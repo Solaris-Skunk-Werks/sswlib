@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008, George Blouin Jr. (skyhigh@solaris7.com)
+Copyright (c) 2009, George Blouin Jr. (skyhigh@solaris7.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
@@ -41,6 +41,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
 import org.w3c.dom.*;
 
+/**
+ * This object loads, saves, and stores a list of personnel
+ *
+ * @author George Blouin
+ */
 public class Warriors extends AbstractTableModel {
     private Vector<Warrior> list = new Vector<Warrior>();
     private String defaultPath = "data/WarriorList.psn",
@@ -55,6 +60,12 @@ public class Warriors extends AbstractTableModel {
         Load(filename);
     }
 
+    /**
+     * Load a list of personnel that has been saved to the disk.  This file must
+     * have a .psn extension
+     *
+     * @param filename
+     */
     public void Load( String filename ) {
         if ( !filename.isEmpty() ) {
             Clear();

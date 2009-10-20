@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008, George Blouin Jr. (skyhigh@solaris7.com)
+Copyright (c) 2009, George Blouin Jr. (skyhigh@solaris7.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
@@ -32,6 +32,12 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import org.w3c.dom.*;
 
+/**
+ * This object stores information about a specific Warrior including Name, Rank,
+ * Affiliation, Quirks, Skills, etc.
+ *
+ * @author George Blouin
+ */
 public class Warrior {
     private String  Name = "",
                     Rank = "",
@@ -47,6 +53,18 @@ public class Warrior {
 
     }
 
+    /**
+     * Parses an XML node for the data necessary to create a Warrior object
+     * <warrior name="" status="">
+     *  <affiliation faction="" rank="" />
+     *  <skills gunnery="" piloting="" mod="" />
+     *  <quirks></quirks>
+     *  <notes></notes>
+     * </warrior>
+     *
+     * @param n XML Node to parse
+     * @throws java.lang.Exception
+     */
     public Warrior( Node n ) throws Exception {
         NamedNodeMap map = n.getAttributes();
         Name = map.getNamedItem("name").getTextContent().trim();
@@ -73,6 +91,18 @@ public class Warrior {
         }
     }
 
+    /**
+     * Writes the xml format expected by Warrior into the stream given
+     * <warrior name="" status="">
+     *  <affiliation faction="" rank="" />
+     *  <skills gunnery="" piloting="" mod="" />
+     *  <quirks></quirks>
+     *  <notes></notes>
+     * </warrior>
+     *
+     * @param file The filestream to write into
+     * @throws java.io.IOException
+     */
     public void SerializeXML(BufferedWriter file) throws IOException {
         file.write(CommonTools.Tabs(5) + "<warrior name=\"" + this.Name.trim() + "\" status=\"" + this.Status.trim() + "\">");
         file.newLine();
@@ -88,6 +118,12 @@ public class Warrior {
         file.newLine();
     }
 
+    /**
+     * Writes the data in the xml format expected by MegaMek for a .mul file
+     *
+     * @param file The filestream to write the xml into
+     * @throws java.io.IOException
+     */
     public void SerializeMUL(BufferedWriter file) throws IOException {
         file.write(CommonTools.Tabs(2) + "<pilot name=\"" + this.Name + "\" gunnery=\"" + this.Gunnery + "\" piloting=\"" + this.Piloting + "\" />");
         file.newLine();
@@ -211,19 +247,26 @@ public class Warrior {
     }
 
     /**
-     * @return the ManeiDomini
+     * Returns a double value representing the overall modifier allocated to this
+     * warrior based on the various modifications they have included in themselves.
+     *
+     * @return Total Manei Domini modifier
      */
     public double getManeiDomini() {
         return ManeiDomini;
     }
 
     /**
-     * @param ManeiDomini the ManeiDomini to set
+     * @param ManeiDomini The total modifier for all MD mods
      */
     public void setManeiDomini(double ManeiDomini) {
         this.ManeiDomini = ManeiDomini;
     }
 
+    /**
+     *
+     * @return A string containing the Gunnery and Piloting skills as G/P (4/5)
+     */
     public String getSkills() {
         return this.Gunnery + "/" + this.Piloting;
     }
