@@ -29,8 +29,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package common;
 
 import components.AvailableCode;
+import java.awt.Font;
 
 public class CommonTools {
+    public final static String tab = "    ";
+    public static Font BoldFont = new Font( "Arial", Font.BOLD, 8 );
+    public static Font PlainFont = new Font( "Arial", Font.PLAIN, 8 );
+    public static Font ItalicFont = new Font( "Arial", Font.ITALIC, 8 );
+    public static Font SmallFont = new Font( "Arial", Font.PLAIN, 7 );
+    public static Font SmallItalicFont = new Font( "Arial", Font.ITALIC, 7 );
+    public static Font TitleFont = new Font("Arial", Font.BOLD, 14);
+    public static Font SectionHeaderFont = new Font("Arial", Font.BOLD, 12);
+    public final static String NL = System.getProperty( "line.separator" );
+    public final static String Tab = "\t";
+
     private final static float[][] BVMods = {
         { 2.8f,  2.63f, 2.45f, 2.28f, 2.01f, 1.82f, 1.75f, 1.67f, 1.59f },
         { 2.56f, 2.4f,  2.24f, 2.08f, 1.84f, 1.6f,  1.58f, 1.51f, 1.44f },
@@ -395,4 +407,81 @@ public class CommonTools {
 
         return false;
     }
+
+    public static String Tabs(int Num) {
+        String tabs = "";
+        for (int i=0; i < Num; i++) {
+            tabs += tab;
+        }
+        return tabs;
+    }
+
+
+    public static float GetSkillBV( float BV, int Gunnery, int Piloting ) {
+        return BV * BVMods[Gunnery][Piloting];
+    }
+
+    public static float GetModifierBV( float SkillBV, float Modifier) {
+        return SkillBV * Modifier;
+    }
+
+    public static float GetFullAdjustedBV( float BV, int Gunnery, int Piloting, float Modifier ) {
+        return BV * BVMods[Gunnery][Piloting] * Modifier;
+    }
+
+    public static float GetForceSizeMultiplier( int Force1Size, int Force2Size ) {
+        if( Force1Size <= 0 || Force2Size <= 0 ) {
+            return 0;
+        }
+
+        return ( ((float) Force2Size) / ((float) Force1Size) ) + ( ((float) Force1Size) / ((float) Force2Size) ) - 1.0f;
+    }
+
+    public static String SafeFileName(String filename) {
+        return filename.replace(" ", "%20").replace("'", "");
+    }
+
+    public static String GetSafeFilename(String s) {
+        s = s.replaceAll("%", "%25");
+        s = s.replaceAll(" ", "%20");
+        s = s.replaceAll("!", "%21");
+        s = s.replaceAll("[{(}]", "%28");
+        s = s.replaceAll("[{)}]", "%29");
+        s = s.replaceAll("[{;}]", "%3B");
+        s = s.replaceAll("[{@}]", "%40");
+        s = s.replaceAll("[{&}]", "%26");
+        s = s.replaceAll("[{=}]", "%3D");
+        s = s.replaceAll("[{+}]", "%2B");
+        s = s.replaceAll("[{$}]", "%24");
+        s = s.replaceAll("[{?}]", "%3F");
+        s = s.replaceAll("[{,}]", "%2C");
+        s = s.replaceAll("[{#}]", "%23");
+        s = s.replaceAll("[{\\[}]", "%5B");
+        s = s.replaceAll("[{\\]}]", "%5D");
+        s = s.replaceAll("[{*}]", "%2A");
+        return s;
+    }
+
+    public static String FormatFileName(String filename) {
+        return filename.replace("'", "").replace(" ", "_");
+    }
+
+    public static String spaceRight(String value, int length) {
+        return String.format("%1$-" + length + "s", value);
+    }
+
+    public static String spaceLeft(String value, int length) {
+        return String.format("%1$#" + length + "s", value);
+    }
+
+    public static String padRight(String value, int length, String character) {
+                if ( value.length() < length ) {
+
+            for ( int i=value.length(); i < length; i++) {
+                value += character;
+            }
+        }
+        return value;
+    }
+
 }
