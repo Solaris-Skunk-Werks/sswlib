@@ -28,9 +28,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package common;
 
-public class Constants {
-    public final static String LibVersion = "0.0.1",
-                               BASELOADOUT_NAME = "Base Loadout",
-                               WEAPONSFILE = "data/weapons.dat",
-                               AMMOFILE = "data/ammunition.dat";
+import components.Mech;
+import filehandlers.BinaryReader;
+import java.util.Vector;
+
+public class DataFactory {
+    // Class file to make data lookups easier and disconnected from the GUI
+    Object[][] Equipment = { { null }, { null }, { null }, { null }, { null }, { null }, { null }, { null } };
+    EquipmentFactory Equips;
+
+    public DataFactory( Mech m ) throws Exception {
+        BinaryReader b = new BinaryReader();
+        Vector ammo = b.ReadAmmo( Constants.AMMOFILE );
+        Vector weapons = b.ReadWeapons( Constants.WEAPONSFILE );
+        Equips = new EquipmentFactory( weapons, ammo, m );
+    }
+
+    public EquipmentFactory GetEquipment() {
+        return Equips;
+    }
+
+    public void Rebuild( Mech m ) {
+        Equips.BuildPhysicals( m );
+    }
 }

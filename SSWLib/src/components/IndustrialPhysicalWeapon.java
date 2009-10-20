@@ -26,11 +26,47 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package common;
+package components;
 
-public class Constants {
-    public final static String LibVersion = "0.0.1",
-                               BASELOADOUT_NAME = "Base Loadout",
-                               WEAPONSFILE = "data/weapons.dat",
-                               AMMOFILE = "data/ammunition.dat";
+/**
+ *
+ * @author Michael Mills
+ */
+public class IndustrialPhysicalWeapon extends PhysicalWeapon {
+    public IndustrialPhysicalWeapon( String actualname, String lookup, String critname, String mname, Mech m, AvailableCode a ){
+        super(actualname, lookup, critname, mname, m, a);
+        resetAllocations( m );
+        SetReplacesHand( true );
+        SetRequiresLowerArm( true );
+        SetPWClass( PhysicalWeapon.PW_CLASS_INDUSTRIAL );
+    }
+
+    private IndustrialPhysicalWeapon( IndustrialPhysicalWeapon i ) {
+        super( i );
+        resetAllocations( i.Owner );
+        SetReplacesHand( true );
+        SetRequiresLowerArm( true );
+        SetPWClass( PhysicalWeapon.PW_CLASS_INDUSTRIAL );
+    }
+
+    public void resetAllocations(Mech m) {
+        if( m.IsQuad() ){
+            this.SetAllocations( false, false, true, false, false, false );
+            this.SetReplacesHand( false );
+            this.SetRequiresLowerArm( false );
+        } else {
+            this.SetAllocations( false, false, false, true, false, false );
+            this.SetReplacesHand( true );
+            this.SetRequiresLowerArm( true );
+        }
+    }
+
+    public void SetSpecials( int cost, int obv, int dbv ) {
+        this.SetSpecials( "PA", "-", 0, (double) cost, 0, (double) obv, (double) dbv, false );
+    }
+
+    @Override
+    public IndustrialPhysicalWeapon Clone() {
+        return new IndustrialPhysicalWeapon( this );
+    }
 }

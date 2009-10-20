@@ -33,7 +33,7 @@ import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 
-public class BinaryConversionTool {
+public class BinaryConverter {
 // Provides conversion tools for binary files, either into Java classes or from
 // CSV to binary (and back again if needed).
 
