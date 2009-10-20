@@ -75,4 +75,15 @@ public class Constants {
                         NO_IMAGE = "../Images/No_Image.png";
     public final static String[] Locs = { "Head", "Center Torso", "Left Torso",
         "Right Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg" };
+
+    public final static String Print_ForceList = "Print.ForceList",
+                        Print_FireDeclaration = "Print.FireDeclaration",
+                        Print_Recordsheet = "Print.Recordsheets",
+                        Print_BattleForce = "Print.BattleForce",
+                        Format_Recordsheet = "UseRS",
+                        Format_Tables = "UseCharts",
+                        Format_CanonPattern = "UseCanonDots",
+                        Format_ConvertTerrain = "UseMiniConversion",
+                        Format_TerrainModifier = "MiniConversionRate",
+                        Format_OneForcePerPage = "OneForcePerPage";
 }

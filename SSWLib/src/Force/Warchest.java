@@ -135,7 +135,7 @@ public class Warchest implements ifSerializable {
         this.TrackCost = TrackCost;
     }
 
-    public Vector<Force.Bonus> getBonuses() {
+    public Vector<Bonus> getBonuses() {
         return bonuses;
     }
 
