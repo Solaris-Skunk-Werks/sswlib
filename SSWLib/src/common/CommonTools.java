@@ -42,6 +42,24 @@ public class CommonTools {
     public static Font SectionHeaderFont = new Font("Arial", Font.BOLD, 12);
     public final static String NL = System.getProperty( "line.separator" );
     public final static String Tab = "\t";
+    public final static int BattleMech = 0,
+                            IndustrialMech = 1,
+                            ProtoMech = 2,
+                            Vehicle = 3,
+                            Infantry = 4,
+                            BattleArmor = 5,
+                            ConvFighter = 6,
+                            AeroFighter = 7,
+                            SmallCraft = 8,
+                            Dropship = 9,
+                            SupportVehicle = 10,
+                            MobileStructure = 11;
+    
+    public final static String[] UnitTypes = { "BattleMech", "IndustrialMech",
+                                 "ProtoMech", "Combat Vehicle", "Infantry",
+                                 "Battle Armor", "Conventional Fighter",
+                                 "Aerospace Fighter", "Small Craft", "Dropship",
+                                 "Support Vehicle", "Mobile Structure" };
 
     private final static float[][] BVMods = {
         { 2.8f,  2.63f, 2.45f, 2.28f, 2.01f, 1.82f, 1.75f, 1.67f, 1.59f },
