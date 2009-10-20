@@ -59,4 +59,9 @@ public class Objective extends abWarchestItem implements ifSerializable {
         data += getDescription() + " (Reward:" + getValue() + ")";
         return data;
     }
+
+    @Override
+    public String toString() {
+        return SerializeClipboard();
+    }
 }

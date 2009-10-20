@@ -28,9 +28,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package battleforce;
 
+import common.CommonTools;
 import java.util.Vector;
 import org.w3c.dom.Node;
 import components.Mech;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 public class BattleForceStats {
     private String Element = "",
@@ -156,22 +159,19 @@ public class BattleForceStats {
         PV = (int)((int) BasePV * Mods[Skill]);
     }
 
-    public String SerializeXML() {
-        String data = "";
-
-        data += "<battleforce ";
-        data += "pv=\"" + getPointValue() + "\" ";
-        data += "mv=\"" + getMovement() + "\" ";
-        data += "s=\"" + getShort() + "\" ";
-        data += "m=\"" + getMedium() + "\" ";
-        data += "l=\"" + getLong() + "\" ";
-        data += "e=\"" + getExtreme() + "\" ";
-        data += "ov=\"" + getOverheat() + "\" ";
-        data += "armor=\"" + getArmor() + "\" ";
-        data += "internal=\"" + getInternal() + "\" ";
-        data += "abilities=\"" + getAbilitiesString() + "\" />\n";
-
-        return data;
+    public void SerializeXML( BufferedWriter file, int Tabs ) throws IOException {
+        file.write( CommonTools.Tabs(Tabs) +
+                    "<battleforce pv=\"" + getPointValue() + "\" " +
+                    "wt=\"" + getWeight() + "\" " +
+                    "mv=\"" + getMovement() + "\" " +
+                    "s=\"" + getShort() + "\" " +
+                    "m=\"" + getMedium() + "\" " +
+                    "l=\"" + getLong() + "\" " +
+                    "e=\"" + getExtreme() + "\" " +
+                    "ov=\"" + getOverheat() + "\" " +
+                    "armor=\"" + getArmor() + "\" " +
+                    "internal=\"" + getInternal() + "\" " +
+                    "abilities=\"" + getAbilitiesString() + "\" />");
     }
 
     public String SerializeCSV() {
@@ -318,5 +318,9 @@ public class BattleForceStats {
 
     public int getBasePV() {
         return BasePV;
+    }
+
+    public void setElement(String Element) {
+        this.Element = Element;
     }
 }
