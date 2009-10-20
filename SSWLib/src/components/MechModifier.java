@@ -36,12 +36,13 @@ public class MechModifier {
                 RunAdd = 0,
                 WalkAdd = 0,
                 JumpAdd = 0;
-    private float DefBonus = 0.0f,
-                  MinDefBonus = 0.0f,
-                  ArmorMult = 0.0f,
-                  IntMult = 0.0f,
-                  RunMult = 0.0f;
+    private double DefBonus = 0.0,
+                  MinDefBonus = 0.0,
+                  ArmorMult = 0.0,
+                  IntMult = 0.0,
+                  RunMult = 0.0;
     private boolean BVMovement,
+                    BVHeatMod,
                     CanJump = true;
 
 /**
@@ -60,7 +61,7 @@ public class MechModifier {
  * @param imult Modifier to the internal structure multiplier, adder, usually the same as the armor mult
  * @param BVMove Whether this MechMod counts towards BV Movement (add for Modular Armor)
  */
-    public MechModifier( int wadd, int radd, int jadd, float rmult, int gmod, int pmod, int heat, float def, float mindef, float amult, float imult, boolean BVMove ) {
+    public MechModifier( int wadd, int radd, int jadd, double rmult, int gmod, int pmod, int heat, double def, double mindef, double amult, double imult, boolean BVMove, boolean BVHeat ) {
         WalkAdd = wadd;
         RunAdd = radd;
         JumpAdd = jadd;
@@ -73,6 +74,7 @@ public class MechModifier {
         ArmorMult = amult;
         IntMult = imult;
         BVMovement = BVMove;
+        BVHeatMod = BVHeat;
     }
 
     public void SetCanJump(boolean j) {
@@ -95,7 +97,7 @@ public class MechModifier {
         return JumpAdd;
     }
 
-    public float RunningMultiplier() {
+    public double RunningMultiplier() {
         return RunMult;
     }
 
@@ -111,19 +113,19 @@ public class MechModifier {
         return HeatAdd;
     }
 
-    public float DefensiveBonus() {
+    public double DefensiveBonus() {
         return DefBonus;
     }
 
-    public float MinimumDefensiveBonus() {
+    public double MinimumDefensiveBonus() {
         return MinDefBonus;
     }
 
-    public float ArmorMultiplier() {
+    public double ArmorMultiplier() {
         return ArmorMult;
     }
 
-    public float InternalMultiplier() {
+    public double InternalMultiplier() {
         return IntMult;
     }
 
@@ -131,7 +133,11 @@ public class MechModifier {
         return BVMovement;
     }
 
-    public void Combine( MechModifier m  ) {
+    public boolean UseBVHeat() {
+        return BVHeatMod;
+    }
+
+    public void Combine( MechModifier m ) {
         // combines two mech modifiers together.
         WalkAdd += m.WalkingAdder();
         RunAdd += m.RunningAdder();
@@ -151,7 +157,7 @@ public class MechModifier {
         }
     }
 
-    public void BVCombine( MechModifier m  ) {
+    public void BVCombine( MechModifier m ) {
         // combines two mech modifiers together, taking special movement modifiers
         // into consideration (Modular Armor does not count towards BV movement)
         if( m.UseBVMovement() ) {
@@ -162,7 +168,9 @@ public class MechModifier {
         }
         GunneryMod += m.GunneryMod();
         PilotMod += m.PilotingModifier();
-        HeatAdd += m.HeatAdder();
+        if( m.UseBVHeat() ) {
+            HeatAdd += m.HeatAdder();
+        }
         DefBonus += m.DefensiveBonus();
         if( MinDefBonus < m.MinDefBonus ) {
             MinDefBonus = m.MinDefBonus;

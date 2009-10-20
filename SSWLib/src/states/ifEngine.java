@@ -28,26 +28,32 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
-import components.*;
+import components.AvailableCode;
+import components.MechModifier;
 
 public interface ifEngine {
+    public String ActualName();
+    public String CritName();
+    public String LookupName();
+    public String ChatName();
+    public String MegaMekName( boolean UseRear );
+    public String BookReference();
     public int GetFullCrits();
     public boolean IsFusion();
     public boolean IsNuclear();
-    public float GetTonnage( int Rating, boolean fractional );
+    public double GetTonnage( int Rating );
+    public int GetBFStructure( int tonnage );
     public int GetCTCrits();
     public int GetSideTorsoCrits();
     public int NumCTBlocks();
-    public int GetCVSpace();
     public boolean CanSupportRating( int rate );
-    public String GetCritName();
-    public String GetMMName();
-    public float GetCost( int MechTonnage, int Rating );
-    public float GetBVMult();
+    public double GetCost( int MechTonnage, int Rating );
+    public double GetBVMult();
     public AvailableCode GetAvailability();
     public int FreeHeatSinks();
     public int MaxMovementHeat();
     public int MinimumHeat();
     public int JumpingHeatMultiplier();
+    public boolean IsPrimitive();
     public MechModifier GetMechModifier();
 }

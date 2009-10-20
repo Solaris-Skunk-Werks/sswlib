@@ -28,9 +28,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
-import components.*;
+import components.Armor;
+import components.AvailableCode;
+import components.LocationIndex;
+import components.MechModifier;
+import components.ifMechLoadout;
 
 public class stArmorCLRE implements ifArmor, ifState {
+    boolean locked = false;
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_CLAN );
 
     public stArmorCLRE() {
@@ -40,48 +45,75 @@ public class stArmorCLRE implements ifArmor, ifState {
         AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL );
     }
 
-    public String GetLookupName() {
+    public String ActualName() {
         return "Reactive Armor";
     }
 
-    public String GetCritName() {
-        return "Reactive Armor";
-    }
-
-    public String GetMMName() {
+    public String CritName() {
         return "Reactive";
+    }
+
+    public String LookupName() {
+        return "Reactive Armor";
+    }
+
+    public String ChatName() {
+        return "Rctv Armor";
+    }
+
+    public String MegaMekName( boolean UseRear ) {
+        return "Reactive";
+    }
+
+    public String BookReference() {
+        return "Tactical Operations";
+    }
+
+    public boolean HasCounterpart() {
+        return true;
+    }
+
+    public boolean Place( Armor a, ifMechLoadout l ) {
+        // Simply place the armor into the loadout queue
+        l.AddToQueue( a );
+        return true;
+    }
+
+    public boolean Place( Armor a, ifMechLoadout l, LocationIndex[] Locs ) {
+        // not implemented yet, just place as normal
+        return Place( a, l );
     }
 
     public int NumCrits() {
         return 7;
     }
 
-    public int GetCVSpace() {
-        return 1;
-    }
-
-    public float GetAVMult() {
+    public double GetAVMult() {
         return 1.0f;
-    }
-
-    public float GetFractionalMult() {
-        return 0.0625f;
     }
 
     public boolean IsStealth() {
         return false;
     }
 
-    public float GetCostMult() {
+    public double GetCostMult() {
         return 30000.0f;
     }
 
-    public float GetBVTypeMult() {
+    public double GetBVTypeMult() {
         return 1.5f;
     }
 
     public int GetBAR() {
         return 10;
+    }
+
+    public boolean LocationLocked() {
+        return locked;
+    }
+
+    public void SetLocked( boolean l ) {
+        locked = l;
     }
 
     public MechModifier GetMechModifier() {

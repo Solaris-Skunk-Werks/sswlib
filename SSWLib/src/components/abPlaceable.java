@@ -28,38 +28,60 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
-/**
- * Provides a class for items that can be placed into a loadout.  This is very
- * generic, but should work for Vehicles and Aerospace fighter as-is.  'Mech
- * items may need to create or implement even more methods.
- * 
- * @author Justin Bengtson
- */
 public abstract class abPlaceable {
     // An abstract class for items that can be placed inside a loadout.
-    private boolean Locked = false;
-    private String Manufacturer = "Unknown";
+    private boolean Locked = false,  Armored = false;
     private Exclusion Exclusions = null;
+    public final static AvailableCode ArmoredAC = new AvailableCode( AvailableCode.TECH_BOTH );
+    private MechModifier Modifier = null;
+    private String[] BattleForceAbilities = new String[]{};
 
-    public abstract String GetCritName();
-
-    public String GetPrintName(){
-        return GetCritName();
+    public abPlaceable() {
+        ArmoredAC.SetISCodes( 'E', 'X', 'X', 'F' );
+        ArmoredAC.SetISDates( 3059, 3061, true, 3061, 0, 0, false, false );
+        ArmoredAC.SetISFactions( "FW", "FW", "", "" );
+        ArmoredAC.SetCLCodes( 'E', 'X', 'X', 'F' );
+        ArmoredAC.SetCLDates( 3060, 3061, true, 3061, 0, 0, false, false );
+        ArmoredAC.SetCLFactions( "CDS", "CDS", "", "" );
+        ArmoredAC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 
-    public abstract String GetMegaMekName( boolean UseRear );
-    public abstract float GetTonnage();
-    public abstract float GetCost();
-    public abstract float GetOffensiveBV();
-    public abstract float GetDefensiveBV();
-    public abstract int GetMechSpace();
-    public abstract int GetCVSpace();
-    public abstract int GetAeroSpace();
-
-    public boolean CanSplit() {
-        return false;
+/**
+ * Places this item within the specified MechLoadout.  By default, most items
+ * will be placed in the placement queue.  Certain items may want to override
+ * this method in order to implement specific placement methods.
+ *
+ * @param l The MechLoadout to place this item into.
+ * @return Whether the item was placed successfully.
+ */
+    public boolean Place( ifMechLoadout l ) {
+        l.AddToQueue(this);
+        return true;
     }
 
+/**
+ * Places this item within the specified MechLoadout using the given locations.
+ * By default, most items will be placed in the placement queue, and this method
+ * normally does that.  Certain items may want to override this method in order
+ * to implement specific placement methods.
+ *
+ * @param l The MechLoadout to place this item into.
+ * @param locs  The locations where this item should be placed.
+ * @return Whether or not the item was placed successfully.
+ */
+    public boolean Place( ifMechLoadout l, LocationIndex[] locs ) {
+        return Place( l );
+    }
+
+    public void Remove( ifMechLoadout l ) {
+        // Removes itself from the specified Loadout.  This method will rarely
+        // be overridden.
+        l.Remove(this);
+    }
+
+    // The following methods determine where this item can be placed.  When the
+    // loadout attempts to add them to a location, it will check the specified
+    // routine.  Defaults are assumed and can be overidden.
     public boolean CanAllocHD() {
         return true;
     }
@@ -80,85 +102,156 @@ public abstract class abPlaceable {
         return true;
     }
 
-    public boolean OmniActuatorRestricted() {
+    // This method determines whether the item can be split between adjacent
+    // locations.  The CanAlloc methods will determine where the item can be
+    // split to.
+    public boolean CanSplit() {
         return false;
     }
 
-    public boolean CanAllocBody() {
+    // This method tells us whether the item must be placed contiguously.  Some
+    // items (like Endo-Steel) have a lot of crits but are not contiguous, so
+    // the user must be allowed to split them between locations as they see fit.
+    // The loadout will handle how many are alloc'd and how many not.
+    // The default is contiguous.  Most items, even if they can be split, must
+    // be alloc'd contiguously.
+    public boolean Contiguous() {
         return true;
     }
 
-    public boolean CanAllocFront() {
-        return true;
-    }
-
-    public boolean CanAllocRear() {
-        return true;
-    }
-
-    public boolean CanAllocSides() {
-        return true;
-    }
-
-    public boolean CanAllocTurret() {
-        return true;
-    }
-
-    public boolean CanAllocNose() {
-        return true;
-    }
-
-    public boolean CanAllocWings() {
-        return true;
-    }
-
-    public boolean CanAllocAft() {
-        return true;
-    }
-
-    public boolean CanAllocFuselage() {
-        return true;
-    }
-
-/**
- * Most Placeables will use the default method here.  This can be overridden for
- * certain items to creatively place themselves (like Stealth Armor in a 'Mech).
- * 
- * @param l The Loadout to add this item to.
- */
-    public void Place(ifLoadout l) {
-        l.AddToQueue( this );
-    }
-
-    public void Remove(ifLoadout l) {
-        l.Remove( this );
-    }
-
+    // This method tells us whether the item is locked in it's current location.
+    // Useful for stuff like engines and gyros.
     public boolean LocationLocked() {
         return Locked;
     }
 
-    public void SetLocked(boolean l) {
+    public void SetLocked( boolean l ) {
         Locked = l;
     }
 
+    // this method is for items that are linked to a particular location for
+    // some reason, such as Artemis IY FCS that must be in the same location
+    // as the launcher.
     public boolean LocationLinked() {
         return false;
     }
 
-    public boolean CoreComponent() {
+    // actual name is the Battletech name for the equipment, from the books
+    // we use other names elsewhere because this can get extremely long.
+    public abstract String ActualName();
+
+    // the lookup name is used when we are trying to find the piece of equipment.
+    public abstract String LookupName();
+
+    // the crit name is how the item appears in the loadout when allocated.
+    public abstract String CritName();
+
+    // the name to be used when expoerting this equipment to a chat line.
+    public abstract String ChatName();
+
+    // the name to be used when exporting to MegaMek
+    public abstract String MegaMekName( boolean UseRear );
+
+    // reference for the book that the equipment comes from 
+    public abstract String BookReference();
+
+    // returns the number of crits this item takes in the Loadout.
+    public abstract int NumCrits();
+
+    // returns the mass of the component
+    public abstract double GetTonnage();
+
+    // return the cost of the item
+    public abstract double GetCost();
+
+    // return the offensive battle value of the item
+    public abstract double GetOffensiveBV();
+
+    // return the current offensive battle value of the item.  This is useful
+    // for weapons since they may be mounted to the rear.
+    public abstract double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES );
+
+    // return the defensive battle value of the item
+    public abstract double GetDefensiveBV();
+
+    // placement counter for non-contiguous items.  This method should only be
+    // over-ridden by items that are non-contiguous.
+    public int NumPlaced() {
+        return 0;
+    }
+
+    // increments the number of times this item has been placed.  Once again,
+    // should only be over-ridden by non-contiguous items
+    public void IncrementPlaced() {
+    }
+
+    // decrements the number of times this item has been placed.  Only override
+    // for non-contiguous items
+    public void DecrementPlaced() {
+    }
+
+    // resets the placed counter.  only override for non-contiguous items
+    public void ResetPlaced() {
+    }
+
+    // tells us whether the item can be mounted to the rear.  Most items cannot,
+    // so this automatically returns false
+    public boolean CanMountRear() {
         return false;
     }
 
+    // This next two methods should be overridden by any component that can be
+    // mounted to the rear.
+    public void MountRear(boolean rear) {
+    }
+
+    public boolean IsMountedRear() {
+        return false;
+    }
+
+    // tells us if this is a core component.  A special list is kept in the
+    // loadout for items not of this type and calculations based on such.
+    public boolean CoreComponent() {
+        // most items aren't core components, so only override if neccesary
+        return false;
+    }
+
+    // the manufacturer is provided for certain equipment that can be
+    // specified as built by a certain company.  Most items don't need this.
     public String GetManufacturer() {
-        return Manufacturer;
+        return "Unknown";
     }
 
-    public void SetManufacturer( String n ) {
-        Manufacturer = n;
+    public void SetManufacturer(String n) {
     }
 
-    public void SetExclusions( Exclusion e ) {
+    // added for BattleForce special abilities that could be part of the
+    // equipment being added.  Defaulting to a blank string array.
+    public String[] GetBattleForceAbilities() {
+        return BattleForceAbilities;
+    }
+
+    public void SetBattleForceAbilities( String[] a ) {
+        BattleForceAbilities = a;
+    }
+
+    // added for armored components in tech manual
+    public boolean CanArmor() {
+        // most components can be armored, only ones that can't should override
+        return true;
+    }
+
+    public boolean IsArmored() {
+        // return whether the component is armored
+        return Armored;
+    }
+
+    public void ArmorComponent(boolean armor) {
+        // armor or unarmor the component
+        Armored = armor;
+    }
+
+    public void SetExclusions(Exclusion e) {
         Exclusions = e;
     }
 
@@ -166,5 +259,20 @@ public abstract class abPlaceable {
         return Exclusions;
     }
 
+    public void AddMechModifier(MechModifier m) {
+        Modifier = m;
+    }
+
+    public MechModifier GetMechModifier() {
+        return Modifier;
+    }
+
+    // tells us whether the item can be struck during a critical.  Should be
+    // overridden if the item requires it.
+    public boolean IsCritable() {
+        return true;
+    }
+
+    // All placeables should be able to return their AvailableCode
     public abstract AvailableCode GetAvailability();
 }

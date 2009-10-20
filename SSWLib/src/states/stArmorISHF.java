@@ -28,9 +28,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
-import components.*;
+import components.Armor;
+import components.AvailableCode;
+import components.LocationIndex;
+import components.MechModifier;
+import components.ifMechLoadout;
 
 public class stArmorISHF implements ifArmor, ifState {
+    boolean locked = false;
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
 
     public stArmorISHF() {
@@ -40,35 +45,54 @@ public class stArmorISHF implements ifArmor, ifState {
         AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_ADVANCED, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT );
     }
 
-    public String GetLookupName() {
+    public String ActualName() {
+        return "Heavy Ferro-Fibrous Armor";
+    }
+
+    public String CritName() {
         return "Heavy Ferro-Fibrous";
     }
 
-    public String GetCritName() {
+    public String LookupName() {
         return "Heavy Ferro-Fibrous";
     }
 
-    public String GetMMName() {
+    public String ChatName() {
+        return "HFF Armor";
+    }
+
+    public String MegaMekName( boolean UseRear ) {
         return "Heavy Ferro-Fibrous";
+    }
+
+    public String BookReference() {
+        return "Tech Manual";
+    }
+
+    public boolean HasCounterpart() {
+        return false;
+    }
+
+    public boolean Place( Armor a, ifMechLoadout l ) {
+        // Simply place the armor into the loadout queue
+        l.AddToQueue( a );
+        return true;
+    }
+
+    public boolean Place( Armor a, ifMechLoadout l, LocationIndex[] Locs ) {
+        // not implemented yet, just place as normal
+        return Place( a, l );
     }
 
     public int NumCrits() {
         return 21;
     }
 
-    public int GetCVSpace() {
-        return 3;
-    }
-
-    public float GetAVMult() {
+    public double GetAVMult() {
         return 1.24f;
     }
 
-    public float GetFractionalMult() {
-        return 0.0504f;
-    }
-
-    public float GetCostMult() {
+    public double GetCostMult() {
         return 25000.0f;
     }
 
@@ -76,12 +100,20 @@ public class stArmorISHF implements ifArmor, ifState {
         return false;
     }
 
-    public float GetBVTypeMult() {
+    public double GetBVTypeMult() {
         return 1.0f;
     }
 
     public int GetBAR() {
         return 10;
+    }
+
+    public boolean LocationLocked() {
+        return locked;
+    }
+
+    public void SetLocked( boolean l ) {
+        locked = l;
     }
 
     public MechModifier GetMechModifier() {

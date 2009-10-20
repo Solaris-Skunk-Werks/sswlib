@@ -27,19 +27,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 package states;
-import components.*;
+
+import components.Armor;
+import components.AvailableCode;
+import components.LocationIndex;
+import components.MechModifier;
+import components.ifMechLoadout;
 
 public interface ifArmor {
-    public String GetCritName();
+    public String ActualName();
+    public String CritName();
+    public String LookupName();
+    public String ChatName();
+    public String MegaMekName( boolean UseRear );
+    public String BookReference();
+    public boolean Place( Armor a, ifMechLoadout l );
+    public boolean Place( Armor a, ifMechLoadout l, LocationIndex[] Locs );
     public int NumCrits();
-    public int GetCVSpace();
-    public float GetAVMult();
-    public float GetFractionalMult();
+    public double GetAVMult();
     public boolean IsStealth();
-    public String GetMMName();
-    public float GetCostMult();
-    public float GetBVTypeMult();
+    public double GetCostMult();
+    public double GetBVTypeMult();
     public int GetBAR();
+    public boolean LocationLocked();
+    public void SetLocked( boolean l );
     public MechModifier GetMechModifier();
     public AvailableCode GetAvailability();
 }

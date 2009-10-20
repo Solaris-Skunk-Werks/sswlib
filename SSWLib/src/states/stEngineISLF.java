@@ -28,19 +28,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
-import common.CommonTools;
-import components.*;
+import components.AvailableCode;
+import components.MechModifier;
 
 public class stEngineISLF implements ifEngine, ifState {
     // An Inner Sphere Light Fusion Engine
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
-    private final static float[] Masses = {0.5f,0.5f,0.5f,0.5f,1.0f,1.0f,1.0f,
+    private final static double[] Masses = {0.5f,0.5f,0.5f,0.5f,1.0f,1.0f,1.0f,
         1.0f,1.5f,1.5f,1.5f,1.5f,1.5f,1.5f,2.0f,2.0f,2.5f,2.5f,2.5f,3.0f,3.0f,
         3.0f,3.0f,3.0f,3.5f,3.5f,4.0f,4.0f,4.5f,4.5f,4.5f,4.5f,4.5f,5.5f,5.5f,
         6.0f,6.0f,6.0f,6.5f,6.5f,7.0f,7.5f,7.5f,7.5f,8.0f,8.5f,9.0f,9.0f,9.5f,
         10.0f,10.5f,10.5f,11.0f,12.0f,12.0f,12.5f,13.5f,13.5f,14.5f,15.0f,15.5f,
         16.5f,17.0f,18.0f,18.5f,19.5f,20.5f,21.5f,22.5f,24.0f,25.0f,26.0f,27.5f,
         29.0f,31.0f,33.0f,34.5f,37.0f,39.5f};
+    private final static int[] BFStructure = {1,1,1,1,2,2,2,2,3,3,3,4,4,4,4,5,5,5,5};
 
     public stEngineISLF() {
         AC.SetISCodes( 'E', 'X', 'X', 'E' );
@@ -49,15 +50,14 @@ public class stEngineISLF implements ifEngine, ifState {
         AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_ADVANCED );
     }
 
-    public float GetTonnage( int Rating, boolean fractional ) {
-        if( fractional ) {
-            float retval = CommonTools.BaseEngineMass[GetIndex( Rating )] * 0.75f;
-            if( retval < 0.25f ) { retval = 0.25f; }
-            return retval;
-        }
-        return Masses[GetIndex( Rating )];
+    public boolean HasCounterpart() {
+        return false;
     }
 
+    public double GetTonnage( int Rating ) {
+        return Masses[GetIndex( Rating )];
+    }
+    
     public int GetCTCrits() {
         return 3;
     }
@@ -70,10 +70,6 @@ public class stEngineISLF implements ifEngine, ifState {
         return 2;
     }
     
-    public int GetCVSpace() {
-        return 1;
-    }
-    
     public boolean CanSupportRating( int rate ) {
         if( rate < 5 || rate > 400 || rate % 5 != 0 ) {
             return false;
@@ -82,20 +78,32 @@ public class stEngineISLF implements ifEngine, ifState {
         }
     }
 
-    public String GetLookupName() {
+    public String ActualName() {
         return "Light Fusion Engine";
     }
 
-    public String GetCritName() {
+    public String CritName() {
         return "Light Fusion Engine";
     }
-    
-    public String GetMMName() {
+
+    public String LookupName() {
+        return "Light Fusion Engine";
+    }
+
+    public String ChatName() {
+        return "LFE";
+    }
+
+    public String MegaMekName( boolean UseRear ) {
         return "Fusion Engine";
     }
 
-    public float GetCost( int MechTonnage, int Rating ) {
-        return ( 15000 * MechTonnage * Rating ) / 75;
+    public String BookReference() {
+        return "Tech Manual";
+    }
+
+    public double GetCost( int MechTonnage, int Rating ) {
+        return ( 15000.0f * ((double) MechTonnage) * ((double) Rating )) / 75.0f;
     }
     
     public AvailableCode GetAvailability() {
@@ -106,7 +114,7 @@ public class stEngineISLF implements ifEngine, ifState {
         return 10;
     }
 
-    public float GetBVMult() {
+    public double GetBVMult() {
         return 0.75f;
     }
     
@@ -125,6 +133,14 @@ public class stEngineISLF implements ifEngine, ifState {
     private int GetIndex( int Rating ) {
         return Rating / 5 - 2;
     }
+
+    private int GetBFIndex( int tonnage ) {
+        return (tonnage - 10) / 5;
+    }
+
+    public int GetBFStructure( int tonnage ) {
+        return BFStructure[GetBFIndex(tonnage)];
+    }
     
     public int MaxMovementHeat() {
         return 2;
@@ -140,6 +156,10 @@ public class stEngineISLF implements ifEngine, ifState {
 
     public MechModifier GetMechModifier() {
         return null;
+    }
+
+    public boolean IsPrimitive() {
+        return false;
     }
 
     @Override

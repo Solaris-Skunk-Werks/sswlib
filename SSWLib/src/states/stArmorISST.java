@@ -28,11 +28,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
-import components.*;
+import components.Armor;
+import components.AvailableCode;
+import components.LocationIndex;
+import components.MechModifier;
+import components.ifMechLoadout;
 
 public class stArmorISST implements ifArmor, ifState {
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
-    private final MechModifier MechMod = new MechModifier( 0, 0, 0, 0.0f, 0, 0, 10, 0.2f, 0.0f, 0.0f, 0.0f, true );
+    private final MechModifier MechMod = new MechModifier( 0, 0, 0, 0.0f, 0, 0, 10, 0.2f, 0.0f, 0.0f, 0.0f, true, false );
 
     public stArmorISST() {
         AC.SetISCodes( 'E', 'X', 'X', 'E' );
@@ -41,48 +45,201 @@ public class stArmorISST implements ifArmor, ifState {
         AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL );
     }
 
-    public String GetLookupName() {
+    public String ActualName() {
         return "Stealth Armor";
     }
 
-    public String GetCritName() {
+    public String CritName() {
         return "Stealth Armor";
     }
 
-    public String GetMMName() {
+    public String LookupName() {
         return "Stealth Armor";
+    }
+
+    public String ChatName() {
+        return "Stlth Armor";
+    }
+
+    public String MegaMekName( boolean UseRear ) {
+        return "Stealth Armor";
+    }
+
+    public String BookReference() {
+        return "Tech Manual";
+    }
+
+    public boolean HasCounterpart() {
+        return false;
+    }
+
+    public boolean Place( Armor a, ifMechLoadout l ) {
+        // Place the armor in the mech
+        boolean placed = false;
+        int increment = 11;
+        try {
+            if( l.IsQuad() ) {
+                // these crits can only ever go here, no need to check.
+                l.AddToLA( a, 4 );
+                l.AddToLA( a, 5 );
+                l.AddToRA( a, 4 );
+                l.AddToRA( a, 5 );
+            } else {
+                // check each available space from the bottom.  If we cannot
+                // allocate then we need to revert to normal armor
+                while( placed == false ) {
+                    if ( increment < 0 ) { return false; }
+                    try {
+                        l.AddToLA( a, increment );
+                        increment--;
+                        placed = true;
+                    } catch ( Exception e ) {
+                        increment--;
+                    }
+                }
+                placed = false;
+                while( placed == false ) {
+                    if ( increment < 0 ) { return false; }
+                    try {
+                        l.AddToLA( a, increment );
+                        increment--;
+                        placed = true;
+                    } catch ( Exception e ) {
+                        increment--;
+                    }
+                }
+                placed = false;
+                increment = 11;
+                while( placed == false ) {
+                    if ( increment < 0 ) { return false; }
+                    try {
+                        l.AddToRA( a, increment );
+                        increment--;
+                        placed = true;
+                    } catch ( Exception e ) {
+                        increment--;
+                    }
+                }
+                placed = false;
+                while( placed == false ) {
+                    if ( increment < 0 ) { return false; }
+                    try {
+                        l.AddToRA( a, increment );
+                        increment--;
+                        placed = true;
+                    } catch ( Exception e ) {
+                        increment--;
+                    }
+                }
+            }
+
+            // check each available space from the bottom.  If we cannot allocate
+            // then we need to revert to normal armor
+            placed = false;
+            increment = 11;
+            while( placed == false ) {
+                if ( increment < 0 ) { return false; }
+                try {
+                    l.AddToLT( a, increment );
+                    increment--;
+                    placed = true;
+                } catch ( Exception e ) {
+                    increment--;
+                }
+            }
+            placed = false;
+            while( placed == false ) {
+                if ( increment < 0 ) { return false; }
+                try {
+                    l.AddToLT( a, increment );
+                    increment--;
+                    placed = true;
+                } catch ( Exception e ) {
+                    increment--;
+                }
+            }
+            placed = false;
+            increment = 11;
+            while( placed == false ) {
+                if ( increment < 0 ) { return false; }
+                try {
+                    l.AddToRT( a, increment );
+                    increment--;
+                    placed = true;
+                } catch ( Exception e ) {
+                    increment--;
+                }
+            }
+            placed = false;
+            while( placed == false ) {
+                if ( increment < 0 ) { return false; }
+                try {
+                    l.AddToRT( a, increment );
+                    increment--;
+                    placed = true;
+                } catch ( Exception e ) {
+                    increment--;
+                }
+            }
+
+            // leg crits can only ever go here, so no need to check.
+            l.AddToLL( a, 4 );
+            l.AddToLL( a, 5 );
+            l.AddToRL( a, 4 );
+            l.AddToRL( a, 5 );
+        } catch ( Exception e ) {
+            // something else was probably in the way.  Tell the placer
+            return false;
+        }
+
+        // all went well
+        return true;
+    }
+
+    public boolean Place( Armor a, ifMechLoadout l, LocationIndex[] Locs ) {
+        LocationIndex li;
+        try {
+            for( int i = 0; i < Locs.length; i++ ) {
+                li = (LocationIndex) Locs[i];
+                l.AddTo( a, li.Location, li.Index );
+            }
+        } catch( Exception e ) {
+            return false;
+        }
+        return true;
     }
 
     public int NumCrits() {
         return 12;
     }
 
-    public int GetCVSpace() {
-        return 2;
-    }
-
-    public float GetAVMult() {
+    public double GetAVMult() {
         return 1.0f;
-    }
-
-    public float GetFractionalMult() {
-        return 0.0625f;
     }
 
     public boolean IsStealth() {
         return true;
     }
 
-    public float GetCostMult() {
+    public double GetCostMult() {
         return 50000.0f;
     }
 
-    public float GetBVTypeMult() {
+    public double GetBVTypeMult() {
         return 1.0f;
     }
 
     public int GetBAR() {
         return 10;
+    }
+
+    public boolean LocationLocked() {
+        // stealth armor is always locked.
+        return true;
+    }
+
+    public void SetLocked( boolean l ) {
+        // stealth armor is always locked.
     }
 
     public MechModifier GetMechModifier() {
