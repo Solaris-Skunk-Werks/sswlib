@@ -36,6 +36,7 @@ import java.io.FileReader;
 public class BinaryConverter {
 // Provides conversion tools for binary files, either into Java classes or from
 // CSV to binary (and back again if needed).
+    String Messages = "";
 
 /**
  * Converts a CSV text file of RangedWeapon data into a binary file to conserve
@@ -47,6 +48,7 @@ public class BinaryConverter {
  */
     public boolean ConvertRangedWeaponsCSVtoBin( String input, String output, String delim ) {
         // take two filenames as input.
+        Messages = "";
         int NumConverted = 0;
         BufferedReader FR;
         DataOutputStream FW;
@@ -73,10 +75,11 @@ public class BinaryConverter {
             FR.close();
             FW.close();
         } catch( Exception e ) {
-            e.printStackTrace();
+            Messages += e.getMessage();
+            Messages += e.toString();
             return false;
         }
-        System.out.println( "Wrote " + NumConverted + " weapons to " + output );
+        Messages += "Wrote " + NumConverted + " weapons to " + output + "\n";
         return true;
     }
 
@@ -90,6 +93,7 @@ public class BinaryConverter {
  */
     public boolean ConvertAmmunitionCSVtoBin( String input, String output, String delim ) {
         // take two filenames as input.
+        Messages = "";
         int NumConverted = 0;
         BufferedReader FR;
         DataOutputStream FW;
@@ -116,11 +120,16 @@ public class BinaryConverter {
             FR.close();
             FW.close();
         } catch( Exception e ) {
-            e.printStackTrace();
+            Messages += e.getMessage();
+            Messages += e.toString();
             return false;
         }
-        System.out.println( "Wrote " + NumConverted + " ammunitions to " + output );
+        Messages += "Wrote " + NumConverted + " ammunitions to " + output + "\n";
         return true;
+    }
+
+    public String GetMessages() {
+        return Messages;
     }
 
 /**
