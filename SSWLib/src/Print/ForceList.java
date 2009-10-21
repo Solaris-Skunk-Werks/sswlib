@@ -44,7 +44,7 @@ public class ForceList implements Printable {
     private Force[] forces;
     private PageFormat format = null;
     private String Title = "Battletech Force Balancer",
-                    Background = "data/bfb_bg.png";
+                    Background = "rs/bfb_bg.png";
     private Media media = new Media();
 
     public int currentX = 0;

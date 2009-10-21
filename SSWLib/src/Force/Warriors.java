@@ -48,7 +48,7 @@ import org.w3c.dom.*;
  */
 public class Warriors extends AbstractTableModel {
     private Vector<Warrior> list = new Vector<Warrior>();
-    private String defaultPath = "data/WarriorList.psn",
+    private String defaultPath = "data/Personnel/WarriorList.psn",
                     Title = "",
                     PersonnelFile = "";
 
