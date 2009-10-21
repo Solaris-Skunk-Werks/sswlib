@@ -67,11 +67,11 @@ public class BattleForceStats {
         Element = m.GetFullName();
         Abilities = m.GetBFAbilities();
         int[] Data = m.GetBFDamage( this );
-        S = Data[Constants.BF_SHORT];
-        M = Data[Constants.BF_MEDIUM];
-        L = Data[Constants.BF_LONG];
-        E = Data[Constants.BF_EXTREME];
-        OV = Data[Constants.BF_OV];
+        S = Data[BFConstants.BF_SHORT];
+        M = Data[BFConstants.BF_MEDIUM];
+        L = Data[BFConstants.BF_LONG];
+        E = Data[BFConstants.BF_EXTREME];
+        OV = Data[BFConstants.BF_OV];
         BasePV = m.GetBFPoints();
         PV = BasePV;
 
