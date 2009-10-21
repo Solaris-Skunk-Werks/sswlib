@@ -30,7 +30,6 @@ package components;
 
 import common.CommonTools;
 import java.util.Vector;
-import gui.EquipmentCollection;
 import visitors.VFCSArtemisIVLoader;
 import visitors.VFCSArtemisVLoader;
 import visitors.VFCSApolloLoader;

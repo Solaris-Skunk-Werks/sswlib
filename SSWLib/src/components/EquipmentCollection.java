@@ -26,13 +26,9 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package gui;
+package components;
 
 import java.util.Vector;
-import components.AvailableCode;
-import components.Equipment;
-import components.abPlaceable;
-import components.ifMechLoadout;
 
 public class EquipmentCollection {
     // provides a class for consolidating multiple pieces of equipment in a JList

@@ -29,7 +29,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package components;
 
 import java.util.Vector;
-import gui.EquipmentCollection;
 
 public interface ifMechLoadout {
     public void SetName( String s );

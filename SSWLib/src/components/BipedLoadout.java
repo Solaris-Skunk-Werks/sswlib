@@ -29,7 +29,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package components;
 
 import java.util.Vector;
-import gui.EquipmentCollection;
 import common.CommonTools;
 import visitors.VFCSApolloLoader;
 import visitors.VFCSArtemisIVLoader;
