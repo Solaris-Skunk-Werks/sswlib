@@ -28,11 +28,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package visitors;
 
-import components.LocationIndex;
-import components.Mech;
+import components.*;
 
 public interface ifVisitor {
     public void LoadLocations( LocationIndex[] locs );
     public void SetClan( boolean clan );
     public void Visit( Mech m ) throws Exception;
+    public void Visit( CombatVehicle v ) throws Exception;
+    public void Visit( Infantry i ) throws Exception;
+    public void Visit( SupportVehicle s ) throws Exception;
+    public void Visit( BattleArmor b ) throws Exception;
+    public void Visit( Fighter f ) throws Exception;
+    public void Visit( Spaceship s ) throws Exception;
+    public void Visit( SpaceStation s ) throws Exception;
+    public void Visit( ProtoMech p ) throws Exception;
+    public void Visit( MobileStructure m ) throws Exception;
+    public void Visit( LargeSupportVehicle l ) throws Exception;
+    public void Visit( Dropship d ) throws Exception;
 }

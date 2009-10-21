@@ -28,9 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package visitors;
 
-import components.JumpJetFactory;
-import components.LocationIndex;
-import components.Mech;
+import components.*;
 
 public class VJumpJetSetStandard implements ifVisitor {
     private Mech CurMech;
@@ -52,5 +50,49 @@ public class VJumpJetSetStandard implements ifVisitor {
             // now let's blow out the jump jets and recalculate
             j.ReCalculate();
         }
+    }
+
+    public void Visit( CombatVehicle v ) throws Exception {
+        // does nothing at the moment
+    }
+
+    public void Visit( Infantry i ) throws Exception {
+        // does nothing at the moment
+    }
+
+    public void Visit( SupportVehicle s ) throws Exception {
+        // does nothing at the moment
+    }
+
+    public void Visit( BattleArmor b ) throws Exception {
+        // does nothing at the moment
+    }
+
+    public void Visit( Fighter f ) throws Exception {
+        // does nothing at the moment
+    }
+
+    public void Visit( Spaceship s ) throws Exception {
+        // does nothing at the moment
+    }
+
+    public void Visit( SpaceStation s ) throws Exception {
+        // does nothing at the moment
+    }
+
+    public void Visit( ProtoMech p ) throws Exception {
+        // does nothing at the moment
+    }
+
+    public void Visit( MobileStructure m ) throws Exception {
+        // does nothing at the moment
+    }
+
+    public void Visit( LargeSupportVehicle l ) throws Exception {
+        // does nothing at the moment
+    }
+
+    public void Visit( Dropship d ) throws Exception {
+        // does nothing at the moment
     }
 }
