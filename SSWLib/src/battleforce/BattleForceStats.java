@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package battleforce;
 
-import common.CommonTools;
+import common.*;
 import java.util.Vector;
 import org.w3c.dom.Node;
 import components.Mech;
@@ -62,16 +62,16 @@ public class BattleForceStats {
     public BattleForceStats() {
 
     }
-    
+
     public BattleForceStats( Mech m ) {
         Element = m.GetFullName();
         Abilities = m.GetBFAbilities();
         int[] Data = m.GetBFDamage( this );
-        S = Data[BFConstants.BF_SHORT];
-        M = Data[BFConstants.BF_MEDIUM];
-        L = Data[BFConstants.BF_LONG];
-        E = Data[BFConstants.BF_EXTREME];
-        OV = Data[BFConstants.BF_OV];
+        S = Data[Constants.BF_SHORT];
+        M = Data[Constants.BF_MEDIUM];
+        L = Data[Constants.BF_LONG];
+        E = Data[Constants.BF_EXTREME];
+        OV = Data[Constants.BF_OV];
         BasePV = m.GetBFPoints();
         PV = BasePV;
 
@@ -98,6 +98,7 @@ public class BattleForceStats {
         BasePV = Integer.parseInt(n.getAttributes().getNamedItem("pv").getTextContent());
         PV = BasePV;
         MV = n.getAttributes().getNamedItem("mv").getTextContent();
+        Wt = Integer.parseInt(n.getAttributes().getNamedItem("wt").getTextContent());
         S = Integer.parseInt(n.getAttributes().getNamedItem("s").getTextContent());
         M = Integer.parseInt(n.getAttributes().getNamedItem("m").getTextContent());
         L = Integer.parseInt(n.getAttributes().getNamedItem("l").getTextContent());
@@ -117,20 +118,22 @@ public class BattleForceStats {
     public BattleForceStats( String[] items ) {
         Element = items[0];
         BasePV = Integer.parseInt(items[1]);
-        MV = items[2];
-        S = Integer.parseInt(items[3]);
-        M = Integer.parseInt(items[4]);
-        L = Integer.parseInt(items[5]);
-        E = Integer.parseInt(items[6]);
-        OV = Integer.parseInt(items[7]);
-        Armor = Integer.parseInt(items[8]);
-        Internal = Integer.parseInt(items[9]);
-        if ( items[10].contains("~") ) {
-            String[] Ability = items[10].split("~");
+        Wt = Integer.parseInt(items[2]);
+        MV = items[3];
+        S = Integer.parseInt(items[4]);
+        M = Integer.parseInt(items[5]);
+        L = Integer.parseInt(items[6]);
+        E = Integer.parseInt(items[7]);
+        OV = Integer.parseInt(items[8]);
+        Armor = Integer.parseInt(items[9]);
+        Internal = Integer.parseInt(items[10]);
+        if ( items[11].contains("~") ) {
+            String[] Ability = items[11].split("~");
             for ( String item : Ability ) {
                 Abilities.add(item.trim());
             }
         }
+        PV = BasePV;
     }
 
     private void updateSkill() {
@@ -177,15 +180,17 @@ public class BattleForceStats {
     public String SerializeCSV() {
         String data = "";
 
-        data += CSVFormat(Element);
-        data += CSVFormat(PV + "");
-        data += CSVFormat(Wt + "");
-        data += CSVFormat(MV + "");
-        data += CSVFormat(getShort() + "");
-        data += CSVFormat(getMedium() + "");
-        data += CSVFormat(getLong() + "");
-        data += CSVFormat(getExtreme() + "");
-        data += CSVFormat(getOverheat() + "");
+        data += CSVFormat(getElement());
+        data += CSVFormat(PV);
+        data += CSVFormat(Wt);
+        data += CSVFormat(MV);
+        data += CSVFormat(getShort());
+        data += CSVFormat(getMedium());
+        data += CSVFormat(getLong());
+        data += CSVFormat(getExtreme());
+        data += CSVFormat(getOverheat());
+        data += CSVFormat(getArmor());
+        data += CSVFormat(getInternal());
         data += CSVFormat(getAbilities().toString().replace("[", "").replace("]", ""));
 
         return data.substring(0, data.length()-2);
@@ -193,6 +198,10 @@ public class BattleForceStats {
 
     public String CSVFormat( String data ) {
         return "\"" + data + "\", ";
+    }
+
+    public String CSVFormat( int data ) {
+        return data + ",";
     }
 
     public Vector<String> getAbilities() {
@@ -269,7 +278,7 @@ public class BattleForceStats {
     public String getElement() {
         return Element;
     }
-    
+
     public String getMovement() {
         return MV;
     }
