@@ -50,7 +50,7 @@ public class AvailableCode {
                             UNIT_AEROFIGHTER = 3,
                             UNIT_CONVFIGHTER = 4;
     public static String[] TechBaseSTR = {
-        "Inner Sphere", "Clan", "Both" };
+        "Inner Sphere", "Clan", "Mixed" };
 
     // Declares
     private char IS_SL = 'X',
