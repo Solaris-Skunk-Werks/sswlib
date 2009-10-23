@@ -29,7 +29,7 @@ package Force;
 
 import common.CommonTools;
 import filehandlers.Media;
-import Force.View.abTable;
+import Force.View.*;
 import Print.ForceList;
 import battleforce.*;
 
@@ -68,7 +68,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
                 OpForSize = 0;
     public boolean isDirty = false,
                     useUnevenForceMod = true;
-    private abTable currentModel;
+    private abTable currentModel = new tbTotalWarfare(this);
 
     public Force( ){
 
@@ -107,7 +107,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
                 this.Type = ForceNode.getAttributes().getNamedItem("type").getTextContent().trim();
 
             if ( this.Type.isEmpty() ) { this.Type = BattleForce.InnerSphere; }
-            if ( ForceNode.getChildNodes().item(0).getNodeName().equals("group") ) {
+            if ( ForceNode.getChildNodes().item(1).getNodeName().equals("group") ) {
                 Load( ForceNode, 2 );
             } else {
                 for (int i=0; i < ForceNode.getChildNodes().getLength(); i++) {
@@ -349,6 +349,10 @@ public class Force extends AbstractTableModel implements ifSerializable {
         currentModel = model;
     }
 
+    public abTable getCurrentModel() {
+        return currentModel;
+    }
+
     public void sortForPrinting() {
         Hashtable<String, Vector> list = new Hashtable<String, Vector>();
         String group;
@@ -444,7 +448,8 @@ public class Force extends AbstractTableModel implements ifSerializable {
 
     public BattleForce toBattleForce() {
         sortForPrinting();
-        
+        String error = "";
+
         BattleForce bf = new BattleForce();
         bf.Type = Type;
         bf.ForceName = ForceName;
@@ -452,9 +457,15 @@ public class Force extends AbstractTableModel implements ifSerializable {
         for ( int i=0; i < Units.size(); i++ ) {
             Unit u = (Unit) Units.get(i);
             u.LoadMech();
-            BattleForceStats stat = new BattleForceStats(u.m, u.Group,u.getGunnery(), u.getPiloting());
-            bf.BattleForceStats.add(stat);
+            if ( u.m != null ) {
+                BattleForceStats stat = new BattleForceStats(u.m, u.Group,u.getGunnery(), u.getPiloting());
+                bf.BattleForceStats.add(stat);
+            } else {
+                error += "Could not load " + u.TypeModel + ".  The filename is most likely blank.\n";
+            }
         }
+
+        if ( !error.isEmpty() ) { Media.Messager(error); }
         return bf;
     }
 

@@ -41,7 +41,8 @@ import org.w3c.dom.Node;
 public class Unit implements ifSerializable {
     public String TypeModel = "",
                   Type = "",
-                  Model = "";
+                  Model = "",
+                  Info = "";
     private String Mechwarrior = "";
     public String Filename = "",
                   Configuration = "",
@@ -75,7 +76,25 @@ public class Unit implements ifSerializable {
         this.BaseBV = m.getBV();
         this.Filename = m.getFilename();
         this.Configuration = m.getConfig();
+        this.Info = m.getInfo();
         this.BFStats = m.getBattleForceStats();
+        Refresh();
+    }
+
+    public Unit( Mech m ) {
+        Type = m.GetName();
+        Model = m.GetModel();
+        TypeModel = m.GetFullName();
+        Tonnage = m.GetTonnage();
+        BaseBV = m.GetCurrentBV();
+        Info = m.GetChatInfo();
+
+        if ( m.IsOmnimech() ) {
+            setOmni(true);
+            Configuration = m.GetLoadout().GetName();
+        }
+        this.m = m;
+        Refresh();
     }
 
     public Unit( Node n ) throws Exception {
@@ -140,6 +159,9 @@ public class Unit implements ifSerializable {
                 this.BFStats.setPiloting(Piloting);
                 this.BFStats.setGunnery(Gunnery);
             }
+            if ( node.getNodeName().equals("info") ) {
+                this.Info = node.getTextContent().trim();
+            }
         }
         this.Refresh();
     }
@@ -162,9 +184,14 @@ public class Unit implements ifSerializable {
     }
 
     public void UpdateByMech() {
-        TypeModel = m.GetFullName();
-        Configuration = m.GetLoadout().GetName();
-        BaseBV = m.GetCurrentBV();
+        LoadMech();
+        if ( m != null ) {
+            TypeModel = m.GetFullName();
+            Configuration = m.GetLoadout().GetName();
+            BaseBV = m.GetCurrentBV();
+            Info = m.GetChatInfo();
+            BFStats = new BattleForceStats(m);
+        }
         Refresh();
     }
 
@@ -190,6 +217,8 @@ public class Unit implements ifSerializable {
         file.write(CommonTools.Tabs(4) + "<unit type=\"" + this.Type + "\" model=\"" + this.Model + "\" config=\"" + this.Configuration + "\" tonnage=\"" + this.Tonnage + "\" bv=\"" + this.BaseBV + "\" design=\"" + this.UnitType + "\" file=\"" + this.Filename + "\" c3status=\"" + this.UsingC3 + "\">");
         file.newLine();
         BFStats.SerializeXML(file, 5);
+        file.newLine();
+        file.write(CommonTools.Tabs(5) + "<info>" + this.Info + "</info>");
         file.newLine();
         file.write(CommonTools.Tabs(5) + "<quirks>" + this.UnitQuirks + "</quirks>");
         file.newLine();
@@ -298,5 +327,9 @@ public class Unit implements ifSerializable {
 
     public void setOmni(boolean isOmni) {
         this.isOmni = isOmni;
+    }
+    
+    public String getInfo() {
+        return Info;
     }
 }
