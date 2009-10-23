@@ -170,8 +170,7 @@ public class BattleforceCards implements Printable {
 
         //Output individual units
         for ( int i=0; i < getBattleforce().BattleForceStats.size(); i++ ) {
-            groupChanged = false;
-            graphic.setFont( PrintConsts.RegularFont );
+            graphic.setFont( PrintConsts.Regular9Font );
             BattleForceStats stats = (BattleForceStats) getBattleforce().BattleForceStats.get(i);
 
             if ( elementCount == 3 ) {
@@ -187,60 +186,77 @@ public class BattleforceCards implements Printable {
 
 
             //Unit Name
-            graphic.drawString(stats.getElement(), x+50, y+55);
+            graphic.drawString(stats.getElement(), x+5, y+55);
 
             //Image
             if ( !stats.getImage().isEmpty() && printMechs ) {
                 Image image = media.GetImage(stats.getImage());
-                Dimension d = media.reSize(image, 172d, 108d);
+                Dimension d = media.reSize(image, 108d, 140d);
                 image.getScaledInstance(d.width, d.height, Image.SCALE_SMOOTH);
                 graphic.drawImage(image, x+10, y+58, d.width, d.height, null);
             }
 
             //Movement (MV)
-            //graphic.setFont( PrintConsts.BoldFont );
-            graphic.drawString(stats.getMovement(), x+15, y+188);
+            int offset = 15;
+            if ( stats.getMovement().length() > 2 ) { offset -= 5; }
+            graphic.drawString(stats.getMovement(), x+offset, y+218);
 
             //Damage Values (S,M,L,E)
-            graphic.drawString(stats.getShort()+"", x+38, y+188);
-            graphic.drawString(stats.getMedium()+"", x+58, y+188);
-            graphic.drawString(stats.getLong()+"", x+80, y+188);
-            graphic.drawString(stats.getExtreme()+"", x+102, y+188);
+            graphic.drawString(stats.getShort()+"", x+34, y+218);
+            graphic.drawString(stats.getMedium()+"", x+54, y+218);
+            graphic.drawString(stats.getLong()+"", x+72, y+218);
+            graphic.drawString(stats.getExtreme()+"", x+92, y+218);
 
             //Weight Class
-            graphic.drawString(stats.getWeight()+"", x+120, y+188);
+            graphic.drawString(stats.getWeight()+"", x+111, y+218);
 
             //Skill
-            graphic.drawString(stats.getSkill()+"", x+135, y+188);
+            graphic.drawString(stats.getSkill()+"", x+127, y+218);
 
             //Overheat (OV)
-            graphic.drawString(stats.getOverheat()+"", x+151, y+188);
+            graphic.drawString(stats.getOverheat()+"", x+144, y+218);
 
             //PV
-            graphic.drawString(stats.getPointValue()+"", x+166, y+188);
+            graphic.drawString(stats.getPointValue()+"", x+161, y+218);
 
             //Armor
-            int offset = 21;
+            int xoffset = 132,
+                yoffset = 72,
+                indexer = 0;
             for ( int a=0; a < stats.getArmor(); a++ ) {
-                graphic.drawOval(x+offset, y+205, 4, 4);
-                offset += 6;
+                if ( indexer == 5 ) { yoffset += 9; xoffset = 132; indexer = 0; }
+                graphic.drawOval(x+xoffset, y+yoffset, 8, 8);
+                xoffset += 9;
+                indexer += 1;
             }
 
             //Internal Structure
 
-            offset = 21;
+            xoffset = 132;
+            yoffset += 10;
+            indexer = 0;
             Color curColor = graphic.getColor();
             for ( int s=0; s < stats.getInternal(); s++ ) {
+                if ( indexer == 5 ) { yoffset += 9; xoffset = 132; indexer = 0; }
                 graphic.setColor(Color.LIGHT_GRAY);
-                graphic.fillOval(x+offset, y+210, 4, 4);
+                graphic.fillOval(x+xoffset, y+yoffset, 8, 8);
                 graphic.setColor(curColor);
-                graphic.drawOval(x+offset, y+210, 4, 4);
-                offset += 6;
+                graphic.drawOval(x+xoffset, y+yoffset, 8, 8);
+                xoffset += 9;
+                indexer += 1;
             }
 
             //Abilities
+            //graphic.setFont(PrintConsts.SmallFont);
+            xoffset = 132;
+            yoffset = 132;
+            indexer = 0;
             graphic.setFont(PrintConsts.SmallFont);
-            graphic.drawString(stats.getAbilitiesString(), x+65, y+220);
+            for ( String ability : stats.getAbilities() ) {
+                graphic.drawString(ability, x+xoffset, y+yoffset);
+                yoffset += graphic.getFont().getSize();
+            }
+            //graphic.drawString(stats.getAbilitiesString(), x+65, y+220);
 
             x += UnitImageWidth;
         }
