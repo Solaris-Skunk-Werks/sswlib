@@ -336,6 +336,21 @@ public class EquipmentFactory {
         }
     }
 
+    public Object[] GetAllEquipment() {
+        Vector retval = new Vector();
+        abPlaceable p;
+        for (int i = 0; i < Equipment.size(); i++) {
+            p = (abPlaceable) Equipment.get(i);
+            retval.add( p );
+        }
+
+        for (int i = 0; i < IndustrialEquipment.size(); i++) {
+            p = (abPlaceable) IndustrialEquipment.get(i);
+            retval.add( p );
+        }
+        return retval.toArray();
+    }
+
     public Object[] GetEquipment( Mech m ) {
         // returns an array based on the given specifications of era and year
         Vector RetVal = new Vector();

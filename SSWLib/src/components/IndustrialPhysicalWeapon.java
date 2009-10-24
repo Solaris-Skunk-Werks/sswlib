@@ -44,8 +44,6 @@ public class IndustrialPhysicalWeapon extends PhysicalWeapon {
     private IndustrialPhysicalWeapon( IndustrialPhysicalWeapon i ) {
         super( i );
         resetAllocations( i.Owner );
-        SetReplacesHand( true );
-        SetRequiresLowerArm( true );
         SetPWClass( PhysicalWeapon.PW_CLASS_INDUSTRIAL );
     }
 

@@ -200,7 +200,10 @@ public class BattleForceTools {
     public static boolean isBFSRM(ifWeapon w)
     {
         if (((abPlaceable)w).CritName().contains("SRM"))
-            return true;
+            if ( w.IsStreak() )
+                return false;
+            else
+                return true;
         else
             return false;
     }
