@@ -25,9 +25,8 @@ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF TH
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package Force.View;
+package list.view;
 
-import Force.Force;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -35,19 +34,15 @@ import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
-import list.view.Column;
+import list.MechList;
 
-public abstract class abTable extends AbstractTableModel {
+public abstract class abView extends AbstractTableModel {
     public Vector<Column> Columns = new Vector<Column>();
-    public Force force;
-
-    public Force getForce() {
-        return force;
-    };
+    public MechList list;
 
     public void setupTable( JTable tbl ) {
         //Create a sorting class and apply it to the list
-        TableRowSorter Leftsorter = new TableRowSorter<abTable>(this);
+        TableRowSorter Leftsorter = new TableRowSorter<abView>(this);
         List <RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
 
         for ( Column col : Columns ) {
@@ -68,11 +63,10 @@ public abstract class abTable extends AbstractTableModel {
     @Override
     public String getColumnName( int col ) { return Columns.get(col).Title; }
     public int getColumnCount() { return Columns.size(); }
-    public int getRowCount() { return force.Units.size(); }
+    public int getRowCount() { return list.Size(); }
     @Override
     public Class getColumnClass(int c) { return Columns.get(c).classType; }
     public Object getClassOf( int row, int col ) { return Columns.get(col).classType; }
     @Override
     public boolean isCellEditable( int row, int col ) { return Columns.get(col).isEditable; }
-
 }

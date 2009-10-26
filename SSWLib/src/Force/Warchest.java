@@ -75,7 +75,7 @@ public class Warchest implements ifSerializable {
      * @throws java.io.IOException
      */
     public void SerializeXML(BufferedWriter file) throws IOException {
-        if ( bonuses.size() > 0 && objectives.size() > 0 ) {
+        if ( bonuses.size() > 0 || objectives.size() > 0 ) {
             file.write( CommonTools.Tabs(1) + "<warchest cost=\"" + this.TrackCost + "\">" );
             file.newLine();
 

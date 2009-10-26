@@ -54,6 +54,8 @@ public class Scenario implements ifSerializable {
     private Warchest warchest = new Warchest();
 
     public Scenario() {
+        forces.add(new Force());
+        forces.add(new Force());
     }
 
     public Scenario( Node node ) {
@@ -87,21 +89,18 @@ public class Scenario implements ifSerializable {
                 }
             }
             if (n.getNodeName().equals("warchest")) {
-                setWarchest(new Warchest(n.getFirstChild()));
+                setWarchest(new Warchest(n));
             }
         }
 
+        if ( forces.size() < 2 ) {
+            for (int i=forces.size(); i <=2; i++ ) {
+                forces.add(new Force());
+            }
+        }
         if ( !errorMessage.isEmpty() ) {
             Media.Messager("Errors occured during load:\n" + errorMessage);
         }
-    }
-
-    public Force topForce() {
-        return getForces().get(0);
-    }
-
-    public Force bottomForce() {
-        return getForces().get(1);
     }
 
     public void AddForce( Force f ) {
@@ -222,7 +221,7 @@ public class Scenario implements ifSerializable {
     }
 
     public Force getAttackerForce() {
-        return topForce();
+        return getForces().get(0);
     }
 
     public String getDefender() {
@@ -234,7 +233,7 @@ public class Scenario implements ifSerializable {
     }
 
     public Force getDefenderForce() {
-        return bottomForce();
+        return getForces().get(1);
     }
 
     public String getVictoryConditions() {

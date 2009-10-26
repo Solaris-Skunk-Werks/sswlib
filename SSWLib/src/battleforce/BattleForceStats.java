@@ -81,6 +81,8 @@ public class BattleForceStats {
 
         MV = m.GetBFPrimeMovement() + m.GetBFPrimeMovementMode();
         if ( m.GetBFSecondaryMovement() != 0 ) {
+            if ( !m.GetBFSecondaryMovementMode().isEmpty() &&
+                 !m.GetBFSecondaryMovementMode().isEmpty() ) { MV = m.GetBFPrimeMovement() + ""; }
             MV += "/" + m.GetBFSecondaryMovement() + m.GetBFSecondaryMovementMode();
         }
 

@@ -3872,7 +3872,11 @@ public class Mech implements ifBattleforce {
         int jumpMP = GetAdjustedJumpingMP(false);
 
         if (walkMP == jumpMP){
-            return "j";
+            if ( GetBFSecondaryMovementMode().isEmpty() ) {
+                return "j";
+            } else {
+                return "";
+            }
         }else{
             return "";
         }

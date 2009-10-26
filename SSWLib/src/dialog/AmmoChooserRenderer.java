@@ -26,41 +26,41 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package battleforce;
+package dialog;
 
-import java.awt.Image;
-import java.util.Vector;
+import dialog.dlgAmmoChooser;
+import java.awt.Component;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import components.Ammunition;
+import components.LocationIndex;
+import components.abPlaceable;
+import filehandlers.FileCommon;
 
-public class BattleForce {
-    public Vector<BattleForceStats> BattleForceStats = new Vector<BattleForceStats>();
-    public String ForceName = "",
-                  LogoPath = "",
-                  Type = InnerSphere;
-    private Image Logo = null;
-    private int PointValue = 0;
+public class AmmoChooserRenderer extends DefaultListCellRenderer {
+    private dlgAmmoChooser Parent;
+    private abPlaceable a = null;
 
-    public static final String InnerSphere = "Inner Sphere",
-                                Clan = "Clan",
-                                Comstar = "Comstar";
-
-    private void setInnerSphere() {
-        Type = InnerSphere;
+    public AmmoChooserRenderer( dlgAmmoChooser p ) {
+        Parent = p;
     }
 
-    private void setClan() {
-        Type = Clan;
-    }
-
-    private void setComstar() {
-        Type = Comstar;
-    }
-
-    public int PointValue() {
-        int Total = 0;
-        for ( BattleForceStats stat : BattleForceStats ) {
-            Total += stat.getPointValue();
+    @Override
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean hasFocus) {
+        JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
+        String Text = "";
+        if( value instanceof abPlaceable ) {
+            a = (abPlaceable) value;
+            LocationIndex loc = Parent.GetMech().GetLoadout().FindIndex( a );
+            Text = FileCommon.FormatAmmoPrintName( (Ammunition) a, 1 );
+            if( loc.Location < 11 ) {
+                Text = "(" + FileCommon.EncodeLocation( loc.Location, Parent.GetMech().IsQuad() ) + "-" + ( loc.Index + 1 ) + ") " + Text;
+            }
         }
-        return Total;
-    }
 
+        label.setText( Text );
+
+        return label;
+    }
 }

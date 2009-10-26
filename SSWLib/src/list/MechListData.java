@@ -122,6 +122,7 @@ public class MechListData extends abUnitData {
         u.Model = this.getModel();
         u.setOmni(this.isOmni());
         if ( this.isOmni() ) {
+            u.setOmni(true);
             u.Model = this.Config;
             u.Configuration = this.Config;
         }
@@ -129,6 +130,7 @@ public class MechListData extends abUnitData {
         u.Tonnage = this.Tonnage;
         u.UnitType = CommonTools.BattleMech;
         u.Filename = this.filename;
+        u.Info = this.Info;
         u.Refresh();
 
         return u;

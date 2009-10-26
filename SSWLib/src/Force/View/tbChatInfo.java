@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2009, George Blouin Jr. (skyhigh@solaris7.com)
+Copyright (c) 2008, George Blouin Jr. (skyhigh@solaris7.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
@@ -25,57 +25,35 @@ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF TH
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package Force;
+package Force.View;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import org.w3c.dom.Node;
+import Force.Force;
+import Force.Unit;
+import javax.swing.SortOrder;
+import list.view.Column;
 
-/**
- * This abstract stores a Description and Value for a Bonus and Objective which
- * are both Warchest Items
- *
- * @author George Blouin
- */
-public class abWarchestItem implements ifSerializable {
-    private String Description = "";
-    private int Value = 0;
+public class tbChatInfo extends abTable {
+    public tbChatInfo( Force f ) {
+        force = f;
 
-    public abWarchestItem( String Description, int Value ) {
-        this.Description = Description;
-        this.Value = Value;
+        Columns.add(new Column( 0, "Unit", "TypeModel", 100 ));
+        Columns.add(new Column( 1, "Info", "ChatInfo", 400, false));
+        Columns.add(new Column( 2, "Base BV", "BaseBV", 20, Integer.class ));
+        Columns.add(new Column( 3, "Adj BV", "TotalBV", false, 20, Integer.class, true, SortOrder.ASCENDING ));
     }
 
-    public abWarchestItem( Node n ) {
-        this.Description = n.getTextContent().trim();
-        this.Value = Integer.parseInt(n.getAttributes().getNamedItem("value").getTextContent().trim());
-    }
-
-    public void SerializeXML(BufferedWriter file) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public String SerializeClipboard() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public String SerializeData() {
-        return SerializeClipboard();
-    }
-    
-    public String getDescription() {
-        return Description;
-    }
-
-    public void setDescription( String description ) {
-        this.Description = description;
-    }
-
-    public int getValue() {
-        return Value;
-    }
-
-    public void setValue( int value ) {
-        this.Value = value;
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        Unit u = (Unit) force.Units.get( rowIndex );
+        switch( columnIndex ) {
+            case 0:
+                return u.TypeModel;
+            case 1:
+                return u.Info;
+            case 2:
+                return String.format( "%1$,.0f", u.BaseBV );
+            case 3:
+                return String.format( "%1$,.0f", u.TotalBV );
+        }
+        return null;
     }
 }
