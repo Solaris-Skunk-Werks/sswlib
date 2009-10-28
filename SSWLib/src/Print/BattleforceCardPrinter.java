@@ -41,7 +41,7 @@ import battleforce.BattleForceStats;
 import filehandlers.Media;
 import java.awt.Font;
 
-public class BattleforceCards implements Printable {
+public class BattleforceCardPrinter implements Printable {
     private BattleForce battleforce;
     private Media media = new Media();
     private Graphics2D graphic;
@@ -51,14 +51,14 @@ public class BattleforceCards implements Printable {
     private int UnitSize = 4,
                 UnitImageWidth = 187,
                 UnitImageHeight = 234,
-                ElementLimit = 3;
+                ElementLimit = 2;
     private boolean printMechs = true,
                     printLogo = true;
 
     private int x = 0,
                 y = 0;
 
-    public BattleforceCards( BattleForce f) {
+    public BattleforceCardPrinter( BattleForce f) {
         battleforce = f;
         RecordSheet = media.GetImage( PrintConsts.BF_BG );
         Unit = media.GetImage( PrintConsts.BF_Card );
@@ -66,7 +66,7 @@ public class BattleforceCards implements Printable {
         setType(battleforce.Type);
     }
 
-    public BattleforceCards() {
+    public BattleforceCardPrinter() {
         this(new BattleForce());
     }
 
@@ -106,87 +106,34 @@ public class BattleforceCards implements Printable {
 
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
         if( RecordSheet == null) { return Printable.NO_SUCH_PAGE; }
+        x = 0;
+        y = (int) pageFormat.getImageableY();
         ((Graphics2D) graphics).translate( pageFormat.getImageableX(), pageFormat.getImageableY() );
         graphic = (Graphics2D) graphics;
-        if ( UnitSize == 4 ) { ElementLimit = 2; }   //For an IS lance go ahead and split by 2 to match ups
         Render();
         return Printable.PAGE_EXISTS;
     }
     
     public void Render() {
-        x = 20;
-        y = 91;
-        int Groups = 1,
-            PointTotal = 0;
-        int y2 = 0,
-            elementCount = 0;
-        boolean groupChanged = false;
-
-        //Recordsheet
-//        graphic.drawImage( RecordSheet, 0, 0, 576, 756, null );
+        int elementCount = 0;
+        Image icon = null;
+        Dimension d = new Dimension();
 
         //Unit Logo
-//        if ( !battleforce.LogoPath.isEmpty() && printLogo ) {
-//            Image icon = media.GetImage(getBattleforce().LogoPath);
-//            Dimension d = media.reSize(icon, 50, 50);
-//            graphic.drawImage(icon, 300, 5, d.width, d.height, null);
-//        }
-
-
-        //Print the Unit Name at the top of the sheet
-//        graphic.setFont( PrintConsts.TitleFont );
-//
-//        if ( getBattleforce().ForceName.isEmpty() ) { battleforce.ForceName = getBattleforce().Type; }
-//        String title = getBattleforce().ForceName;
-//        String[] pTitle = new String[]{"", "", "Record Sheet"};
-//        int titleY = 23;
-//
-//
-//        if ( title.length() <= 20 ) {
-//            pTitle[0] = title;
-//            pTitle[1] = "Record Sheet";
-//            pTitle[2] = "";
-//            titleY = 30;
-//        } else if ( title.length() > 20 && title.length() <= 40 ) {
-//            pTitle[0] = title.substring(0, title.lastIndexOf(" ", 20) );
-//            title = title.replace(pTitle[0], "").trim();
-//            pTitle[1] = title;
-//            titleY = 20;
-//        } else {
-//            pTitle[0] = title.substring(0, title.lastIndexOf(" ", 20) );
-//            title = title.replace(pTitle[0], "").trim();
-//            int nextIndex = 20;
-//            if ( title.length() < nextIndex ) { nextIndex = title.length(); }
-//            pTitle[1] = title.substring(0, title.lastIndexOf(" ", nextIndex) );
-//            title = title.replace(pTitle[1], "").trim();
-//            pTitle[2] = title;
-//            titleY = 20;
-//        }
-//
-//        for ( int t=0; t < pTitle.length; t++ ) {
-//            if ( !pTitle[t].isEmpty() ) {
-//                graphic.drawString(pTitle[t], 360, titleY);
-//                titleY += 12;
-//            }
-//        }
-
-
-        x = 0;
-//        y = 67;
-        y = 0;
-
-        graphic.setFont( PrintConsts.RegularFont );
-        if ( getBattleforce().ForceName.isEmpty() ) { battleforce.ForceName = getBattleforce().Type; }
-        graphic.drawString(getBattleforce().ForceName + " - " + getBattleforce().BattleForceStats.get(0).getUnit(), x, y);
-        graphic.drawString("PV: " + getBattleforce().PointValue(), (UnitImageWidth*3)-20, y);
-        
-        y += graphic.getFont().getSize();
-
-        ElementLimit = 2;
-        
-        if ( ElementLimit == 2 ) {
-            graphic.drawImage( Charts, (UnitImageWidth*2)+2, y, 194, 465, null);
+        if ( !battleforce.LogoPath.isEmpty() && printLogo ) {
+            icon = media.GetImage(getBattleforce().LogoPath);
+            d = media.reSize(icon, 20, 20);
         }
+
+        graphic.setFont( PrintConsts.TitleFont );
+        if ( getBattleforce().ForceName.isEmpty() ) { getBattleforce().ForceName = getBattleforce().Type; }
+        graphic.drawString(getBattleforce().ForceName + " - " + getBattleforce().BattleForceStats.get(0).getUnit(), x, y);
+        graphic.drawString("PV: " + getBattleforce().PointValue(), (UnitImageWidth*3)-48, y);
+
+        y += graphic.getFont().getSize()-10;
+
+        //Charts
+        graphic.drawImage( Charts, (UnitImageWidth*2)+2, y, 194, 562, null);
 
         //Output individual units
         for ( int i=0; i < getBattleforce().BattleForceStats.size(); i++ ) {
@@ -195,14 +142,12 @@ public class BattleforceCards implements Printable {
             if ( elementCount == ElementLimit ) {
                 elementCount = 0;
                 x = 0;
-                if ( UnitSize == 5) { x = (int) UnitImageWidth/2; }
                 y += UnitImageHeight;
             }
 
             graphic.drawImage( Unit, x, y, UnitImageWidth, UnitImageHeight, null);
 
             elementCount += 1;
-            PointTotal += stats.getPointValue();
 
             graphic.setFont( new Font("Verdana", Font.PLAIN, 8) );
             
@@ -212,9 +157,13 @@ public class BattleforceCards implements Printable {
             //Image
             if ( !stats.getImage().isEmpty() && printMechs ) {
                 Image image = media.GetImage(stats.getImage());
-                Dimension d = media.reSize(image, 108d, 140d);
-                image.getScaledInstance(d.width, d.height, Image.SCALE_SMOOTH);
-                graphic.drawImage(image, x+10, y+58, d.width, d.height, null);
+                Dimension dim = media.reSize(image, 110d, 140d);
+                image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
+                graphic.drawImage(image, x+10, y+58, dim.width, dim.height, null);
+
+                if ( icon != null && printLogo ) {
+                    graphic.drawImage(icon, x+105, y+58, d.width, d.height, null);
+                }
             }
 
             //Movement (MV)
@@ -269,7 +218,7 @@ public class BattleforceCards implements Printable {
 
             //Abilities
             xoffset = 132;
-            yoffset = 132;
+            yoffset = 130;
             indexer = 0;
             graphic.setFont(new Font("Arial", Font.PLAIN, 5));
             for ( String ability : stats.getAbilities() ) {

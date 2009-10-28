@@ -40,7 +40,7 @@ import battleforce.BattleForce;
 import battleforce.BattleForceStats;
 import filehandlers.Media;
 
-public class Battleforce implements Printable {
+public class BattleforcePrinter implements Printable {
     private BattleForce battleforce;
     private Media media = new Media();
     private Graphics2D graphic;
@@ -54,14 +54,14 @@ public class Battleforce implements Printable {
     private int x = 0,
                 y = 0;
 
-    public Battleforce( BattleForce f) {
+    public BattleforcePrinter( BattleForce f) {
         battleforce = f;
         RecordSheet = media.GetImage( PrintConsts.BF_IS );
         Unit = media.GetImage( PrintConsts.BF_IS_Unit );
         setType(battleforce.Type);
     }
 
-    public Battleforce() {
+    public BattleforcePrinter() {
         this(new BattleForce());
     }
 

@@ -30,7 +30,7 @@ package Force;
 import common.CommonTools;
 import filehandlers.Media;
 import Force.View.*;
-import Print.ForceList;
+import Print.ForceListPrinter;
 import battleforce.*;
 
 import java.awt.Image;
@@ -235,14 +235,16 @@ public class Force extends AbstractTableModel implements ifSerializable {
         return SerializeClipboard();
     }
 
-    public void RenderPrint(ForceList p) {
+    public void RenderPrint(ForceListPrinter p) {
         if ( Units.size() == 0 ) { return; }
         sortForPrinting();
         p.setFont(CommonTools.SectionHeaderFont);
-        loadLogo();
-        if (getLogo() != null) {
-            p.Graphic.drawImage(getLogo(), p.currentX, p.currentY-15, 25, 25, null);
-            p.currentX += 30;
+        if ( p.PrintLogo() ) {
+            loadLogo();
+            if (getLogo() != null) {
+                p.Graphic.drawImage(getLogo(), p.currentX, p.currentY-15, 25, 25, null);
+                p.currentX += 30;
+            }
         }
         p.WriteStr(ForceName, 0);
         p.NewLine();

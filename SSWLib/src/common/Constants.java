@@ -46,5 +46,7 @@ public class Constants {
                         Format_CanonPattern = "UseCanonDots",
                         Format_ConvertTerrain = "UseMiniConversion",
                         Format_TerrainModifier = "MiniConversionRate",
-                        Format_OneForcePerPage = "OneForcePerPage";
+                        Format_OneForcePerPage = "OneForcePerPage",
+                        Format_BattleForceSheetChoice = "BattleForceSheetIndex",
+                        Format_RecordsheetChoice = "RecordsheetIndex";
 }

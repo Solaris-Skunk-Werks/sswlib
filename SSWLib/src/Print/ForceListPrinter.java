@@ -37,41 +37,40 @@ import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.util.Vector;
 
 
-public class ForceList implements Printable {
+public class ForceListPrinter implements Printable {
     public Graphics2D Graphic;
-    private Force[] forces;
+    //private Force[] forces;
+    private Vector<Force> forces = new Vector<Force>();
     private PageFormat format = null;
     private String Title = "Battletech Force Balancer",
                     Background = "rs/bfb_bg.png";
     private Media media = new Media();
+    private boolean printLogo = true;
 
     public int currentX = 0;
     public int currentY = 0;
 
-    public ForceList(Force[] forces){
+    public ForceListPrinter(Vector<Force> forces){
         this.forces = forces;
     }
 
-    public ForceList(){
+    public ForceListPrinter(){
 
     }
 
-    public void AddForces( Force[] forces ) {
+    public void AddForces( Vector<Force> forces ) {
         this.forces = forces;
     }
 
     public void AddForce( Force force ) {
-        if (forces[0] != null) {
-            forces[0] = force;
-        } else {
-            forces[1] = force;
-        }
+        this.forces.add(force);
     }
 
     public void clearForces() {
-        forces = new Force[]{};
+        this.forces.clear();
     }
     
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
@@ -90,17 +89,12 @@ public class ForceList implements Printable {
         Graphic.drawImage( media.GetImage(Background), 0, 0, 576, 756, null);
         setFont(CommonTools.TitleFont);
         Graphic.drawString(Title, 280, 16);
-        
-        //WriteStr(Title, 0);
-        //NewLine();
-        //setFont(CommonTools.PlainFont);
-        //WriteLine();
-        //NewLine();
-        //NewLine();
-        forces[0].RenderPrint(this);
-        NewLine();
-        NewLine();
-        forces[1].RenderPrint(this);
+
+        for ( Force force : forces ) {
+            force.RenderPrint(this);
+            NewLine();
+            NewLine();
+        }
     }
 
     public void WriteStr(String line, int changeX) {
@@ -148,6 +142,14 @@ public class ForceList implements Printable {
      */
     public void setTitle(String Title) {
         this.Title = Title;
+    }
+
+    public void setPrintLogo(boolean printLogo) {
+        this.printLogo = printLogo;
+    }
+
+    public boolean PrintLogo() {
+        return printLogo;
     }
 
 }

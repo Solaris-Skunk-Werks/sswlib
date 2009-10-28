@@ -37,9 +37,9 @@ public class BFBPrinter {
     private String jobName = "Battletech Force Balancer",
                     Title = "Battletech Force Balancer";
     private Boolean useDialog = true;
-    private ForceList sheet = new ForceList();
+    private ForceListPrinter sheet = new ForceListPrinter();
     private PrintDeclaration chits = new PrintDeclaration();
-    private Vector forces = new Vector();
+    private Vector<Force> forces = new Vector<Force>();
     private int unitSize = 0;
 
     private Book pages = new Book();
@@ -57,11 +57,11 @@ public class BFBPrinter {
         setPaperSize(Letter);
     }
 
-    public BFBPrinter( Force[] forces ) {
+    public BFBPrinter( Vector<Force> forces ) {
         this();
-        for (int i=0; i<=forces.length; i++) {
-            this.forces.add(forces[i]);
-            unitSize += forces[i].Units.size();
+        this.forces = forces;
+        for ( Force force : forces ) {
+            unitSize += force.Units.size();
         }
         sheet.AddForces(forces);
         chits.AddForces(forces);
@@ -69,7 +69,7 @@ public class BFBPrinter {
 
     public BFBPrinter( Force force ) {
         this();
-        this.forces.add(forces);
+        this.forces.add(force);
         unitSize += force.Units.size();
         sheet.AddForce(force);
         chits.AddForce(force);

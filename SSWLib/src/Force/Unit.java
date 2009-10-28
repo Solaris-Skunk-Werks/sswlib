@@ -32,7 +32,7 @@ import battleforce.BattleForceStats;
 import components.Mech;
 import list.MechListData;
 import filehandlers.MechReader;
-import Print.ForceList;
+import Print.ForceListPrinter;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -199,7 +199,7 @@ public class Unit implements ifSerializable {
         return getGunnery() + "/" + getPiloting();
     }
 
-    public void RenderPrint(ForceList p) {
+    public void RenderPrint(ForceListPrinter p) {
         p.setFont(CommonTools.PlainFont);
         p.WriteStr(TypeModel, 120);
         p.WriteStr(getMechwarrior(), 140);

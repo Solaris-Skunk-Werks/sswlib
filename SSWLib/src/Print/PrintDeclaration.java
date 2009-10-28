@@ -38,7 +38,7 @@ import java.util.Vector;
 
 public class PrintDeclaration implements Printable {
     public Graphics2D Graphic;
-    private Vector forces = new Vector();
+    private Vector<Force> forces = new Vector<Force>();
     private PageFormat format = null;
     private String[] Types = new String[]{"  Primary", "Secondary", "Secondary"};
     private String Title = "Fire Declaration Markers";
@@ -50,16 +50,12 @@ public class PrintDeclaration implements Printable {
 
     }
 
-    public PrintDeclaration( Force[] forces ) {
-        for ( Force f : forces ) {
-            this.forces.add(f);
-        }
+    public PrintDeclaration( Vector<Force> forces ) {
+        this.forces = forces;
     }
 
-    public void AddForces( Force[] forces ) {
-        for ( Force f : forces ) {
-            this.forces.add(f);
-        }
+    public void AddForces( Vector<Force> forces ) {
+        this.forces = forces;
     }
 
     public void AddForce( Force force ) {
@@ -82,11 +78,9 @@ public class PrintDeclaration implements Printable {
 
     private void PreparePrint() {
         Reset();
-        for (int f=0; f < forces.size(); f++) {
-            Force force = (Force) forces.get(f);
+        for ( Force force : forces ) {
             Image logo = force.getLogo();
-            for (int j=0; j<force.Units.size(); j++) {
-                Unit unit = (Unit) force.Units.get(j);
+            for ( Unit unit : force.Units ) {
                 for (int k=0; k<Types.length; k++) {
                     int shift = 5;
                     Graphic.setFont(CommonTools.SmallFont);
