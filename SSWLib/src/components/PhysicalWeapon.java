@@ -69,6 +69,7 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
                     RequiresHand = true,
                     ReplacesHand = false,
                     RequiresLowerArm = true,
+                    ReplacesLowerArm = false,
                     Alloc_HD = false,
                     Alloc_CT = false,
                     Alloc_Torso = false,
@@ -77,11 +78,12 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
                     CanSplit = false,
                     PowerAmps = false;
 
-    public PhysicalWeapon( String actualname, String lookupname, String critname, String mname, Mech m, AvailableCode a ) {
+    public PhysicalWeapon( String actualname, String lookupname, String critname, String mname, String chatn, Mech m, AvailableCode a ) {
         ActualName= actualname;
         LookupName = lookupname;
         CritName = critname;
         MegaMekName = mname;
+        ChatName = chatn;
         Owner = m;
         AC = a;
     }
@@ -126,6 +128,7 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
         Fusion = p.Fusion;
         PowerAmps = p.PowerAmps;
         RequiresHand = p.RequiresHand;
+        ReplacesLowerArm = p.ReplacesLowerArm;
         SetBattleForceAbilities( p.GetBattleForceAbilities() );
         if ( RequiresHand == true ) { RequiresLowerArm = true; }
         ReplacesHand = p.ReplacesHand;
@@ -135,12 +138,60 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
         PWClass = p.PWClass;
     }
 
-    public void SetStats( double tmult, double cmult, double tadder, int cadder ) {
-        // sets the weapon's tonnage and critical statistics
+    public void SetOwner( Mech m ) {
+        // convenience method since physical weapons are based on tonnage
+        Owner = m;
+        if( PWClass == PW_CLASS_INDUSTRIAL ) {
+            if( Owner.IsQuad() ){
+                SetAllocations( false, false, true, false, false, false );
+            } else {
+                SetAllocations( false, false, false, true, false, false );
+            }
+        }
+    }
+
+    public void SetType( String type, String spec ) {
+        Type = type;
+        Specials = spec;
+    }
+
+    
+    public void SetTonnage( double tmult, double tadd, boolean roundhalf ) {
         TonMult = tmult;
-        CritMult = cmult;
-        TonAdd = tadder;
-        CritAdd = cadder;
+        TonAdd = tadd;
+        RoundToHalfTon = roundhalf;
+    }
+
+    public void SetCost( double costmult, double costadd ) {
+        CostMult = costmult;
+        CostAdd = costadd;
+    }
+
+    public void SetBV( double bmult, double badd, double dbv ) {
+        BVMult = bmult;
+        BVAdd = badd;
+        DefBV = dbv;
+    }
+
+    public void SetCrits( double critmult, int critadd ) {
+        CritMult = critmult;
+        CritAdd = critadd;
+    }
+
+    public void SetHeat( int h ) {
+        Heat = h;
+    }
+
+    public void SetToHit( int thsrt, int thmed, int thlng ) {
+        ToHitShort = thsrt;
+        ToHitMedium = thmed;
+        ToHitLong = thlng;
+    }
+
+    public void SetDamage( double dmult, int dadder ) {
+        // sets the weapons damage potential
+        DamageMult = dmult;
+        DamageAdd = dadder;
     }
 
     public void SetAllocations( boolean hd, boolean ct, boolean torso, boolean arms, boolean legs, boolean split ) {
@@ -152,57 +203,10 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
         CanSplit = split;
     }
 
-    public void SetDamage( double dmult, int dadder ) {
-        // sets the weapons damage potential
-        DamageMult = dmult;
-        DamageAdd = dadder;
-    }
-
-    public void SetHeat( int h ) {
-        Heat = h;
-    }
-
-    public void SetSpecials( String type, String spec, double cmult, double cadd, double bmult, double badd, double dbv, boolean round ) {
-        Type = type;
-        Specials = spec;
-        CostMult = cmult;
-        CostAdd = cadd;
-        BVMult = bmult;
-        BVAdd = badd;
-        DefBV = dbv;
-        RoundToHalfTon = round;
-    }
-
-    public void SetChatName( String s ) {
-        ChatName = s;
-    }
-
-    public void SetBookReference( String s ) {
-        BookReference = s;
-    }
-
-    public void SetToHit( int thsrt, int thmed, int thlng ) {
-        ToHitShort = thsrt;
-        ToHitMedium = thmed;
-        ToHitLong = thlng;
-    }
-
-    public int GetToHitShort() {
-        return ToHitShort;
-    }
-
-    public int GetToHitMedium() {
-        return ToHitMedium;
-    }
-
-    public int GetToHitLong() {
-        return ToHitLong;
-    }
-
-    public void SetRequirements( boolean nuc, boolean fus, boolean amps ) {
-        Nuclear = nuc;
-        Fusion = fus;
-        PowerAmps = amps;
+    public void SetRequiresLowerArm( boolean b ) {
+        RequiresLowerArm = b;
+        if ( b == false )
+            RequiresHand = false;
     }
 
     public void SetRequiresHand( boolean b ) {
@@ -217,14 +221,39 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
             RequiresHand = false;
     }
 
-    public void SetRequiresLowerArm( boolean b ) {
-        RequiresLowerArm = b;
-        if ( b == false )
+    public void SetReplacesLowerArm( boolean b ) {
+        ReplacesLowerArm = b;
+        if ( b == true ) {
             RequiresHand = false;
+            RequiresLowerArm = false;
+        }
+    }
+
+    public void SetRequirements( boolean nuc, boolean fus, boolean amps ) {
+        Nuclear = nuc;
+        Fusion = fus;
+        PowerAmps = amps;
     }
 
     public void SetPWClass( int pwclass ) {
         PWClass = pwclass;
+        SetOwner( Owner );
+    }
+
+    public void SetBookReference( String s ) {
+        BookReference = s;
+    }
+
+    public int GetToHitShort() {
+        return ToHitShort;
+    }
+
+    public int GetToHitMedium() {
+        return ToHitMedium;
+    }
+
+    public int GetToHitLong() {
+        return ToHitLong;
     }
 
     public int GetPWClass () {
@@ -237,11 +266,6 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
 
     public int GetFCSType() {
         return ifMissileGuidance.FCS_NONE;
-    }
-
-    public void SetOwner( Mech m ) {
-        // convenience method since physical weapons are based on tonnage
-        Owner = m;
     }
 
     public boolean RequiresFusion() {
@@ -266,6 +290,10 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
 
     public boolean RequiresLowerArm() {
         return RequiresLowerArm;
+    }
+
+    public boolean ReplacesLowerArm() {
+        return ReplacesLowerArm;
     }
 
     public double GetCostMult() {

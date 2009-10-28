@@ -41,7 +41,9 @@ public class DataFactory {
         BinaryReader b = new BinaryReader();
         Vector ammo = b.ReadAmmo( Constants.AMMOFILE );
         Vector weapons = b.ReadWeapons( Constants.WEAPONSFILE );
-        Equips = new EquipmentFactory( weapons, ammo, m );
+        Vector physicals = b.ReadPhysicals( Constants.PHYSICALSFILE );
+        Vector equips = b.ReadEquipment( Constants.EQUIPMENTFILE );
+        Equips = new EquipmentFactory( weapons, physicals, equips, ammo, m );
     }
 
     public EquipmentFactory GetEquipment() {

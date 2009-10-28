@@ -79,6 +79,149 @@ public abstract class abPlaceable {
         l.Remove(this);
     }
 
+    public boolean Place( ifBALoadout l ) {
+        l.AddToQueue( this );
+        return true;
+    }
+
+    public boolean Place( ifBALoadout l, LocationIndex[] locs ) {
+        return Place( l );
+    }
+
+    public void Remove( ifBALoadout l ) {
+        l.Remove( this );
+    }
+
+    public boolean Place( ifCVLoadout l ) {
+        l.AddToQueue( this );
+        return true;
+    }
+
+    public boolean Place( ifCVLoadout l, LocationIndex[] locs ) {
+        return Place( l );
+    }
+
+    public void Remove( ifCVLoadout l ) {
+        l.Remove( this );
+    }
+
+    public boolean Place( ifDSLoadout l ) {
+        l.AddToQueue( this );
+        return true;
+    }
+
+    public boolean Place( ifDSLoadout l, LocationIndex[] locs ) {
+        return Place( l );
+    }
+
+    public void Remove( ifDSLoadout l ) {
+        l.Remove( this );
+    }
+
+    public boolean Place( ifFighterLoadout l ) {
+        l.AddToQueue( this );
+        return true;
+    }
+
+    public boolean Place( ifFighterLoadout l, LocationIndex[] locs ) {
+        return Place( l );
+    }
+
+    public void Remove( ifFighterLoadout l ) {
+        l.Remove( this );
+    }
+
+    public boolean Place( ifInfantryLoadout l ) {
+        l.AddToQueue( this );
+        return true;
+    }
+
+    public boolean Place( ifInfantryLoadout l, LocationIndex[] locs ) {
+        return Place( l );
+    }
+
+    public void Remove( ifInfantryLoadout l ) {
+        l.Remove( this );
+    }
+
+    public boolean Place( ifLSVLoadout l ) {
+        l.AddToQueue( this );
+        return true;
+    }
+
+    public boolean Place( ifLSVLoadout l, LocationIndex[] locs ) {
+        return Place( l );
+    }
+
+    public void Remove( ifLSVLoadout l ) {
+        l.Remove( this );
+    }
+
+    public boolean Place( ifMSLoadout l ) {
+        l.AddToQueue( this );
+        return true;
+    }
+
+    public boolean Place( ifMSLoadout l, LocationIndex[] locs ) {
+        return Place( l );
+    }
+
+    public void Remove( ifMSLoadout l ) {
+        l.Remove( this );
+    }
+
+    public boolean Place( ifProtoLoadout l ) {
+        l.AddToQueue( this );
+        return true;
+    }
+
+    public boolean Place( ifProtoLoadout l, LocationIndex[] locs ) {
+        return Place( l );
+    }
+
+    public void Remove( ifProtoLoadout l ) {
+        l.Remove( this );
+    }
+
+    public boolean Place( ifSSLoadout l ) {
+        l.AddToQueue( this );
+        return true;
+    }
+
+    public boolean Place( ifSSLoadout l, LocationIndex[] locs ) {
+        return Place( l );
+    }
+
+    public void Remove( ifSSLoadout l ) {
+        l.Remove( this );
+    }
+
+    public boolean Place( ifSVLoadout l ) {
+        l.AddToQueue( this );
+        return true;
+    }
+
+    public boolean Place( ifSVLoadout l, LocationIndex[] locs ) {
+        return Place( l );
+    }
+
+    public void Remove( ifSVLoadout l ) {
+        l.Remove( this );
+    }
+
+    public boolean Place( ifShipLoadout l ) {
+        l.AddToQueue( this );
+        return true;
+    }
+
+    public boolean Place( ifShipLoadout l, LocationIndex[] locs ) {
+        return Place( l );
+    }
+
+    public void Remove( ifShipLoadout l ) {
+        l.Remove( this );
+    }
+
     // The following methods determine where this item can be placed.  When the
     // loadout attempts to add them to a location, it will check the specified
     // routine.  Defaults are assumed and can be overidden.

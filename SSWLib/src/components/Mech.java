@@ -761,9 +761,10 @@ public class Mech implements ifBattleforce {
             abPlaceable p = (abPlaceable) v.get( i );
             if( p instanceof PhysicalWeapon ) {
                 CurLoadout.Remove(p);
-            }
-            else if (p instanceof IndustrialEquipment){
-                CurLoadout.Remove(p);
+            } else if( p instanceof Equipment ) {
+                if( ! ((Equipment) p).Validate( this ) ) {
+                    CurLoadout.Remove( p );
+                }
             }
         }
 
@@ -937,10 +938,10 @@ public class Mech implements ifBattleforce {
             abPlaceable p = (abPlaceable) v.get( i );
             if( p instanceof PhysicalWeapon ) {
                 CurLoadout.Remove(p);
-            }
-            else if (p instanceof IndustrialEquipment)
-            {
-                CurLoadout.Remove(p);
+            } else if( p instanceof Equipment ) {
+                if( ! ((Equipment) p).Validate( this ) ) {
+                    CurLoadout.Remove( p );
+                }
             }
         }
 
@@ -1780,9 +1781,7 @@ public class Mech implements ifBattleforce {
 
     public int GetCurrentBV() {
         // returns the final battle value of the mech
-        double tempmod = 0.0;
-        tempmod += CurCockpit.BVMod() * Math.floor( ( GetDefensiveBV() + GetOffensiveBV() + 0.5 ) ) - Math.floor( ( GetDefensiveBV() + GetOffensiveBV() + 0.5 ) );
-        return (int) Math.floor( ( GetDefensiveBV() + GetOffensiveBV() + tempmod + 0.5 ) );
+        return (int) Math.floor( CurCockpit.BVMod() * ( GetDefensiveBV() + GetOffensiveBV() ) + 0.5 );
     }
 
     public double GetDefensiveBV() {

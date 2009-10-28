@@ -84,6 +84,94 @@ public class BinaryConverter {
     }
 
 /**
+ * Converts a CSV text file of Physical Weapons data into a binary file to conserve
+ * space and prevent unwanted user changes.
+ *
+ * @param input The canonical input CSV filename.
+ * @param output The canonical output binary filename.
+ * @param delim The text delimiter used in the CSV file.  One character only.
+ */
+    public boolean ConvertPhysicalWeaponCSVtoBin( String input, String output, String delim ) {
+        Messages = "";
+        int NumConverted = 0;
+        BufferedReader FR;
+        DataOutputStream FW;
+        try {
+            FR = new BufferedReader( new FileReader( input ) );
+            FW = new DataOutputStream( new FileOutputStream( output ) );
+            boolean EOF = false;
+            String read = "";
+            while( EOF == false ) {
+                read = FR.readLine();
+                if( read == null ) {
+                    // We've hit the end of the file.
+                    EOF = true;
+                } else {
+                    if( read.equals( "EOF" ) ) {
+                        // end of file.
+                        EOF = true;
+                    } else {
+                        ProcessPhysicalWeaponString( FW, read, delim );
+                        NumConverted++;
+                    }
+                }
+            }
+            FR.close();
+            FW.close();
+        } catch( Exception e ) {
+            Messages += e.getMessage();
+            Messages += e.toString();
+            return false;
+        }
+        Messages += "Wrote " + NumConverted + " physical weapons to " + output + "\n";
+        return true;
+    }
+
+/**
+ * Converts a CSV text file of Equipment data into a binary file to conserve
+ * space and prevent unwanted user changes.
+ *
+ * @param input The canonical input CSV filename.
+ * @param output The canonical output binary filename.
+ * @param delim The text delimiter used in the CSV file.  One character only.
+ */
+    public boolean ConvertEquipmentCSVtoBin( String input, String output, String delim ) {
+        Messages = "";
+        int NumConverted = 0;
+        BufferedReader FR;
+        DataOutputStream FW;
+        try {
+            FR = new BufferedReader( new FileReader( input ) );
+            FW = new DataOutputStream( new FileOutputStream( output ) );
+            boolean EOF = false;
+            String read = "";
+            while( EOF == false ) {
+                read = FR.readLine();
+                if( read == null ) {
+                    // We've hit the end of the file.
+                    EOF = true;
+                } else {
+                    if( read.equals( "EOF" ) ) {
+                        // end of file.
+                        EOF = true;
+                    } else {
+                        ProcessEquipmentString( FW, read, delim );
+                        NumConverted++;
+                    }
+                }
+            }
+            FR.close();
+            FW.close();
+        } catch( Exception e ) {
+            Messages += e.getMessage();
+            Messages += e.toString();
+            return false;
+        }
+        Messages += "Wrote " + NumConverted + " equipments to " + output + "\n";
+        return true;
+    }
+
+/**
  * Converts a CSV text file of Ammunition data into a binary file to conserve
  * space and prevent unwanted user changes.
  * 
@@ -156,47 +244,7 @@ public class BinaryConverter {
         FW.writeUTF( data[4] ); // Type
         FW.writeUTF( data[5] ); // Specials
         FW.writeInt( Integer.parseInt( data[6] ) ); // Class
-        // Availability Code Starts Here
-        FW.writeInt( Integer.parseInt( data[7] ) ); // Tbase
-        FW.writeInt( Integer.parseInt( data[8] ) ); // BM
-        FW.writeInt( Integer.parseInt( data[9] ) ); // IM
-        FW.writeInt( Integer.parseInt( data[10] ) ); // CV
-        FW.writeInt( Integer.parseInt( data[11] ) ); // AF
-        FW.writeInt( Integer.parseInt( data[12] ) ); // CF
-        // Inner Sphere Availability
-        FW.writeChar( data[13].charAt( 0 ) ); // Tech
-        FW.writeChar( data[14].charAt( 0 ) ); // SL
-        FW.writeChar( data[15].charAt( 0 ) ); // SW
-        FW.writeChar( data[16].charAt( 0 ) ); // CI
-        FW.writeInt( Integer.parseInt( data[17] ) ); // Intro
-        FW.writeUTF( data[18] ); // Ifac
-        FW.writeBoolean( Boolean.parseBoolean( data[19] ) ); // Extinct
-        FW.writeInt( Integer.parseInt( data[20] ) ); // Eyear
-        FW.writeBoolean( Boolean.parseBoolean( data[21] ) ); // ReIntro
-        FW.writeInt( Integer.parseInt( data[22] ) ); // RIYear
-        FW.writeUTF( data[23] ); // RIFac
-        FW.writeBoolean( Boolean.parseBoolean( data[24] ) ); // Prototype
-        FW.writeInt( Integer.parseInt( data[25] ) ); // R&DYear
-        FW.writeUTF( data[26] ); // R&DFac
-        FW.writeInt( Integer.parseInt( data[27] ) ); // Pyear
-        FW.writeUTF( data[28] ); // Pfac
-        // Clan Availability
-        FW.writeChar( data[29].charAt( 0 ) ); // Tech
-        FW.writeChar( data[30].charAt( 0 ) ); // SL
-        FW.writeChar( data[31].charAt( 0 ) ); // SW
-        FW.writeChar( data[32].charAt( 0 ) ); // CI
-        FW.writeInt( Integer.parseInt( data[33] ) ); // Intro
-        FW.writeUTF( data[34] ); // Ifac
-        FW.writeBoolean( Boolean.parseBoolean( data[35] ) ); // Extinct
-        FW.writeInt( Integer.parseInt( data[36] ) ); // Eyear
-        FW.writeBoolean( Boolean.parseBoolean( data[37] ) ); // ReIntro
-        FW.writeInt( Integer.parseInt( data[38] ) ); // RIYear
-        FW.writeUTF( data[39] ); // RIFac
-        FW.writeBoolean( Boolean.parseBoolean( data[40] ) ); // Prototype
-        FW.writeInt( Integer.parseInt( data[41] ) ); // R&DYear
-        FW.writeUTF( data[42] ); // R&DFac
-        FW.writeInt( Integer.parseInt( data[43] ) ); // Pyear
-        FW.writeUTF( data[44] ); // Pfac
+        ProcessAvailableCodeString( FW, data, 7 );
         // Meat of the weapon stats start here
         FW.writeDouble( Double.parseDouble( data[45] ) ); // Tons
         FW.writeInt( Integer.parseInt( data[46] ) ); // Mspc
@@ -253,6 +301,142 @@ public class BinaryConverter {
     }
 
 /**
+ * Processes the given physical weapons string from a CSV file into binary data.
+ * Output is fed to the given DataOutputStream.
+ *
+ * @param FW The DataOutputStream to write to.
+ * @param read The delimited string to read from.  One full line of data.
+ * @param delim The text delimiter used in the CSV file.  One character only.
+ * @throws java.lang.Exception
+ */
+    private void ProcessPhysicalWeaponString( DataOutputStream FW, String read, String delim ) throws Exception {
+        // here we're going to read the data string and output it to binary form
+        // Assuming semi-colon delimited.
+        String[] data = read.split( delim );
+        // this is very unsafe, but we're going to assume that all the information
+        // is correct and in the proper order.
+        FW.writeUTF( data[0] ); // Lookup Name
+        FW.writeUTF( data[1] ); // Actual Name
+        FW.writeUTF( data[2] ); // Crit Name
+        FW.writeUTF( data[3] ); // Chat Name
+        FW.writeUTF( data[4] ); // MM Name
+        FW.writeUTF( data[5] ); // Type
+        FW.writeUTF( data[6] ); // Specials
+        ProcessAvailableCodeString( FW, data, 7 );
+        // weapon stats start here
+        FW.writeDouble( Double.parseDouble( data[45] ) ); // Tonnage Multiplier
+        FW.writeDouble( Double.parseDouble( data[46] ) ); // Tonnage Adder
+        FW.writeBoolean( Boolean.parseBoolean( data[47] ) ); // Round to Half Ton
+        FW.writeDouble( Double.parseDouble( data[48] ) ); // Cost Multiplier
+        FW.writeDouble( Double.parseDouble( data[49] ) ); // Cost Adder
+        FW.writeDouble( Double.parseDouble( data[50] ) ); // BV Multiplier
+        FW.writeDouble( Double.parseDouble( data[51] ) ); // BV Adder
+        FW.writeDouble( Double.parseDouble( data[52] ) ); // Def BV
+        FW.writeDouble( Double.parseDouble( data[53] ) ); // Crit Multiplier
+        FW.writeInt( Integer.parseInt( data[54] ) ); // Crit Adder
+        FW.writeInt( Integer.parseInt( data[55] ) ); // Heat
+        FW.writeInt( Integer.parseInt( data[56] ) ); // To-Hit Short
+        FW.writeInt( Integer.parseInt( data[57] ) ); // To-Hit Medium
+        FW.writeInt( Integer.parseInt( data[58] ) ); // To-Hit Long
+        FW.writeDouble( Double.parseDouble( data[59] ) ); // Damage Multiplier
+        FW.writeInt( Integer.parseInt( data[60] ) ); // Damage Adder
+        FW.writeBoolean( Boolean.parseBoolean( data[61] ) ); // Can Alloc HD
+        FW.writeBoolean( Boolean.parseBoolean( data[62] ) ); // Can Alloc CT
+        FW.writeBoolean( Boolean.parseBoolean( data[63] ) ); // Can Alloc Torso
+        FW.writeBoolean( Boolean.parseBoolean( data[64] ) ); // Can Alloc Arms
+        FW.writeBoolean( Boolean.parseBoolean( data[65] ) ); // Can Alloc Legs
+        FW.writeBoolean( Boolean.parseBoolean( data[66] ) ); // Can Split
+        FW.writeBoolean( Boolean.parseBoolean( data[67] ) ); // Requires Lower Arm
+        FW.writeBoolean( Boolean.parseBoolean( data[68] ) ); // Requires Hand
+        FW.writeBoolean( Boolean.parseBoolean( data[69] ) ); // Replaces Lower Arm
+        FW.writeBoolean( Boolean.parseBoolean( data[70] ) ); // Replaces Hand
+        FW.writeBoolean( Boolean.parseBoolean( data[71] ) ); // Requires Fusion
+        FW.writeBoolean( Boolean.parseBoolean( data[72] ) ); // Requires Nuclear
+        FW.writeBoolean( Boolean.parseBoolean( data[73] ) ); // Requires Power Amps
+        FW.writeInt( Integer.parseInt( data[74] ) ); // Physical Weapon Class
+        FW.writeUTF( data[75] ); // Book Reference
+        FW.writeUTF( data[76] ); // Battleforce Abilities
+        if( Boolean.parseBoolean( data[77] ) ) {
+            FW.writeBoolean( true ); // has a mech modifier
+            FW.writeInt( Integer.parseInt( data[78] ) ); // Walking Adder
+            FW.writeInt( Integer.parseInt( data[79] ) ); // Running Adder
+            FW.writeInt( Integer.parseInt( data[80] ) ); // Jumping Adder
+            FW.writeDouble( Double.parseDouble( data[81] ) ); // Running Multiplier
+            FW.writeInt( Integer.parseInt( data[82] ) ); // PSR Modifier
+            FW.writeInt( Integer.parseInt( data[83] ) ); // GSR Modifier
+            FW.writeInt( Integer.parseInt( data[84] ) ); // Heat Adder
+            FW.writeDouble( Double.parseDouble( data[85] ) ); // Defensive BV Bonus
+            FW.writeDouble( Double.parseDouble( data[86] ) ); // Minimum Defensive BV Bonus
+            FW.writeDouble( Double.parseDouble( data[87] ) ); // Armor Multiplier
+            FW.writeDouble( Double.parseDouble( data[88] ) ); // Internal Multiplier
+            FW.writeBoolean( Boolean.parseBoolean( data[89] ) ); // Use for BV Movement
+            FW.writeBoolean( Boolean.parseBoolean( data[90] ) ); // Use for BV Heat
+        } else {
+            FW.writeBoolean( false ); // doesn't have a mech modifier
+        }
+    }
+
+/**
+ * Processes the given equipment string from a CSV file into binary data.
+ * Output is fed to the given DataOutputStream.
+ *
+ * @param FW The DataOutputStream to write to.
+ * @param read The delimited string to read from.  One full line of data.
+ * @param delim The text delimiter used in the CSV file.  One character only.
+ * @throws java.lang.Exception
+ */
+    private void ProcessEquipmentString( DataOutputStream FW, String read, String delim ) throws Exception {
+        // here we're going to read the data string and output it to binary form
+        // Assuming semi-colon delimited.
+        String[] data = read.split( delim );
+        // this is very unsafe, but we're going to assume that all the information
+        // is correct and in the proper order.
+        FW.writeUTF( data[0] ); // Lookup Name
+        FW.writeUTF( data[1] ); // Actual Name
+        FW.writeUTF( data[2] ); // Crit Name
+        FW.writeUTF( data[3] ); // Chat Name
+        FW.writeUTF( data[4] ); // MM Name
+        FW.writeUTF( data[5] ); // Type
+        FW.writeUTF( data[6] ); // Specials
+        ProcessAvailableCodeString( FW, data, 7 );
+        FW.writeDouble( Double.parseDouble( data[45] ) ); // Tonnage
+        FW.writeBoolean( Boolean.parseBoolean( data[46] ) ); // Is Variable Tonnage
+        FW.writeDouble( Double.parseDouble( data[47] ) ); // Variable Increment
+        FW.writeDouble( Double.parseDouble( data[48] ) ); // Minimum Tonnage
+        FW.writeDouble( Double.parseDouble( data[49] ) ); // Maximum Tonnage
+        FW.writeDouble( Double.parseDouble( data[50] ) ); // Cost
+        FW.writeDouble( Double.parseDouble( data[51] ) ); // Cost Per Ton
+        FW.writeDouble( Double.parseDouble( data[52] ) ); // OBV
+        FW.writeDouble( Double.parseDouble( data[53] ) ); // DBV
+        FW.writeInt( Integer.parseInt( data[54] ) ); // NumCrits
+        FW.writeDouble( Double.parseDouble( data[55] ) ); // Tons Per Crit
+        FW.writeInt( Integer.parseInt( data[56] ) ); // Heat
+        FW.writeInt( Integer.parseInt( data[57] ) ); // Short Range
+        FW.writeInt( Integer.parseInt( data[58] ) ); // Medium Range
+        FW.writeInt( Integer.parseInt( data[59] ) ); // Long Range
+        FW.writeBoolean( Boolean.parseBoolean( data[60] ) ); // Has Ammo
+        FW.writeInt( Integer.parseInt( data[61] ) ); // Lot Size
+        FW.writeInt( Integer.parseInt( data[62] ) ); // Ammo Index
+        FW.writeBoolean( Boolean.parseBoolean( data[63] ) ); // Can Alloc HD
+        FW.writeBoolean( Boolean.parseBoolean( data[64] ) ); // Can Alloc CT
+        FW.writeBoolean( Boolean.parseBoolean( data[65] ) ); // Can Alloc Torso
+        FW.writeBoolean( Boolean.parseBoolean( data[66] ) ); // Can Alloc Arms
+        FW.writeBoolean( Boolean.parseBoolean( data[67] ) ); // Can Alloc Legs
+        FW.writeBoolean( Boolean.parseBoolean( data[68] ) ); // Can Split
+        FW.writeBoolean( Boolean.parseBoolean( data[69] ) ); // Requires Quad
+        FW.writeInt( Integer.parseInt( data[70] ) ); // Number Allowed Per Mech
+        FW.writeBoolean( Boolean.parseBoolean( data[71] ) ); // Can Mount Rear
+        FW.writeBoolean( Boolean.parseBoolean( data[72] ) ); // Explosive
+        FW.writeUTF( data[73] ); // Book Reference
+        FW.writeUTF( data[74] ); // Battleforce Abilities
+        int numexceptions = Integer.parseInt( data[75] );
+        FW.writeInt( numexceptions ); // number of exceptions to read
+        for( int i = 0; i < numexceptions; i++ ) {
+            FW.writeUTF( data[76+i] ); // each exception
+        }
+    }
+
+/**
  * Processes the given ammo string from a CSV file into binary data.  Output
  * is fed to the given DataOutputStream.
  * 
@@ -275,46 +459,7 @@ public class BinaryConverter {
         FW.writeUTF( data[3] ); // MM Name
         FW.writeInt( Integer.parseInt( data[4] ) ); // IDX
         // Availability Code Starts Here
-        FW.writeInt( Integer.parseInt( data[5] ) ); // Tbase
-        FW.writeInt( Integer.parseInt( data[6] ) ); // BM
-        FW.writeInt( Integer.parseInt( data[7] ) ); // IM
-        FW.writeInt( Integer.parseInt( data[8] ) ); // CV
-        FW.writeInt( Integer.parseInt( data[9] ) ); // AF
-        FW.writeInt( Integer.parseInt( data[10] ) ); // CF
-        // Inner Sphere Availability
-        FW.writeChar( data[11].charAt( 0 ) ); // Tech
-        FW.writeChar( data[12].charAt( 0 ) ); // SL
-        FW.writeChar( data[13].charAt( 0 ) ); // SW
-        FW.writeChar( data[14].charAt( 0 ) ); // CI
-        FW.writeInt( Integer.parseInt( data[15] ) ); // Intro
-        FW.writeUTF( data[16] ); // Ifac
-        FW.writeBoolean( Boolean.parseBoolean( data[17] ) ); // Extinct
-        FW.writeInt( Integer.parseInt( data[18] ) ); // Eyear
-        FW.writeBoolean( Boolean.parseBoolean( data[19] ) ); // ReIntro
-        FW.writeInt( Integer.parseInt( data[20] ) ); // RIYear
-        FW.writeUTF( data[21] ); // RIFac
-        FW.writeBoolean( Boolean.parseBoolean( data[22] ) ); // Prototype
-        FW.writeInt( Integer.parseInt( data[23] ) ); // R&DYear
-        FW.writeUTF( data[24] ); // R&DFac
-        FW.writeInt( Integer.parseInt( data[25] ) ); // Pyear
-        FW.writeUTF( data[26] ); // Pfac
-        // Clan Availability
-        FW.writeChar( data[27].charAt( 0 ) ); // Tech
-        FW.writeChar( data[28].charAt( 0 ) ); // SL
-        FW.writeChar( data[29].charAt( 0 ) ); // SW
-        FW.writeChar( data[30].charAt( 0 ) ); // CI
-        FW.writeInt( Integer.parseInt( data[31] ) ); // Intro
-        FW.writeUTF( data[32] ); // Ifac
-        FW.writeBoolean( Boolean.parseBoolean( data[33] ) ); // Extinct
-        FW.writeInt( Integer.parseInt( data[34] ) ); // Eyear
-        FW.writeBoolean( Boolean.parseBoolean( data[35] ) ); // ReIntro
-        FW.writeInt( Integer.parseInt( data[36] ) ); // RIYear
-        FW.writeUTF( data[37] ); // RIFac
-        FW.writeBoolean( Boolean.parseBoolean( data[38] ) ); // Prototype
-        FW.writeInt( Integer.parseInt( data[39] ) ); // R&DYear
-        FW.writeUTF( data[40] ); // R&DFac
-        FW.writeInt( Integer.parseInt( data[41] ) ); // Pyear
-        FW.writeUTF( data[42] ); // Pfac
+        ProcessAvailableCodeString( FW, data, 5 );
         // Meat of the ammo stats start here
         FW.writeDouble( Double.parseDouble( data[43] ) ); // Tonnage
         FW.writeDouble( Double.parseDouble( data[44] ) ); // Cost
@@ -338,5 +483,48 @@ public class BinaryConverter {
         FW.writeInt( Integer.parseInt( data[62] ) ); // Weapon Class
         FW.writeInt( Integer.parseInt( data[63] ) ); // FCS Type
         FW.writeUTF( data[64] ); // Book Reference
+    }
+
+    private void ProcessAvailableCodeString( DataOutputStream FW, String[] data, int sindex ) throws Exception {
+        FW.writeInt( Integer.parseInt( data[sindex] ) ); // Tbase
+        FW.writeInt( Integer.parseInt( data[sindex+1] ) ); // BM
+        FW.writeInt( Integer.parseInt( data[sindex+2] ) ); // IM
+        FW.writeInt( Integer.parseInt( data[sindex+3] ) ); // CV
+        FW.writeInt( Integer.parseInt( data[sindex+4] ) ); // AF
+        FW.writeInt( Integer.parseInt( data[sindex+5] ) ); // CF
+        // Inner Sphere Availability
+        FW.writeChar( data[sindex+6].charAt( 0 ) ); // Tech
+        FW.writeChar( data[sindex+7].charAt( 0 ) ); // SL
+        FW.writeChar( data[sindex+8].charAt( 0 ) ); // SW
+        FW.writeChar( data[sindex+9].charAt( 0 ) ); // CI
+        FW.writeInt( Integer.parseInt( data[sindex+10] ) ); // Intro
+        FW.writeUTF( data[sindex+11] ); // Ifac
+        FW.writeBoolean( Boolean.parseBoolean( data[sindex+12] ) ); // Extinct
+        FW.writeInt( Integer.parseInt( data[sindex+13] ) ); // Eyear
+        FW.writeBoolean( Boolean.parseBoolean( data[sindex+14] ) ); // ReIntro
+        FW.writeInt( Integer.parseInt( data[sindex+15] ) ); // RIYear
+        FW.writeUTF( data[sindex+16] ); // RIFac
+        FW.writeBoolean( Boolean.parseBoolean( data[sindex+17] ) ); // Prototype
+        FW.writeInt( Integer.parseInt( data[sindex+18] ) ); // R&DYear
+        FW.writeUTF( data[sindex+19] ); // R&DFac
+        FW.writeInt( Integer.parseInt( data[sindex+20] ) ); // Pyear
+        FW.writeUTF( data[sindex+21] ); // Pfac
+        // Clan Availability
+        FW.writeChar( data[sindex+22].charAt( 0 ) ); // Tech
+        FW.writeChar( data[sindex+23].charAt( 0 ) ); // SL
+        FW.writeChar( data[sindex+24].charAt( 0 ) ); // SW
+        FW.writeChar( data[sindex+25].charAt( 0 ) ); // CI
+        FW.writeInt( Integer.parseInt( data[sindex+26] ) ); // Intro
+        FW.writeUTF( data[sindex+27] ); // Ifac
+        FW.writeBoolean( Boolean.parseBoolean( data[sindex+28] ) ); // Extinct
+        FW.writeInt( Integer.parseInt( data[sindex+29] ) ); // Eyear
+        FW.writeBoolean( Boolean.parseBoolean( data[sindex+30] ) ); // ReIntro
+        FW.writeInt( Integer.parseInt( data[sindex+31] ) ); // RIYear
+        FW.writeUTF( data[sindex+32] ); // RIFac
+        FW.writeBoolean( Boolean.parseBoolean( data[sindex+33] ) ); // Prototype
+        FW.writeInt( Integer.parseInt( data[sindex+34] ) ); // R&DYear
+        FW.writeUTF( data[sindex+35] ); // R&DFac
+        FW.writeInt( Integer.parseInt( data[sindex+36] ) ); // Pyear
+        FW.writeUTF( data[sindex+37] ); // Pfac
     }
 }

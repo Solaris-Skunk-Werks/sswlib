@@ -89,15 +89,15 @@ public class MGArray extends abPlaceable implements ifWeapon {
     public String LookupName() {
         if( Rear ) {
             if( Clan ) {
-                return "(R) (CL) " + CritName();
+                return "(R) (CL) " + GetName();
             } else {
-                return "(R) (IS) " + CritName();
+                return "(R) (IS) " + GetName();
             }
         } else {
             if( Clan ) {
-                return "(CL) " + CritName();
+                return "(CL) " + GetName();
             } else {
-                return "(IS) " + CritName();
+                return "(IS) " + GetName();
             }
         }
     }
@@ -105,15 +105,15 @@ public class MGArray extends abPlaceable implements ifWeapon {
     // the crit name is how the item appears in the loadout when allocated.
     public String CritName() {
         if( Rear ) {
-            return "(R) " + GetName();
+            return "(R) " + GetShortName();
         } else {
-            return GetName();
+            return GetShortName();
         }
     }
 
     // the name to be used when expoerting this equipment to a chat line.
     public String ChatName() {
-        return "MGA";
+        return "MGA+" + NumMGs + MGType.ChatName();
     }
 
     // the name to be used when exporting to MegaMek
@@ -228,6 +228,10 @@ public class MGArray extends abPlaceable implements ifWeapon {
 
     public String GetName() {
         return "MG Array (" + NumMGs + " " + MGType.CritName() + ")";
+    }
+
+    public String GetShortName() {
+        return "MG Array (" + NumMGs + " " + MGType.ChatName() + ")";
     }
 
     public String GetType() {
@@ -429,9 +433,10 @@ public class MGArray extends abPlaceable implements ifWeapon {
     @Override
     public void MountRear( boolean rear ) {
         Rear = rear;
-        if( MGType.IsMountedRear() != rear ) {
-            MGType.MountRear( rear );
-        }
+        if( MGs[0] != null ) { MGs[0].MountRear( rear ); }
+        if( MGs[1] != null ) { MGs[1].MountRear( rear ); }
+        if( MGs[2] != null ) { MGs[2].MountRear( rear ); }
+        if( MGs[3] != null ) { MGs[3].MountRear( rear ); }
     }
 
     @Override

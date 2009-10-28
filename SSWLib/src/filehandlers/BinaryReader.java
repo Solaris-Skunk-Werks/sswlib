@@ -34,6 +34,11 @@ import java.io.FileInputStream;
 import java.util.Vector;
 import components.Ammunition;
 import components.AvailableCode;
+import components.Equipment;
+import components.Exclusion;
+import components.Mech;
+import components.MechModifier;
+import components.PhysicalWeapon;
 import components.RangedWeapon;
 
 public class BinaryReader {
@@ -77,6 +82,123 @@ public class BinaryReader {
                     rw.SetBookReference( FR.readUTF() );
                     rw.SetBattleForceAbilities( FR.readUTF().split(",") );
                     finished.add( rw );
+                } catch( EOFException e1 ) {
+                    break;
+                }
+            }
+            FR.close();
+        } catch( Exception e ) {
+            e.printStackTrace();
+            throw e;
+        }
+        return finished;
+    }
+
+    public Vector ReadPhysicals( String inputfile ) throws Exception {
+        Vector finished = new Vector();
+        DataInputStream FR;
+        Mech m = new Mech();
+        try {
+            FR = new DataInputStream( new FileInputStream( inputfile ) );
+            String lname = "";
+            String aname = "";
+            String cname = "";
+            String chat = "";
+            String mname = "";
+            String type = "";
+            String special = "";
+            while( true ) {
+                try {
+                    lname = FR.readUTF();
+                    aname = FR.readUTF();
+                    cname = FR.readUTF();
+                    chat = FR.readUTF();
+                    mname = FR.readUTF();
+                    type = FR.readUTF();
+                    special = FR.readUTF();
+                    AvailableCode AC = GetAvailability( FR );
+                    PhysicalWeapon pw = new PhysicalWeapon( aname, lname, cname, mname, chat, m, AC );
+                    pw.SetType( type, special );
+                    pw.SetTonnage( FR.readDouble(), FR.readDouble(), FR.readBoolean() );
+                    pw.SetCost( FR.readDouble(), FR.readDouble() );
+                    pw.SetBV( FR.readDouble(), FR.readDouble(), FR.readDouble() );
+                    pw.SetCrits( FR.readDouble(), FR.readInt() );
+                    pw.SetHeat( FR.readInt() );
+                    pw.SetToHit( FR.readInt(), FR.readInt(), FR.readInt() );
+                    pw.SetDamage( FR.readDouble(), FR.readInt() );
+                    pw.SetAllocations( FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean() );
+                    pw.SetRequiresLowerArm( FR.readBoolean() );
+                    pw.SetRequiresHand( FR.readBoolean() );
+                    pw.SetReplacesLowerArm( FR.readBoolean() );
+                    pw.SetReplacesHand( FR.readBoolean() );
+                    pw.SetRequirements( FR.readBoolean(), FR.readBoolean(), FR.readBoolean() );
+                    pw.SetPWClass( FR.readInt() );
+                    pw.SetBookReference( FR.readUTF() );
+                    pw.SetBattleForceAbilities( FR.readUTF().split(",") );
+                    if( FR.readBoolean() ) {
+                        MechModifier mm = new MechModifier( FR.readInt(), FR.readInt(), FR.readInt(), FR.readDouble(), FR.readInt(), FR.readInt(), FR.readInt(), FR.readDouble(), FR.readDouble(), FR.readDouble(), FR.readDouble(), FR.readBoolean(), FR.readBoolean() );
+                        pw.AddMechModifier( mm );
+                    }
+                    finished.add( pw );
+                } catch( EOFException e1 ) {
+                    break;
+                }
+            }
+            FR.close();
+        } catch( Exception e ) {
+            e.printStackTrace();
+            throw e;
+        }
+        return finished;
+    }
+
+    public Vector ReadEquipment( String inputfile ) throws Exception {
+        Vector finished = new Vector();
+        DataInputStream FR;
+        Mech m = new Mech();
+        try {
+            FR = new DataInputStream( new FileInputStream( inputfile ) );
+            String lname = "";
+            String aname = "";
+            String cname = "";
+            String chat = "";
+            String mname = "";
+            String type = "";
+            String special = "";
+            while( true ) {
+                try {
+                    lname = FR.readUTF();
+                    aname = FR.readUTF();
+                    cname = FR.readUTF();
+                    chat = FR.readUTF();
+                    mname = FR.readUTF();
+                    type = FR.readUTF();
+                    special = FR.readUTF();
+                    AvailableCode AC = GetAvailability( FR );
+                    Equipment e = new Equipment( aname, lname, cname, mname, chat, type, AC );
+                    e.SetSpecials( special );
+                    e.SetTonnage( FR.readDouble(), FR.readBoolean(), FR.readDouble(), FR.readDouble(), FR.readDouble() );
+                    e.SetCost( FR.readDouble(), FR.readDouble() );
+                    e.SetBV( FR.readDouble(), FR.readDouble() );
+                    e.SetCrits( FR.readInt(), FR.readDouble() );
+                    e.SetHeat( FR.readInt() );
+                    e.SetRange( FR.readInt(), FR.readInt(), FR.readInt() );
+                    e.SetAmmo( FR.readBoolean(), FR.readInt(), FR.readInt() );
+                    e.SetAllocs( FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readInt() );
+                    e.SetMountableRear( FR.readBoolean() );
+                    e.SetExplosive( FR.readBoolean() );
+                    e.SetBookReference( FR.readUTF() );
+                    e.SetBattleForceAbilities( FR.readUTF().split(",") );
+                    int numexceptions = FR.readInt();
+                    if( numexceptions > 0 ) {
+                        Vector<String> excep = new Vector<String>();
+                        for( int i = 0; i < numexceptions; i++ ) {
+                            excep.add( FR.readUTF() );
+                        }
+                        Exclusion ex = new Exclusion( excep.toArray( new String[] { null } ), e.CritName() );
+                        e.SetExclusions( ex );
+                    }
+                    finished.add( e );
                 } catch( EOFException e1 ) {
                     break;
                 }

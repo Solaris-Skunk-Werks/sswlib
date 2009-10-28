@@ -28,6 +28,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
+import java.util.Vector;
+
 public class Equipment extends abPlaceable {
     private String ActualName,
                    CritName,
@@ -44,7 +46,8 @@ public class Equipment extends abPlaceable {
                 ShtRange = 0,
                 MedRange = 0,
                 LngRange = 0,
-                Heat = 0;
+                Heat = 0,
+                MaxAllowed = 0;
     private double Tonnage = 0.0,
                   Cost = 0.0,
                   OffBV = 0.0,
@@ -64,7 +67,8 @@ public class Equipment extends abPlaceable {
                     Rear = false,
                     CanMountRear = false,
                     Explosive = false,
-                    VariableSize = false;
+                    VariableSize = false,
+                    RequiresQuad = false;
     private AvailableCode AC;
 
     public Equipment() {
@@ -72,10 +76,12 @@ public class Equipment extends abPlaceable {
         // for regular equipment
     }
 
-    public Equipment( String actualname, String lookupname, String critname, String t, AvailableCode a ) {
+    public Equipment( String actualname, String lookupname, String critname, String mname, String chatn, String t, AvailableCode a ) {
         ActualName = actualname;
         CritName = critname;
         LookupName = lookupname;
+        MegaMekName = mname;
+        ChatName = chatn;
         Type = t;
         AC = a;
     }
@@ -117,27 +123,44 @@ public class Equipment extends abPlaceable {
         BookReference = e.BookReference;
         ChatName = e.ChatName;
         Manufacturer = e.Manufacturer;
+        RequiresQuad = e.RequiresQuad;
+        MaxAllowed = e.MaxAllowed;
         SetBattleForceAbilities( e.GetBattleForceAbilities() );
         SetExclusions( e.GetExclusions() );
     }
 
-    public void SetMegaMekName( String n ) {
-        // provided if it's anything different than the CritName
-        MegaMekName = n;
-    }
-
-    public void SetStats( int crits, double tons, double cost, double obv, double dbv, String spec ) {
-        Crits = crits;
-        Tonnage = tons;
-        Cost = cost;
-        OffBV = obv;
-        DefBV = dbv;
+    public void SetSpecials( String spec ) {
         Specials = spec;
     }
 
+    public void SetTonnage( double tons, boolean variable, double vincrement, double min, double max ) {
+        Tonnage = tons;
+        VariableSize = variable;
+        MinTons = min;
+        MaxTons = max;
+        VariableIncrement = vincrement;
+    }
+
+    public void SetCost( double cost, double costperton ) {
+        Cost = cost;
+        CostPerTon = costperton;
+    }
+
+    public void SetBV( double obv, double dbv ) {
+        OffBV = obv;
+        DefBV = dbv;
+    }
+
+    public void SetCrits( int crits, double tonspercrit ) {
+        Crits = crits;
+        TonsPerCrit = tonspercrit;
+    }
+
+    public void SetHeat( int h ) {
+        Heat = h;
+    }
+
     public void SetRange( int sht, int med, int lng ) {
-        // most equipment only has a long range, but this needs to be supported
-        // no equipment should have a minimum range
         ShtRange = sht;
         MedRange = med;
         LngRange = lng;
@@ -150,41 +173,27 @@ public class Equipment extends abPlaceable {
         AmmoIndex = index;
     }
 
-    public void SetHeat( int h ) {
-        Heat = h;
-    }
-
-    public void SetAllocs( boolean hd, boolean ct, boolean st, boolean ar, boolean lg ) {
+    public void SetAllocs( boolean hd, boolean ct, boolean st, boolean ar, boolean lg, boolean split, boolean reqquad, int max ) {
         alloc_head = hd;
         alloc_ct = ct;
         alloc_torsos = st;
         alloc_arms = ar;
         alloc_legs = lg;
+        CanSplit = split;
+        RequiresQuad = reqquad;
+        MaxAllowed = max;
     }
 
-    public void SetSplitable( boolean s ) {
-        CanSplit = s;
+    public void SetMountableRear( boolean b ) {
+        CanMountRear = b;
     }
 
     public void SetExplosive( boolean b ) {
         Explosive = b;
     }
 
-    public void SetVariableSize( boolean s, double min, double max, double increment, double tpc, double cpt ) {
-        VariableSize = s;
-        MinTons = min;
-        MaxTons = max;
-        VariableIncrement = increment;
-        TonsPerCrit = tpc;
-        CostPerTon = cpt;
-    }
-
     public void SetBookReference( String b ) {
         BookReference = b;
-    }
-
-    public void SetChatName( String c ) {
-        ChatName = c;
     }
 
     public String ActualName() {
@@ -343,10 +352,6 @@ public class Equipment extends abPlaceable {
         return alloc_legs;
     }
 
-    public void SetMountableRear( boolean b ) {
-        CanMountRear = b;
-    }
-
     @Override
     public boolean CanMountRear() {
         return CanMountRear;
@@ -376,6 +381,14 @@ public class Equipment extends abPlaceable {
         return Explosive;
     }
 
+    public boolean RequiresQuad() {
+        return RequiresQuad;
+    }
+
+    public int MaxAllowed() {
+        return MaxAllowed;
+    }
+
     public boolean IsVariableSize() {
         return VariableSize;
     }
@@ -403,6 +416,26 @@ public class Equipment extends abPlaceable {
     public void SetTonnage( double d ) {
         if( d < MinTons || d > MaxTons ) { return; }
         Tonnage = d;
+    }
+
+    public boolean Validate( Mech m ) {
+        if( MaxAllowed > 0 ) {
+            Vector currentEquipment = m.GetLoadout().GetEquipment();
+            for( int i = 0, c = 0; i < currentEquipment.size(); ++i ) {
+                abPlaceable currentItem = (abPlaceable) currentEquipment.get( i );
+                if( currentItem.LookupName().equals( LookupName ) ) {
+                    ++c;
+                    if( c == MaxAllowed ) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        } else if( RequiresQuad ) {
+            return m.IsQuad();
+        } else {
+            return true;
+        }
     }
 
     public Equipment Clone() {

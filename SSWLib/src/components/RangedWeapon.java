@@ -558,8 +558,14 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
 
     @Override
     public void MountRear( boolean rear ) {
-        // this sets the mounted rear boolean
-        MountedRear = rear;
+        if( IsInArray() ) {
+            if( GetMyArray().IsMountedRear() != rear ) {
+                GetMyArray().MountRear( rear );
+            }
+            MountedRear = rear;
+        } else {
+            MountedRear = rear;
+        }
     }
 
     @Override

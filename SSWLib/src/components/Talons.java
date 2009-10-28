@@ -40,6 +40,7 @@ public class Talons extends PhysicalWeapon {
         AC.SetPBMAllowed( true );
         AC.SetPIMAllowed( true );
         AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+        SetBattleForceAbilities( new String[]{ "MEL" } );
         Owner = m;
     }
 
