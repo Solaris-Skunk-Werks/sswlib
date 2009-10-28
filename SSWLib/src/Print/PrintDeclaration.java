@@ -30,6 +30,7 @@ package Print;
 import common.CommonTools;
 import Force.*;
 
+import filehandlers.ImageTracker;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -40,17 +41,19 @@ public class PrintDeclaration implements Printable {
     public Graphics2D Graphic;
     private Vector<Force> forces = new Vector<Force>();
     private PageFormat format = null;
+    private ImageTracker imageTracker;
     private String[] Types = new String[]{"  Primary", "Secondary", "Secondary"};
     private String Title = "Fire Declaration Markers";
 
     public int currentX = 0;
     public int currentY = 0;
 
-    public PrintDeclaration() {
-
+    public PrintDeclaration( ImageTracker imageTracker ) {
+        this.imageTracker = imageTracker;
     }
 
-    public PrintDeclaration( Vector<Force> forces ) {
+    public PrintDeclaration( Vector<Force> forces, ImageTracker imageTracker ) {
+        this(imageTracker);
         this.forces = forces;
     }
 

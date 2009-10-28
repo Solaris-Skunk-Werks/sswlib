@@ -30,6 +30,7 @@ package Print;
 
 import Force.*;
 
+import filehandlers.ImageTracker;
 import java.awt.print.*;
 import java.util.Vector;
 
@@ -37,9 +38,10 @@ public class BFBPrinter {
     private String jobName = "Battletech Force Balancer",
                     Title = "Battletech Force Balancer";
     private Boolean useDialog = true;
-    private ForceListPrinter sheet = new ForceListPrinter();
-    private PrintDeclaration chits = new PrintDeclaration();
+    private ForceListPrinter sheet;
+    private PrintDeclaration chits;
     private Vector<Force> forces = new Vector<Force>();
+    private ImageTracker imageTracker;
     private int unitSize = 0;
 
     private Book pages = new Book();
@@ -53,12 +55,15 @@ public class BFBPrinter {
     public final static PaperSize A4 = new PaperSize(595, 842, 18, 18, 559, 806);
     public final static PaperSize Legal = new PaperSize(8.5d, 14.0d);
 
-    public BFBPrinter() {
+    public BFBPrinter( ImageTracker imageTracker) {
+        this.imageTracker = imageTracker;
         setPaperSize(Letter);
+        sheet = new ForceListPrinter(imageTracker);
+        chits = new PrintDeclaration(imageTracker);
     }
 
-    public BFBPrinter( Vector<Force> forces ) {
-        this();
+    public BFBPrinter( Vector<Force> forces, ImageTracker imageTracker ) {
+        this(imageTracker);
         this.forces = forces;
         for ( Force force : forces ) {
             unitSize += force.Units.size();
@@ -67,8 +72,8 @@ public class BFBPrinter {
         chits.AddForces(forces);
     }
 
-    public BFBPrinter( Force force ) {
-        this();
+    public BFBPrinter( Force force, ImageTracker imageTracker ) {
+        this(imageTracker);
         this.forces.add(force);
         unitSize += force.Units.size();
         sheet.AddForce(force);
@@ -130,7 +135,7 @@ public class BFBPrinter {
             chits.AddForce((Force) this.forces.get(0));
             pages.append(chits, page);
 
-            PrintDeclaration chit2 = new PrintDeclaration();
+            PrintDeclaration chit2 = new PrintDeclaration(imageTracker);
             chit2.AddForce((Force) this.forces.get(1));
             pages.append(chit2, page);
         } else {

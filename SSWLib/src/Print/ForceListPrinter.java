@@ -29,11 +29,12 @@ package Print;
 
 import common.CommonTools;
 import Force.*;
-import filehandlers.Media;
+import filehandlers.ImageTracker;
 
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
@@ -45,20 +46,20 @@ public class ForceListPrinter implements Printable {
     //private Force[] forces;
     private Vector<Force> forces = new Vector<Force>();
     private PageFormat format = null;
-    private String Title = "Battletech Force Balancer",
-                    Background = "rs/bfb_bg.png";
-    private Media media = new Media();
+    private String Title = "Battletech Force Balancer";
+    private ImageTracker imageTracker;
     private boolean printLogo = true;
 
     public int currentX = 0;
     public int currentY = 0;
 
-    public ForceListPrinter(Vector<Force> forces){
+    public ForceListPrinter(Vector<Force> forces, ImageTracker imageTracker){
         this.forces = forces;
+        this.imageTracker = imageTracker;
     }
 
-    public ForceListPrinter(){
-
+    public ForceListPrinter( ImageTracker imageTracker ){
+        this.imageTracker = imageTracker;
     }
 
     public void AddForces( Vector<Force> forces ) {
@@ -86,7 +87,8 @@ public class ForceListPrinter implements Printable {
         Reset();
         
         //Background Image
-        Graphic.drawImage( media.GetImage(Background), 0, 0, 576, 756, null);
+        Image Recordsheet = imageTracker.getImage( PrintConsts.BFB_BG );
+        Graphic.drawImage( Recordsheet, 0, 0, 576, 756, null);
         setFont(CommonTools.TitleFont);
         Graphic.drawString(Title, 280, 16);
 

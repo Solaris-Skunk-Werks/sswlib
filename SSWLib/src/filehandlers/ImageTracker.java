@@ -38,7 +38,11 @@ public class ImageTracker {
         }
         
         Image tempimg = media.GetImage(filename);
-        imageStore.add(new StoredImage(filename, tempimg));
+        if ( tempimg != null ) {
+            imageStore.add(new StoredImage(filename, tempimg));
+        } else {
+            System.out.println("Could not load " + filename);
+        }
         return tempimg;
     }
 
