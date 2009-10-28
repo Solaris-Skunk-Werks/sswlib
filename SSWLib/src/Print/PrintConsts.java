@@ -49,12 +49,12 @@ public class PrintConsts {
                             TOTAL_ARMOR = 17,
                             STATS = 18;
 
-    public final static String RS_TW_BP = "/rs/RS_TW_BP.png",
-                               RS_TW_QD = "/rs/RS_TW_QD.png",
+    public final static String RS_TW_BP = "rs/RS_TW_BP.png",
+                               RS_TW_QD = "rs/RS_TW_QD.png",
                                RS_TO_BP = "",
                                RS_TO_QD = "",
-                               BP_ChartImage = "/rs/Charts.png",
-                               QD_ChartImage = "/rs/ChartsQD.png",
+                               BP_ChartImage = "rs/Charts.png",
+                               QD_ChartImage = "rs/ChartsQD.png",
                                BF_BG = "rs/BF_BG.png",
                                BF_IS = "rs/BF_BG.png",
                                BF_IS_Unit = "rs/BF_IS_Unit.png",
@@ -77,5 +77,4 @@ public class PrintConsts {
     public final static Font ReallySmallFont = new Font( "Arial", Font.PLAIN, 6 );
     public final static Font XtraSmallBoldFont = new Font( "Arial", Font.BOLD, 6 );
     public final static Font XtraSmallFont = new Font( "Arial", Font.PLAIN, 6 );
-    
 }

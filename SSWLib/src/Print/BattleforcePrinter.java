@@ -38,12 +38,14 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import battleforce.BattleForce;
 import battleforce.BattleForceStats;
+import filehandlers.ImageTracker;
 import filehandlers.Media;
 
 public class BattleforcePrinter implements Printable {
     private BattleForce battleforce;
     private Media media = new Media();
     private Graphics2D graphic;
+    private ImageTracker imageTracker;
     private Image RecordSheet,
                     Unit;
     private int UnitSize = 4,
@@ -54,15 +56,16 @@ public class BattleforcePrinter implements Printable {
     private int x = 0,
                 y = 0;
 
-    public BattleforcePrinter( BattleForce f) {
+    public BattleforcePrinter( BattleForce f, ImageTracker images) {
         battleforce = f;
-        RecordSheet = media.GetImage( PrintConsts.BF_IS );
-        Unit = media.GetImage( PrintConsts.BF_IS_Unit );
+        imageTracker = images;
+        RecordSheet = imageTracker.getImage( PrintConsts.BF_BG );
+        Unit = imageTracker.getImage( PrintConsts.BF_IS_Unit );
         setType(battleforce.Type);
     }
 
-    public BattleforcePrinter() {
-        this(new BattleForce());
+    public BattleforcePrinter(ImageTracker images) {
+        this(new BattleForce(), images);
     }
 
     public void Add( BattleForceStats stat ) {
@@ -70,11 +73,11 @@ public class BattleforcePrinter implements Printable {
     }
 
     public void setRecordSheet( String sheet ) {
-        RecordSheet = media.GetImage(sheet);
+        RecordSheet = imageTracker.getImage(sheet);
     }
     
     public void setUnitSheet( String item ) {
-        Unit = media.GetImage( item );
+        Unit = imageTracker.getImage( item );
     }
 
     public void setType( String Type ) {
@@ -88,22 +91,19 @@ public class BattleforcePrinter implements Printable {
     }
 
     public void setInnerSphere() {
-        RecordSheet = media.GetImage(PrintConsts.BF_IS);
-        Unit = media.GetImage( PrintConsts.BF_IS_Unit);
+        Unit = imageTracker.getImage( PrintConsts.BF_IS_Unit);
         UnitSize = 4;
         UnitImageHeight = 225;
     }
 
     public void setClan() {
-        RecordSheet = media.GetImage(PrintConsts.BF_CL);
-        Unit = media.GetImage( PrintConsts.BF_CL_Unit);
+        Unit = imageTracker.getImage( PrintConsts.BF_CL_Unit);
         UnitSize = 5;
         UnitImageHeight = 360;
     }
 
     public void setComstar() {
-        RecordSheet = media.GetImage(PrintConsts.BF_CS);
-        Unit = media.GetImage( PrintConsts.BF_CS_Unit);
+        Unit = imageTracker.getImage( PrintConsts.BF_CS_Unit);
         UnitSize = 6;
         UnitImageHeight = 323;
     }
@@ -130,7 +130,7 @@ public class BattleforcePrinter implements Printable {
 
         //Unit Logo
         if ( !battleforce.LogoPath.isEmpty() && printLogo ) {
-            Image icon = media.GetImage(getBattleforce().LogoPath);
+            Image icon = imageTracker.getImage(getBattleforce().LogoPath);
             Dimension d = media.reSize(icon, 50, 50);
             graphic.drawImage(icon, 300, 5, d.width, d.height, null);
         }
@@ -208,7 +208,7 @@ public class BattleforcePrinter implements Printable {
 
             //Image
             if ( !stats.getImage().isEmpty() && printMechs ) {
-                Image image = media.GetImage(stats.getImage());
+                Image image = imageTracker.getImage(stats.getImage());
                 Dimension d = media.reSize(image, 35d, 33d);
                 image.getScaledInstance(d.width, d.height, Image.SCALE_SMOOTH);
                 graphic.drawImage(image, x, y, d.width, d.height, null);

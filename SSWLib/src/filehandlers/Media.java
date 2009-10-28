@@ -39,6 +39,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import common.ImageFilter;
 import common.ImagePreview;
+import java.util.Vector;
 
 public class Media {
     MediaTracker Tracker = new MediaTracker(new JLabel());
@@ -88,14 +89,14 @@ public class Media {
         return fileChooser.getSelectedFile();
     }
     public Image GetImage(String filename) {
+        System.out.println("Loading " + filename);
         Image retval = toolkit.getImage( filename );
         Tracker.addImage( retval, 0 );
         try {
             Tracker.waitForID( 0 );
         } catch (InterruptedException ie) {
-            // do nothing
+            System.out.println(ie.getMessage());
         }
-        Tracker.removeImage(retval);
         return retval;
     }
 
@@ -210,6 +211,5 @@ public class Media {
             return "*." + Extension;
         }
     }
-
 
 }

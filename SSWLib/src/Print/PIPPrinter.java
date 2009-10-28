@@ -34,12 +34,13 @@ import java.awt.Point;
 import java.util.Hashtable;
 
 import components.*;
-import filehandlers.Media;
+import filehandlers.ImageTracker;
 
 public class PIPPrinter {
     private Graphics2D graphics = null;
     private boolean useCanon = true;
     private Mech CurMech = null;
+    private ImageTracker imageTracker;
     private Hashtable<Integer, PIPSettings> Armor = new Hashtable<Integer, PIPSettings>();
     private Hashtable<Integer, PIPSettings> Internal = new Hashtable<Integer, PIPSettings>();
     private String filePath = "./rs/patterns/";
@@ -49,15 +50,13 @@ public class PIPPrinter {
     private String ExtensionPNG = ".png";
     private ifPrintPoints Points = null;
 
-    private Media media = new Media();
-
     // <editor-fold desc="Constructors">
     /**
      * Creates an PIPPrinter object with the default settings
      *
      */
-    public PIPPrinter() {
-        this(null, null, true);
+    public PIPPrinter(ImageTracker images) {
+        this(null, null, true, images);
     }
 
     /**
@@ -65,8 +64,8 @@ public class PIPPrinter {
      *
      * @param  graphics  the graphics object to use when rendering
      */
-    public PIPPrinter(Graphics2D graphics) {
-        this(graphics, null, true);
+    public PIPPrinter(Graphics2D graphics, ImageTracker images) {
+        this(graphics, null, true, images);
     }
     
     /**
@@ -75,8 +74,8 @@ public class PIPPrinter {
      * @param  graphics  the graphics object to use when rendering
      * @param  curMech   the Mech object to use
      */
-    public PIPPrinter( Graphics2D graphics, Mech curMech ) {
-        this(graphics, curMech, true);
+    public PIPPrinter( Graphics2D graphics, Mech curMech, ImageTracker images ) {
+        this(graphics, curMech, true, images);
     }
     
     /**
@@ -86,10 +85,11 @@ public class PIPPrinter {
      * @param  curMech   the Mech object to use
      * @param  useCanon  boolean determining whether or not to use canon points
      */
-    public PIPPrinter( Graphics2D graphics, Mech curMech, boolean useCanon ) {
+    public PIPPrinter( Graphics2D graphics, Mech curMech, boolean useCanon, ImageTracker images ) {
         this.graphics = graphics;
         this.CurMech = curMech;
         this.useCanon = useCanon;
+        this.imageTracker = images;
 
         Points = new TWBipedPoints();
 
@@ -197,10 +197,9 @@ public class PIPPrinter {
         String filename = "";
         Image pattern = null;
         filename = filePath + Source + "_" + Chassis + "_" + pip.locationPrefix + pip.GetFileNumber();
-        pattern = media.GetImage(filename + ExtensionGIF);
-        if ( pattern == null ) { pattern = media.GetImage(filename + ExtensionPNG); }
+        pattern = imageTracker.getImage(filename + ExtensionGIF);
+        if ( pattern == null ) { pattern = imageTracker.getImage(filename + ExtensionPNG); }
         graphics.drawImage(pattern, pip.startingPoint.x, pip.startingPoint.y, pip.imageSize.x, pip.imageSize.y, null);
-        pattern.flush();
     }
 
 // <editor-fold desc="Settor Methods">

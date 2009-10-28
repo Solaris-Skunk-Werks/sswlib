@@ -38,12 +38,14 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import battleforce.BattleForce;
 import battleforce.BattleForceStats;
+import filehandlers.ImageTracker;
 import filehandlers.Media;
 import java.awt.Font;
 
 public class BattleforceCardPrinter implements Printable {
     private BattleForce battleforce;
     private Media media = new Media();
+    private ImageTracker imageTracker;
     private Graphics2D graphic;
     private Image RecordSheet,
                     Unit,
@@ -58,16 +60,17 @@ public class BattleforceCardPrinter implements Printable {
     private int x = 0,
                 y = 0;
 
-    public BattleforceCardPrinter( BattleForce f) {
+    public BattleforceCardPrinter( BattleForce f, ImageTracker images) {
         battleforce = f;
+        imageTracker = images;
         RecordSheet = media.GetImage( PrintConsts.BF_BG );
         Unit = media.GetImage( PrintConsts.BF_Card );
         Charts = media.GetImage( PrintConsts.BF_Chart );
         setType(battleforce.Type);
     }
 
-    public BattleforceCardPrinter() {
-        this(new BattleForce());
+    public BattleforceCardPrinter(ImageTracker images) {
+        this(new BattleForce(), images);
     }
 
     public void Add( BattleForceStats stat ) {
@@ -75,11 +78,11 @@ public class BattleforceCardPrinter implements Printable {
     }
 
     public void setRecordSheet( String sheet ) {
-        RecordSheet = media.GetImage(sheet);
+        RecordSheet = imageTracker.getImage(sheet);
     }
     
     public void setUnitSheet( String item ) {
-        Unit = media.GetImage( item );
+        Unit = imageTracker.getImage( item );
     }
 
     public void setType( String Type ) {
@@ -121,7 +124,7 @@ public class BattleforceCardPrinter implements Printable {
 
         //Unit Logo
         if ( !battleforce.LogoPath.isEmpty() && printLogo ) {
-            icon = media.GetImage(getBattleforce().LogoPath);
+            icon = imageTracker.getImage(getBattleforce().LogoPath);
             d = media.reSize(icon, 20, 20);
         }
 
@@ -156,7 +159,7 @@ public class BattleforceCardPrinter implements Printable {
 
             //Image
             if ( !stats.getImage().isEmpty() && printMechs ) {
-                Image image = media.GetImage(stats.getImage());
+                Image image = imageTracker.getImage(stats.getImage());
                 Dimension dim = media.reSize(image, 110d, 140d);
                 image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
                 graphic.drawImage(image, x+10, y+58, dim.width, dim.height, null);

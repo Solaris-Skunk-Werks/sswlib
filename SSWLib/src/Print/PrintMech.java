@@ -31,6 +31,7 @@ package Print;
 import common.*;
 import components.*;
 import filehandlers.FileCommon;
+import filehandlers.ImageTracker;
 import filehandlers.Media;
 
 import java.awt.Color;
@@ -62,37 +63,28 @@ public class PrintMech implements Printable {
                 MiniConvRate = 1;
     private double BV = 0.0;
     private ifPrintPoints points = null;
-    private Font BoldFont = new Font( "Arial", Font.BOLD, 8 );
-    private Font PlainFont = new Font( "Arial", Font.PLAIN, 8 );
-    private Font ItalicFont = new Font( "Arial", Font.ITALIC, 8 );
-    private Font SmallFont = new Font( "Arial", Font.PLAIN, 7 );
-    private Font SmallItalicFont = new Font( "Arial", Font.ITALIC, 7 );
-    private Font SmallBoldFont = new Font( "Arial", Font.BOLD, 7 );
-    private Font ReallySmallFont = new Font( "Arial", Font.PLAIN, 6 );
-    private Font XtraSmallBoldFont = new Font( "Arial", Font.BOLD, 6 );
-    private Font XtraSmallFont = new Font( "Arial", Font.PLAIN, 6 );
     private Color Black = new Color( 0, 0, 0 ),
                   Grey = new Color( 128, 128, 128 );
     private Media media = new Media();
+    private ImageTracker imageTracker;
 
     // <editor-fold desc="Constructors">
-    public PrintMech( Mech m, Image i, boolean adv, boolean A4) {
+    public PrintMech( Mech m, Image i, boolean adv, boolean A4, ImageTracker images) {
         CurMech = m;
-        MechImage = media.GetImage(m.GetSSWImage());
+        imageTracker = images;
+        MechImage = imageTracker.getImage(m.GetSSWImage());
         Advanced = adv;
         BV = CommonTools.GetAdjustedBV(CurMech.GetCurrentBV(), Gunnery, Piloting);
         UseA4Paper = A4;
-        GetRecordSheet();
-        ChartImage = media.GetImage(PrintConsts.BP_ChartImage );
-        if ( CurMech.IsQuad() ) { ChartImage = media.GetImage(PrintConsts.QD_ChartImage); }
+        GetRecordSheet(imageTracker);
     }
 
-    public PrintMech( Mech m ) {
-        this( m, null, false, false);
+    public PrintMech( Mech m, ImageTracker images ) {
+        this( m, null, false, false, images);
     }
 
-    public PrintMech( Mech m, String Warrior, int Gun, int Pilot) {
-        this( m, null, false, false);
+    public PrintMech( Mech m, String Warrior, int Gun, int Pilot, ImageTracker images) {
+        this( m, null, false, false, images);
         SetPilotData(Warrior, Gun, Pilot);
     }
     // </editor-fold>
@@ -227,14 +219,14 @@ public class PrintMech implements Printable {
     }
 
     private void DrawPips( Graphics2D graphics ) {
-        PIPPrinter ap = new PIPPrinter(graphics, CurMech, Canon);
+        PIPPrinter ap = new PIPPrinter(graphics, CurMech, Canon, imageTracker);
         ap.Render();
     }
 
     private void DrawCriticals( Graphics2D graphics ) {
         abPlaceable[] a = null;
         Point[] p = null;
-        graphics.setFont( SmallFont );
+        graphics.setFont( PrintConsts.SmallFont );
 
         a = CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_HD );
         p = points.GetCritHDPoints();
@@ -777,8 +769,8 @@ public class PrintMech implements Printable {
 
         PlaceableInfo[] a = SortEquipmentByLocation();
         p = points.GetWeaponChartPoints();
-        graphics.setFont( SmallFont );
-        if (a.length >= 9) { graphics.setFont( XtraSmallFont ); }
+        graphics.setFont( PrintConsts.SmallFont );
+        if (a.length >= 9) { graphics.setFont( PrintConsts.XtraSmallFont ); }
         int offset = 0;
         boolean PrintSpecials = false;
         for( int i = 0; i < a.length; i++ ) {
@@ -902,7 +894,7 @@ public class PrintMech implements Printable {
             offset += graphics.getFont().getSize();
         }
 
-        graphics.setFont( BoldFont );
+        graphics.setFont( PrintConsts.BoldFont );
         p = points.GetDataChartPoints();
         graphics.drawString( CurMech.GetFullName(), p[PrintConsts.MECHNAME].x, p[PrintConsts.MECHNAME].y );
 
@@ -934,9 +926,9 @@ public class PrintMech implements Printable {
         if ( !TRO ) {
             graphics.drawString( String.format( "%1$,.0f (Base: %2$,d)", BV, CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
             graphics.drawString( "Weapon Heat (" + CurMech.GetWeaponHeat() + ")", p[PrintConsts.MAX_HEAT].x, p[PrintConsts.MAX_HEAT].y );
-            graphics.setFont(SmallFont);
+            graphics.setFont( PrintConsts.SmallFont );
             graphics.drawString( "Armor Pts: " + CurMech.GetArmor().GetArmorValue(), p[PrintConsts.TOTAL_ARMOR].x, p[PrintConsts.TOTAL_ARMOR].y );
-            graphics.setFont(BoldFont);
+            graphics.setFont( PrintConsts.BoldFont );
         } else {
             graphics.drawString( String.format( "%1$,d", CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
         }
@@ -952,7 +944,7 @@ public class PrintMech implements Printable {
         }
 
         // check boxes
-        graphics.setFont( PlainFont );
+        graphics.setFont( PrintConsts.PlainFont );
         String temp = CurMech.GetHeatSinks().LookupName();
         temp = temp.split( " " )[0];
         graphics.drawString( temp, p[PrintConsts.HEATSINK_NUMBER].x, p[PrintConsts.HEATSINK_NUMBER].y + 11 );
@@ -964,15 +956,15 @@ public class PrintMech implements Printable {
 
         if ( !TRO ) {
             //Armor Type
-            graphics.setFont(SmallFont);
-            if ( CurMech.IsQuad() ) { graphics.setFont(XtraSmallFont); }
+            graphics.setFont( PrintConsts.SmallFont );
+            if ( CurMech.IsQuad() ) { graphics.setFont( PrintConsts.XtraSmallFont ); }
 
             int baseX = points.GetArmorInfoPoints()[LocationIndex.MECH_LOC_CT].x;
             int baseY = points.GetArmorInfoPoints()[LocationIndex.MECH_LOC_CT].y + 15;
 
             if ( CurMech.GetArmor().RequiresExtraRules() ) {
-                graphics.setFont(SmallBoldFont);
-                if ( CurMech.IsQuad() ) { graphics.setFont(XtraSmallBoldFont); }
+                graphics.setFont( PrintConsts.SmallBoldFont );
+                if ( CurMech.IsQuad() ) { graphics.setFont( PrintConsts.XtraSmallBoldFont ); }
             }
 
             String[] parts = CurMech.GetArmor().CritName().trim().split(" ");
@@ -983,43 +975,43 @@ public class PrintMech implements Printable {
                     baseY += 10;
                 }
             }
-            graphics.setFont(PlainFont);
+            graphics.setFont( PrintConsts.PlainFont );
 
             //Availability Codes
             graphics.drawString(CurMech.GetAvailability().GetBestCombinedCode(), p[PrintConsts.TECH_IS].x, p[PrintConsts.TECH_IS].y+20);
         }
 
         //heat sinks
-        graphics.setFont( PlainFont );
+        graphics.setFont( PrintConsts.PlainFont );
         graphics.drawString( CurMech.GetHeatSinks().GetNumHS() + "", p[PrintConsts.HEATSINK_NUMBER].x, p[PrintConsts.HEATSINK_NUMBER].y );
         graphics.drawString( CurMech.GetHeatSinks().TotalDissipation() + "", p[PrintConsts.HEATSINK_DISSIPATION].x, p[PrintConsts.HEATSINK_DISSIPATION].y );
 
         // internal information
-        graphics.setFont( SmallFont );
+        graphics.setFont( PrintConsts.SmallFont );
         p = points.GetInternalInfoPoints();
-        graphics.drawString( CurMech.GetIntStruc().GetCTPoints() + "", p[LocationIndex.MECH_LOC_CT].x, p[LocationIndex.MECH_LOC_CT].y );
-        graphics.drawString( CurMech.GetIntStruc().GetSidePoints() + "", p[LocationIndex.MECH_LOC_LT].x, p[LocationIndex.MECH_LOC_LT].y );
-        graphics.drawString( CurMech.GetIntStruc().GetSidePoints() + "", p[LocationIndex.MECH_LOC_RT].x, p[LocationIndex.MECH_LOC_RT].y );
-        graphics.drawString( CurMech.GetIntStruc().GetArmPoints() + "", p[LocationIndex.MECH_LOC_LA].x, p[LocationIndex.MECH_LOC_LA].y );
-        graphics.drawString( CurMech.GetIntStruc().GetArmPoints() + "", p[LocationIndex.MECH_LOC_RA].x, p[LocationIndex.MECH_LOC_RA].y );
-        graphics.drawString( CurMech.GetIntStruc().GetLegPoints() + "", p[LocationIndex.MECH_LOC_LL].x, p[LocationIndex.MECH_LOC_LL].y );
-        graphics.drawString( CurMech.GetIntStruc().GetLegPoints() + "", p[LocationIndex.MECH_LOC_RL].x, p[LocationIndex.MECH_LOC_RL].y );
+        graphics.drawString( "[" + CurMech.GetIntStruc().GetCTPoints() + "]", p[LocationIndex.MECH_LOC_CT].x, p[LocationIndex.MECH_LOC_CT].y );
+        graphics.drawString( "[" + CurMech.GetIntStruc().GetSidePoints() + "]", p[LocationIndex.MECH_LOC_LT].x, p[LocationIndex.MECH_LOC_LT].y );
+        graphics.drawString( "[" + CurMech.GetIntStruc().GetSidePoints() + "]", p[LocationIndex.MECH_LOC_RT].x, p[LocationIndex.MECH_LOC_RT].y );
+        graphics.drawString( "[" + CurMech.GetIntStruc().GetArmPoints() + "]", p[LocationIndex.MECH_LOC_LA].x, p[LocationIndex.MECH_LOC_LA].y );
+        graphics.drawString( "[" + CurMech.GetIntStruc().GetArmPoints() + "]", p[LocationIndex.MECH_LOC_RA].x, p[LocationIndex.MECH_LOC_RA].y );
+        graphics.drawString( "[" + CurMech.GetIntStruc().GetLegPoints() + "]", p[LocationIndex.MECH_LOC_LL].x, p[LocationIndex.MECH_LOC_LL].y );
+        graphics.drawString( "[" + CurMech.GetIntStruc().GetLegPoints() + "]", p[LocationIndex.MECH_LOC_RL].x, p[LocationIndex.MECH_LOC_RL].y );
 
         // armor information
         p = points.GetArmorInfoPoints();
-        graphics.drawString( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_HD ) + "", p[LocationIndex.MECH_LOC_HD].x, p[LocationIndex.MECH_LOC_HD].y );
-        graphics.drawString( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CT ) + "", p[LocationIndex.MECH_LOC_CT].x, p[LocationIndex.MECH_LOC_CT].y );
-        graphics.drawString( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LT ) + "", p[LocationIndex.MECH_LOC_LT].x, p[LocationIndex.MECH_LOC_LT].y );
-        graphics.drawString( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RT ) + "", p[LocationIndex.MECH_LOC_RT].x, p[LocationIndex.MECH_LOC_RT].y );
-        graphics.drawString( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LA ) + "", p[LocationIndex.MECH_LOC_LA].x, p[LocationIndex.MECH_LOC_LA].y );
-        graphics.drawString( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RA ) + "", p[LocationIndex.MECH_LOC_RA].x, p[LocationIndex.MECH_LOC_RA].y );
-        graphics.drawString( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LL ) + "", p[LocationIndex.MECH_LOC_LL].x, p[LocationIndex.MECH_LOC_LL].y );
-        graphics.drawString( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RL ) + "", p[LocationIndex.MECH_LOC_RL].x, p[LocationIndex.MECH_LOC_RL].y );
-        graphics.drawString( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CTR ) + "", p[LocationIndex.MECH_LOC_CTR].x, p[LocationIndex.MECH_LOC_CTR].y );
-        graphics.drawString( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LTR ) + "", p[LocationIndex.MECH_LOC_LTR].x, p[LocationIndex.MECH_LOC_LTR].y );
-        graphics.drawString( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RTR ) + "", p[LocationIndex.MECH_LOC_RTR].x, p[LocationIndex.MECH_LOC_RTR].y );
+        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_HD ) + "]", p[LocationIndex.MECH_LOC_HD].x, p[LocationIndex.MECH_LOC_HD].y );
+        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CT ) + "]", p[LocationIndex.MECH_LOC_CT].x, p[LocationIndex.MECH_LOC_CT].y );
+        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LT ) + "]", p[LocationIndex.MECH_LOC_LT].x, p[LocationIndex.MECH_LOC_LT].y );
+        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RT ) + "]", p[LocationIndex.MECH_LOC_RT].x, p[LocationIndex.MECH_LOC_RT].y );
+        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LA ) + "]", p[LocationIndex.MECH_LOC_LA].x, p[LocationIndex.MECH_LOC_LA].y );
+        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RA ) + "]", p[LocationIndex.MECH_LOC_RA].x, p[LocationIndex.MECH_LOC_RA].y );
+        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LL ) + "]", p[LocationIndex.MECH_LOC_LL].x, p[LocationIndex.MECH_LOC_LL].y );
+        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RL ) + "]", p[LocationIndex.MECH_LOC_RL].x, p[LocationIndex.MECH_LOC_RL].y );
+        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CTR ) + "]", p[LocationIndex.MECH_LOC_CTR].x, p[LocationIndex.MECH_LOC_CTR].y );
+        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LTR ) + "]", p[LocationIndex.MECH_LOC_LTR].x, p[LocationIndex.MECH_LOC_LTR].y );
+        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RTR ) + "]", p[LocationIndex.MECH_LOC_RTR].x, p[LocationIndex.MECH_LOC_RTR].y );
         if( CurMech.GetArmor().GetBAR() < 10 ) {
-            graphics.setFont( XtraSmallFont );
+            graphics.setFont( PrintConsts.XtraSmallFont );
             graphics.drawString( "BAR:" + CurMech.GetArmor().GetBAR(), p[LocationIndex.MECH_LOC_HD].x, p[LocationIndex.MECH_LOC_HD].y + 7 );
             graphics.drawString( "BAR:" + CurMech.GetArmor().GetBAR(), p[LocationIndex.MECH_LOC_CT].x - 5, p[LocationIndex.MECH_LOC_CT].y + 8 );
             graphics.drawString( "BAR:" + CurMech.GetArmor().GetBAR(), p[LocationIndex.MECH_LOC_LT].x - 4, p[LocationIndex.MECH_LOC_LT].y + 7 );
@@ -1031,7 +1023,7 @@ public class PrintMech implements Printable {
             graphics.drawString( "BAR:" + CurMech.GetArmor().GetBAR(), p[LocationIndex.MECH_LOC_CTR].x + 2, p[LocationIndex.MECH_LOC_CTR].y + 8 );
             graphics.drawString( "BAR:" + CurMech.GetArmor().GetBAR(), p[LocationIndex.MECH_LOC_LTR].x + 13, p[LocationIndex.MECH_LOC_LTR].y );
             graphics.drawString( "BAR:" + CurMech.GetArmor().GetBAR(), p[LocationIndex.MECH_LOC_RTR].x - 22, p[LocationIndex.MECH_LOC_RTR].y );
-            graphics.setFont( SmallFont );
+            graphics.setFont( PrintConsts.SmallFont );
         }
     }
 
@@ -1088,7 +1080,7 @@ public class PrintMech implements Printable {
     }
 
     private void DrawGrid( Graphics2D graphics ) {
-        graphics.setFont( ReallySmallFont );
+        graphics.setFont( PrintConsts.ReallySmallFont );
         boolean bPrint = true;
         for (int x = 0; x <= 576; x += 10) {
             if (bPrint) { graphics.drawString(x+"", x-5, 5); }
@@ -1177,18 +1169,20 @@ public class PrintMech implements Printable {
         return retval;
     }
 
-    private void GetRecordSheet() {
+    private void GetRecordSheet( ImageTracker images ) {
         // loads the correct record sheet and points based on the information given
-        RecordSheet = media.GetImage( PrintConsts.RS_TW_BP );
+        RecordSheet = images.getImage( PrintConsts.RS_TW_BP );
+        ChartImage = images.getImage(PrintConsts.BP_ChartImage );
         points = new TWBipedPoints();
 
         if ( CurMech.IsQuad() ) {
-            RecordSheet = media.GetImage( PrintConsts.RS_TW_QD );
+            RecordSheet = images.getImage( PrintConsts.RS_TW_QD );
+            if ( CurMech.IsQuad() ) { ChartImage = images.getImage(PrintConsts.QD_ChartImage); }
             points = new TWQuadPoints();
         }
 
         if ( Advanced ) {
-            RecordSheet = media.GetImage( PrintConsts.RS_TO_BP );
+            RecordSheet = images.getImage( PrintConsts.RS_TO_BP );
         }
     }
 
