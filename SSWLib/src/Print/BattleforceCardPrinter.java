@@ -63,9 +63,9 @@ public class BattleforceCardPrinter implements Printable {
     public BattleforceCardPrinter( BattleForce f, ImageTracker images) {
         battleforce = f;
         imageTracker = images;
-        RecordSheet = media.GetImage( PrintConsts.BF_BG );
-        Unit = media.GetImage( PrintConsts.BF_Card );
-        Charts = media.GetImage( PrintConsts.BF_Chart );
+        RecordSheet = images.getImage( PrintConsts.BF_BG );
+        Unit = images.getImage( PrintConsts.BF_Card );
+        Charts = images.getImage( PrintConsts.BF_Chart );
         setType(battleforce.Type);
     }
 
