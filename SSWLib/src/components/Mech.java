@@ -3591,6 +3591,25 @@ public class Mech implements ifBattleforce {
         return false;
     }
 
+    public boolean HasECM() {
+        // ensures that, if the 'Mech needs ECM, it has it.
+        SimplePlaceable p = new SimplePlaceable( "ECMTest", "ECMTest", "ECMTest", "ECMTest", "none", 0, false, null );
+        p.SetExclusions( new Exclusion( new String[] { "ECM", "Watchdog" }, "ECMTest" ) );
+        try {
+            CurLoadout.CheckExclusions( p );
+        } catch( Exception e ) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean ValidateECM() {
+        if( CurArmor.IsStealth() || HasVoidSig() ) {
+            return HasECM();
+        }
+        return true;
+    }
+
     public Vector GetMechMods() {
         return MechMods;
     }

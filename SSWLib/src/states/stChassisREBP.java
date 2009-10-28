@@ -85,7 +85,7 @@ public class stChassisREBP implements ifChassis, ifState {
     }
 
     public String LookupName() {
-        return "Reinforced";
+        return "Reinforced Structure";
     }
 
     public String ChatName() {
@@ -160,6 +160,6 @@ public class stChassisREBP implements ifChassis, ifState {
     // toString
     @Override
     public String toString() {
-        return "Reinforced";
+        return "Reinforced Structure";
     }
 }
