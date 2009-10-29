@@ -123,13 +123,13 @@ public class MultiSlotSystem extends abPlaceable {
     @Override
     public double GetTonnage() {
         double retval = 0.0;
-        if( IsArmored() ) {
-            retval += 0.5 * ReportCrits();
-        }
         if( BasedOnMechTons ) {
             retval += Owner.GetTonnage() * Tonnage;
         } else {
             retval += Tonnage;
+        }
+        if( IsArmored() ) {
+            retval += 0.5 * ReportCrits();
         }
         return retval;
     }

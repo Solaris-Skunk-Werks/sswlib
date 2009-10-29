@@ -34,13 +34,13 @@ import components.MechModifier;
 public class stEngineISXL implements ifEngine, ifState {
     // An Inner Sphere XL Fusion Engine
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
-    private final static double[] Masses = {0.5f,0.5f,0.5f,0.5f,0.5f,0.5f,0.5f,
-        0.5f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.5f,1.5f,1.5f,1.5f,1.5f,2.0f,2.0f,
-        2.0f,2.0f,2.0f,2.5f,2.5f,2.5f,2.5f,3.0f,3.0f,3.0f,3.0f,3.0f,3.5f,3.5f,
-        4.0f,4.0f,4.0f,4.5f,4.5f,4.5f,5.0f,5.0f,5.0f,5.5f,5.5f,6.0f,6.0f,6.5f,
-        6.5f,7.0f,7.0f,7.5f,8.0f,8.0f,8.5f,9.0f,9.0f,9.5f,10.0f,10.5f,11.0f,
-        11.5f,12.0f,12.5f,13.0f,13.5f,14.5f,15.0f,16.0f,16.5f,17.5f,18.5f,19.5f,
-        20.5f,22.0f,23.0f,24.5f,26.5f};
+    private final static double[] Masses = {0.5,0.5,0.5,0.5,0.5,0.5,0.5,
+        0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.5,1.5,1.5,1.5,1.5,2.0,2.0,
+        2.0,2.0,2.0,2.5,2.5,2.5,2.5,3.0,3.0,3.0,3.0,3.0,3.5,3.5,
+        4.0,4.0,4.0,4.5,4.5,4.5,5.0,5.0,5.0,5.5,5.5,6.0,6.0,6.5,
+        6.5,7.0,7.0,7.5,8.0,8.0,8.5,9.0,9.0,9.5,10.0,10.5,11.0,
+        11.5,12.0,12.5,13.0,13.5,14.5,15.0,16.0,16.5,17.5,18.5,19.5,
+        20.5,22.0,23.0,24.5,26.5};
     private final static int[] BFStructure = {1,1,1,1,1,2,2,2,2,3,3,3,3,3,4,4,4,4,4};
 
     public stEngineISXL() {
@@ -54,8 +54,14 @@ public class stEngineISXL implements ifEngine, ifState {
         return true;
     }
 
-    public double GetTonnage( int Rating ) {
-        return Masses[GetIndex( Rating )];
+    public double GetTonnage( int Rating, boolean fractional ) {
+        if( fractional ) {
+            double retval = Math.ceil( stEngineFusion.Masses[GetIndex( Rating )] * 500 ) * 0.001;
+            if( retval < 0.25 ) { return 0.25; }
+            return retval;
+        } else {
+            return Masses[GetIndex( Rating )];
+        }
     }
     
     public int GetCTCrits() {

@@ -502,6 +502,10 @@ public class Armor  extends abPlaceable {
     @Override
     public double GetTonnage() {
         // this has to return the nearest half-ton.
+        if( Owner.UsingFractionalAccounting() ) {
+            double result = GetArmorValue() * Config.GetPointsPerTon();
+            return Math.ceil( result * 1000 ) * 0.001;
+        }
         double result = GetArmorValue() / ( 8 * Config.GetAVMult() );
         int mid = (int) Math.floor( result + 0.9999 );
         result = mid * 0.5;
@@ -510,6 +514,7 @@ public class Armor  extends abPlaceable {
 
     public double GetWastedTonnage() {
         // returns the amount of tonnage wasted due to unspent armor points
+        if( Owner.UsingFractionalAccounting() ) { return 0.0; }
         double result = GetTonnage() - GetArmorValue() / ( 16 * Config.GetAVMult() );
         if( result < 0.0 ) { result = 0.0; }
         return (double) Math.floor( result * 100 ) / 100;
@@ -518,6 +523,7 @@ public class Armor  extends abPlaceable {
     public int GetWastedAV() {
         // returns the amount of armor points left in the current half-ton lot
         // get the amount of wasted tonnage
+        if( Owner.UsingFractionalAccounting() ) { return 0; }
         double Waste = 0.5 - ( GetTonnage() - GetArmorValue() / ( 16 * Config.GetAVMult() ) );
         int result = (int) Math.floor( ( 8 * Config.GetAVMult() ) - ( Waste * 16 * Config.GetAVMult() ) );
         if( result < 0 ) { result = 0; }
@@ -532,6 +538,10 @@ public class Armor  extends abPlaceable {
 
     public double GetMaxTonnage() {
         // returns the maximum armor tonnage supported by this mech.
+        if( Owner.UsingFractionalAccounting() ) {
+            double result = GetMaxArmor() * Config.GetPointsPerTon();
+            return Math.ceil( result * 1000 ) * 0.001;
+        }
         double result = GetMaxArmor() / ( 8 * Config.GetAVMult() );
         int mid = (int) Math.round( result + 0.4999 );
         result = mid * 0.5;
@@ -541,6 +551,10 @@ public class Armor  extends abPlaceable {
     public double GetAVMult() {
         // convenience method for armor placement
         return Config.GetAVMult();
+    }
+
+    public double GetPointsPerTon() {
+        return Config.GetPointsPerTon();
     }
 
     public double GetBVTypeMult() {

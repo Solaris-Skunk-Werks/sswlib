@@ -92,6 +92,10 @@ public class stArmorISFF implements ifArmor, ifState {
         return 1.12f;
     }
 
+    public double GetPointsPerTon() {
+        return 0.0558;
+    }
+
     public boolean IsStealth() {
         return false;
     }

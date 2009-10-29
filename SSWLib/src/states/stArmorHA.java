@@ -95,6 +95,10 @@ public class stArmorHA implements ifArmor, ifState {
         return 0.5f;
     }
 
+    public double GetPointsPerTon() {
+        return 0.125;
+    }
+
     public boolean IsStealth() {
         return false;
     }

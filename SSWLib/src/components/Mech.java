@@ -89,6 +89,7 @@ public class Mech implements ifBattleforce {
                     HasLegAES = false,
                     HasFHES = false,
                     HasPartialWing = false,
+                    FractionalAccounting = false,
                     Changed = false;
     private Engine CurEngine = new Engine( this );
     private ifMechLoadout MainLoadout = new BipedLoadout( Constants.BASELOADOUT_NAME, this ),
@@ -3659,6 +3660,14 @@ public class Mech implements ifBattleforce {
             }
         }
         return retval;
+    }
+
+    public boolean UsingFractionalAccounting() {
+        return FractionalAccounting;
+    }
+
+    public void SetFractionalAccounting( boolean b ) {
+        FractionalAccounting = b;
     }
 
     public void SetOverview( String n ) {

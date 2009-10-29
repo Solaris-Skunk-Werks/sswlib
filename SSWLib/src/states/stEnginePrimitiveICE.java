@@ -34,13 +34,13 @@ import components.MechModifier;
 public class stEnginePrimitiveICE implements ifEngine, ifState {
     // An Inner Sphere I.C.E. Engine
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
-    private final static double[] Masses = { 1.0f,1.0f,1.0f,1.0f,2.0f,2.0f,2.0f,
-        2.0f,3.0f,3.0f,3.0f,4.0f,4.0f,4.0f,5.0f,5.0f,6.0f,6.0f,6.0f,7.0f,7.0f,
-        8.0f,8.0f,8.0f,9.0f,9.0f,10.0f,10.0f,11.0f,11.0f,12.0f,12.0f,12.0f,
-        14.0f,14.0f,15.0f,15.0f,16.0f,17.0f,17.0f,18.0f,19.0f,20.0f,20.0f,21.0f,
-        22.0f,23.0f,24.0f,25.0f,26.0f,27.0f,28.0f,29.0f,31.0f,32.0f,33.0f,35.0f,
-        36.0f,38.0f,39.0f,41.0f,43.0f,45.0f,47.0f,49.0f,51.0f,54.0f,57.0f,59.0f,
-        63.0f,66.0f,69.0f,73.0f,77.0f,82.0f,87.0f,92.0f,98.0f,105.0f };
+    private final static double[] Masses = { 1.0,1.0,1.0,1.0,2.0,2.0,2.0,
+        2.0,3.0,3.0,3.0,4.0,4.0,4.0,5.0,5.0,6.0,6.0,6.0,7.0,7.0,
+        8.0,8.0,8.0,9.0,9.0,10.0,10.0,11.0,11.0,12.0,12.0,12.0,
+        14.0,14.0,15.0,15.0,16.0,17.0,17.0,18.0,19.0,20.0,20.0,21.0,
+        22.0,23.0,24.0,25.0,26.0,27.0,28.0,29.0,31.0,32.0,33.0,35.0,
+        36.0,38.0,39.0,41.0,43.0,45.0,47.0,49.0,51.0,54.0,57.0,59.0,
+        63.0,66.0,69.0,73.0,77.0,82.0,87.0,92.0,98.0,105.0 };
     private final static int[] BFStructure = {1,1,2,2,3,3,3,4,4,5,5,5,6,6,6,7,7,8,8};
 
     public stEnginePrimitiveICE() {
@@ -59,7 +59,7 @@ public class stEnginePrimitiveICE implements ifEngine, ifState {
         return false;
     }
 
-    public double GetTonnage( int Rating ) {
+    public double GetTonnage( int Rating, boolean fractional ) {
         return Masses[GetIndex( Rating )];
     }
     

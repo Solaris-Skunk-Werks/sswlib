@@ -45,6 +45,7 @@ public interface ifArmor {
     public boolean Place( Armor a, ifMechLoadout l, LocationIndex[] Locs );
     public int NumCrits();
     public double GetAVMult();
+    public double GetPointsPerTon();
     public boolean IsStealth();
     public double GetCostMult();
     public double GetBVTypeMult();

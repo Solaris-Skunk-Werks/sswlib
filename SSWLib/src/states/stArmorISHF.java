@@ -92,6 +92,10 @@ public class stArmorISHF implements ifArmor, ifState {
         return 1.24f;
     }
 
+    public double GetPointsPerTon() {
+        return 0.0504;
+    }
+
     public double GetCostMult() {
         return 25000.0f;
     }

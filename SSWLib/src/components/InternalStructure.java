@@ -204,7 +204,7 @@ public class InternalStructure extends abPlaceable {
     }
 
     public double GetTonnage() {
-        return Config.GetStrucTon( Owner.GetTonnage() );
+        return Config.GetStrucTon( Owner.GetTonnage(), Owner.UsingFractionalAccounting() );
     }
 
     public boolean IsQuad() {

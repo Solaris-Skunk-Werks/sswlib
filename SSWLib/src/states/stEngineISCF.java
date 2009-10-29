@@ -34,13 +34,13 @@ import components.MechModifier;
 public class stEngineISCF implements ifEngine, ifState {
     // An Inner Sphere Compact Fusion Engine
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
-    private final static double[] Masses = {1.0f,1.0f,1.0f,1.0f,1.5f,1.5f,1.5f,
-        1.5f,2.5f,2.5f,2.5f,3.0f,3.0f,3.0f,4.0f,4.0f,4.5f,4.5f,4.5f,5.5f,5.5f,
-        6.0f,6.0f,6.0f,7.0f,7.0f,7.5f,7.5f,8.5f,8.5f,9.0f,9.0f,9.0f,10.5f,10.5f,
-        11.5f,11.5f,12.0f,13.0f,13.0f,13.5f,14.5f,15.0f,15.0f,16.0f,16.5f,17.5f,
-        18.0f,19.0f,19.5f,20.5f,21.0f,22.0f,23.5f,24.0f,25.0f,26.5f,27.0f,28.5f,
-        29.5f,31.0f,32.5f,34.0f,35.5f,37.0f,38.5f,40.5f,43.0f,44.5f,47.5f,49.5f,
-        52.0f,55.0f,58.0f,61.5f,65.5f,69.0f,73.5f,79.0f};
+    private final static double[] Masses = {1.0,1.0,1.0,1.0,1.5,1.5,1.5,
+        1.5,2.5,2.5,2.5,3.0,3.0,3.0,4.0,4.0,4.5,4.5,4.5,5.5,5.5,
+        6.0,6.0,6.0,7.0,7.0,7.5,7.5,8.5,8.5,9.0,9.0,9.0,10.5,10.5,
+        11.5,11.5,12.0,13.0,13.0,13.5,14.5,15.0,15.0,16.0,16.5,17.5,
+        18.0,19.0,19.5,20.5,21.0,22.0,23.5,24.0,25.0,26.5,27.0,28.5,
+        29.5,31.0,32.5,34.0,35.5,37.0,38.5,40.5,43.0,44.5,47.5,49.5,
+        52.0,55.0,58.0,61.5,65.5,69.0,73.5,79.0};
     private final static int[] BFStructure = {1,2,2,3,3,4,4,5,5,6,7,7,7,8,8,9,10,10,10};
 
     public stEngineISCF() {
@@ -54,8 +54,12 @@ public class stEngineISCF implements ifEngine, ifState {
         return false;
     }
 
-    public double GetTonnage( int Rating ) {
-        return Masses[GetIndex( Rating )];
+    public double GetTonnage( int Rating, boolean fractional ) {
+        if( fractional ) {
+            return Math.ceil( stEngineFusion.Masses[GetIndex( Rating )] * 1500 ) * 0.001;
+        } else {
+            return Masses[GetIndex( Rating )];
+        }
     }
     
     public int GetCTCrits() {

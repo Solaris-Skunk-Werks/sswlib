@@ -34,13 +34,13 @@ import components.MechModifier;
 public class stEnginePrimitiveFission implements ifEngine, ifState {
     // An Inner Sphere Fission Engine
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
-    private final static double[] Masses = {5.0f,5.0f,5.0f,5.0f,5.0f,5.0f,5.0f,
-        5.0f,5.0f,5.0f,5.0f,5.0f,5.0f,5.0f,5.0f,5.0f,5.5f,5.5f,5.5f,6.5f,6.5f,
-        7.0f,7.0f,7.0f,8.0f,8.0f,9.0f,9.0f,10.0f,10.0f,10.5f,10.5f,10.5f,12.5f,
-        12.5f,13.5f,13.5f,14.0f,15.0f,15.0f,16.0f,17.0f,17.5f,17.5f,18.5f,19.5f,
-        20.5f,21.0f,22.0f,23.0f,24.0f,24.5f,25.5f,27.5f,28.0f,29.0f,31.0f,31.5f,
-        33.5f,34.5f,36.0f,38.0f,39.5f,41.5f,43.0f,45.0f,47.5f,50.0f,52.0f,55.5f,
-        58.0f,60.5f,64.0f,67.5f,72.0f,76.5f,80.5f,86.0f,92.0f};
+    private final static double[] Masses = {5.0,5.0,5.0,5.0,5.0,5.0,5.0,
+        5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.5,5.5,5.5,6.5,6.5,
+        7.0,7.0,7.0,8.0,8.0,9.0,9.0,10.0,10.0,10.5,10.5,10.5,12.5,
+        12.5,13.5,13.5,14.0,15.0,15.0,16.0,17.0,17.5,17.5,18.5,19.5,
+        20.5,21.0,22.0,23.0,24.0,24.5,25.5,27.5,28.0,29.0,31.0,31.5,
+        33.5,34.5,36.0,38.0,39.5,41.5,43.0,45.0,47.5,50.0,52.0,55.5,
+        58.0,60.5,64.0,67.5,72.0,76.5,80.5,86.0,92.0};
     private final static int[] BFStructure = {1,1,2,2,3,3,3,4,4,5,5,5,6,6,6,7,7,8,8};
 
     public stEnginePrimitiveFission() {
@@ -59,8 +59,14 @@ public class stEnginePrimitiveFission implements ifEngine, ifState {
         return false;
     }
 
-    public double GetTonnage( int Rating ) {
-        return Masses[GetIndex( Rating )];
+    public double GetTonnage( int Rating, boolean fractional ) {
+        if( fractional ) {
+            double retval = Math.ceil( stEngineFusion.Masses[GetIndex( Rating )] * 1750 ) * 0.001;
+            if( retval < 5.0 ) { return 5.0; }
+            return retval;
+        } else {
+            return Masses[GetIndex( Rating )];
+        }
     }
     
     public int GetCTCrits() {

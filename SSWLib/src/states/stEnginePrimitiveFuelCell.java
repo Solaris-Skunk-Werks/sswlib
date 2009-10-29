@@ -34,13 +34,13 @@ import components.MechModifier;
 public class stEnginePrimitiveFuelCell implements ifEngine, ifState {
     // An Inner Sphere Fuel Cell Engine
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
-    private final static double[] Masses = {1.0f,1.0f,1.0f,1.0f,1.5f,1.5f,1.5f,
-        1.5f,2.0f,2.0f,2.0f,2.5f,2.5f,2.5f,3.0f,3.0f,4.0f,4.0f,4.0f,4.5f,4.5f,
-        5.0f,5.0f,5.0f,5.5f,5.5f,6.0f,6.0f,7.0f,7.0f,7.5f,7.5f,7.5f,8.5f,8.5f,
-        9.0f,9.0f,10.0f,10.5f,10.5f,11.0f,11.5f,12.0f,12.0f,13.0f,13.5f,14.0f,
-        14.5f,15.0f,16.0f,16.5f,17.0f,17.5f,19.0f,19.5f,20.0f,21.0f,22.0f,23.0f,
-        23.5f,25.0f,26.0f,27.0f,28.5f,29.5f,31.0f,32.5f,34.5f,35.5f,38.0f,40.0f,
-        41.5f,44.0f,46.5f,49.5f,52.5f,55.5f,59.0f,63.0f};
+    private final static double[] Masses = {1.0,1.0,1.0,1.0,1.5,1.5,1.5,
+        1.5,2.0,2.0,2.0,2.5,2.5,2.5,3.0,3.0,4.0,4.0,4.0,4.5,4.5,
+        5.0,5.0,5.0,5.5,5.5,6.0,6.0,7.0,7.0,7.5,7.5,7.5,8.5,8.5,
+        9.0,9.0,10.0,10.5,10.5,11.0,11.5,12.0,12.0,13.0,13.5,14.0,
+        14.5,15.0,16.0,16.5,17.0,17.5,19.0,19.5,20.0,21.0,22.0,23.0,
+        23.5,25.0,26.0,27.0,28.5,29.5,31.0,32.5,34.5,35.5,38.0,40.0,
+        41.5,44.0,46.5,49.5,52.5,55.5,59.0,63.0};
     private final static int[] BFStructure = {1,1,2,2,3,3,3,4,4,5,5,5,6,6,6,7,7,8,8};
 
     public stEnginePrimitiveFuelCell() {
@@ -59,8 +59,12 @@ public class stEnginePrimitiveFuelCell implements ifEngine, ifState {
         return false;
     }
 
-    public double GetTonnage( int Rating ) {
-        return Masses[GetIndex( Rating )];
+    public double GetTonnage( int Rating, boolean fractional ) {
+        if( fractional ) {
+            return Math.ceil( stEngineFusion.Masses[GetIndex( Rating )] * 1200 ) * 0.001;
+        } else {
+            return Masses[GetIndex( Rating )];
+        }
     }
 
     public int GetCTCrits() {

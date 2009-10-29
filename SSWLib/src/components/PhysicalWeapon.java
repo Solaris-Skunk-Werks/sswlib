@@ -376,10 +376,14 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
     @Override
     public double GetTonnage() {
         double result = 0.0;
-        if( RoundToHalfTon ) {
-            result = ((int) ( Math.ceil( Owner.GetTonnage() * TonMult * 2 ))) * 0.5 + TonAdd;
+        if( Owner.UsingFractionalAccounting() ) {
+            result = Math.ceil( ( Owner.GetTonnage() * TonMult + TonAdd ) * 1000 ) * 0.001;
         } else {
-            result = (int) Math.ceil( Owner.GetTonnage() * TonMult ) + TonAdd;
+            if( RoundToHalfTon ) {
+                result = ((int) ( Math.ceil( Owner.GetTonnage() * TonMult * 2 ))) * 0.5 + TonAdd;
+            } else {
+                result = (int) Math.ceil( Owner.GetTonnage() * TonMult ) + TonAdd;
+            }
         }
         if( IsArmored() ) {
             return result + ( NumCrits() * 0.5 );

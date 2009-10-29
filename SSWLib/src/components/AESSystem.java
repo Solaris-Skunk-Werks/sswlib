@@ -94,13 +94,23 @@ public class AESSystem extends abPlaceable {
     @Override
     public double GetTonnage() {
         double retval = 0.0;
+        if( Owner.UsingFractionalAccounting() ) {
+            if( Owner.IsQuad() ) {
+                retval = Owner.GetTonnage() * 0.02;
+                retval = Math.ceil( retval * 1000 ) * 0.001;
+            } else {
+                retval = Owner.GetTonnage() * 0.02857;
+                retval = Math.ceil( retval * 1000 ) * 0.001;
+            }
+        } else {
+            if( Owner.IsQuad() ) {
+                retval = ((int) ( Math.ceil( Owner.GetTonnage() * 0.02 * 2.0 ))) * 0.5;
+            } else {
+                retval = ((int) ( Math.ceil( Owner.GetTonnage() * 0.02857 * 2.0 ))) * 0.5;
+            }
+        }
         if( IsArmored() ) {
             retval += NumCrits() * 0.5;
-        }
-        if( Owner.IsQuad() ) {
-            retval += ((int) ( Math.ceil( Owner.GetTonnage() * 0.02 * 2.0 ))) * 0.5;
-        } else {
-            retval += ((int) ( Math.ceil( Owner.GetTonnage() * 0.02857 * 2.0 ))) * 0.5;
         }
         return retval;
     }

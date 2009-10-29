@@ -64,8 +64,13 @@ public class PowerAmplifier {
         if( tons <= 0.0 ) {
             return 0.0;
         } else {
-            double result = (double) Math.ceil( tons * 0.2 );
-            return result * 0.5;
+            double result = 0.0;
+            if( CurLoadout.GetMech().UsingFractionalAccounting() ) {
+                result = Math.ceil( tons * 200 ) * 0.001;
+            } else {
+                result = (double) Math.ceil( tons * 0.2 ) * 0.5;
+            }
+            return result;
         }
     }
 

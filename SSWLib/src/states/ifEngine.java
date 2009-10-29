@@ -41,7 +41,7 @@ public interface ifEngine {
     public int GetFullCrits();
     public boolean IsFusion();
     public boolean IsNuclear();
-    public double GetTonnage( int Rating );
+    public double GetTonnage( int Rating, boolean fractional );
     public int GetBFStructure( int tonnage );
     public int GetCTCrits();
     public int GetSideTorsoCrits();

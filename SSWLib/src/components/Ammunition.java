@@ -34,6 +34,7 @@ public class Ammunition extends abPlaceable {
                   OffBV = 0.0,
                   DefBV = 0.0;
     private int LotSize = 0,
+                CurLotSize = 0,
                 AmmoIndex,
                 minrng = 0,
                 srtrng = 0,
@@ -95,6 +96,7 @@ public class Ammunition extends abPlaceable {
         medrng = a.medrng;
         lngrng = a.lngrng;
         LotSize = a.LotSize;
+        CurLotSize = LotSize;
         Explosive = a.Explosive;
         WeaponClass = a.WeaponClass;
         FCSType = a.FCSType;
@@ -132,6 +134,7 @@ public class Ammunition extends abPlaceable {
 
     public void SetAmmo( int size, boolean explode, int wclass, int fcsclass ) {
         LotSize = size;
+        CurLotSize = LotSize;
         Explosive = explode;
         WeaponClass = wclass;
         FCSType = fcsclass;
@@ -183,11 +186,19 @@ public class Ammunition extends abPlaceable {
     public double GetTonnage() {
         // Only certain types of ammo comes in less or more than one ton lots
         // but we'll have to set this regardless
+        if( LotSize != CurLotSize ) {
+            double TonsPerShot = Tonnage / (double) LotSize;
+            return Math.ceil( TonsPerShot * (double) CurLotSize ) * 0.001;
+        }
         return Tonnage;
     }
 
     // return the cost of the item
     public double GetCost() {
+        if( LotSize != CurLotSize ) {
+            double CostPerShot = Cost / (double) LotSize;
+            return Math.ceil( CostPerShot * (double) CurLotSize ) * 0.001;
+        }
         return Cost;
     }
 
@@ -204,7 +215,19 @@ public class Ammunition extends abPlaceable {
     }
 
     public int GetLotSize() {
+        if( CurLotSize != LotSize ) { return CurLotSize; }
         return LotSize;
+    }
+
+    public boolean SetLotSize( int size ) {
+        if( size > LotSize || size < 1 ) return false;
+        CurLotSize = size;
+        return true;
+    }
+
+    public boolean OddLotSize() {
+        if( CurLotSize != LotSize ) { return true; }
+        return false;
     }
 
     public boolean IsExplosive() {

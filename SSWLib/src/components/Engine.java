@@ -145,9 +145,9 @@ public class Engine extends abPlaceable {
 
     public double GetTonnage() {
         if( IsArmored() ) {
-            return CurConfig.GetTonnage( EngineRating ) + ReportCrits() * 0.5;
+            return CurConfig.GetTonnage( EngineRating, Owner.UsingFractionalAccounting() ) + ReportCrits() * 0.5;
         } else {
-            return CurConfig.GetTonnage( EngineRating );
+            return CurConfig.GetTonnage( EngineRating, Owner.UsingFractionalAccounting() );
         }
     }
 

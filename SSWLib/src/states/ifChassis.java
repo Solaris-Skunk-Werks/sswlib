@@ -39,7 +39,7 @@ public interface ifChassis {
     public String MegaMekName( boolean UseRear );
     public String BookReference();
     public int GetCrits();
-    public double GetStrucTon( int Tonnage );
+    public double GetStrucTon( int Tonnage, boolean fractional );
     public boolean IsQuad();
     public int GetHeadPoints();
     public int GetCTPoints( int Tonnage );

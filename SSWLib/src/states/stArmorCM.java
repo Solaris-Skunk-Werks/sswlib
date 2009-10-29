@@ -95,6 +95,10 @@ public class stArmorCM implements ifArmor, ifState {
         return 1.5f;
     }
 
+    public double GetPointsPerTon() {
+        return 0.0417;
+    }
+
     public boolean IsStealth() {
         return false;
     }

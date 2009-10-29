@@ -33,9 +33,7 @@ import components.MechModifier;
 
 public class stChassisISCOQD implements ifChassis, ifState {
     // An Inner Sphere Composite Quad chassis
-    private final static double[] Masses = { 0.5f, 1.0f, 1.0f, 1.5f, 1.5f, 2.0f,
-        2.0f, 2.5f, 2.5f, 3.0f, 3.0f, 3.5f, 3.5f, 4.0f, 4.0f, 4.5f, 4.5f, 5.0f,
-        5.0f };
+    private final static double[] Masses = { 0.5, 1.0, 1.0, 1.5, 1.5, 2.0, 2.0, 2.5, 2.5, 3.0, 3.0, 3.5, 3.5, 4.0, 4.0, 4.5, 4.5, 5.0, 5.0 };
     private final static int[][] IntPoints = {
         { 4, 3, 1, 2 },
         { 5, 4, 2, 3 },
@@ -97,8 +95,12 @@ public class stChassisISCOQD implements ifChassis, ifState {
         return "Tactical Operations";
     }
 
-    public double GetStrucTon( int Tonnage ) {
-        return Masses[GetIndex(Tonnage)];
+    public double GetStrucTon( int Tonnage, boolean fractional ) {
+        if( fractional ) {
+            return Math.ceil( stChassisMSQD.Masses[GetIndex(Tonnage)] * 500 ) * 0.001;
+        } else {
+            return Masses[GetIndex(Tonnage)];
+        }
     }
     
     public boolean IsQuad() {

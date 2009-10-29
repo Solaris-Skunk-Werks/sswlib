@@ -93,6 +93,10 @@ public class stArmorPBM implements ifArmor, ifState {
         return 0.67f;
     }
 
+    public double GetPointsPerTon() {
+        return 0.0933;
+    }
+
     public double GetCostMult() {
         return 5000.0f;
     }

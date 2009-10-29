@@ -92,6 +92,10 @@ public class stArmorCLRE implements ifArmor, ifState {
         return 1.0f;
     }
 
+    public double GetPointsPerTon() {
+        return 0.0625;
+    }
+
     public boolean IsStealth() {
         return false;
     }

@@ -80,7 +80,12 @@ public class Supercharger extends abPlaceable {
 
     @Override
     public double GetTonnage() {
-        double retval = ((int) ( Math.ceil( Owner.GetMech().GetEngine().GetTonnage() * 0.1 * 2 ))) * 0.5;
+        double retval = 0.0;
+        if( Owner.GetMech().UsingFractionalAccounting() ) {
+            retval = Math.ceil( Owner.GetMech().GetEngine().GetTonnage() * 100 ) * 0.001;
+        } else {
+            retval = ((int) ( Math.ceil( Owner.GetMech().GetEngine().GetTonnage() * 0.1 * 2 ))) * 0.5;
+        }
         if( IsArmored() ) {
             retval += 0.5;
         }

@@ -92,6 +92,10 @@ public class stArmorCLFF implements ifArmor, ifState {
         return 1.2f;
     }
 
+    public double GetPointsPerTon() {
+        return 0.0521;
+    }
+
     public boolean IsStealth() {
         return false;
     }

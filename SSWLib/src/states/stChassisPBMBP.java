@@ -33,9 +33,7 @@ import components.MechModifier;
 
 public class stChassisPBMBP implements ifChassis, ifState {
     // An Inner Sphere Primitive Biped chassis
-    private final static double[] Masses = { 1.0f, 1.5f, 2.0f, 2.5f, 3.0f, 3.5f,
-        4.0f, 4.5f, 5.0f, 5.5f, 6.0f, 6.5f, 7.0f, 7.5f, 8.0f, 8.5f, 9.0f, 9.5f,
-        10.0f };
+    private final static double[] Masses = { 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0 };
     private final static int[][] IntPoints = {
         { 4, 3, 1, 2 },
         { 5, 4, 2, 3 },
@@ -99,7 +97,7 @@ public class stChassisPBMBP implements ifChassis, ifState {
         return "Jihad Secrets: The Blake Documents";
     }
 
-    public double GetStrucTon( int Tonnage ) {
+    public double GetStrucTon( int Tonnage, boolean fractional ) {
         return Masses[GetIndex(Tonnage)];
     }
     
