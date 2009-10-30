@@ -190,7 +190,7 @@ public class Ammunition extends abPlaceable {
         // but we'll have to set this regardless
         if( LotSize != CurLotSize ) {
             double TonsPerShot = Tonnage / (double) LotSize;
-            return CommonTools.RoundFractional( TonsPerShot * (double) CurLotSize );
+            return CommonTools.RoundFractionalTons( TonsPerShot * (double) CurLotSize );
         }
         return Tonnage;
     }
@@ -199,7 +199,7 @@ public class Ammunition extends abPlaceable {
     public double GetCost() {
         if( LotSize != CurLotSize ) {
             double CostPerShot = Cost / (double) LotSize;
-            return CommonTools.RoundFractional( CostPerShot * (double) CurLotSize );
+            return CommonTools.RoundFractionalTons( CostPerShot * (double) CurLotSize );
         }
         return Cost;
     }

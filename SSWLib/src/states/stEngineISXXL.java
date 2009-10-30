@@ -46,7 +46,7 @@ public class stEngineISXXL implements ifEngine, ifState {
 
     public stEngineISXXL() {
         AC.SetISCodes( 'F', 'X', 'X', 'F' );
-        AC.SetISDates( 2582, 0, true, 3055, 0, 0, false, false );
+        AC.SetISDates( 2582, 3055, true, 3055, 0, 0, false, false );
         AC.SetISFactions( "TH", "FC", "", "" );
         AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL );
     }
@@ -57,7 +57,7 @@ public class stEngineISXXL implements ifEngine, ifState {
 
     public double GetTonnage( int Rating, boolean fractional ) {
         if( fractional ) {
-            double retval = CommonTools.RoundFractional( stEngineFusion.Masses[GetIndex( Rating )] * 0.333 );
+            double retval = CommonTools.RoundFractionalTons( stEngineFusion.Masses[GetIndex( Rating )] * 0.333 );
 //            double retval = Math.ceil( stEngineFusion.Masses[GetIndex( Rating )] * 333.333 ) * 0.001;
             if( retval < 0.25 ) { return 0.25; }
             return retval;

@@ -60,7 +60,7 @@ public class stEngineFuelCell implements ifEngine, ifState {
 
     public double GetTonnage( int Rating, boolean fractional ) {
         if( fractional ) {
-            return CommonTools.RoundFractional( stEngineFusion.Masses[GetIndex( Rating )] * 1.2 );
+            return CommonTools.RoundFractionalTons( stEngineFusion.Masses[GetIndex( Rating )] * 1.2 );
 //            return Math.ceil( stEngineFusion.Masses[GetIndex( Rating )] * 1200 ) * 0.001;
         } else {
             return Masses[GetIndex( Rating )];

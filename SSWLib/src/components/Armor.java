@@ -505,7 +505,7 @@ public class Armor  extends abPlaceable {
     public double GetTonnage() {
         // this has to return the nearest half-ton.
         if( Owner.UsingFractionalAccounting() ) {
-            return CommonTools.RoundFractional( GetArmorValue() * Config.GetPointsPerTon() );
+            return CommonTools.RoundFractionalTons( GetArmorValue() * Config.GetPointsPerTon() );
 //            return Math.ceil( GetArmorValue() * Config.GetPointsPerTon() * 1000 ) * 0.001;
         }
         double result = GetArmorValue() / ( 8 * Config.GetAVMult() );
@@ -541,7 +541,7 @@ public class Armor  extends abPlaceable {
     public double GetMaxTonnage() {
         // returns the maximum armor tonnage supported by this mech.
         if( Owner.UsingFractionalAccounting() ) {
-            return CommonTools.RoundFractional( GetMaxArmor() * Config.GetPointsPerTon() );
+            return CommonTools.RoundFractionalTons( GetMaxArmor() * Config.GetPointsPerTon() );
 //            return Math.ceil( GetMaxArmor() * Config.GetPointsPerTon() * 1000 ) * 0.001;
         }
         double result = GetMaxArmor() / ( 8 * Config.GetAVMult() );
