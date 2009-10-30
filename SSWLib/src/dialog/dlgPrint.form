@@ -28,7 +28,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lblStatus" alignment="0" pref="631" max="32767" attributes="0"/>
+                  <Component id="lblStatus" alignment="0" pref="647" max="32767" attributes="0"/>
                   <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                       <Group type="102" alignment="0" attributes="1">
                           <Component id="btnPreview" min="-2" max="-2" attributes="0"/>
@@ -116,7 +116,7 @@
                           <Component id="lblBattleForceIcon" min="-2" pref="54" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="14" max="32767" attributes="0"/>
+                  <EmptySpace pref="26" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

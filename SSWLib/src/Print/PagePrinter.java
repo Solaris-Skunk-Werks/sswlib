@@ -35,7 +35,7 @@ import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 
 public class PagePrinter {
-    private String jobName = "Battletech Force Balancer";
+    private String jobName = "Skunkwerks Print";
     private boolean DoPrint = true;
 
     private Book pages = new Book();

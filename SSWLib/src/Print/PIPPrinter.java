@@ -43,7 +43,7 @@ public class PIPPrinter {
     private ImageTracker imageTracker;
     private Hashtable<Integer, PIPSettings> Armor = new Hashtable<Integer, PIPSettings>();
     private Hashtable<Integer, PIPSettings> Internal = new Hashtable<Integer, PIPSettings>();
-    private String filePath = "./rs/patterns/";
+    private String filePath = "/data/";
     private String Source = "TW";
     private String Chassis = "BP";
     private String ExtensionGIF = ".gif";
@@ -196,7 +196,8 @@ public class PIPPrinter {
     private void renderImage( PIPSettings pip ) {
         String filename = "";
         Image pattern = null;
-        filename = filePath + Source + "_" + Chassis + "_" + pip.locationPrefix + pip.GetFileNumber();
+        //filename = filePath + Source + "_" + Chassis + "_" + pip.locationPrefix + pip.GetFileNumber();
+        filename = Source + "_" + Chassis + "_" + pip.locationPrefix + pip.GetFileNumber();
         pattern = imageTracker.getImage(filename + ExtensionGIF);
         if ( pattern == null ) { pattern = imageTracker.getImage(filename + ExtensionPNG); }
         graphics.drawImage(pattern, pip.startingPoint.x, pip.startingPoint.y, pip.imageSize.x, pip.imageSize.y, null);

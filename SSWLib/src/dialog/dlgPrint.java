@@ -101,12 +101,12 @@ public class dlgPrint extends javax.swing.JDialog {
             }
         }
 
-        if ((runtime.maxMemory() / 1024) < 260160) {
-            chkCanon.setSelected(false);
-            chkCanon.setEnabled(false);
-            setStatus("Not enough memory to print canon patterns");
-            this.repaint();
-        }
+//        if ((runtime.maxMemory() / 1024) < 260160) {
+//            chkCanon.setSelected(false);
+//            chkCanon.setEnabled(false);
+//            setStatus("Not enough memory to print canon patterns");
+//            this.repaint();
+//        }
     }
 
     private PagePrinter SetupPrinter() {

@@ -100,6 +100,17 @@ public class Media {
         return retval;
     }
 
+    public Image LoadImage( byte[] data ) {
+        Image retval = toolkit.createImage( data );
+        Tracker.addImage(retval, 0);
+        try {
+            Tracker.waitForID( 0 );
+        } catch (InterruptedException ie) {
+            System.out.println(ie.getMessage());
+        }
+        return retval;
+    }
+
     public void RemoveImage(Image image ) {
         Tracker.removeImage(image);
     }
