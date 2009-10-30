@@ -30,8 +30,10 @@ package common;
 
 import components.*;
 import java.awt.Font;
+import java.text.DecimalFormat;
 
 public class CommonTools {
+    private final static DecimalFormat df = new DecimalFormat( "#.###" );
     public final static String tab = "    ";
     public static Font BoldFont = new Font( "Arial", Font.BOLD, 8 );
     public static Font PlainFont = new Font( "Arial", Font.PLAIN, 8 );
@@ -996,5 +998,9 @@ public class CommonTools {
             }
         }
         return value;
+    }
+
+    public static double RoundFractional( double d ) {
+        return Double.valueOf( df.format( d ) );
     }
 }

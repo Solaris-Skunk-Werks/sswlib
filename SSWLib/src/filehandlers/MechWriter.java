@@ -81,6 +81,11 @@ public class MechWriter {
         FR.write( tab + "<rules_level>" + CurMech.GetBaseRulesLevel() + "</rules_level>" );
         FR.newLine();
 
+        if( CurMech.UsingFractionalAccounting() ) {
+            FR.write( tab + "<fractional />" );
+            FR.newLine();
+        }
+
         FR.write( tab + "<era>" + CurMech.GetEra() + "</era>" );
         FR.newLine();
 /*
@@ -566,6 +571,11 @@ public class MechWriter {
                 if( p instanceof Equipment ) {
                     if( ((Equipment) p).IsVariableSize() ) {
                         retval += prefix + tab + "<tons>" + p.GetTonnage() + "</tons>" + NL;
+                    }
+                }
+                if( ( p instanceof Ammunition ) && CurMech.UsingFractionalAccounting() ) {
+                    if( ((Ammunition) p).OddLotSize() ) {
+                        retval += prefix + tab + "<lot>" + ((Ammunition) p).GetLotSize() + "</lot>" + NL;
                     }
                 }
                 retval += GetLocationLines( prefix + tab, p );

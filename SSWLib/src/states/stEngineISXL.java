@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
+import common.CommonTools;
 import components.AvailableCode;
 import components.MechModifier;
 
@@ -56,7 +57,8 @@ public class stEngineISXL implements ifEngine, ifState {
 
     public double GetTonnage( int Rating, boolean fractional ) {
         if( fractional ) {
-            double retval = Math.ceil( stEngineFusion.Masses[GetIndex( Rating )] * 500 ) * 0.001;
+            double retval = CommonTools.RoundFractional( stEngineFusion.Masses[GetIndex( Rating )] * 0.5 );
+//            double retval = Math.ceil( stEngineFusion.Masses[GetIndex( Rating )] * 500 ) * 0.001;
             if( retval < 0.25 ) { return 0.25; }
             return retval;
         } else {

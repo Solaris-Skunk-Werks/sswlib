@@ -28,6 +28,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
+import common.CommonTools;
+
 public class Ammunition extends abPlaceable {
     private double Tonnage = 1.0,
                   Cost = 0.0,
@@ -188,7 +190,7 @@ public class Ammunition extends abPlaceable {
         // but we'll have to set this regardless
         if( LotSize != CurLotSize ) {
             double TonsPerShot = Tonnage / (double) LotSize;
-            return Math.ceil( TonsPerShot * (double) CurLotSize ) * 0.001;
+            return CommonTools.RoundFractional( TonsPerShot * (double) CurLotSize );
         }
         return Tonnage;
     }
@@ -197,7 +199,7 @@ public class Ammunition extends abPlaceable {
     public double GetCost() {
         if( LotSize != CurLotSize ) {
             double CostPerShot = Cost / (double) LotSize;
-            return Math.ceil( CostPerShot * (double) CurLotSize ) * 0.001;
+            return CommonTools.RoundFractional( CostPerShot * (double) CurLotSize );
         }
         return Cost;
     }
@@ -228,6 +230,14 @@ public class Ammunition extends abPlaceable {
     public boolean OddLotSize() {
         if( CurLotSize != LotSize ) { return true; }
         return false;
+    }
+
+    public int GetMaxLotSize() {
+        return LotSize;
+    }
+
+    public void ResetLotSize() {
+        CurLotSize = LotSize;
     }
 
     public boolean IsExplosive() {

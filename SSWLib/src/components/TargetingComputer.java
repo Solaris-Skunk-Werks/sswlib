@@ -97,35 +97,7 @@ public class TargetingComputer extends abPlaceable {
 
     @Override
     public double GetTonnage() {
-        double retval = 0.0;
-        if( Owner.GetMech().UsingFractionalAccounting() ) {
-            double Build = 0.0;
-            Vector V = Owner.GetTCList();
-
-            if( V.size() == 0 ) {
-                return 0;
-            }
-
-            for( int i = 0; i < V.size(); i++ ) {
-                if( V.get( i ) instanceof RangedWeapon ) {
-                    if( ((RangedWeapon) V.get( i )).IsUsingCapacitor() ) {
-                        Build += ((abPlaceable) V.get( i )).GetTonnage() - 1.0;
-                    } else {
-                        Build += ((abPlaceable) V.get( i )).GetTonnage();
-                    }
-                } else {
-                    Build += ((abPlaceable) V.get( i )).GetTonnage();
-                }
-            }
-
-            if( Clan ) {
-                retval += Math.ceil( ( Build * 0.2 ) * 1000 ) * 0.001;
-            } else {
-                retval += Math.ceil( ( Build * 0.25 ) * 1000 ) * 0.001;
-            }
-        } else {
-            retval += GetSize();
-        }
+        double retval = GetSize();
         if( IsArmored() ) {
             retval += GetSize() * 0.5;
         }

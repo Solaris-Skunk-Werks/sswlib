@@ -28,6 +28,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
+import common.CommonTools;
+import java.text.DecimalFormat;
 import states.*;
 
 public class Armor  extends abPlaceable {
@@ -503,8 +505,8 @@ public class Armor  extends abPlaceable {
     public double GetTonnage() {
         // this has to return the nearest half-ton.
         if( Owner.UsingFractionalAccounting() ) {
-            double result = GetArmorValue() * Config.GetPointsPerTon();
-            return Math.ceil( result * 1000 ) * 0.001;
+            return CommonTools.RoundFractional( GetArmorValue() * Config.GetPointsPerTon() );
+//            return Math.ceil( GetArmorValue() * Config.GetPointsPerTon() * 1000 ) * 0.001;
         }
         double result = GetArmorValue() / ( 8 * Config.GetAVMult() );
         int mid = (int) Math.floor( result + 0.9999 );
@@ -539,8 +541,8 @@ public class Armor  extends abPlaceable {
     public double GetMaxTonnage() {
         // returns the maximum armor tonnage supported by this mech.
         if( Owner.UsingFractionalAccounting() ) {
-            double result = GetMaxArmor() * Config.GetPointsPerTon();
-            return Math.ceil( result * 1000 ) * 0.001;
+            return CommonTools.RoundFractional( GetMaxArmor() * Config.GetPointsPerTon() );
+//            return Math.ceil( GetMaxArmor() * Config.GetPointsPerTon() * 1000 ) * 0.001;
         }
         double result = GetMaxArmor() / ( 8 * Config.GetAVMult() );
         int mid = (int) Math.round( result + 0.4999 );

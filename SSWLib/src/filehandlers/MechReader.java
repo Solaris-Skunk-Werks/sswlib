@@ -236,6 +236,10 @@ public class MechReader {
             ruleslevel += 1;
         }
         m.SetRulesLevel( ruleslevel );
+        n = d.getElementsByTagName( "fractional" );
+        if( n.getLength() > 0 ) {
+            m.SetFractionalAccounting( true );
+        }
         n = d.getElementsByTagName( "era" );
         int era = Integer.parseInt( n.item( 0 ).getTextContent() );
         if( SaveFileVersion == 0 ) {
@@ -567,6 +571,7 @@ public class MechReader {
                 int VGLArc = 0;
                 int VGLAmmo = 0;
                 double vtons = 0.0;
+                int lotsize = 0;
                 l = new LocationIndex();
                 for( int j = 0; j < nl.getLength(); j++ ) {
                     if( nl.item( j ).getNodeName().equals( "name" ) ) {
@@ -585,6 +590,8 @@ public class MechReader {
                         VGLAmmo = Integer.parseInt( nl.item( j ).getTextContent() );
                     } else if( nl.item( j ).getNodeName().equals( "tons" ) ) {
                         vtons = Double.parseDouble( nl.item( j ).getTextContent() );
+                    } else if( nl.item( j ).getNodeName().equals( "lot" ) ) {
+                        lotsize = Integer.parseInt( nl.item( j ).getTextContent() );
                     }
                 }
                 if( eType.equals( "TargetingComputer" ) || eType.equals( "CASE" ) || eType.equals( "CASEII" ) || eType.equals( "Supercharger" ) ) {
@@ -657,6 +664,9 @@ public class MechReader {
                         if( ((Equipment) p).IsVariableSize() ) {
                             ((Equipment) p).SetTonnage( vtons );
                         }
+                    }
+                    if( ( p instanceof Ammunition ) && lotsize > 0 ) {
+                        ((Ammunition) p).SetLotSize( lotsize );
                     }
                     if( p.CanSplit() ) {
                         if( splitLoc.size() > 0 ) {

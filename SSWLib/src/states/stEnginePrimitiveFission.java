@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
+import common.CommonTools;
 import components.AvailableCode;
 import components.MechModifier;
 
@@ -61,7 +62,8 @@ public class stEnginePrimitiveFission implements ifEngine, ifState {
 
     public double GetTonnage( int Rating, boolean fractional ) {
         if( fractional ) {
-            double retval = Math.ceil( stEngineFusion.Masses[GetIndex( Rating )] * 1750 ) * 0.001;
+            double retval = CommonTools.RoundFractional( stEngineFusion.Masses[GetIndex( Rating )] * 1.75 );
+//            double retval = Math.ceil( stEngineFusion.Masses[GetIndex( Rating )] * 1750 ) * 0.001;
             if( retval < 5.0 ) { return 5.0; }
             return retval;
         } else {

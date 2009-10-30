@@ -42,12 +42,18 @@ import components.*;
 public class TXTWriter {
 
     private Mech CurMech;
-    private String NL;
+    private String NL,
+                   tformat = "$6.2f";
     public boolean CurrentLoadoutOnly = false;
 
     public TXTWriter( Mech m ) {
         CurMech = m;
         NL = System.getProperty( "line.separator" );
+        if( CurMech.UsingFractionalAccounting() ) {
+            tformat = "$7.3f";
+        } else {
+            tformat = "$6.2f";
+        }
     }
 
 // This is a text formating string (80 chars) I keep around for when it's needed
@@ -113,6 +119,10 @@ public class TXTWriter {
         retval += "Production Year: " + CurMech.GetYear() + NL;
         retval += "Cost: " + String.format( "%1$,.0f", Math.floor( CurMech.GetTotalCost() + 0.5 ) ) + " C-Bills" + NL;
         retval += "Battle Value: " + String.format( "%1$,d", CurMech.GetCurrentBV() ) + NL + NL;
+
+        if( CurMech.UsingFractionalAccounting() ) {
+            retval += "Construction Options: Fractional Accounting" + NL + NL;
+        }
 
         retval += "Chassis: " + CurMech.GetChassisModel() + " " + CurMech.GetIntStruc().CritName() + NL;
         retval += "Power Plant: " + CurMech.GetEngineManufacturer() + " " + CurMech.GetEngine().GetRating() + " " + CurMech.GetEngine() + NL;
@@ -192,11 +202,11 @@ public class TXTWriter {
         }
         retval += "Equipment           Type                         Rating                   Mass  " + NL;
         retval += "--------------------------------------------------------------------------------" + NL;
-        retval += String.format( "Internal Structure: %1$-28s %2$3s points              %3$6.2f", CurMech.GetIntStruc().CritName(), CurMech.GetIntStruc().GetTotalPoints(), CurMech.GetIntStruc().GetTonnage() ) + NL;
+        retval += String.format( "Internal Structure: %1$-28s %2$3s points              %3" + tformat, CurMech.GetIntStruc().CritName(), CurMech.GetIntStruc().GetTotalPoints(), CurMech.GetIntStruc().GetTonnage() ) + NL;
         if( CurMech.GetIntStruc().NumCrits() > 0 ) {
             retval += "    Internal Locations: " + FileCommon.GetInternalLocations( CurMech ) + NL;
         }
-        retval += String.format( "Engine:             %1$-28s %2$3s                     %3$6.2f", CurMech.GetEngine().CritName(), CurMech.GetEngine().GetRating(), CurMech.GetEngine().GetTonnage() ) + NL;
+        retval += String.format( "Engine:             %1$-28s %2$3s                     %3" + tformat, CurMech.GetEngine().CritName(), CurMech.GetEngine().GetRating(), CurMech.GetEngine().GetTonnage() ) + NL;
         if( CurMech.GetWalkingMP() != CurMech.GetAdjustedWalkingMP( false , true ) ) {
             retval += "    Walking MP: " + CurMech.GetWalkingMP() + " (" + CurMech.GetAdjustedWalkingMP( false, true ) + ")" + NL;
         } else {
@@ -223,18 +233,18 @@ public class TXTWriter {
         if( CurMech.GetJumpJets().GetNumJJ() > 0 ) {
             retval += String.format( "    %1$-68s %2$6.2f", "Jump Jet Locations: " + FileCommon.GetJumpJetLocations( CurMech ), CurMech.GetJumpJets().GetTonnage() ) + NL;
         }
-        retval += String.format( "Heat Sinks:         %1$-28s %2$-8s                %3$6.2f", GetHSType(), GetHSNum(), CurMech.GetHeatSinks().GetTonnage() ) + NL;
+        retval += String.format( "Heat Sinks:         %1$-28s %2$-8s                %3" + tformat, GetHSType(), GetHSNum(), CurMech.GetHeatSinks().GetTonnage() ) + NL;
         if( CurMech.GetHeatSinks().GetNumHS() > CurMech.GetEngine().InternalHeatSinks() ) {
             retval += "    Heat Sink Locations: " + FileCommon.GetHeatSinkLocations( CurMech ) + NL;
         }
-        retval += String.format( "Gyro:               %1$-52s %2$6.2f", CurMech.GetGyro().LookupName(), CurMech.GetGyro().GetTonnage() ) + NL;
-        retval += String.format( "Cockpit:            %1$-52s %2$6.2f", CurMech.GetCockpit().GetReportName(), CurMech.GetCockpit().GetTonnage() ) + NL;
+        retval += String.format( "Gyro:               %1$-52s %2" + tformat, CurMech.GetGyro().LookupName(), CurMech.GetGyro().GetTonnage() ) + NL;
+        retval += String.format( "Cockpit:            %1$-52s %2" + tformat, CurMech.GetCockpit().GetReportName(), CurMech.GetCockpit().GetTonnage() ) + NL;
         if( CurMech.HasEjectionSeat() ) {
-            retval += String.format( "    %1$-68s %2$6.2f", "Ejection Seat:", CurMech.GetEjectionSeat().GetTonnage() ) + NL;
+            retval += String.format( "    %1$-68s %2" + tformat, "Ejection Seat:", CurMech.GetEjectionSeat().GetTonnage() ) + NL;
         }
         if( ! CurMech.GetEngine().IsNuclear() ) {
             if( CurMech.GetLoadout().GetPowerAmplifier().GetTonnage() > 0 ) {
-                retval += String.format( "%1$-72s %2$6.2f", "Power Amplifiers:", CurMech.GetLoadout().GetPowerAmplifier().GetTonnage() ) + NL;
+                retval += String.format( "%1$-72s %2" + tformat, "Power Amplifiers:", CurMech.GetLoadout().GetPowerAmplifier().GetTonnage() ) + NL;
             }
         }
         retval += "    Actuators:      " + FileCommon.BuildActuators( CurMech, false ) + NL;
@@ -242,9 +252,9 @@ public class TXTWriter {
             retval += "    TSM Locations: " + FileCommon.GetTSMLocations( CurMech ) + NL;
         }
         if( CurMech.GetArmor().GetBAR() < 10 ) {
-            retval += String.format( "Armor:              %1$-28s AV - %2$3s                %3$6.2f", CurMech.GetArmor().CritName() + " (BAR: " + CurMech.GetArmor().GetBAR() +")", CurMech.GetArmor().GetArmorValue(), CurMech.GetArmor().GetTonnage() ) + NL;
+            retval += String.format( "Armor:              %1$-28s AV - %2$3s                %3" + tformat, CurMech.GetArmor().CritName() + " (BAR: " + CurMech.GetArmor().GetBAR() +")", CurMech.GetArmor().GetArmorValue(), CurMech.GetArmor().GetTonnage() ) + NL;
         } else {
-            retval += String.format( "Armor:              %1$-28s AV - %2$3s                %3$6.2f", CurMech.GetArmor().CritName(), CurMech.GetArmor().GetArmorValue(), CurMech.GetArmor().GetTonnage() ) + NL;
+            retval += String.format( "Armor:              %1$-28s AV - %2$3s                %3" + tformat, CurMech.GetArmor().CritName(), CurMech.GetArmor().GetArmorValue(), CurMech.GetArmor().GetTonnage() ) + NL;
         }
         if( CurMech.GetArmor().NumCrits() > 0 ) {
             retval += "    Armor Locations: " + FileCommon.GetArmorLocations( CurMech ) + NL;
@@ -258,15 +268,15 @@ public class TXTWriter {
                 }
             }
             if( check ) {
-                retval += String.format( "    %1$-68s %2$6.2f", "CASE Locations: " + FileCommon.GetCaseLocations( CurMech ), CurMech.GetCaseTonnage() ) + NL;
+                retval += String.format( "    %1$-68s %2" + tformat, "CASE Locations: " + FileCommon.GetCaseLocations( CurMech ), CurMech.GetCaseTonnage() ) + NL;
             }
         } else {
             if( CurMech.GetCaseTonnage() != 0.0f ) {
-                retval += String.format( "    %1$-68s %2$6.2f", "CASE Locations: " + FileCommon.GetCaseLocations( CurMech ), CurMech.GetCaseTonnage() ) + NL;
+                retval += String.format( "    %1$-68s %2" + tformat, "CASE Locations: " + FileCommon.GetCaseLocations( CurMech ), CurMech.GetCaseTonnage() ) + NL;
             }
         }
         if( CurMech.GetCASEIITonnage() != 0.0f ) {
-            retval += String.format( "    %1$-68s %2$6.2f", "CASE II Locations: " + FileCommon.GetCaseIILocations( CurMech ), CurMech.GetCASEIITonnage() ) + NL;
+            retval += String.format( "    %1$-68s %2" + tformat, "CASE II Locations: " + FileCommon.GetCaseIILocations( CurMech ), CurMech.GetCASEIITonnage() ) + NL;
         }
         retval += NL + "                                                      Internal       Armor      " + NL;
         retval += "                                                      Structure      Factor     " + NL;
@@ -664,30 +674,30 @@ public class TXTWriter {
         // add in any special systems
         boolean Special = false;
         if( CurMech.HasNullSig() ) {
-            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5$6.2f", CurMech.GetNullSig().CritName(), "*", "10", 7, 0.0 ) + NL;
+            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, CurMech.GetNullSig().CritName(), "*", "10", 7, 0.0 ) + NL;
             Special = true;
         }
         if( CurMech.HasVoidSig() ) {
-            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5$6.2f", CurMech.GetVoidSig().CritName(), "*", "10", 7, 0.0 ) + NL;
+            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, CurMech.GetVoidSig().CritName(), "*", "10", 7, 0.0 ) + NL;
             Special = true;
         }
         if( CurMech.HasChameleon() ) {
-            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5$6.2f", CurMech.GetChameleon().CritName(), "*", "6", 6, 0.0 ) + NL;
+            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, CurMech.GetChameleon().CritName(), "*", "6", 6, 0.0 ) + NL;
             Special = true;
         }
         if( CurMech.HasBlueShield() ) {
-            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5$6.2f", CurMech.GetBlueShield().CritName(), "*", "-", 7, 3.0 ) + NL;
+            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, CurMech.GetBlueShield().CritName(), "*", "-", 7, 3.0 ) + NL;
             Special = true;
         }
         if( CurMech.HasEnviroSealing() ) {
-            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5$6.2f", CurMech.GetEnviroSealing().CritName(), "*", "-", 8, 0.0 ) + NL;
+            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, CurMech.GetEnviroSealing().CritName(), "*", "-", 8, 0.0 ) + NL;
             Special = true;
         }
         if( CurMech.HasTracks() ) {
             if( CurMech.IsQuad() ) {
-                retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5$6.2f", CurMech.GetTracks().CritName(), "*", "-", 4, CurMech.GetTracks().GetTonnage() ) + NL;
+                retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, CurMech.GetTracks().CritName(), "*", "-", 4, CurMech.GetTracks().GetTonnage() ) + NL;
             } else {
-                retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5$6.2f", CurMech.GetTracks().CritName(), "*", "-", 2, CurMech.GetTracks().GetTonnage() ) + NL;
+                retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, CurMech.GetTracks().CritName(), "*", "-", 2, CurMech.GetTracks().GetTonnage() ) + NL;
             }
             Special = true;
         }
@@ -771,7 +781,7 @@ public class TXTWriter {
             retval += String.format( "    %1$-68s %2$6.2f", "Jump Jet Locations: " + FileCommon.GetJumpJetLocations( CurMech ), CurMech.GetJumpJets().GetOmniTonnage() ) + NL;
         }
         if( CurMech.GetHeatSinks().GetNumHS() > CurMech.GetHeatSinks().GetBaseLoadoutNumHS() ) {
-            retval += String.format( "Heat Sinks:         %1$-28s %2$-8s                %3$6.2f", GetHSType(), GetHSNum(), CurMech.GetHeatSinks().GetOmniTonnage() ) + NL;
+            retval += String.format( "Heat Sinks:         %1$-28s %2$-8s                %3" + tformat, GetHSType(), GetHSNum(), CurMech.GetHeatSinks().GetOmniTonnage() ) + NL;
             if( CurMech.GetHeatSinks().GetNumHS() > CurMech.GetEngine().InternalHeatSinks() ) {
                 retval += "    Heat Sink Locations: " + FileCommon.GetHeatSinkLocations( CurMech ) + NL;
             }
@@ -785,19 +795,19 @@ public class TXTWriter {
                 }
             }
             if( check ) {
-                retval += String.format( "    %1$-68s %2$6.2f", "CASE Locations: " + FileCommon.GetCaseLocations( CurMech ), CurMech.GetCaseTonnage() ) + NL;
+                retval += String.format( "    %1$-68s %2" + tformat, "CASE Locations: " + FileCommon.GetCaseLocations( CurMech ), CurMech.GetCaseTonnage() ) + NL;
             }
         } else {
             if( CurMech.GetCaseTonnage() != 0.0f ) {
-                retval += String.format( "    %1$-68s %2$6.2f", "CASE Locations: " + FileCommon.GetCaseLocations( CurMech ), CurMech.GetCaseTonnage() ) + NL;
+                retval += String.format( "    %1$-68s %2" + tformat, "CASE Locations: " + FileCommon.GetCaseLocations( CurMech ), CurMech.GetCaseTonnage() ) + NL;
             }
         }
         if( CurMech.GetCASEIITonnage() != 0.0f ) {
-            retval += String.format( "    %1$-68s %2$6.2f", "CASE II Locations: " + FileCommon.GetCaseIILocations( CurMech ), CurMech.GetCASEIITonnage() ) + NL;
+            retval += String.format( "    %1$-68s %2" + tformat, "CASE II Locations: " + FileCommon.GetCaseIILocations( CurMech ), CurMech.GetCASEIITonnage() ) + NL;
         }
         if( ! CurMech.GetEngine().IsNuclear() ) {
             if( CurMech.GetLoadout().GetPowerAmplifier().GetTonnage() > 0 ) {
-                retval += String.format( "%1$-72s %2$6.2f", "Power Amplifiers:", CurMech.GetLoadout().GetPowerAmplifier().GetTonnage() ) + NL;
+                retval += String.format( "%1$-72s %2" + tformat, "Power Amplifiers:", CurMech.GetLoadout().GetPowerAmplifier().GetTonnage() ) + NL;
             }
         }
         retval += "    Actuators:      " + FileCommon.BuildActuators( CurMech, false ) + NL;
@@ -991,33 +1001,33 @@ public class TXTWriter {
 
         // build the string based on the type of equipment
         if( p instanceof Ammunition ) {
-            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5$6.2f", FileCommon.FormatAmmoExportName( (Ammunition) p, numthisloc ), loc, "-", crits, p.GetTonnage() * numthisloc ) + NL;
+            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, FileCommon.FormatAmmoExportName( (Ammunition) p, numthisloc ), loc, "-", crits, p.GetTonnage() * numthisloc ) + NL;
         } else if( p instanceof RangedWeapon ) {
             double tons = p.GetTonnage();
             String add = "";
             if( ((RangedWeapon) p).IsUsingFCS() ) {
                 abPlaceable a = (abPlaceable) ((RangedWeapon) p).GetFCS();
                 tons -= a.GetTonnage();
-                add += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5$6.2f", a.CritName(), loc, "-", a.NumCrits(), a.GetTonnage() * numthisloc ) + NL;
+                add += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5" + tformat, a.CritName(), loc, "-", a.NumCrits(), a.GetTonnage() * numthisloc ) + NL;
             }
             if( ((RangedWeapon) p).IsUsingCapacitor() ) {
                 tons -= 1.0f;
                 abPlaceable a = ((RangedWeapon) p).GetCapacitor();
-                add += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5$6.2f", a.CritName(), loc, numthisloc * 5 + "*", a.NumCrits(), a.GetTonnage() * numthisloc ) + NL;
+                add += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5" + tformat, a.CritName(), loc, numthisloc * 5 + "*", a.NumCrits(), a.GetTonnage() * numthisloc ) + NL;
             }
-            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5$6.2f", name, loc, ((RangedWeapon) p).GetHeat() * numthisloc, crits, tons * numthisloc ) + NL + add;
+            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, name, loc, ((RangedWeapon) p).GetHeat() * numthisloc, crits, tons * numthisloc ) + NL + add;
         } else if( p instanceof MGArray ) {
-            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5$6.2f", name, loc, "-", crits, ((MGArray) p).GetBaseTons() ) + NL;
+            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, name, loc, "-", crits, ((MGArray) p).GetBaseTons() ) + NL;
             abPlaceable a = ((MGArray) p).GetMGType();
             if( CurMech.GetLoadout().GetTechBase() == AvailableCode.TECH_BOTH ) {
-                retval += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5$6.2f", ((MGArray) p).GetNumMGs() + " " + a.LookupName() + "s", loc, ((RangedWeapon) a).GetHeat() * ((MGArray) p).GetNumMGs(), ((MGArray) p).GetNumMGs(), ( ((MGArray) p).GetMGTons() * ((MGArray) p).GetNumMGs() ) ) + NL;
+                retval += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5" + tformat, ((MGArray) p).GetNumMGs() + " " + a.LookupName() + "s", loc, ((RangedWeapon) a).GetHeat() * ((MGArray) p).GetNumMGs(), ((MGArray) p).GetNumMGs(), ( ((MGArray) p).GetMGTons() * ((MGArray) p).GetNumMGs() ) ) + NL;
             } else{
-                retval += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5$6.2f", ((MGArray) p).GetNumMGs() + " " + a.CritName() + "s", loc, ((RangedWeapon) a).GetHeat() * ((MGArray) p).GetNumMGs(), ((MGArray) p).GetNumMGs(), ( ((MGArray) p).GetMGTons() * ((MGArray) p).GetNumMGs() ) ) + NL;
+                retval += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5" + tformat, ((MGArray) p).GetNumMGs() + " " + a.CritName() + "s", loc, ((RangedWeapon) a).GetHeat() * ((MGArray) p).GetNumMGs(), ((MGArray) p).GetNumMGs(), ( ((MGArray) p).GetMGTons() * ((MGArray) p).GetNumMGs() ) ) + NL;
             }
        } else if( p instanceof Equipment ) {
-            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5$6.2f", name, loc, ((Equipment) p).GetHeat() * numthisloc, crits, p.GetTonnage() * numthisloc ) + NL;
+            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, name, loc, ((Equipment) p).GetHeat() * numthisloc, crits, p.GetTonnage() * numthisloc ) + NL;
         } else {
-            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5$6.2f", name, loc, "-", crits, p.GetTonnage() * numthisloc ) + NL;
+            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, name, loc, "-", crits, p.GetTonnage() * numthisloc ) + NL;
         }
 
         return retval;
