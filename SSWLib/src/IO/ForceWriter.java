@@ -102,6 +102,7 @@ public class ForceWriter {
     }
 
     public void SerializeForce( Force f, String filename ) throws IOException {
+        if ( !filename.endsWith(".force") ) { filename += ".force"; }
         BufferedWriter FR = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( filename ), "UTF-8" ) );
 
         // beginning of an XML file:

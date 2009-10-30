@@ -33,6 +33,7 @@ import Force.View.*;
 import Print.ForceListPrinter;
 import battleforce.*;
 
+import filehandlers.ImageTracker;
 import java.awt.Image;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -235,14 +236,14 @@ public class Force extends AbstractTableModel implements ifSerializable {
         return SerializeClipboard();
     }
 
-    public void RenderPrint(ForceListPrinter p) {
+    public void RenderPrint(ForceListPrinter p, ImageTracker imageTracker) {
         if ( Units.size() == 0 ) { return; }
         sortForPrinting();
         p.setFont(CommonTools.SectionHeaderFont);
         if ( p.PrintLogo() ) {
-            loadLogo();
-            if (getLogo() != null) {
-                p.Graphic.drawImage(getLogo(), p.currentX, p.currentY-15, 25, 25, null);
+            loadLogo(imageTracker);
+            if (Logo != null) {
+                p.Graphic.drawImage(Logo, p.currentX, p.currentY-15, 25, 25, null);
                 p.currentX += 30;
             }
         }
@@ -335,10 +336,9 @@ public class Force extends AbstractTableModel implements ifSerializable {
         return Flag;
     }
 
-    public void loadLogo() {
+    public void loadLogo(ImageTracker imageTracker) {
         if (!LogoPath.isEmpty()) {
-            Media media = new Media();
-            Logo = media.GetImage(LogoPath);
+            Logo = imageTracker.getImage(LogoPath);
         }
     }
 
@@ -482,8 +482,8 @@ public class Force extends AbstractTableModel implements ifSerializable {
         return Forces;
     }
 
-    public Image getLogo() {
-        if ( Logo == null ) {loadLogo();}
+    public Image getLogo(ImageTracker imageTracker) {
+        if ( Logo == null ) {loadLogo(imageTracker);}
         return Logo;
     }
 

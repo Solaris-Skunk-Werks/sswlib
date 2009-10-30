@@ -124,8 +124,6 @@ public class frmForce extends javax.swing.JFrame {
         btnSave = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         btnPrintForce = new javax.swing.JButton();
-        btnPrintUnits = new javax.swing.JButton();
-        btnPrintBattleForce = new javax.swing.JButton();
         btnPreview = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         btnExportMUL = new javax.swing.JButton();
@@ -157,7 +155,6 @@ public class frmForce extends javax.swing.JFrame {
         lblLogo = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         cmbUnitType = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
 
         setTitle("Force List");
         setMinimumSize(null);
@@ -177,7 +174,7 @@ public class frmForce extends javax.swing.JFrame {
         tlbActions.setFloatable(false);
         tlbActions.setRollover(true);
 
-        btnOpen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/folder-open-document.png"))); // NOI18N
+        btnOpen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder-open-document.png"))); // NOI18N
         btnOpen.setToolTipText("Open Force");
         btnOpen.setFocusable(false);
         btnOpen.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -189,7 +186,7 @@ public class frmForce extends javax.swing.JFrame {
         });
         tlbActions.add(btnOpen);
 
-        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/disk-black.png"))); // NOI18N
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/disk-black.png"))); // NOI18N
         btnSave.setToolTipText("Save Force");
         btnSave.setFocusable(false);
         btnSave.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -202,7 +199,7 @@ public class frmForce extends javax.swing.JFrame {
         tlbActions.add(btnSave);
         tlbActions.add(jSeparator2);
 
-        btnPrintForce.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/printer.png"))); // NOI18N
+        btnPrintForce.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/printer.png"))); // NOI18N
         btnPrintForce.setToolTipText("Print Force List");
         btnPrintForce.setFocusable(false);
         btnPrintForce.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -214,31 +211,7 @@ public class frmForce extends javax.swing.JFrame {
         });
         tlbActions.add(btnPrintForce);
 
-        btnPrintUnits.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/printer--plus.png"))); // NOI18N
-        btnPrintUnits.setToolTipText("Print Selected Units");
-        btnPrintUnits.setFocusable(false);
-        btnPrintUnits.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnPrintUnits.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnPrintUnits.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPrintUnitsActionPerformed(evt);
-            }
-        });
-        tlbActions.add(btnPrintUnits);
-
-        btnPrintBattleForce.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/printer--puzzle.png"))); // NOI18N
-        btnPrintBattleForce.setToolTipText("Print Battleforce");
-        btnPrintBattleForce.setFocusable(false);
-        btnPrintBattleForce.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnPrintBattleForce.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnPrintBattleForce.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPrintBattleForceActionPerformed(evt);
-            }
-        });
-        tlbActions.add(btnPrintBattleForce);
-
-        btnPreview.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/projection-screen.png"))); // NOI18N
+        btnPreview.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/projection-screen.png"))); // NOI18N
         btnPreview.setToolTipText("Preview");
         btnPreview.setFocusable(false);
         btnPreview.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -251,7 +224,7 @@ public class frmForce extends javax.swing.JFrame {
         tlbActions.add(btnPreview);
         tlbActions.add(jSeparator1);
 
-        btnExportMUL.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/document--arrow.png"))); // NOI18N
+        btnExportMUL.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/document--arrow.png"))); // NOI18N
         btnExportMUL.setToolTipText("Export MUL");
         btnExportMUL.setFocusable(false);
         btnExportMUL.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -263,7 +236,7 @@ public class frmForce extends javax.swing.JFrame {
         });
         tlbActions.add(btnExportMUL);
 
-        btnExportMTFs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/documents--arrow.png"))); // NOI18N
+        btnExportMTFs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/documents--arrow.png"))); // NOI18N
         btnExportMTFs.setToolTipText("Export All to MTF");
         btnExportMTFs.setFocusable(false);
         btnExportMTFs.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -276,7 +249,7 @@ public class frmForce extends javax.swing.JFrame {
         tlbActions.add(btnExportMTFs);
         tlbActions.add(jSeparator3);
 
-        btnAddMech.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/clipboard--plus.png"))); // NOI18N
+        btnAddMech.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/clipboard--plus.png"))); // NOI18N
         btnAddMech.setToolTipText("Add Unit");
         btnAddMech.setFocusable(false);
         btnAddMech.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -288,7 +261,7 @@ public class frmForce extends javax.swing.JFrame {
         });
         tlbActions.add(btnAddMech);
 
-        btnRemoveUnit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/clipboard--minus.png"))); // NOI18N
+        btnRemoveUnit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/clipboard--minus.png"))); // NOI18N
         btnRemoveUnit.setToolTipText("Remove Unit");
         btnRemoveUnit.setFocusable(false);
         btnRemoveUnit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -300,7 +273,7 @@ public class frmForce extends javax.swing.JFrame {
         });
         tlbActions.add(btnRemoveUnit);
 
-        brnClearForce.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/clipboard-empty.png"))); // NOI18N
+        brnClearForce.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/clipboard-empty.png"))); // NOI18N
         brnClearForce.setToolTipText("Clear Force List");
         brnClearForce.setFocusable(false);
         brnClearForce.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -312,7 +285,7 @@ public class frmForce extends javax.swing.JFrame {
         });
         tlbActions.add(brnClearForce);
 
-        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/arrow-circle-double.png"))); // NOI18N
+        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/arrow-circle-double.png"))); // NOI18N
         btnRefresh.setToolTipText("Refresh Force List");
         btnRefresh.setFocusable(false);
         btnRefresh.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -325,7 +298,7 @@ public class frmForce extends javax.swing.JFrame {
         tlbActions.add(btnRefresh);
         tlbActions.add(jSeparator4);
 
-        btnAmmoChooser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/ammo.png"))); // NOI18N
+        btnAmmoChooser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ammo.png"))); // NOI18N
         btnAmmoChooser.setFocusable(false);
         btnAmmoChooser.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnAmmoChooser.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -336,7 +309,7 @@ public class frmForce extends javax.swing.JFrame {
         });
         tlbActions.add(btnAmmoChooser);
 
-        btnImages.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ssw/Images/images-stack.png"))); // NOI18N
+        btnImages.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/images-stack.png"))); // NOI18N
         btnImages.setToolTipText("Manage Images");
         btnImages.setFocusable(false);
         btnImages.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -482,9 +455,6 @@ public class frmForce extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel3.setText("Affects BattleForce Sheets");
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -501,10 +471,8 @@ public class frmForce extends javax.swing.JFrame {
                         .addGap(10, 10, 10)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbUnitType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)))
-                .addContainerGap(347, Short.MAX_VALUE))
+                        .addComponent(cmbUnitType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(420, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -516,8 +484,7 @@ public class frmForce extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(cmbUnitType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(cmbUnitType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
             .addComponent(lblLogo, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
         );
@@ -566,37 +533,6 @@ public class frmForce extends javax.swing.JFrame {
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
         force.RefreshBV();
     }//GEN-LAST:event_formWindowGainedFocus
-
-    private void btnPrintUnitsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintUnitsActionPerformed
-        if ( tblForce.getSelectedRowCount() == 0 ) {
-            tblForce.selectAll();
-        }
-
-        if ( tblForce.getSelectedRowCount() > 0 ) {
-            imageTracker.preLoadMechImages();
-            PagePrinter printer = new PagePrinter();
-
-            try
-            {
-                int[] rows = tblForce.getSelectedRows();
-                for ( int i=0; i < rows.length; i++ ) {
-                    Unit data = (Unit) force.Units.get(tblForce.convertRowIndexToModel(rows[i]));
-                    Mech m = data.m;
-                    if ( data.IsOmni() ) {
-                        m.SetCurLoadout( data.Configuration );
-                    }
-                    PrintMech pm = new PrintMech(m, data.getMechwarrior(), data.getGunnery(), data.getPiloting(), imageTracker);
-                    printer.Append( BFBPrinter.Letter.toPage(), pm );
-                }
-                printer.Print();
-                tblForce.clearSelection();
-
-            } catch ( Exception e ) {
-                System.err.println( e.getMessage() );
-                e.printStackTrace();
-            }
-        }
-    }//GEN-LAST:event_btnPrintUnitsActionPerformed
 
     private void tblForceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblForceMouseClicked
         if (evt.getClickCount() >= 2) { LoadMech(); }
@@ -670,14 +606,10 @@ public class frmForce extends javax.swing.JFrame {
     }//GEN-LAST:event_btnOpenActionPerformed
 
     private void btnPrintForceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintForceActionPerformed
-        force.RefreshBV();
-
-        PagePrinter printer = new PagePrinter();
-
-        ForceListPrinter sheet = new ForceListPrinter(imageTracker);
-        sheet.AddForce(force);
-        printer.Append( BFBPrinter.Letter.toPage(), sheet );
-        printer.Print();
+        Scenario scenario = new Scenario(force);
+        dlgPrint print = new dlgPrint(this, true, scenario, imageTracker);
+        print.setLocationRelativeTo(this);
+        print.setVisible(true);
     }//GEN-LAST:event_btnPrintForceActionPerformed
 
     private void btnExportMULActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportMULActionPerformed
@@ -785,17 +717,10 @@ public class frmForce extends javax.swing.JFrame {
         force.ForceName = txtForceName.getText();
     }//GEN-LAST:event_txtForceNameFocusLost
 
-    private void btnPrintBattleForceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintBattleForceActionPerformed
-        PagePrinter printer = new PagePrinter();
-        printer.Append( BFBPrinter.Letter.toPage(), new BattleforceCardPrinter(force.toBattleForce(), imageTracker) );
-        printer.Print();
-    }//GEN-LAST:event_btnPrintBattleForceActionPerformed
-
     private void btnPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviewActionPerformed
         PagePrinter printer = new PagePrinter();
         printer.setJobName(force.ForceName);
-        Scenario scenario = new Scenario();
-        scenario.AddForce(force);
+        Scenario scenario = new Scenario(force);
 
         //Force List
         ForceListPrinter sheet = new ForceListPrinter(imageTracker);
@@ -812,7 +737,7 @@ public class frmForce extends javax.swing.JFrame {
     }//GEN-LAST:event_txtForceNameKeyReleased
 
     private void lblLogoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoMouseClicked
-        File logo = media.SelectImage( prefs.get("LastLogo", ""), "Select Logo");
+        File logo = media.SelectImage( prefs.get("LastOpenLogo", ""), "Select Logo");
         try {
             if ( logo != null ) {
                 prefs.put("LastOpenLogo", logo.getPath().toString());
@@ -859,9 +784,7 @@ public class frmForce extends javax.swing.JFrame {
     private javax.swing.JButton btnImages;
     private javax.swing.JButton btnOpen;
     private javax.swing.JButton btnPreview;
-    private javax.swing.JButton btnPrintBattleForce;
     private javax.swing.JButton btnPrintForce;
-    private javax.swing.JButton btnPrintUnits;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnRemoveUnit;
     private javax.swing.JButton btnSave;
@@ -869,7 +792,6 @@ public class frmForce extends javax.swing.JFrame {
     private javax.swing.JComboBox cmbView;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;

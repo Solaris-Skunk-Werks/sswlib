@@ -58,6 +58,15 @@ public class Scenario implements ifSerializable {
         forces.add(new Force());
     }
 
+    public Scenario( Force force ) {
+        forces.add(force);
+        forces.add(new Force());
+    }
+
+    public Scenario( Vector<Force> forces ) {
+        this.forces = forces;
+    }
+
     public Scenario( Node node ) {
         String errorMessage = "";
 

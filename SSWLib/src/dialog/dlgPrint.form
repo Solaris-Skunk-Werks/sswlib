@@ -35,8 +35,8 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="jPanel2" min="-2" pref="124" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="pnlWhat" alignment="0" max="32767" attributes="1"/>
-                      <Component id="pnlHow" alignment="0" min="-2" max="-2" attributes="1"/>
+                      <Component id="pnlWhat" alignment="0" min="0" max="32767" attributes="1"/>
+                      <Component id="pnlHow" alignment="0" max="32767" attributes="1"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -77,43 +77,46 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="chkPrintForce" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblForceIcon" alignment="1" min="-2" pref="54" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="chkPrintScenario" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
+                      <Component id="chkPrintForce" linkSize="1" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="21" pref="21" max="21" attributes="0"/>
+                          <Component id="lblForceIcon" min="-2" pref="54" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="chkPrintScenario" linkSize="1" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
                           <EmptySpace min="21" pref="21" max="21" attributes="0"/>
                           <Component id="lblRecordsheetIcon1" min="-2" pref="54" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                      <Component id="chkPrintFireChits" linkSize="1" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
                           <EmptySpace min="21" pref="21" max="21" attributes="0"/>
                           <Component id="lblFireDecIcon" min="-2" pref="54" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="chkPrintFireChits" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="chkPrintRecordsheets" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
+                      <Component id="chkPrintRecordsheets" linkSize="1" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
                           <EmptySpace min="21" pref="21" max="21" attributes="0"/>
                           <Component id="lblRecordsheetIcon" min="-2" pref="54" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                      <Component id="chkPrintBattleforce" linkSize="1" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
                           <EmptySpace min="21" pref="21" max="21" attributes="0"/>
-                          <Component id="lblBattleForceIcon" alignment="0" min="-2" pref="54" max="-2" attributes="0"/>
+                          <Component id="lblBattleForceIcon" min="-2" pref="54" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="chkPrintBattleforce" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                  <EmptySpace pref="14" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -121,31 +124,23 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="chkPrintForce" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblForceIcon" min="-2" pref="70" max="-2" attributes="0"/>
+                      <Component id="chkPrintForce" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkPrintScenario" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkPrintFireChits" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkPrintRecordsheets" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkPrintBattleforce" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="lblForceIcon" min="-2" pref="70" max="-2" attributes="0"/>
+                              <Component id="lblRecordsheetIcon1" min="-2" pref="70" max="-2" attributes="0"/>
+                              <Component id="lblFireDecIcon" min="-2" pref="70" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="lblRecordsheetIcon" alignment="0" min="-2" pref="70" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" attributes="0">
-                          <Component id="chkPrintScenario" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblRecordsheetIcon1" min="-2" pref="70" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Component id="chkPrintFireChits" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblFireDecIcon" min="-2" pref="70" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="chkPrintRecordsheets" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblRecordsheetIcon" min="-2" pref="70" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="chkPrintBattleforce" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblBattleForceIcon" min="-2" pref="70" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="lblBattleForceIcon" min="-2" pref="70" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -193,7 +188,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/BFB/Images/ForceList_BG.png"/>
+              <Image iconType="3" name="/images/ForceList_BG.png"/>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
@@ -208,7 +203,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/BFB/Images/FireDec_BG.png"/>
+              <Image iconType="3" name="/images/FireDec_BG.png"/>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
@@ -223,7 +218,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/BFB/Images/Recordsheet_BG.png"/>
+              <Image iconType="3" name="/images/Recordsheet_BG.png"/>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
@@ -238,7 +233,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/BFB/Images/BattleForce_BG.png"/>
+              <Image iconType="3" name="/images/BattleForce_BG.png"/>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
@@ -261,7 +256,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/BFB/Images/Recordsheet_BG.png"/>
+              <Image iconType="3" name="/images/ForceList_BG.png"/>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
@@ -385,7 +380,7 @@
             <Component class="javax.swing.JButton" name="btnImageMgr">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/BFB/Images/images-stack.png"/>
+                  <Image iconType="3" name="/images/images-stack.png"/>
                 </Property>
                 <Property name="iconTextGap" type="int" value="2"/>
                 <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">

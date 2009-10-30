@@ -73,7 +73,7 @@
         <Component class="javax.swing.JButton" name="btnOpen">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/folder-open-document.png"/>
+              <Image iconType="3" name="/images/folder-open-document.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Open Force"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -87,7 +87,7 @@
         <Component class="javax.swing.JButton" name="btnSave">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/disk-black.png"/>
+              <Image iconType="3" name="/images/disk-black.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Save Force"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -103,7 +103,7 @@
         <Component class="javax.swing.JButton" name="btnPrintForce">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/printer.png"/>
+              <Image iconType="3" name="/images/printer.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Print Force List"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -114,38 +114,10 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintForceActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnPrintUnits">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/printer--plus.png"/>
-            </Property>
-            <Property name="toolTipText" type="java.lang.String" value="Print Selected Units"/>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="horizontalTextPosition" type="int" value="0"/>
-            <Property name="verticalTextPosition" type="int" value="3"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintUnitsActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnPrintBattleForce">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/printer--puzzle.png"/>
-            </Property>
-            <Property name="toolTipText" type="java.lang.String" value="Print Battleforce"/>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="horizontalTextPosition" type="int" value="0"/>
-            <Property name="verticalTextPosition" type="int" value="3"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintBattleForceActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="btnPreview">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/projection-screen.png"/>
+              <Image iconType="3" name="/images/projection-screen.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Preview"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -161,7 +133,7 @@
         <Component class="javax.swing.JButton" name="btnExportMUL">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/document--arrow.png"/>
+              <Image iconType="3" name="/images/document--arrow.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Export MUL"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -175,7 +147,7 @@
         <Component class="javax.swing.JButton" name="btnExportMTFs">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/documents--arrow.png"/>
+              <Image iconType="3" name="/images/documents--arrow.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Export All to MTF"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -191,7 +163,7 @@
         <Component class="javax.swing.JButton" name="btnAddMech">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/clipboard--plus.png"/>
+              <Image iconType="3" name="/images/clipboard--plus.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Add Unit"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -205,7 +177,7 @@
         <Component class="javax.swing.JButton" name="btnRemoveUnit">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/clipboard--minus.png"/>
+              <Image iconType="3" name="/images/clipboard--minus.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Remove Unit"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -219,7 +191,7 @@
         <Component class="javax.swing.JButton" name="brnClearForce">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/clipboard-empty.png"/>
+              <Image iconType="3" name="/images/clipboard-empty.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Clear Force List"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -233,7 +205,7 @@
         <Component class="javax.swing.JButton" name="btnRefresh">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/arrow-circle-double.png"/>
+              <Image iconType="3" name="/images/arrow-circle-double.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Refresh Force List"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -249,7 +221,7 @@
         <Component class="javax.swing.JButton" name="btnAmmoChooser">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/ammo.png"/>
+              <Image iconType="3" name="/images/ammo.png"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -262,7 +234,7 @@
         <Component class="javax.swing.JButton" name="btnImages">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/ssw/Images/images-stack.png"/>
+              <Image iconType="3" name="/images/images-stack.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Manage Images"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -432,11 +404,9 @@
                           <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cmbUnitType" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="347" max="32767" attributes="0"/>
+                  <EmptySpace pref="420" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -452,7 +422,6 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cmbUnitType" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="22" max="32767" attributes="0"/>
               </Group>
@@ -503,14 +472,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmbUnitTypeActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabel3">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="99" green="99" red="99" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Affects BattleForce Sheets"/>
-          </Properties>
         </Component>
       </SubComponents>
     </Container>

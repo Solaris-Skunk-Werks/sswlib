@@ -82,7 +82,7 @@ public class PrintDeclaration implements Printable {
     private void PreparePrint() {
         Reset();
         for ( Force force : forces ) {
-            Image logo = force.getLogo();
+            Image logo = force.getLogo(imageTracker);
             for ( Unit unit : force.Units ) {
                 for (int k=0; k<Types.length; k++) {
                     int shift = 5;

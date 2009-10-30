@@ -58,6 +58,7 @@ public class dlgImageMgr extends javax.swing.JDialog {
     }
 
     public dlgImageMgr( java.awt.Frame parent, Force force, ImageTracker imageTracker ) {
+        this(parent, true);
         this.forces.add(force);
         this.imageTracker = imageTracker;
         Load();

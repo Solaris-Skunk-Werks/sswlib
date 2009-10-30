@@ -93,7 +93,7 @@ public class ForceListPrinter implements Printable {
         Graphic.drawString(Title, 280, 16);
 
         for ( Force force : forces ) {
-            force.RenderPrint(this);
+            force.RenderPrint(this, imageTracker);
             NewLine();
             NewLine();
         }
