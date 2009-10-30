@@ -37,7 +37,7 @@ public class tbTotalWarfare extends abTable {
     public tbTotalWarfare( Force f ) {
         force = f;
 
-        Columns.add(new Column( 0, "Unit", "TypeModel", 150 ));
+        Columns.add(new Column( 0, "Unit", "TypeModel", false, 150, String.class, true, SortOrder.ASCENDING ));
         Columns.add(new Column( 1, "Type", "UnitType", 50 ));
         Columns.add(new Column( 2, "Mechwarrior", "Mechwarrior", 150, true));
         Columns.add(new Column( 3, "Lance/Star", "Group", true, 0, String.class, true, SortOrder.ASCENDING));
@@ -48,6 +48,11 @@ public class tbTotalWarfare extends abTable {
         Columns.add(new Column( 8, "Mod", "Mod", 30, false, Double.class ));
         Columns.add(new Column( 9, "C3", "UsesC3", 30, false, String.class ));
         Columns.add(new Column( 10, "Adj BV", "TotalBV", false, 40, Integer.class, true, SortOrder.ASCENDING ));
+
+        SortFields.add(Columns.get(3));
+        SortFields.add(Columns.get(4));
+        SortFields.add(Columns.get(0));
+        SortFields.add(Columns.get(10));
     }
 
     public Object getValueAt( int row, int col ) {
@@ -62,9 +67,9 @@ public class tbTotalWarfare extends abTable {
             case 3:
                 return u.Group;
             case 4:
-                return u.Tonnage;
+                return String.format( "%1$,.0f", u.Tonnage);
             case 5:
-                return u.BaseBV;
+                return String.format( "%1$,.0f", u.BaseBV);
             case 6:
                 return u.getGunnery();
             case 7:

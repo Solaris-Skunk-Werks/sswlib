@@ -89,7 +89,7 @@ public class Media {
         return fileChooser.getSelectedFile();
     }
     public Image GetImage(String filename) {
-        System.out.println("Loading " + filename);
+        //System.out.println("Loading " + filename);
         Image retval = toolkit.getImage( filename );
         Tracker.addImage( retval, 0 );
         try {

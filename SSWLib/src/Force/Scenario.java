@@ -157,7 +157,7 @@ public class Scenario implements ifSerializable {
         file.write( CommonTools.tab + "</attacker>" );
         file.newLine();
 
-        file.write( CommonTools.tab + "<defender description=\"" + this.Attacker + "\">" );
+        file.write( CommonTools.tab + "<defender description=\"" + this.Defender + "\">" );
         file.newLine();
 
         getDefenderForce().SerializeXML(file);

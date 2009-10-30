@@ -181,6 +181,10 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             printer.Append( BFBPrinter.Letter.toPage(), sheet );
         }
 
+        if ( chkPrintScenario.isSelected() ) {
+            ScenarioPrinter sheet = new ScenarioPrinter(scenario);
+            printer.Append( BFBPrinter.Letter.toPage(), sheet);
+        }
 
         if ( chkPrintFireChits.isSelected() ) {
             PrintDeclaration fire = new PrintDeclaration(imageTracker);

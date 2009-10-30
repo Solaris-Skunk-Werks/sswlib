@@ -39,6 +39,7 @@ import list.view.Column;
 
 public abstract class abTable extends AbstractTableModel {
     public Vector<Column> Columns = new Vector<Column>();
+    public Vector<Column> SortFields = new Vector<Column>();
     public Force force;
 
     public Force getForce() {
@@ -50,9 +51,17 @@ public abstract class abTable extends AbstractTableModel {
         TableRowSorter Leftsorter = new TableRowSorter<abTable>(this);
         List <RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
 
-        for ( Column col : Columns ) {
-            if ( col.isSortable ) {
-                sortKeys.add(new RowSorter.SortKey(col.Index, col.sortOrder));
+        if ( SortFields.size() > 0 ) {
+            for ( Column col : SortFields ) {
+                if ( col.isSortable ) {
+                    sortKeys.add(new RowSorter.SortKey(col.Index, col.sortOrder));
+                }
+            }
+        } else {
+            for ( Column col : Columns ) {
+                if ( col.isSortable ) {
+                    sortKeys.add(new RowSorter.SortKey(col.Index, col.sortOrder));
+                }
             }
         }
         Leftsorter.setSortKeys(sortKeys);

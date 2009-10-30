@@ -77,7 +77,7 @@ public class ImageTracker {
             byte[] image = resource.getResource(filename);
             if ( image != null ) { tempimg = media.LoadImage(resource.getResource(filename)); }
             if ( tempimg != null ) {
-                System.out.println(filename + " retrieved from zip file!");
+                //System.out.println(filename + " retrieved from zip file!");
                 imageStore.add(new StoredImage(filename, tempimg));
                 break;
             }
@@ -86,7 +86,7 @@ public class ImageTracker {
         if ( tempimg == null ) {
             tempimg = media.GetImage(filename);
             if ( tempimg != null ) {
-                System.out.println(filename + " retrieved from file system.");
+                //System.out.println(filename + " retrieved from file system.");
                 imageStore.add(new StoredImage(filename, tempimg));
             }
         }
