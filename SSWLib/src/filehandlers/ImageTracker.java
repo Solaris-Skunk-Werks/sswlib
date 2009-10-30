@@ -8,7 +8,6 @@ package filehandlers;
 import IO.JarResources;
 import Print.PrintConsts;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -20,7 +19,7 @@ public class ImageTracker {
     private Hashtable<String, JarResources> resources = new Hashtable<String, JarResources>();
 
     public ImageTracker() {
-        addResource( PrintConsts.PATTERNS, true);
+        addResource( PrintConsts.PATTERNS, false);
     }
 
     public void addResource( JarResources resource ) {

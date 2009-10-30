@@ -49,20 +49,20 @@ public class PrintConsts {
                             TOTAL_ARMOR = 17,
                             STATS = 18;
 
-    public final static String RS_TW_BP = "Data/Printing/RS_TW_BP.png",
-                               RS_TW_QD = "Data/Printing/RS_TW_QD.png",
+    public final static String RS_TW_BP = "./Data/Printing/RS_TW_BP.png",
+                               RS_TW_QD = "./Data/Printing/RS_TW_QD.png",
                                RS_TO_BP = "",
                                RS_TO_QD = "",
-                               BP_ChartImage = "Data/Printing/Charts.png",
-                               QD_ChartImage = "Data/Printing/ChartsQD.png",
-                               BF_BG = "Data/Printing/BF_BG.png",
-                               BF_IS_Unit = "Data/Printing/BF_IS_Unit.png",
-                               BF_CS_Unit = "Data/Printing/BF_CS_Unit.png",
-                               BF_CL_Unit = "Data/Printing/BF_CL_Unit.png",
-                               BF_Card = "Data/Printing/BF_Card.png",
-                               BF_Chart = "Data/Printing/BF_Chart.png",
-                               BFB_BG = "Data/Printing/bfb_bg.png",
-                               PATTERNS = "Data/Printing/patterns.zip";
+                               BP_ChartImage = "./Data/Printing/Charts.png",
+                               QD_ChartImage = "./Data/Printing/ChartsQD.png",
+                               BF_BG = "./Data/Printing/BF_BG.png",
+                               BF_IS_Unit = "./Data/Printing/BF_IS_Unit.png",
+                               BF_CS_Unit = "./Data/Printing/BF_CS_Unit.png",
+                               BF_CL_Unit = "./Data/Printing/BF_CL_Unit.png",
+                               BF_Card = "./Data/Printing/BF_Card.png",
+                               BF_Chart = "./Data/Printing/BF_Chart.png",
+                               BFB_BG = "./Data/Printing/bfb_bg.png",
+                               PATTERNS = "./Data/Printing/patterns.zip";
 
     public final static Font TitleFont = new Font( "Verdana", Font.BOLD, 12 );
     public final static Font BoldFont = new Font( "Arial", Font.BOLD, 8 );
