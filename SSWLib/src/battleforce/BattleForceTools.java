@@ -162,6 +162,14 @@ public class BattleForceTools {
                 retval[BFConstants.BF_EXTREME] *= 1.1;
             }
 
+            //Adjust Damage for One Shot
+            if ( w.IsOneShot() ) {
+                retval[BFConstants.BF_SHORT] *= 0.10;
+                retval[BFConstants.BF_MEDIUM] *= 0.10;
+                retval[BFConstants.BF_LONG] *= 0.10;
+                retval[BFConstants.BF_EXTREME] *= 0.10;
+            }
+
         }
 
         // Adjust for AES
@@ -211,7 +219,11 @@ public class BattleForceTools {
     public static boolean isBFLRM(ifWeapon w)
     {
         if (((abPlaceable)w).CritName().contains("LRM"))
-            return true;
+            if ( !((RangedWeapon) w).IsUsingFCS() ) {
+                return true;
+            } else {
+                return false;
+            }
         else
             return false;
     }
