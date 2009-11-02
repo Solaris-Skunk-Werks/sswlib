@@ -376,7 +376,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
         Vector newUnits = new Vector();
         Enumeration e = list.keys();
         while( e.hasMoreElements() ) {
-            Vector v = sortByTonnage((Vector) list.get(e.nextElement()));
+            Vector v = sortByUnitName(sortByTonnage((Vector) list.get(e.nextElement())));
             newUnits.addAll(v);
         }
 
@@ -397,7 +397,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
         Groups.add(g);
 
         //Sort groups by name
-        Groups = sortByName(Groups);
+        Groups = sortByGroupName(Groups);
 
         //Rebuild units
         Units.clear();
@@ -427,7 +427,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
         return v;
     }
 
-    public Vector sortByName( Vector v ) {
+    public Vector sortByGroupName( Vector v ) {
         int i = 1, j = 2;
         Object swap;
         while( i < v.size() ) {
@@ -442,6 +442,29 @@ public class Force extends AbstractTableModel implements ifSerializable {
                 i -= 1;
                 if( i == 0 ) {
                     i = 1;
+                }
+            }
+        }
+        return v;
+    }
+
+    public Vector sortByUnitName( Vector v ) {
+        int i = 1, j = 2;
+        Object swap;
+        while( i < v.size() ) {
+            // get the two items we'll be comparing
+            if ( ((Unit) v.get( i - 1 )).Tonnage == ((Unit) v.get( i )).Tonnage ) {
+                if( ((Unit) v.get( i - 1 )).TypeModel.compareToIgnoreCase(((Unit) v.get( i )).TypeModel) <= 0 ) {
+                    i = j;
+                    j += 1;
+                } else {
+                    swap = v.get( i - 1 );
+                    v.setElementAt( v.get( i ), i - 1 );
+                    v.setElementAt( swap, i );
+                    i -= 1;
+                    if( i == 0 ) {
+                        i = 1;
+                    }
                 }
             }
         }
