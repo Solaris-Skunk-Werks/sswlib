@@ -34,7 +34,7 @@ import common.CommonTools;
 import filehandlers.MechReader;
 
 public class MechListData extends abUnitData {
-    public MechListData(String Name, String Model, String Level, String Era, String Tech, String Source, String Type, String Motive, String Info, int Tonnage, int Year, int BV, double Cost, String filename){
+    public MechListData(String Name, String Model, String Level, String Era, String Tech, String Source, String Type, String Motive, String Info, int Tonnage, int Year, int BV, double Cost, String filename, BattleForceStats bfStats){
         this.Name = Name;
         this.Model = Model;
         this.TypeModel = Name + " " + Model;
@@ -50,14 +50,15 @@ public class MechListData extends abUnitData {
         this.BV = BV;
         this.Cost = Cost;
         this.filename = filename;
+        this.bfstat = bfStats;
     }
 
     public MechListData() {
-        this("", "",  "", "", "", "", "BattleMech", "Biped", "", 0, 2750, 0, 0, "");
+        this("", "",  "", "", "", "", "BattleMech", "Biped", "", 0, 2750, 0, 0, "", new BattleForceStats());
     }
 
     public MechListData( MechListData m ) {
-        this(m.Name, m.Model, m.Level, m.Era, m.Tech, m.Source, m.Type, m.Motive, m.Info, m.Tonnage, m.Year, m.BV, m.Cost, m.filename);
+        this(m.Name, m.Model, m.Level, m.Era, m.Tech, m.Source, m.Type, m.Motive, m.Info, m.Tonnage, m.Year, m.BV, m.Cost, m.filename, m.bfstat);
     }
 
     public MechListData( String filename ) throws Exception {
