@@ -87,16 +87,21 @@ public class ForceListPrinter implements Printable {
         Reset();
         
         //Background Image
-        Image Recordsheet = imageTracker.getImage( PrintConsts.BFB_BG );
-        Graphic.drawImage( Recordsheet, 0, 0, 576, 756, null);
+        Image Recordsheet = imageTracker.getImage( PrintConsts.BT_LOGO );
+        Graphic.drawImage( Recordsheet, 0, 0, 306, 49, null);
         setFont(CommonTools.TitleFont);
-        Graphic.drawString(Title, 280, 16);
+        Graphic.drawString(Title, 310, 16);
+        currentY = 75;
 
         for ( Force force : forces ) {
             force.RenderPrint(this, imageTracker);
             NewLine();
             NewLine();
         }
+
+        Graphic.setFont( PrintConsts.SmallBoldFont );
+        Graphic.drawString(PrintConsts.getCopyright()[0], 100, (int)format.getHeight()-40);
+        Graphic.drawString(PrintConsts.getCopyright()[1], 60, (int)format.getHeight()-30);
     }
 
     public void WriteStr(String line, int changeX) {
