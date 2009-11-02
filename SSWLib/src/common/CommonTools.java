@@ -718,6 +718,7 @@ public class CommonTools {
 
     public static int GetAverageClusterHits( ifWeapon w, int manualmodifier ) {
         if( ! w.IsCluster() ) { return 1; }
+        if( w.IsStreak() ) { return w.ClusterSize(); }
         int size = w.ClusterSize() - 1; // subtract one for array indexing
         int roll = 5 + manualmodifier; // subtracting 2 because we're indexing an array
         if( w instanceof RangedWeapon ) {
