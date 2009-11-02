@@ -105,7 +105,7 @@ public class MechList extends AbstractTableModel {
                 List.add(mData);
             }
         } catch (Exception e) {
-            //do nothing
+            System.out.println(e.getMessage());
         }
     }
 
