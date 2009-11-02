@@ -146,7 +146,10 @@ public class MechReader {
         if ( n.getLength() > 0 ) { Data.setInfo( n.item( 0 ).getTextContent() ); }
 
         n = d.getElementsByTagName( "battleforce" );
-        if ( n.getLength() > 0 ) { Data.setBattleForceStats( new BattleForceStats(n.item(0)) ); }
+        if ( n.getLength() > 0 ) {
+            Data.setBattleForceStats( new BattleForceStats(n.item(0)) );
+            Data.getBattleForceStats().setElement(Data.getFullName());
+        }
 
         n = d.getElementsByTagName( "battle_value" );
         if (n.getLength() >= 1) Data.setBV( Integer.parseInt( n.item(0).getTextContent() ) );
