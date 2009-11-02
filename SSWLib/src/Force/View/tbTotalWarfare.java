@@ -67,9 +67,9 @@ public class tbTotalWarfare extends abTable {
             case 3:
                 return u.Group;
             case 4:
-                return String.format( "%1$,.0f", u.Tonnage);
+                return (int) u.Tonnage;
             case 5:
-                return String.format( "%1$,.0f", u.BaseBV);
+                return (int) u.BaseBV;
             case 6:
                 return u.getGunnery();
             case 7:
