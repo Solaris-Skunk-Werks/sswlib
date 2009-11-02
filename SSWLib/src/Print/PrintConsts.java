@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package Print;
 
 import java.awt.Font;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -64,6 +65,7 @@ public class PrintConsts {
                                BF_Card = "./Data/Printing/BF_Card.png",
                                BF_Chart = "./Data/Printing/BF_Chart.png",
                                BFB_BG = "./Data/Printing/bfb_bg.png",
+                               BT_LOGO = "./Data/Printing/BT_Logo.png",
                                PATTERNS = "./Data/Printing/patterns.zip";
 
     public final static Font TitleFont = new Font( "Verdana", Font.BOLD, 12 );
@@ -138,5 +140,11 @@ public class PrintConsts {
         }
 
         return ret;
+    }
+
+    public static String[] getCopyright() {
+        return new String[]{
+            "Copyright " + (Calendar.getInstance()).get(Calendar.YEAR) + " WizKids, Inc.  Classic Battletech, 'Mech and BattleMech are trademarks of WizKids, Inc.  All Rights reserved.",
+            "Catalyst Game Labs and the Catalyst Game Labs logo are trademarks of InMediaRes Productions, LLC. Permission to photocopy for personal use."};
     }
 }
