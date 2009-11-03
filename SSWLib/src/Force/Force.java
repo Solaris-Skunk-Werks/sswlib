@@ -376,7 +376,8 @@ public class Force extends AbstractTableModel implements ifSerializable {
         Vector newUnits = new Vector();
         Enumeration e = list.keys();
         while( e.hasMoreElements() ) {
-            Vector v = sortByUnitName(sortByTonnage((Vector) list.get(e.nextElement())));
+            Vector v = sortByTonnage((Vector) list.get(e.nextElement()));
+            v = sortByUnitName(v);
             newUnits.addAll(v);
         }
 
@@ -466,6 +467,9 @@ public class Force extends AbstractTableModel implements ifSerializable {
                         i = 1;
                     }
                 }
+            } else {
+                i = j;
+                j += 1;
             }
         }
         return v;
