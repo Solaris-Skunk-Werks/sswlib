@@ -36,7 +36,7 @@
                           <Component id="jPanel2" min="-2" pref="124" max="-2" attributes="0"/>
                       </Group>
                       <Component id="pnlWhat" alignment="0" min="0" max="32767" attributes="1"/>
-                      <Component id="pnlHow" alignment="0" max="32767" attributes="1"/>
+                      <Component id="pnlHow" alignment="0" pref="643" max="32767" attributes="1"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>

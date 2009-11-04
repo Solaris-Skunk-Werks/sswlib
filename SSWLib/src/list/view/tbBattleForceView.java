@@ -31,43 +31,48 @@ import javax.swing.SortOrder;
 import list.MechList;
 import list.MechListData;
 
-public class tbTotalWarfareView extends abView {
-    public tbTotalWarfareView( MechList list ) {
+public class tbBattleForceView extends abView {
+    public tbBattleForceView( MechList list ) {
         this.list = list;
 
-        Columns.add(new Column( 0, "Tons", "Tonnage", false, 20, Integer.class, true, SortOrder.ASCENDING ));
-        Columns.add(new Column( 1, "Type/Model", "Name", false, 100, String.class, true, SortOrder.ASCENDING ));
-        Columns.add(new Column( 2, "BV", "BV", 30, Integer.class ));
-        Columns.add(new Column( 3, "Cost", "Cost", 30, Double.class ));
-        Columns.add(new Column( 4, "Level", "Level", 40 ));
-        Columns.add(new Column( 5, "Era", "Era", 20 ));
-        Columns.add(new Column( 6, "Tech", "Tech", 20 ));
-        Columns.add(new Column( 7, "Year", "Year", 20, Integer.class ));
-        Columns.add(new Column( 8, "Source", "Source", 30 ));
-
+        Columns.add(new Column( 0, "Unit", "TypeModel", 150 ));
+        Columns.add(new Column( 1, "MV", "MV", 20, Integer.class ));
+        Columns.add(new Column( 2, "S", "S", 20, Integer.class ));
+        Columns.add(new Column( 3, "M", "M", 20, Integer.class ));
+        Columns.add(new Column( 4, "L", "L", 20, Integer.class ));
+        Columns.add(new Column( 5, "E", "E", 20, Integer.class ));
+        Columns.add(new Column( 6, "Wt", "Wt", 20, Integer.class ));
+        Columns.add(new Column( 7, "OV", "OV", 20, Integer.class ));
+        Columns.add(new Column( 8, "A/S", "Armor", 20, Integer.class ));
+        Columns.add(new Column( 9, "Base PV", "BaseBV", 30, Integer.class ));
+        Columns.add(new Column( 10, "Adj PV", "TotalBV", false, 40, Integer.class, true, SortOrder.ASCENDING ));
     }
 
     public Object getValueAt( int row, int col ) {
         MechListData m = (MechListData) list.Get( row );
         switch( col ) {
             case 0:
-                return (int) m.getTonnage();
+                return m.getBattleForceStats().getElement();
             case 1:
-                return (m.getName() + " " + m.getModel()).trim();
+                return m.getBattleForceStats().getMovement();
             case 2:
-                return (int) m.getBV();
+                return m.getBattleForceStats().getShort();
             case 3:
-                return ""; //s String.format( "%1$,.2f", m.getCost() );
+                return m.getBattleForceStats().getMedium();
             case 4:
-                return m.getLevel();
+                return m.getBattleForceStats().getLong();
             case 5:
-                return m.getEra();
+                return m.getBattleForceStats().getExtreme();
             case 6:
-                return m.getTech();
+                return m.getBattleForceStats().getWeight();
             case 7:
-                return m.getYear();
+                return m.getBattleForceStats().getOverheat();
             case 8:
-                return m.getSource();
+                return m.getBattleForceStats().getArmor() + "/" + m.getBattleForceStats().getInternal();
+            case 9:
+                return m.getBattleForceStats().getBasePV();
+            case 10:
+                return m.getBattleForceStats().getPointValue();
         }
         return null;
     }

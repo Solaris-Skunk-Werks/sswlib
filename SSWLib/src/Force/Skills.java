@@ -164,16 +164,16 @@ public class Skills {
     }
 
     public String generateRandomSkill( String SkillLevel ) {
-        String filename = "random/tables/total warfare/random skills {Level}.txt";
+        String filename = "./Data/Tables/Total Warfare/random skills {Level}.txt";
         String[] skills = new String[] {"4", "5"};
 
         if ( SkillLevel.equals("Random") ) {
             try {
-                reader.Load("random/tables/total warfare/random experience rating.txt", rus);
+                reader.Load("./Data/Tables/Total Warfare/random experience rating.txt", rus);
                 SkillLevel = rus.Generate().trim();
                 //SkillLevel = SkillLevel.substring(0, SkillLevel.lastIndexOf(","));
             } catch (FileNotFoundException ex) {
-                //do nothing with it
+                System.out.println(ex.getMessage());
             }
         }
 
@@ -182,7 +182,7 @@ public class Skills {
             reader.Load(filename, rus);
             skills = rus.Generate().split(",");
         } catch (FileNotFoundException ex) {
-            //do nothing
+            System.out.println(ex.getMessage());
         }
 
         if ( skills.length > 0 ) {

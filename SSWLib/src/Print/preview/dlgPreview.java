@@ -198,8 +198,8 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             if ( cmbBFSheetType.getSelectedIndex() == 0 ){
                 if ( chkBFOnePerPage.isSelected() ) {
                     Vector<BattleForce> forcelist = new Vector<BattleForce>();
-                    forcelist.addAll(scenario.getAttackerForce().toBattleForceByGroup());
-                    if ( scenario.getDefenderForce().Units.size() > 0 ) { forcelist.addAll(scenario.getDefenderForce().toBattleForceByGroup()); }
+                    forcelist.addAll(scenario.getAttackerForce().toBattleForceByGroup( 12 ));
+                    if ( scenario.getDefenderForce().Units.size() > 0 ) { forcelist.addAll(scenario.getDefenderForce().toBattleForceByGroup( 12 )); }
 
                     for ( BattleForce f : forcelist ) {
                         BattleforcePrinter bf = new BattleforcePrinter(f, imageTracker);
@@ -222,8 +222,8 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                 }
             } else {
                     Vector<BattleForce> forces = new Vector<BattleForce>();
-                    forces.addAll(scenario.getAttackerForce().toBattleForceByGroup());
-                    if ( scenario.getDefenderForce().Units.size() > 0 ) { forces.addAll(scenario.getDefenderForce().toBattleForceByGroup()); }
+                    forces.addAll(scenario.getAttackerForce().toBattleForceByGroup( 6 ));
+                    if ( scenario.getDefenderForce().Units.size() > 0 ) { forces.addAll(scenario.getDefenderForce().toBattleForceByGroup( 6 )); }
 
                     for ( BattleForce f : forces ) {
                         BattleforceCardPrinter bf = new BattleforceCardPrinter(f, imageTracker);

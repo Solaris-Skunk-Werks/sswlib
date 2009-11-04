@@ -498,12 +498,15 @@ public class Force extends AbstractTableModel implements ifSerializable {
         return bf;
     }
 
-    public Vector<BattleForce> toBattleForceByGroup() {
+    public Vector<BattleForce> toBattleForceByGroup( int SizeLimit ) {
         sortForPrinting();
         Vector<BattleForce> Forces = new Vector<BattleForce>();
 
         for ( Group g : Groups ) {
-            Forces.add(g.toBattleForce());
+            Vector<BattleForce> groupForces = g.toBattleForce(SizeLimit);
+            for ( BattleForce bf : groupForces ) {
+                Forces.add(bf);
+            }
         }
 
         return Forces;

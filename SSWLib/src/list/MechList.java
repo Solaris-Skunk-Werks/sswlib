@@ -36,12 +36,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
+import list.view.abView;
+import list.view.tbTotalWarfareView;
 
 
 public class MechList extends AbstractTableModel {
     private Vector<MechListData> List = new Vector<MechListData>();
     private String Directory = "";
     private int IndexVersion = 5;
+    private abView currentModel = new tbTotalWarfareView(this);
 
     public MechList() {
 
@@ -355,5 +358,19 @@ public class MechList extends AbstractTableModel {
     @Override
     public void setValueAt( Object value, int row, int col ) {
         return;
+    }
+
+    /**
+     * @return the currentModel
+     */
+    public abView getCurrentModel() {
+        return currentModel;
+    }
+
+    /**
+     * @param currentModel the currentModel to set
+     */
+    public void setCurrentModel(abView currentModel) {
+        this.currentModel = currentModel;
     }
 }

@@ -48,7 +48,8 @@ public class Group {
         Units.add(u);
     }
 
-    public BattleForce toBattleForce() {
+    public Vector<BattleForce> toBattleForce( int SizeLimit ) {
+        Vector<BattleForce> bforces = new Vector<BattleForce>();
         BattleForce bf = new BattleForce();
         bf.Type = getType();
         bf.ForceName = getForce().ForceName;
@@ -58,8 +59,15 @@ public class Group {
             u.LoadMech();
             BattleForceStats stat = new BattleForceStats(u.m, u.Group,u.getGunnery(), u.getPiloting());
             bf.BattleForceStats.add(stat);
+            if ( bf.BattleForceStats.size() == SizeLimit ) {
+                bforces.add(bf);
+                bf = new BattleForce();
+            }
         }
-        return bf;
+        if ( bf.BattleForceStats.size() > 0 ) {
+            bforces.add(bf);
+        }
+        return bforces;
     }
 
     public void SerializeXML( BufferedWriter file ) throws IOException {
