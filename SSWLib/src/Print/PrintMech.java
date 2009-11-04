@@ -35,6 +35,7 @@ import filehandlers.ImageTracker;
 import filehandlers.Media;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -1042,36 +1043,9 @@ public class PrintMech implements Printable {
     private void DrawImages( Graphics2D graphics ) {
         //PrintMech Image
         if( getMechImage() != null ) {
-            // See if we need to scale
-            int h = getMechImage().getHeight( null );
-            int w = getMechImage().getWidth( null );
-            if ( w > 145 || h > 200 ) {
-                if ( w > h ) { // resize based on width
-                    double resize = 145.0d / w;
-                    h = (int) ( h * resize );
-                    w = (int) ( w * resize );
-                    if( h > 200 ) {
-                        // resize again, this time based on height
-                        resize = 200.0d / h;
-                        h = (int) ( h * resize );
-                        w = (int) ( w * resize );
-                    }
-                } else { // resize based on height
-                    double resize = 200.0d / h;
-                    h = (int) ( h * resize );
-                    w = (int) ( w * resize );
-                    if( w > 145 ) {
-                        // resize again, this time based on width
-                        resize = 145.0d / w;
-                        h = (int) ( h * resize );
-                        w = (int) ( w * resize );
-                    }
-                }
-            }
-            // get the offsets to print the image more or less centered
-            int offx = 0; // (int) ( ( 145 - w ) / 2 );
-            int offy = 0; // (int) ( ( 200 - h ) / 2 );
-            graphics.drawImage( getMechImage(), points.GetMechImageLoc().x + offx, points.GetMechImageLoc().y + offy, w, h, null );
+            Dimension d = media.reSize(getMechImage(), 145, 200);
+            Point offset = media.offsetImageBottom( new Dimension(145, 200), d);
+            graphics.drawImage( getMechImage(), points.GetMechImageLoc().x + offset.x, points.GetMechImageLoc().y + offset.y, d.width, d.height, null );
         }
 
         if ( LogoImage != null ) {

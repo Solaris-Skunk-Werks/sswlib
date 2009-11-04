@@ -41,6 +41,7 @@ import battleforce.BattleForceStats;
 import filehandlers.ImageTracker;
 import filehandlers.Media;
 import java.awt.Font;
+import java.awt.Point;
 
 public class BattleforceCardPrinter implements Printable {
     private BattleForce battleforce;
@@ -162,7 +163,8 @@ public class BattleforceCardPrinter implements Printable {
                 Image image = imageTracker.getImage(stats.getImage());
                 Dimension dim = media.reSize(image, 110d, 140d);
                 image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
-                graphic.drawImage(image, x+10, y+58, dim.width, dim.height, null);
+                Point offset = media.offsetImageBottom( new Dimension(110, 140), dim);
+                graphic.drawImage(image, x+10+offset.x, y+58+offset.y, dim.width, dim.height, null);
 
                 if ( icon != null && printLogo ) {
                     graphic.drawImage(icon, x+105, y+58, d.width, d.height, null);

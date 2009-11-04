@@ -39,6 +39,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import common.ImageFilter;
 import common.ImagePreview;
+import java.awt.Point;
 import java.util.Vector;
 
 public class Media {
@@ -167,6 +168,13 @@ public class Media {
         }
 
         return imageSize;
+    }
+
+    public Point offsetImageBottom( Dimension spaceDimensions, Dimension currentDimensions ) {
+        Point offset = new Point(0, 0);
+        //offset.x = originalDimensions.width - currentDimensions.width;
+        offset.y = spaceDimensions.height - currentDimensions.height;
+        return offset;
     }
 
     public String GetDirectorySelection( Component Parent ) {
