@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package filehandlers;
 
+import Force.Force;
 import battleforce.BFConstants;
 import common.*;
 import java.io.BufferedWriter;
@@ -46,14 +47,35 @@ public class TXTWriter {
                    tformat = "$6.2f";
     public boolean CurrentLoadoutOnly = false;
 
-    public TXTWriter( Mech m ) {
-        CurMech = m;
+    public TXTWriter() {
         NL = System.getProperty( "line.separator" );
+    }
+
+    public TXTWriter( Mech m ) {
+        this();
+        CurMech = m;
         if( CurMech.UsingFractionalAccounting() ) {
             tformat = "$7.3f";
         } else {
             tformat = "$6.2f";
         }
+    }
+
+    public void WriteForces( String filename, Force force ) throws IOException {
+        Vector<Force> forces = new Vector<Force>();
+        forces.add(force);
+        WriteForces( filename, forces );
+    }
+
+    public void WriteForces( String filename, Vector<Force> forces ) throws IOException {
+        if ( !filename.endsWith(".txt") ) { filename += ".txt"; }
+        BufferedWriter FR = new BufferedWriter( new FileWriter(filename) );
+
+        for (Force force : forces) {
+            FR.write(force.SerializeClipboard());
+            FR.newLine();
+        }
+        FR.close();
     }
 
 // This is a text formating string (80 chars) I keep around for when it's needed
