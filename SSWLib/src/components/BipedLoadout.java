@@ -777,7 +777,10 @@ public class BipedLoadout implements ifMechLoadout {
                     throw new Exception( p.CritName() +
                         " cannot be allocated to the right arm because\nthe arm contains a hand actuator." );
                 }
-
+                if ( ((PhysicalWeapon)p).ReplacesLowerArm() && ( RACrits[3] instanceof Actuator ) ) {
+                    throw new Exception( p.CritName() +
+                        " cannot be allocated to the right arm because\nthe arm contains a lower arm actuator." );
+                }
             }
             if( p instanceof ifWeapon ) {
                 if( ((ifWeapon) p).OmniRestrictActuators() && Owner.IsOmnimech() ) {
@@ -834,6 +837,10 @@ public class BipedLoadout implements ifMechLoadout {
                     throw new Exception( p.CritName() +
                         " cannot be allocated to the left arm because\nthe arm contains a hand actuator." );
                 }
+                if ( ((PhysicalWeapon)p).ReplacesLowerArm() && ( LACrits[3] instanceof Actuator ) ) {
+                    throw new Exception( p.CritName() +
+                        " cannot be allocated to the left arm because\nthe arm contains a lower arm actuator." );
+                }
             }
             if( p instanceof ifWeapon ) {
                 if( ((ifWeapon) p).OmniRestrictActuators() && Owner.IsOmnimech() ) {
@@ -867,15 +874,15 @@ public class BipedLoadout implements ifMechLoadout {
             throw new Exception( p.CritName() +
                 " cannot be allocated to the right leg." );
         } else {
-           if( p instanceof PhysicalWeapon ) {
-           // Ensure that no other physical weapons are mounted in this location
-                for( int i = 0; i < NonCore.size(); i++ ){
-                    if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RL)
-                        if ( ((PhysicalWeapon)p).GetPWClass() != PhysicalWeapon.PW_CLASS_TALON )
-                            throw new Exception( p.CritName() +
-                                " cannot be allocated to the right leg because\nthe leg already mounts a physical weapon." );
-                }
-           }
+            if( p instanceof PhysicalWeapon ) {
+            // Ensure that no other physical weapons are mounted in this location
+                 for( int i = 0; i < NonCore.size(); i++ ){
+                     if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RL)
+                         if ( ((PhysicalWeapon)p).GetPWClass() != PhysicalWeapon.PW_CLASS_TALON )
+                             throw new Exception( p.CritName() +
+                                 " cannot be allocated to the right leg because\nthe leg already mounts a physical weapon." );
+                 }
+            }
             try {
                 Allocate( p, SIndex, RLCrits );
             } catch( Exception e ) {

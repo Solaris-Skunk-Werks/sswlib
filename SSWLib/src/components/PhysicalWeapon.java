@@ -136,6 +136,7 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
         RequiresLowerArm = p.RequiresLowerArm;
         if ( RequiresLowerArm == false ) { RequiresHand = false; }
         PWClass = p.PWClass;
+        if( p.GetMechModifier() != null ) { AddMechModifier( p.GetMechModifier() ); }
     }
 
     public void SetOwner( Mech m ) {

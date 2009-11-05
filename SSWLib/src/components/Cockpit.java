@@ -84,7 +84,7 @@ public class Cockpit extends abPlaceable {
 
     public double GetTonnage() {
         if( IsArmored() ) {
-            return CurConfig.GetTonnage() + 0.5;
+            return CurConfig.GetTonnage() + 1.0;
         } else {
             return CurConfig.GetTonnage();
         }
