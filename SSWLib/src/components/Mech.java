@@ -34,6 +34,8 @@ import battleforce.*;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.prefs.Preferences;
+import states.stEngineFuelCell;
+import states.stEngineICE;
 import visitors.*;
 
 public class Mech implements ifBattleforce {
@@ -4220,8 +4222,8 @@ public class Mech implements ifBattleforce {
         return retval;
     }
 
-    public Vector <String> GetBFAbilities() {
-        Vector <String> retval = new Vector();
+    public Vector<String> GetBFAbilities() {
+        Vector<String> retval = new Vector();
 
         // First search all equipment for BF Abilities
         Vector nc = GetLoadout().GetNonCore();
@@ -4342,8 +4344,8 @@ public class Mech implements ifBattleforce {
 
         //ALL Mechs get SRCH (Industrials?)
         retval.add("SRCH");     //Searchlight
-        if( CurEngine.IsNuclear() ) {
-            retval.add("EEE");     //Electric Engine
+        if ( CurEngine.IsICE() || CurEngine.isFuelCell() ) {
+            retval.add("EE");
         }
         if ( IsIndustrialmech() ) {
             if( HasEjectionSeat() ) {

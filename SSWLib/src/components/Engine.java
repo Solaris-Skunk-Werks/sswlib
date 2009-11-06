@@ -444,6 +444,14 @@ public class Engine extends abPlaceable {
         return CurConfig.IsNuclear();
     }
 
+    public boolean IsICE() {
+        return ( CurConfig instanceof stEngineICE );
+    }
+
+    public boolean isFuelCell() {
+        return ( CurConfig instanceof stEngineFuelCell );
+    }
+    
     public int MaxMovementHeat() {
         return CurConfig.MaxMovementHeat();
     }
