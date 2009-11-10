@@ -84,7 +84,7 @@ public class stChassisISCOQD implements ifChassis, ifState {
     }
 
     public String ChatName() {
-        return "Comp QD";
+        return "Comp Quad";
     }
 
     public String MegaMekName( boolean UseRear ) {

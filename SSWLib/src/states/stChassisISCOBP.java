@@ -84,7 +84,7 @@ public class stChassisISCOBP implements ifChassis, ifState {
     }
 
     public String ChatName() {
-        return "Comp BP";
+        return "Comp";
     }
 
     public String MegaMekName( boolean UseRear ) {

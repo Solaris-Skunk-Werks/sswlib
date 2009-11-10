@@ -86,7 +86,7 @@ public class stChassisPIMBP implements ifChassis, ifState {
     }
 
     public String ChatName() {
-        return "PrmInd BP";
+        return "PrmInd";
     }
 
     public String MegaMekName( boolean UseRear ) {

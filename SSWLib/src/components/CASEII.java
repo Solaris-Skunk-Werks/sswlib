@@ -44,7 +44,7 @@ public class CASEII extends abPlaceable {
         AC.SetPIMAllowed( true );
         AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
         Clan = clan;
-        this.SetBattleForceAbilities(new String[]{"CASEII"});
+        SetBattleForceAbilities( new String[]{ "CASEII" } );
     }
 
     @Override

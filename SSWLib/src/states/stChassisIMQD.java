@@ -87,7 +87,7 @@ public class stChassisIMQD implements ifChassis, ifState {
     }
 
     public String ChatName() {
-        return "Ind QD";
+        return "Ind Quad";
     }
 
     public String MegaMekName( boolean UseRear ) {

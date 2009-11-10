@@ -777,7 +777,7 @@ public class BipedLoadout implements ifMechLoadout {
                     throw new Exception( p.CritName() +
                         " cannot be allocated to the right arm because\nthe arm contains a hand actuator." );
                 }
-                if ( ((PhysicalWeapon)p).ReplacesLowerArm() && ( RACrits[3] instanceof Actuator ) ) {
+                if ( ((PhysicalWeapon)p).ReplacesLowerArm() && ( RACrits[2] instanceof Actuator ) ) {
                     throw new Exception( p.CritName() +
                         " cannot be allocated to the right arm because\nthe arm contains a lower arm actuator." );
                 }
@@ -837,7 +837,7 @@ public class BipedLoadout implements ifMechLoadout {
                     throw new Exception( p.CritName() +
                         " cannot be allocated to the left arm because\nthe arm contains a hand actuator." );
                 }
-                if ( ((PhysicalWeapon)p).ReplacesLowerArm() && ( LACrits[3] instanceof Actuator ) ) {
+                if ( ((PhysicalWeapon)p).ReplacesLowerArm() && ( LACrits[2] instanceof Actuator ) ) {
                     throw new Exception( p.CritName() +
                         " cannot be allocated to the left arm because\nthe arm contains a lower arm actuator." );
                 }

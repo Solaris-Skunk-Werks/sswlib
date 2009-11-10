@@ -88,8 +88,8 @@ public class MechListData extends abUnitData {
                 this.Configurations.add(tempData.Configurations.get(i));
             }
             this.bfstat = tempData.getBattleForceStats();
-        } catch ( Exception e ) {
-            throw new Exception("[MechListData " + e.getMessage() + "]");
+        } catch ( Exception e1 ) {
+            throw new Exception("[MechListData " + e1.getMessage() + "]");
         }
     }
 

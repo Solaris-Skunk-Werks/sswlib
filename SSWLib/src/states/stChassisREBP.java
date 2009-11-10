@@ -87,7 +87,7 @@ public class stChassisREBP implements ifChassis, ifState {
     }
 
     public String ChatName() {
-        return "Rnfrcd BP";
+        return "Rnfrcd";
     }
 
     public String MegaMekName( boolean UseRear ) {

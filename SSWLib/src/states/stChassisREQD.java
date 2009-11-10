@@ -87,7 +87,7 @@ public class stChassisREQD implements ifChassis, ifState {
     }
 
     public String ChatName() {
-        return "Rnfrcd QD";
+        return "Rnfrcd Quad";
     }
 
     public String MegaMekName( boolean UseRear ) {

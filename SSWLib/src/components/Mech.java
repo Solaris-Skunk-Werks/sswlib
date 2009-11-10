@@ -1303,36 +1303,43 @@ public class Mech implements ifBattleforce {
 
     public String GetChatInfo() {
         String info = "";
-        info += GetTonnage() + "T ";
+        info += GetTonnage() + "T, ";
         // MP
-        info += GetWalkingMP() + "/";
+        info += GetWalkingMP();
+        if( GetWalkingMP() != GetAdjustedWalkingMP( false, true ) ) {
+            info += "[" + GetAdjustedWalkingMP( false, true ) + "]";
+        }
+        info += "/";
         info += GetRunningMP();
-        if ( GetPhysEnhance().IsMASC() || GetPhysEnhance().IsTSM() ) {
-            info += " (" + GetAdjustedRunningMP( false, true ) + ")";
+        if( GetRunningMP() != GetAdjustedRunningMP( false, true ) ) {
+            info += "[" + GetAdjustedRunningMP( false, true ) + "]";
         }
-        info += "/" + GetAdjustedJumpingMP( false ) + " ";
-
-        // movement info
-        if( GetPhysEnhance().IsMASC() || GetPhysEnhance().IsTSM() ) {
-            info += "(" + GetPhysEnhance().ChatName() + ") ";
+        info += "/" + CurLoadout.GetJumpJets().GetNumJJ();
+        if( CurLoadout.GetJumpJets().GetNumJJ() != this.GetAdjustedJumpingMP( false ) ) {
+            info += "[" + GetAdjustedJumpingMP( false ) + "]";
         }
+        if( CurPhysEnhance.IsMASC() || CurPhysEnhance.IsTSM() ) {
+            info += " " + CurPhysEnhance.ChatName();
+        }
+        info += ", ";
 
         // Engine
         info += GetEngine().ChatName() + ", ";
 
         // Internal Stucture
-        info += GetIntStruc().ChatName() + ", ";
+        info += GetIntStruc().ChatName();
 
         // Gyro
         if ( ! GetGyro().LookupName().equals( "Standard Gyro" ) ) {
-            info += GetGyro().ChatName() + ", ";
+            info += ", " + GetGyro().ChatName();
         }
+        info +=  "; ";
 
         // Armor
-        info += GetArmor().GetTonnage() + "T " + GetArmor().ChatName() + ", ";
+        info += GetArmor().GetTonnage() + "T " + GetArmor().ChatName() + "; ";
 
         // heat sinks
-        info += GetHeatSinks().GetNumHS() + " " + GetHeatSinks().ChatName() + ", ";
+        info += GetHeatSinks().GetNumHS() + " " + GetHeatSinks().ChatName() + "; ";
 
         //Weapons and Equip
         Hashtable<String, Integer> list = new Hashtable<String, Integer>();
@@ -4294,7 +4301,12 @@ public class Mech implements ifBattleforce {
                 }
 
                 // Does the mech carry an explodable weapon?
-                if ( ((ifWeapon)nc.get(i)).IsExplosive() || ((ifWeapon)nc.get(i)).HasAmmo() ) {
+                if ( ((ifWeapon)nc.get(i)).IsExplosive() ) {
+                    hasExplodable = true;
+                }
+            }
+            if( item instanceof Ammunition ) {
+                if( ((Ammunition) item).IsExplosive() ) {
                     hasExplodable = true;
                 }
             }
@@ -4306,10 +4318,16 @@ public class Mech implements ifBattleforce {
         retval.remove("HT7");
 
         // Now deal with all the funny stuff
+        if( CurLoadout.HasCTCASE() || CurLoadout.HasLTCASE() || CurLoadout.HasRTCASE() ) {
+            retval.add( "CASE" );
+        }
+        if( CurLoadout.HasHDCASEII() || CurLoadout.HasCTCASEII() || CurLoadout.HasLTCASEII() || CurLoadout.HasRTCASEII() || CurLoadout.HasLACASEII() || CurLoadout.HasRACASEII() || CurLoadout.HasLLCASEII() || CurLoadout.HasRLCASEII() ) {
+            retval.add( "CASEII" );
+        }
         if ( isENE ) {
             retval.add("ENE");
         }
-        if ( !isENE && GetTechBase() == AvailableCode.TECH_CLAN )
+        if ( !isENE && CurLoadout.IsUsingClanCASE() )
             retval.add("CASE");
         if ( Taser > 0 ) {
             retval.remove("MTAS");

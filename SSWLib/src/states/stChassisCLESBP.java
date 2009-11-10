@@ -84,7 +84,7 @@ public class stChassisCLESBP implements ifChassis, ifState {
     }
 
     public String ChatName() {
-        return "ES BP";
+        return "ES";
     }
 
     public String MegaMekName( boolean UseRear ) {

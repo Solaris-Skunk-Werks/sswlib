@@ -31,10 +31,10 @@ package common;
 public class Constants {
     public final static String LibVersion = "0.0.1",
                                BASELOADOUT_NAME = "Base Loadout",
-                               WEAPONSFILE = "data/equipment/weapons.dat",
-                               PHYSICALSFILE = "data/equipment/physicals.dat",
-                               EQUIPMENTFILE = "data/equipment/equipment.dat",
-                               AMMOFILE = "data/equipment/ammunition.dat";
+                               WEAPONSFILE = "Data/Equipment/weapons.dat",
+                               PHYSICALSFILE = "Data/Equipment/physicals.dat",
+                               EQUIPMENTFILE = "Data/Equipment/equipment.dat",
+                               AMMOFILE = "Data/Equipment/ammunition.dat";
 
     public final static String[] Locs = { "Head", "Center Torso", "Left Torso",
         "Right Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg" };
