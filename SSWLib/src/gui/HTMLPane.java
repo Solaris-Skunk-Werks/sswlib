@@ -26,6 +26,14 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/*
+ * This code borrows liberally from HTMLDocumentEditor.java by Charles Bell,
+ * circa May, 2002.  There was no license on the original, so I assumed public
+ * domain.  This version is designed to be embedded into a pre-existing project
+ * as a JPanel, rather than it's own application.  I have also included several
+ * application-specific methods for our usage.
+ */
+
 package gui;
 
 import java.awt.Color;
@@ -51,7 +59,6 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledEditorKit;
-import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.undo.CannotRedoException;
@@ -168,6 +175,11 @@ public class HTMLPane extends JPanel implements ActionListener {
         } catch( Exception e ) {
             return retval;
         }
+    }
+
+    public void SetText( String s ) {
+        Text.setText( s );
+        repaint();
     }
 
     protected void ResetUndoManager() {
