@@ -374,6 +374,7 @@ public class HTMLPane extends JPanel implements ActionListener {
         Controls.add( AlignLeft );
         Controls.add( AlignCenter );
         Controls.add( AlignRight );
+        Controls.add( Box.createHorizontalGlue() );
 
         Text.setContentType( "text/html" );
         Text.setDocument( Document );
