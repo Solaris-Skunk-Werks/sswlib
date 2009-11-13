@@ -100,11 +100,11 @@ public class HTMLPane extends JPanel implements ActionListener {
     private HTMLEditorKit.InsertHTMLTextAction BulletAction
         = new HTMLEditorKit.InsertHTMLTextAction( "Bullets", "<li> </li>", HTML.Tag.UL, HTML.Tag.LI );*/
 
-    public HTMLPane() {
+    public HTMLPane( boolean OneLine ) {
         HTMLEditorKit Kit = new HTMLEditorKit();
         Document = (HTMLDocument) Kit.createDefaultDocument();
         Document.addUndoableEditListener( UndoHandler );
-        InitComponents();
+        InitComponents( OneLine );
         ResetUndoManager();
     }
 
@@ -230,7 +230,7 @@ public class HTMLPane extends JPanel implements ActionListener {
         }
     }
 
-    private void InitComponents() {
+    private void InitComponents( boolean OneLine ) {
         Font = new JMenu( "" );
         Font.setIcon( new javax.swing.ImageIcon( getClass().getResource( "/images/edit.png" ) ) );
         String[] FontTypes = { "SansSerif", "Serif", "Monospaced", "Dialog", "DialogInput" };
@@ -384,8 +384,18 @@ public class HTMLPane extends JPanel implements ActionListener {
         MenuAlign.setLayout( new BoxLayout( MenuAlign, BoxLayout.X_AXIS ) );
         MenuAlign.add( MainMenu );
         MenuAlign.add( Box.createHorizontalGlue() );
-        add( MenuAlign );
-        add( Controls );
+        if( OneLine ) {
+            JPanel Single = new JPanel();
+            BoxLayout b = new BoxLayout( Single, BoxLayout.X_AXIS );
+            Single.setLayout( b );
+            Single.add( MenuAlign );
+            Single.add( Box.createRigidArea( new java.awt.Dimension( 5, 0 ) ) );
+            Single.add( Controls );
+            add( Single );
+        } else {
+            add( MenuAlign );
+            add( Controls );
+        }
         add( Box.createRigidArea( new java.awt.Dimension( 0, 5 ) ) );
         Scroller = new JScrollPane( Text );
         add( Scroller );
