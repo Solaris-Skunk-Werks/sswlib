@@ -95,6 +95,8 @@ public class HTMLPane extends JPanel implements ActionListener {
     private Action UnderlineAction = new StyledEditorKit.UnderlineAction();
     private Action ItalicAction = new StyledEditorKit.ItalicAction();
 
+    private javax.swing.ImageIcon check = new javax.swing.ImageIcon( getClass().getResource( "/images/ui-check-box.png" ) );
+
 /*    private HTMLEditorKit.InsertHTMLTextAction UnorderedListAction
         = new HTMLEditorKit.InsertHTMLTextAction( "Bullets", "<ul><li> </li></ul>", HTML.Tag.P, HTML.Tag.UL );
     private HTMLEditorKit.InsertHTMLTextAction BulletAction
@@ -159,7 +161,7 @@ public class HTMLPane extends JPanel implements ActionListener {
         String text = Text.getText();
         int start = text.indexOf( "<body>" ) + 7;
         int end = text.indexOf( "</body>" ) - 3;
-        return text.substring( start, end );
+        return text.substring( start, end ).replace( "\n", "" );
     }
 
 /**
@@ -171,7 +173,8 @@ public class HTMLPane extends JPanel implements ActionListener {
         HTMLDocument Doc = (HTMLDocument) Text.getDocument();
         String retval = "Operation Failed!";
         try {
-            return Doc.getText( 0, Doc.getLength() );
+            retval = Doc.getText( 0, Doc.getLength() );
+            return retval.replace( "\n", "" );
         } catch( Exception e ) {
             return retval;
         }
