@@ -4319,16 +4319,16 @@ public class Mech implements ifBattleforce {
 
         // Now deal with all the funny stuff
         if( CurLoadout.HasCTCASE() || CurLoadout.HasLTCASE() || CurLoadout.HasRTCASE() ) {
-            retval.add( "CASE" );
+            if ( !retval.contains( "CASE" ) ) retval.add( "CASE" );
         }
         if( CurLoadout.HasHDCASEII() || CurLoadout.HasCTCASEII() || CurLoadout.HasLTCASEII() || CurLoadout.HasRTCASEII() || CurLoadout.HasLACASEII() || CurLoadout.HasRACASEII() || CurLoadout.HasLLCASEII() || CurLoadout.HasRLCASEII() ) {
-            retval.add( "CASEII" );
+            if ( !retval.contains( "CASEII" ) ) retval.add( "CASEII" );
         }
         if ( isENE ) {
             retval.add("ENE");
         }
-        if ( !isENE && CurLoadout.IsUsingClanCASE() )
-            retval.add("CASE");
+            if ( !isENE && ( CurLoadout.IsUsingClanCASE() && CurLoadout.CanUseClanCASE() ) )
+            if ( !retval.contains( "CASE" ) ) retval.add("CASE");
         if ( Taser > 0 ) {
             retval.remove("MTAS");
             retval.add("MTAS" + Taser);
