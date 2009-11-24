@@ -58,6 +58,7 @@ public class Group {
             Unit u = (Unit) Units.get(i);
             u.LoadMech();
             BattleForceStats stat = new BattleForceStats(u.m, u.Group,u.getGunnery(), u.getPiloting());
+            stat.setWarrior(u.getMechwarrior());
             bf.BattleForceStats.add(stat);
             if ( bf.BattleForceStats.size() == SizeLimit ) {
                 bforces.add(bf);
