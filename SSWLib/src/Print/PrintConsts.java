@@ -54,8 +54,8 @@ public class PrintConsts {
 
     public final static String RS_TW_BP = "./Data/Printing/RS_TW_BP.png",
                                RS_TW_QD = "./Data/Printing/RS_TW_QD.png",
-                               RS_TO_BP = "",
-                               RS_TO_QD = "",
+                               RS_TO_BP = "./Data/Printing/RS_TO_BP.png",
+                               RS_TO_QD = "./Data/Printing/RS_TO_QD.png",
                                BP_ChartImage = "./Data/Printing/Charts.png",
                                QD_ChartImage = "./Data/Printing/ChartsQD.png",
                                BF_BG = "./Data/Printing/BF_BG.png",
@@ -68,18 +68,23 @@ public class PrintConsts {
                                BT_LOGO = "./Data/Printing/BT_Logo.png",
                                PATTERNS = "./Data/Printing/patterns.zip";
 
-    public final static Font TitleFont = new Font( "Verdana", Font.BOLD, 12 );
-    public final static Font BoldFont = new Font( "Arial", Font.BOLD, 8 );
-    public final static Font PlainFont = new Font( "Arial", Font.PLAIN, 8 );
-    public final static Font RegularFont = new Font( "Arial", Font.PLAIN, 10 );
-    public final static Font Regular9Font = new Font( "Arial", Font.PLAIN, 9 );
-    public final static Font ItalicFont = new Font( "Arial", Font.ITALIC, 8 );
-    public final static Font SmallFont = new Font( "Arial", Font.PLAIN, 7 );
-    public final static Font SmallItalicFont = new Font( "Arial", Font.ITALIC, 7 );
-    public final static Font SmallBoldFont = new Font( "Arial", Font.BOLD, 7 );
-    public final static Font ReallySmallFont = new Font( "Arial", Font.PLAIN, 6 );
-    public final static Font XtraSmallBoldFont = new Font( "Arial", Font.BOLD, 6 );
-    public final static Font XtraSmallFont = new Font( "Arial", Font.PLAIN, 6 );
+    public final static Font BaseFont = FontLoader.getFont("Eurosti.ttf").deriveFont(Font.PLAIN, 20);
+    public final static Font BaseBoldFont = FontLoader.getFont("Eurostib.ttf").deriveFont(Font.PLAIN, 20);
+
+    public final static Font TitleFont = BaseBoldFont.deriveFont(Font.BOLD, 16); //new Font( "Verdana", Font.BOLD, 12 );
+    public final static Font BoldFont = BaseBoldFont.deriveFont(Font.BOLD, 10); //new Font( "Arial", Font.BOLD, 8 );
+    public final static Font PlainFont = BaseFont.deriveFont(Font.PLAIN, 9); // new Font( "Arial", Font.PLAIN, 8 );
+    public final static Font RegularFont = BaseFont.deriveFont(Font.PLAIN, 10); // new Font( "Arial", Font.PLAIN, 10 );
+    public final static Font Regular9Font = BaseFont.deriveFont(Font.PLAIN, 17); // new Font( "Arial", Font.PLAIN, 9 );
+    public final static Font ItalicFont = BaseFont.deriveFont(Font.ITALIC, 9);  //new Font( "Arial", Font.ITALIC, 8 );
+    public final static Font Small8Font = BaseFont.deriveFont(Font.PLAIN, 8);  //new Font( "Arial", Font.PLAIN, 7 );s
+    public final static Font SmallFont = BaseFont.deriveFont(Font.PLAIN, 7);  //new Font( "Arial", Font.PLAIN, 7 );
+    public final static Font SmallItalicFont = BaseFont.deriveFont(Font.ITALIC, 7); //new Font( "Arial", Font.ITALIC, 7 );
+    public final static Font SmallBoldFont = BaseBoldFont.deriveFont(Font.BOLD, 7); //new Font( "Arial", Font.BOLD, 7 );
+    public final static Font ReallySmallFont = BaseFont.deriveFont(Font.PLAIN, 6); //new Font( "Arial", Font.PLAIN, 6 );
+    public final static Font XtraSmallBoldFont = BaseBoldFont.deriveFont(Font.BOLD, 6); //new Font( "Arial", Font.BOLD, 6 );
+    public final static Font XtraSmallFont = BaseFont.deriveFont(Font.PLAIN, 6);  //new Font( "Arial", Font.PLAIN, 6 );
+    public final static Font SectionHeaderFont = BaseFont.deriveFont(Font.PLAIN, 11); //new Font("Arial", Font.BOLD, 12);
 
     public static String [] wrapText (String text, int len, boolean ignoreLineBreaks) {
         // return empty array for null text
