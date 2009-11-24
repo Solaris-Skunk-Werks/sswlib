@@ -34,6 +34,7 @@ import list.MechListData;
 import filehandlers.MechReader;
 import Print.ForceListPrinter;
 
+import Print.PrintConsts;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import org.w3c.dom.Node;
@@ -158,6 +159,7 @@ public class Unit implements ifSerializable {
                 this.BFStats.setElement(this.TypeModel);
                 this.BFStats.setPiloting(Piloting);
                 this.BFStats.setGunnery(Gunnery);
+                this.BFStats.setWarrior(warrior.getName());
             }
             if ( node.getNodeName().equals("info") ) {
                 this.Info = node.getTextContent().trim();
@@ -179,6 +181,7 @@ public class Unit implements ifSerializable {
             LoadMech();
             if ( m != null ) {
                 BFStats = new BattleForceStats(m);
+                BFStats.setWarrior(warrior.getName());
             }
         }
     }
@@ -200,7 +203,7 @@ public class Unit implements ifSerializable {
     }
 
     public void RenderPrint(ForceListPrinter p) {
-        p.setFont(CommonTools.PlainFont);
+        p.setFont(PrintConsts.PlainFont);
         p.WriteStr(TypeModel, 120);
         p.WriteStr(getMechwarrior(), 140);
         p.WriteStr(CommonTools.UnitTypes[UnitType], 60);
@@ -283,6 +286,7 @@ public class Unit implements ifSerializable {
         LoadMech();
         if ( m != null ) {
             BFStats = new BattleForceStats(m, Group, getGunnery(), getPiloting());
+            BFStats.setWarrior(warrior.getName());
         }
         return BFStats;
     }
@@ -293,6 +297,7 @@ public class Unit implements ifSerializable {
 
     public void setMechwarrior(String Mechwarrior) {
         warrior.setName(Mechwarrior);
+        BFStats.setWarrior(Mechwarrior);
     }
 
     public String getMechwarriorQuirks() {
