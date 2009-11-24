@@ -45,6 +45,7 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.util.Vector;
+import java.util.prefs.Preferences;
 
 public class PrintMech implements Printable {
     public Mech CurMech;
@@ -58,7 +59,8 @@ public class PrintMech implements Printable {
                     UseA4Paper = false,
                     Canon = false,
                     TRO = false;
-    private String PilotName = "";
+    private String PilotName = "",
+                    currentAmmoFormat = "";
     private int Piloting = 5,
                 Gunnery = 4,
                 MiniConvRate = 1;
@@ -68,6 +70,7 @@ public class PrintMech implements Printable {
                   Grey = new Color( 128, 128, 128 );
     private Media media = new Media();
     private ImageTracker imageTracker;
+    private Preferences Prefs = Preferences.userNodeForPackage("/ssw/gui/frmMain".getClass());
 
     // <editor-fold desc="Constructors">
     public PrintMech( Mech m, Image i, boolean adv, boolean A4, ImageTracker images) {
@@ -150,6 +153,8 @@ public class PrintMech implements Printable {
         setCharts(false);
         SetMiniConversion(1);
         setPrintPilot(false);
+        currentAmmoFormat = Prefs.get( "AmmoNamePrintFormat", "" );
+        Prefs.put( "AmmoNamePrintFormat", "Ammo (%P) %L" );
     }
 
     // </editor-fold>
@@ -186,6 +191,7 @@ public class PrintMech implements Printable {
             return Printable.NO_SUCH_PAGE;
         } else {
             PreparePrint( (Graphics2D) graphics );
+            if ( !currentAmmoFormat.isEmpty() ) { Prefs.put( "AmmoNamePrintFormat", currentAmmoFormat); }
             return Printable.PAGE_EXISTS;
         }
     }
@@ -227,7 +233,7 @@ public class PrintMech implements Printable {
     private void DrawCriticals( Graphics2D graphics ) {
         abPlaceable[] a = null;
         Point[] p = null;
-        graphics.setFont( PrintConsts.SmallFont );
+        graphics.setFont( PrintConsts.SmallBoldFont );
 
         a = CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_HD );
         p = points.GetCritHDPoints();
@@ -883,15 +889,15 @@ public class PrintMech implements Printable {
         Vector AmmoList = GetAmmo();
         if ( AmmoList.size() > 0 ) {
             graphics.drawString("Ammunition Type", p[0].x, p[0].y + offset);
-            graphics.drawString("Rounds", p[2].x, p[2].y + offset);
+            graphics.drawString("Rounds", p[3].x, p[3].y + offset);
             offset += 2;
             graphics.drawLine(p[0].x, p[0].y + offset, p[8].x + 8, p[8].y + offset);
             offset += graphics.getFont().getSize();
         }
         for ( int index=0; index < AmmoList.size(); index++ ) {
             AmmoData CurAmmo = (AmmoData) AmmoList.get(index);
-            graphics.drawString(CurAmmo.PrintName, p[0].x, p[0].y + offset);
-            graphics.drawString(CurAmmo.LotSize + "", p[2].x, p[2].y + offset);
+            graphics.drawString( CurAmmo.Format(), p[0].x, p[0].y + offset);
+            graphics.drawString( CurAmmo.LotSize + "", p[3].x, p[3].y + offset);
             offset += graphics.getFont().getSize();
         }
 
@@ -900,6 +906,7 @@ public class PrintMech implements Printable {
         graphics.drawString( CurMech.GetFullName(), p[PrintConsts.MECHNAME].x, p[PrintConsts.MECHNAME].y );
 
         // have to hack the movement to print the correct stuff here.
+        graphics.setFont( PrintConsts.PlainFont );
         if( CurMech.GetAdjustedWalkingMP( false, true ) != CurMech.GetWalkingMP() ) {
             graphics.drawString( ( CurMech.GetWalkingMP() * MiniConvRate ) + " (" + ( CurMech.GetAdjustedWalkingMP( false, true ) * MiniConvRate ) + ")", p[PrintConsts.WALKMP].x, p[PrintConsts.WALKMP].y );
         } else {
@@ -921,7 +928,11 @@ public class PrintMech implements Printable {
         }
         // end hacking of movement.
 
+        //Tonnage
         graphics.drawString( CurMech.GetTonnage() + "", p[PrintConsts.TONNAGE].x, p[PrintConsts.TONNAGE].y );
+
+        //Cost
+        graphics.setFont( PrintConsts.Small8Font );
         graphics.drawString( String.format( "%1$,.0f C-Bills", Math.floor( CurMech.GetTotalCost() + 0.5f ) ), p[PrintConsts.COST].x, p[PrintConsts.COST].y );
         
         if ( !TRO ) {
@@ -934,8 +945,10 @@ public class PrintMech implements Printable {
             graphics.drawString( String.format( "%1$,d", CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
         }
 
+        graphics.setFont( PrintConsts.PlainFont );
         if ( TRO ) {
-            graphics.drawString( "_______________________", p[PrintConsts.PILOT_NAME].x, p[PrintConsts.PILOT_NAME].y );
+            graphics.setFont( PrintConsts.BoldFont );
+            graphics.drawString( "____________________", p[PrintConsts.PILOT_NAME].x, p[PrintConsts.PILOT_NAME].y );
             graphics.drawString( "___", p[PrintConsts.PILOT_GUN].x, p[PrintConsts.PILOT_GUN].y);
             graphics.drawString( "___", p[PrintConsts.PILOT_PILOT].x-4, p[PrintConsts.PILOT_PILOT].y);
         } else if( PrintPilot ) {
@@ -984,8 +997,8 @@ public class PrintMech implements Printable {
 
         //heat sinks
         graphics.setFont( PrintConsts.PlainFont );
-        graphics.drawString( CurMech.GetHeatSinks().GetNumHS() + "", p[PrintConsts.HEATSINK_NUMBER].x, p[PrintConsts.HEATSINK_NUMBER].y );
-        graphics.drawString( CurMech.GetHeatSinks().TotalDissipation() + "", p[PrintConsts.HEATSINK_DISSIPATION].x, p[PrintConsts.HEATSINK_DISSIPATION].y );
+        graphics.drawString( CurMech.GetHeatSinks().GetNumHS() + " (" + CurMech.GetHeatSinks().TotalDissipation() + ")", p[PrintConsts.HEATSINK_NUMBER].x, p[PrintConsts.HEATSINK_NUMBER].y );
+        //graphics.drawString( CurMech.GetHeatSinks().TotalDissipation() + "", p[PrintConsts.HEATSINK_DISSIPATION].x, p[PrintConsts.HEATSINK_DISSIPATION].y );
 
         // internal information
         graphics.setFont( PrintConsts.SmallFont );
@@ -1033,7 +1046,7 @@ public class PrintMech implements Printable {
         Font OldFont = graphics.getFont();
 
         // set the new font
-        graphics.setFont( OldFont.deriveFont( Font.ITALIC ) );
+        graphics.setFont( PrintConsts.SmallFont );
         graphics.setColor( Grey );
         graphics.drawString( Item, X, Y );
         graphics.setFont( OldFont );
@@ -1080,7 +1093,7 @@ public class PrintMech implements Printable {
                 boolean found = false;
                 for ( int internal=0; internal < AmmoList.size(); internal++ ) {
                     AmmoData existAmmo = (AmmoData) AmmoList.get(internal);
-                    if ( CurAmmo.PrintName.equals( existAmmo.PrintName ) ) {
+                    if ( CurAmmo.ActualName.equals( existAmmo.ActualName ) ) {
                         existAmmo.LotSize += CurAmmo.LotSize;
                         found = true;
                         break;
@@ -1184,12 +1197,23 @@ public class PrintMech implements Printable {
     }
 
     private class AmmoData {
-        public String PrintName;
+        public String ActualName,
+                      ChatName,
+                      CritName,
+                      LookupName;
         public int LotSize;
 
         public AmmoData( Ammunition ammo ) {
-            this.PrintName = ammo.CritName();
+            this.ActualName = ammo.ActualName();
+            this.ChatName = ammo.ChatName();
+            this.CritName = ammo.CritName().replace("@", "").trim();
+            this.LookupName = ammo.LookupName();
+
             this.LotSize = ammo.GetLotSize();
+        }
+
+        public String Format() {
+            return Prefs.get( "AmmoNamePrintFormat", "@%P").replace("%P", CritName).replace("%F", LookupName).replace("%L", "");
         }
     }
 }
