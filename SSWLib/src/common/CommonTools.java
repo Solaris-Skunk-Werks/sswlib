@@ -36,13 +36,6 @@ public class CommonTools {
     private final static DecimalFormat dft = new DecimalFormat( "#.###" ),
                                        dfc = new DecimalFormat( "#.####" );
     public final static String tab = "    ";
-    public static Font BoldFont = new Font( "Arial", Font.BOLD, 8 );
-    public static Font PlainFont = new Font( "Arial", Font.PLAIN, 8 );
-    public static Font ItalicFont = new Font( "Arial", Font.ITALIC, 8 );
-    public static Font SmallFont = new Font( "Arial", Font.PLAIN, 7 );
-    public static Font SmallItalicFont = new Font( "Arial", Font.ITALIC, 7 );
-    public static Font TitleFont = new Font("Arial", Font.BOLD, 14);
-    public static Font SectionHeaderFont = new Font("Arial", Font.BOLD, 12);
     public final static String NL = System.getProperty( "line.separator" );
     public final static String Tab = "\t";
     public final static int BattleMech = 0,
