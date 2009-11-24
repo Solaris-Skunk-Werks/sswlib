@@ -31,6 +31,7 @@ import common.CommonTools;
 import filehandlers.Media;
 import Force.View.*;
 import Print.ForceListPrinter;
+import Print.PrintConsts;
 import battleforce.*;
 
 import filehandlers.ImageTracker;
@@ -239,7 +240,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
     public void RenderPrint(ForceListPrinter p, ImageTracker imageTracker) {
         if ( Units.size() == 0 ) { return; }
         sortForPrinting();
-        p.setFont(CommonTools.SectionHeaderFont);
+        p.setFont(PrintConsts.SectionHeaderFont);
         if ( p.PrintLogo() ) {
             loadLogo(imageTracker);
             if (Logo != null) {
@@ -260,14 +261,14 @@ public class Force extends AbstractTableModel implements ifSerializable {
                 
                 //Output column Headers
                 if ( curGroup.trim().isEmpty() ) { 
-                    p.setFont(CommonTools.ItalicFont);
+                    p.setFont(PrintConsts.ItalicFont);
                     curGroup = "Unit";
                 } else {
-                    p.setFont(CommonTools.BoldFont);
+                    p.setFont(PrintConsts.BoldFont);
                 }
                 p.WriteStr(curGroup, 120);
 
-                p.setFont(CommonTools.ItalicFont);
+                p.setFont(PrintConsts.ItalicFont);
                 p.WriteStr("Mechwarrior", 140);
                 p.WriteStr("Type", 60);
                 p.WriteStr("Tonnage", 50);
@@ -286,7 +287,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
         p.WriteLine();
 
         //Outut Totals
-        p.setFont(CommonTools.ItalicFont);
+        p.setFont(PrintConsts.ItalicFont);
         p.WriteStr(Units.size() + " Units", 120);
         p.WriteStr("", 140);
         p.WriteStr("", 60);
@@ -298,13 +299,13 @@ public class Force extends AbstractTableModel implements ifSerializable {
         //p.WriteStr(String.format("%1$,.0f", TotalAdjustedBV ), 50);
         p.WriteStr("", 30);
         //p.WriteStr(String.format("%1$,.0f", TotalC3BV), 30);
-        p.setFont(CommonTools.BoldFont);
+        p.setFont(PrintConsts.BoldFont);
         p.WriteStr(String.format("%1$,.0f", TotalForceBV), 20);
         if ( TotalForceBV != TotalForceBVAdjusted ) {
             p.WriteStr(String.format(" (%1$,.0f)", TotalForceBVAdjusted), 0);
         }
         p.NewLine();
-        p.setFont(CommonTools.PlainFont);
+        p.setFont(PrintConsts.PlainFont);
     }
 
     public void Clear() {
@@ -488,6 +489,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
             u.LoadMech();
             if ( u.m != null ) {
                 BattleForceStats stat = new BattleForceStats(u.m, u.Group,u.getGunnery(), u.getPiloting());
+                stat.setWarrior(u.getMechwarrior());
                 bf.BattleForceStats.add(stat);
             } else {
                 error += "Could not load " + u.TypeModel + ".  The filename is most likely blank.\n";
