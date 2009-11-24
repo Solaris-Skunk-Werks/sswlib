@@ -153,15 +153,10 @@ public class BattleforceCardPrinter implements Printable {
 
             elementCount += 1;
 
-            graphic.setFont( new Font("Verdana", Font.PLAIN, 8) );
-            
-            //Unit Name
-            graphic.drawString(stats.getElement(), x+5, y+55);
-
             //Image
             if ( !stats.getImage().isEmpty() && printMechs ) {
                 Image image = imageTracker.getImage(stats.getImage());
-                Dimension dim = media.reSize(image, 110d, 140d);
+                Dimension dim = media.reSize(image, 110d, 130d);
                 image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
                 Point offset = media.offsetImageBottom( new Dimension(110, 140), dim);
                 graphic.drawImage(image, x+10+offset.x, y+58+offset.y, dim.width, dim.height, null);
@@ -171,6 +166,17 @@ public class BattleforceCardPrinter implements Printable {
                 }
             }
 
+            //graphic.setFont( new Font("Verdana", Font.PLAIN, 8) );
+            graphic.setFont( PrintConsts.PlainFont );
+            
+            //Unit Name
+            graphic.drawString( stats.getElement(), x+5, y+55);
+
+            //Pilot Name
+            graphic.setFont( PrintConsts.SmallFont );
+            graphic.drawString( stats.getWarrior(), x+5, y+62);
+
+            graphic.setFont( PrintConsts.PlainFont );
             //Movement (MV)
             int offset = 15;
             if ( stats.getMovement().length() > 2 ) { offset -= 5; }
