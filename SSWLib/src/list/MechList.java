@@ -142,14 +142,13 @@ public class MechList extends AbstractTableModel {
 
     public MechList Filter(ListFilter filter) {
         MechList m = new MechList();
-        for ( int d=0; d < List.size(); d++ ) {
-            m.Add((MechListData) List.get(d));
+        for ( MechListData mech : List ) {
+            m.Add(mech);
         }
 
         boolean remove = false;
-        for ( int i=List.size(); i > 0; i-- ) {
+        for ( MechListData mData : List ) {
             remove = false;
-            MechListData mData = (MechListData) List.get(i-1);
 
             if ( filter.getIsOmni() ) {
                 if (! mData.isOmni() ) remove = true;
@@ -181,10 +180,14 @@ public class MechList extends AbstractTableModel {
             if ( filter.getMinMP() > 0 ) {
                 if ( !mData.getInfo().isEmpty() ) {
                     String[] parts = mData.getInfo().split(" ");
-                    if ( parts[1].contains("/") ) {
-                        String[] mp = parts[1].split("/");
-                        int Walk = Integer.parseInt(mp[0]);
-                        if (filter.getMinMP() > Walk) remove = true;
+                    for ( String part : parts ) {
+                        if ( part.contains("/") ) {
+                            String[] mp = part.split("/");
+                            if ( mp[0].contains("[") ) { mp[0] = mp[0].substring(mp[0].indexOf("["), mp[0].indexOf("]")).replace("[", "").replace("]", ""); }
+                            int Walk = Integer.parseInt(mp[0]);
+                            if (filter.getMinMP() > Walk) remove = true;
+                            break;
+                        }
                     }
                 } else {
                     remove = true;
