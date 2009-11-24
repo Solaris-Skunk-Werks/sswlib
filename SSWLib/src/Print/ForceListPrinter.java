@@ -89,7 +89,7 @@ public class ForceListPrinter implements Printable {
         //Background Image
         Image Recordsheet = imageTracker.getImage( PrintConsts.BT_LOGO );
         Graphic.drawImage( Recordsheet, 0, 0, 306, 49, null);
-        setFont(CommonTools.TitleFont);
+        setFont(PrintConsts.BaseFont.deriveFont(Font.BOLD));
         Graphic.drawString(Title, 310, 16);
         currentY = 75;
 
