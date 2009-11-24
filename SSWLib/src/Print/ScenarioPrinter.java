@@ -74,6 +74,9 @@ public class ScenarioPrinter implements Printable {
         currentLocation.setLocation(savePoint.x + pageHalfWidth, savePoint.y);
         RenderTitle("Defender");
         RenderText( scenario.getDefender(), characterHalfWidth );
+
+        
+        
     }
 
     private void RenderTitle( String title) {

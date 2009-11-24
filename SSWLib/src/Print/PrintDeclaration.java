@@ -86,7 +86,7 @@ public class PrintDeclaration implements Printable {
             for ( Unit unit : force.Units ) {
                 for (int k=0; k<Types.length; k++) {
                     int shift = 5;
-                    Graphic.setFont(CommonTools.SmallFont);
+                    Graphic.setFont(PrintConsts.SmallFont);
                     if ( logo != null ) {
                         Graphic.drawImage(logo, currentX+1, currentY-10, 25, 25, null);
                         shift = 30;
@@ -94,7 +94,7 @@ public class PrintDeclaration implements Printable {
                     Graphic.drawString(unit.TypeModel, currentX+shift, currentY);
                     Graphic.drawString((unit.Group + " (" + unit.getMechwarrior() + ")").replace("()", ""), currentX+shift, currentY+10);
                     Graphic.drawRect(currentX, currentY-12, 175, 30);
-                    Graphic.setFont(CommonTools.BoldFont);
+                    Graphic.setFont(PrintConsts.BoldFont);
                     Graphic.drawString(Types[k], currentX+125, currentY+3);
 
                     currentX += 175;
