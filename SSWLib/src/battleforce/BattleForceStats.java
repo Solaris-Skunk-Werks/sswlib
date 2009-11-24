@@ -39,7 +39,8 @@ public class BattleForceStats {
     private String Element = "",
                     MV = "",
                     Unit = "",
-                    Image = "";
+                    Image = "",
+                    Warrior = "";
     private double[] Mods = {2.63, 2.24, 1.82, 1.38, 1.00, 0.86, 0.77, 0.68};
 
     private Vector<String> Abilities = new Vector<String>();
@@ -333,5 +334,13 @@ public class BattleForceStats {
 
     public void setElement(String Element) {
         this.Element = Element;
+    }
+
+    public String getWarrior() {
+        return Warrior;
+    }
+
+    public void setWarrior(String Warrior) {
+        this.Warrior = Warrior;
     }
 }
