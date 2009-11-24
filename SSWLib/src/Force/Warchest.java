@@ -31,6 +31,7 @@ import common.CommonTools;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Vector;
+import javax.swing.DefaultListModel;
 import javax.swing.table.AbstractTableModel;
 import org.w3c.dom.Node;
 
@@ -151,6 +152,22 @@ public class Warchest implements ifSerializable {
         this.objectives = objectives;
     }
 
+    public DefaultListModel getObjectiveList() {
+        DefaultListModel model = new DefaultListModel();
+        for ( Objective objective : objectives ) {
+            model.addElement(objective);
+        }
+        return model;
+    }
+
+    public DefaultListModel getBonusList() {
+        DefaultListModel model = new DefaultListModel();
+        for ( Bonus bonus : bonuses ) {
+            model.addElement(bonus);
+        }
+        return model;
+    }
+    
     public AbstractTableModel getBonusTable() {
         AbstractTableModel model = new AbstractTableModel() {
 
