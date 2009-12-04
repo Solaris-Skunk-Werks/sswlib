@@ -43,6 +43,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import list.view.Column;
 import org.w3c.dom.Node;
 
 /**
@@ -50,7 +51,7 @@ import org.w3c.dom.Node;
  * @author gblouin
  */
 public class Force extends AbstractTableModel implements ifSerializable {
-    public Vector<Unit> Units = new Vector<Unit>();
+    private Vector<Unit> Units = new Vector<Unit>();
     public Vector<Group> Groups = new Vector<Group>();
     public String ForceName = "",
                   LogoPath = "";
@@ -72,8 +73,8 @@ public class Force extends AbstractTableModel implements ifSerializable {
                     useUnevenForceMod = true;
     private abTable currentModel = new tbTotalWarfare(this);
 
-    public Force( ){
-
+    public Force(){
+        Groups.add(new Group("", Type, this));
     }
 
     public Force(Node ForceNode) throws Exception {
@@ -90,13 +91,15 @@ public class Force extends AbstractTableModel implements ifSerializable {
         for (int i=0; i < ForceNode.getChildNodes().getLength(); i++) {
             Node n = ForceNode.getChildNodes().item(i);
             if (n.getNodeName().equals("group")) {
-                Groups.add( new Group(n, Version) );
+                Groups.add( new Group(n, Version, this) );
             }
         }
 
         for ( Group g : Groups ) {
             Units.addAll(g.getUnits());
         }
+
+        if ( Groups.size() == 0 ) { Groups.add(new Group("", Type, this)); }
         RefreshBV();
     }
 
@@ -112,11 +115,12 @@ public class Force extends AbstractTableModel implements ifSerializable {
             if ( ForceNode.getChildNodes().item(1).getNodeName().equals("group") ) {
                 Load( ForceNode, 2 );
             } else {
+                Groups.add( new Group("", Type, this) );
                 for (int i=0; i < ForceNode.getChildNodes().getLength(); i++) {
                     Node n = ForceNode.getChildNodes().item(i);
                     if (n.getNodeName().equals("unit")) {
                         try {
-                            Units.add(new Unit(n));
+                            Groups.get(0).AddUnit(new Unit(n));
                         } catch (Exception e) {
                             throw e;
                         }
@@ -130,7 +134,6 @@ public class Force extends AbstractTableModel implements ifSerializable {
     }
 
     public void RefreshBV() {
-        Unit u;
         NumC3 = 0;
         TotalBaseBV = 0.0f;
         TotalModifier = 0.0f;
@@ -140,8 +143,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
         TotalModifierBV = 0.0f;
         TotalAdjustedBV = 0.0f;
         TotalForceBV = 0.0f;
-        for( int i = 0; i < Units.size(); i++ ) {
-            u = Units.get( i );
+        for ( Unit u : getUnits() ) {
             TotalBaseBV += u.BaseBV;
             TotalModifier += u.MiscMod;
             TotalTonnage += u.Tonnage;
@@ -171,16 +173,58 @@ public class Force extends AbstractTableModel implements ifSerializable {
     }
 
     public void AddUnit( Unit u ) {
+        boolean isAdded = false;
         u.Refresh();
         Units.add( u );
+        for ( Group g : Groups ) {
+            if ( g.getName().equals( u.getGroup() ) ) {
+                g.AddUnit(u);
+                isAdded = true;
+                break;
+            }
+        }
+        if ( !isAdded ) {
+            Group g = new Group(u.getGroup(), u.Type, this);
+            g.AddUnit(u);
+            Groups.add(g);
+        }
         RefreshBV();
         isDirty = true;
     }
 
     public void RemoveUnit( Unit u ){
         Units.remove(u);
+        for ( Group g : Groups ) {
+            if ( g.getName().equals( u.getGroup() ) ) {
+                g.getUnits().remove(u);
+                if ( g.getUnits().size() == 0 ) { Groups.remove(g); }
+                break;
+            }
+        }
         RefreshBV();
         isDirty = true;
+    }
+
+    public void GroupUnit( Unit u ) {
+        boolean isAdded = false;
+
+        for ( Group g : Groups ) {
+            if ( g.getName().equals( u.getPrevGroup() ) ) {
+                g.getUnits().remove(u);
+
+                if ( g.getUnits().size() == 0 ) { Groups.remove(g); }
+            }
+
+            if ( g.getName().equals(u.getGroup() ) ) {
+                g.AddUnit(u);
+                isAdded = true;
+            }
+        }
+        if ( !isAdded ) {
+            Group g = new Group(u.getGroup(), u.Type, this);
+            g.AddUnit(u);
+            Groups.add(g);
+        }
     }
 
     public void SerializeXML(BufferedWriter file) throws IOException {
@@ -203,7 +247,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
         file.write("<unit>");
         file.newLine();
 
-        for ( Unit u : Units ) {
+        for ( Unit u : getUnits() ) {
             u.SerializeMUL(file);
         }
 
@@ -216,19 +260,21 @@ public class Force extends AbstractTableModel implements ifSerializable {
         String data = "";
 
         data += this.ForceName + CommonTools.NL;
-        for (int s=0; s < 120; s++ ) { data += "-"; }
+        for (int s=0; s < 95; s++ ) { data += "-"; }
         data += CommonTools.NL;
-        data += CommonTools.spaceRight("Unit", 30) + CommonTools.Tab +
-                "Tons" + CommonTools.Tab +
-                "BV" + CommonTools.Tab +
-                CommonTools.spaceRight("Mechwarrior", 30) + CommonTools.Tab +
-                CommonTools.spaceRight("Lance/Star", 20) + CommonTools.Tab +
-                "G/P" + CommonTools.Tab +
-                "Adj BV" + CommonTools.NL;
 
-        for ( Unit u : Units ) {
-            data += u.SerializeClipboard() + CommonTools.NL;
+        for ( Group g : Groups ) {
+            data += g.SerializeClipboard();
         }
+
+        for ( Column c : CommonTools.ScenarioClipboardColumns() ) {
+            if ( c.Title.equals("Adj BV") ) {
+                data += String.format("%1$,.0f", TotalAdjustedBV);
+            } else {
+                data += CommonTools.spaceRight("", c.preferredWidth) + CommonTools.Tab;
+            }
+        }
+        data += CommonTools.Tab;
 
         return data;
     }
@@ -238,50 +284,61 @@ public class Force extends AbstractTableModel implements ifSerializable {
     }
 
     public void RenderPrint(ForceListPrinter p, ImageTracker imageTracker) {
-        if ( Units.size() == 0 ) { return; }
+        if ( getUnits().size() == 0 ) { return; }
         sortForPrinting();
         p.setFont(PrintConsts.SectionHeaderFont);
         if ( p.PrintLogo() ) {
             loadLogo(imageTracker);
             if (Logo != null) {
-                p.Graphic.drawImage(Logo, p.currentX, p.currentY-15, 25, 25, null);
+                p.Graphic.drawImage(Logo, p.currentX, p.currentY-20, 25, 25, null);
                 p.currentX += 30;
             }
         }
         p.WriteStr(ForceName, 0);
         p.NewLine();
+        p.currentY += 5;
 
-        String lastGroup = "~",
-               curGroup = "";
-        for (int i=0; i < Units.size(); i++) {
-            Unit u = Units.get(i);
-            if (!u.Group.equals(lastGroup)) {
-                p.NewLine();
-                curGroup = u.Group;
-                
-                //Output column Headers
-                if ( curGroup.trim().isEmpty() ) { 
-                    p.setFont(PrintConsts.ItalicFont);
-                    curGroup = "Unit";
-                } else {
-                    p.setFont(PrintConsts.BoldFont);
-                }
-                p.WriteStr(curGroup, 120);
-
+        for ( Group g : Groups ) {
+            String curGroup = g.getName();
+            if ( g.getName().isEmpty() ) {
                 p.setFont(PrintConsts.ItalicFont);
-                p.WriteStr("Mechwarrior", 140);
-                p.WriteStr("Type", 60);
-                p.WriteStr("Tonnage", 50);
-                p.WriteStr("Base BV", 40);
-                p.WriteStr("G/P", 30);
-                p.WriteStr("Modifier", 40);
-                p.WriteStr("Use C3", 30);
-                p.WriteStr("Total BV", 40);
-                //p.WriteStr("Force BV", 0);
-                p.NewLine();
-                lastGroup = u.Group;
+                curGroup = "Unit";
+            } else {
+                p.setFont(PrintConsts.BoldFont);
             }
-            u.RenderPrint(p);
+            p.WriteStr(curGroup, 120);
+
+            p.setFont(PrintConsts.ItalicFont);
+            p.WriteStr("Mechwarrior", 140);
+            p.WriteStr("Type", 60);
+            p.WriteStr("Tonnage", 50);
+            p.WriteStr("Base BV", 40);
+            p.WriteStr("G/P", 30);
+            p.WriteStr("Modifier", 40);
+            p.WriteStr("Use C3", 30);
+            p.WriteStr("Total BV", 40);
+            p.NewLine();
+
+            for ( Unit u : g.getUnits() ) {
+                u.RenderPrint(p);
+            }
+
+            if ( Groups.size() > 1 ) {
+                //Outut Totals
+                p.currentY -= 2;
+                p.setFont(PrintConsts.SmallItalicFont);
+                p.WriteStr(g.getUnits().size() + " Units", 120);
+                p.WriteStr("", 140);
+                p.WriteStr("", 60);
+                p.WriteStr(String.format("%1$,.2f", g.getTotalTonnage()), 50);
+                p.WriteStr(String.format("%1$,.0f", g.getTotalBaseBV()), 40);
+                p.WriteStr("", 30);
+                p.WriteStr("", 40);
+                p.WriteStr("", 30);
+                p.WriteStr(String.format("%1$,.0f", g.getTotalBV()), 20);
+                p.NewLine();
+                p.currentY += 5;
+            }
         }
 
         p.WriteLine();
@@ -294,11 +351,8 @@ public class Force extends AbstractTableModel implements ifSerializable {
         p.WriteStr(String.format("%1$,.2f", TotalTonnage), 50);
         p.WriteStr(String.format("%1$,.0f", TotalBaseBV), 40);
         p.WriteStr("", 30);
-        //p.WriteStr(String.format("%1$,.0f", TotalSkillBV), 50);
         p.WriteStr("", 40);
-        //p.WriteStr(String.format("%1$,.0f", TotalAdjustedBV ), 50);
         p.WriteStr("", 30);
-        //p.WriteStr(String.format("%1$,.0f", TotalC3BV), 30);
         p.setFont(PrintConsts.BoldFont);
         p.WriteStr(String.format("%1$,.0f", TotalForceBV), 20);
         if ( TotalForceBV != TotalForceBVAdjusted ) {
@@ -310,6 +364,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
 
     public void Clear() {
         Units.removeAllElements();
+        Groups.removeAllElements();
         ForceName = "";
         LogoPath = "";
         TotalBaseBV = 0.0f;
@@ -357,49 +412,20 @@ public class Force extends AbstractTableModel implements ifSerializable {
     }
 
     public void sortForPrinting() {
-        Hashtable<String, Vector> list = new Hashtable<String, Vector>();
-        String group;
+       // Hashtable<String, Vector> list = new Hashtable<String, Vector>();
+       // String group;
 
-        //Sort by group name first
-        for ( Unit u : Units ) {
-            group = u.Group;
-            if (list.containsKey(group)) {
-                //Vector v = (Vector) list.get(group);
-                list.get(group).add(u);
-            } else {
-                Vector units = new Vector();
-                units.add(u);
-                list.put(group, units);
-            }
-        }
-
-        //Sort by tonnage within each group
-        Vector newUnits = new Vector();
-        Enumeration e = list.keys();
-        while( e.hasMoreElements() ) {
-            Vector v = sortByTonnage((Vector) list.get(e.nextElement()));
-            v = sortByUnitName(v);
-            newUnits.addAll(v);
-        }
-
-        Units = newUnits;
-
-        //Create groups to match now
-        Groups.removeAllElements();
-        String lastGroup = "";
-        Group g = new Group("", this.Type, this);
-        for (Unit u: Units) {
-            if ( !u.Group.equals(lastGroup) ) {
-                if ( g.getUnits().size() > 0 ) { Groups.add(g); }
-                g = new Group(u.Group, this.Type, this);
-                lastGroup = u.Group;
-            }
-            g.AddUnit(u);
-        }
-        Groups.add(g);
-
-        //Sort groups by name
+        //Sort by Group
         Groups = sortByGroupName(Groups);
+
+        //Sorty inside each group by tonnage then Name
+        for ( Group g : Groups ) {
+            Vector<Unit> v = sortByTonnage(g.getUnits());
+            v = sortByUnitName(v);
+            g.setUnits(v);
+
+            if ( g.getUnits().size() == 0 ) { Groups.remove(g); }
+        }
 
         //Rebuild units
         Units.clear();
@@ -488,7 +514,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
             Unit u = (Unit) Units.get(i);
             u.LoadMech();
             if ( u.m != null ) {
-                BattleForceStats stat = new BattleForceStats(u.m, u.Group,u.getGunnery(), u.getPiloting());
+                BattleForceStats stat = new BattleForceStats(u.m,u.getGroup(), u.getGunnery(),u.getPiloting());
                 stat.setWarrior(u.getMechwarrior());
                 bf.BattleForceStats.add(stat);
             } else {
@@ -575,7 +601,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
             case 2:
                 return u.getMechwarrior();
             case 3:
-                return u.Group;
+                return u.getGroup();
             case 4:
                 return u.Tonnage;
             case 5:
@@ -603,7 +629,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
             case 2:
                 return u.getMechwarrior();
             case 3:
-                return u.Group;
+                return u.getGroup();
             case 4:
                 return u.Tonnage;
             case 5:
@@ -649,7 +675,8 @@ public class Force extends AbstractTableModel implements ifSerializable {
                 u.setMechwarrior(value.toString());
                 break;
             case 3:
-                u.Group = value.toString();
+                u.setGroup(value.toString());
+                GroupUnit(u);
                 break;
             case 6:
                 u.setGunnery(Integer.parseInt(value.toString()));
@@ -664,5 +691,13 @@ public class Force extends AbstractTableModel implements ifSerializable {
         isDirty = true;
         u.Refresh();
         RefreshBV();
+    }
+
+    public Vector<Unit> getUnits() {
+        Units.clear();
+        for ( Group g : Groups ) {
+            Units.addAll(g.getUnits());
+        }
+        return Units;
     }
 }

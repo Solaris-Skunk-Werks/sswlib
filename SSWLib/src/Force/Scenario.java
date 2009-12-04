@@ -31,6 +31,7 @@ import common.CommonTools;
 import filehandlers.Media;
 import Force.View.abTable;
 
+import filehandlers.FileCommon;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Vector;
@@ -40,7 +41,8 @@ import org.w3c.dom.Node;
 
 public class Scenario implements ifSerializable {
     public int VersionNumber = 2;
-    private boolean allowOverwrite = true;
+    private boolean allowOverwrite = true,
+                    isDirty = false;
     private String Name = "",
                     Source = "",
                     Situation = "",
@@ -76,13 +78,13 @@ public class Scenario implements ifSerializable {
 
         for (int i=0; i < node.getChildNodes().getLength(); i++) {
             Node n = node.getChildNodes().item(i);
-            if (n.getNodeName().equals("situation")) { setSituation(n.getTextContent()); }
-            if (n.getNodeName().equals("setup")) { setSetup(n.getTextContent()); }
-            if (n.getNodeName().equals("victoryconditions")) { setVictoryConditions(n.getTextContent()); }
-            if (n.getNodeName().equals("aftermath")) { setAftermath(n.getTextContent()); }
+            if (n.getNodeName().equals("situation")) { setSituation(FileCommon.DecodeFluff(n.getTextContent())); }
+            if (n.getNodeName().equals("setup")) { setSetup(FileCommon.DecodeFluff(n.getTextContent())); }
+            if (n.getNodeName().equals("victoryconditions")) { setVictoryConditions(FileCommon.DecodeFluff(n.getTextContent())); }
+            if (n.getNodeName().equals("aftermath")) { setAftermath(FileCommon.DecodeFluff(n.getTextContent())); }
 
             if (n.getNodeName().equals("attacker")) {
-                setAttacker(n.getAttributes().getNamedItem("description").getTextContent().trim());
+                setAttacker(FileCommon.DecodeFluff(n.getAttributes().getNamedItem("description").getTextContent().trim()));
                 try {
                     forces.add(new Force(n.getChildNodes().item(1), VersionNumber));
                 } catch (Exception ex) {
@@ -90,7 +92,7 @@ public class Scenario implements ifSerializable {
                 }
             }
             if (n.getNodeName().equals("defender")) {
-                setDefender(n.getAttributes().getNamedItem("description").getTextContent().trim());
+                setDefender(FileCommon.DecodeFluff(n.getAttributes().getNamedItem("description").getTextContent().trim()));
                 try {
                     forces.add(new Force(n.getChildNodes().item(1), VersionNumber));
                 } catch (Exception ex) {
@@ -129,8 +131,8 @@ public class Scenario implements ifSerializable {
             i++;
         }
 
-        forces.get(0).OpForSize = getForces().get(1).Units.size();
-        forces.get(1).OpForSize = getForces().get(0).Units.size();
+        forces.get(0).OpForSize = getForces().get(1).getUnits().size();
+        forces.get(1).OpForSize = getForces().get(0).getUnits().size();
     }
 
     public void setModel( abTable model ) {
@@ -143,13 +145,13 @@ public class Scenario implements ifSerializable {
         file.write( "<scenario name=\"" + this.Name + "\" version=\"" + VersionNumber + "\" overwrite=\"" + allowOverwrite + "\">" );
         file.newLine();
 
-        file.write( CommonTools.tab + "<situation>" + this.Situation + "</situation>" );
+        file.write( CommonTools.tab + "<situation>" + FileCommon.EncodeFluff(this.Situation) + "</situation>" );
         file.newLine();
 
-        file.write( CommonTools.tab + "<setup>" + this.Setup + "</setup>" );
+        file.write( CommonTools.tab + "<setup>" + FileCommon.EncodeFluff(this.Setup) + "</setup>" );
         file.newLine();
 
-        file.write( CommonTools.tab + "<attacker description=\"" + this.Attacker + "\">" );
+        file.write( CommonTools.tab + "<attacker description=\"" + FileCommon.EncodeFluff(this.Attacker) + "\">" );
         file.newLine();
 
         getAttackerForce().SerializeXML(file);
@@ -157,7 +159,7 @@ public class Scenario implements ifSerializable {
         file.write( CommonTools.tab + "</attacker>" );
         file.newLine();
 
-        file.write( CommonTools.tab + "<defender description=\"" + this.Defender + "\">" );
+        file.write( CommonTools.tab + "<defender description=\"" + FileCommon.EncodeFluff(this.Defender) + "\">" );
         file.newLine();
 
         getDefenderForce().SerializeXML(file);
@@ -167,10 +169,10 @@ public class Scenario implements ifSerializable {
 
         getWarchest().SerializeXML(file);
 
-        file.write( CommonTools.tab + "<victoryconditions>" + this.VictoryConditions + "</victoryconditions>" );
+        file.write( CommonTools.tab + "<victoryconditions>" + FileCommon.EncodeFluff(this.VictoryConditions) + "</victoryconditions>" );
         file.newLine();
 
-        file.write( CommonTools.tab + "<aftermath>" + this.Aftermath + "</aftermath>" );
+        file.write( CommonTools.tab + "<aftermath>" + FileCommon.EncodeFluff(this.Aftermath) + "</aftermath>" );
         file.newLine();
 
         file.write("</scenario>");
@@ -277,6 +279,26 @@ public class Scenario implements ifSerializable {
         this.forces = forces;
     }
 
+    public Vector<Group> getGroups() {
+        Vector<Group> groups = new Vector<Group>();
+        for ( Force f : forces ) {
+            for ( Group g : f.Groups ) {
+                groups.add(g);
+            }
+        }
+        return groups;
+    }
+
+    public Vector<Unit> getUnits() {
+        Vector<Unit> units = new Vector<Unit>();
+        for ( Force f : forces ) {
+            for ( Unit u : f.getUnits() ) {
+                units.add(u);
+            }
+        }
+        return units;
+    }
+
     public Warchest getWarchest() {
         return warchest;
     }
@@ -299,5 +321,13 @@ public class Scenario implements ifSerializable {
 
     public void setOverwriteable(boolean allowOverwrite) {
         this.allowOverwrite = allowOverwrite;
+    }
+
+    public boolean IsDirty() {
+        return isDirty;
+    }
+
+    public void MakeDirty(boolean isDirty) {
+        this.isDirty = isDirty;
     }
 }

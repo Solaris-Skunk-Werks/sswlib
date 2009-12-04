@@ -37,6 +37,7 @@ import Print.ForceListPrinter;
 import Print.PrintConsts;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import list.view.Column;
 import org.w3c.dom.Node;
 
 public class Unit implements ifSerializable {
@@ -46,8 +47,9 @@ public class Unit implements ifSerializable {
                   Info = "";
     private String Mechwarrior = "";
     public String Filename = "",
-                  Configuration = "",
-                  Group = "";
+                  Configuration = "";
+    private String Group = "",
+                    prevGroup = "";
     private String MechwarriorQuirks = "";
     public String UnitQuirks = "";
     public float BaseBV = 0.0f,
@@ -251,19 +253,47 @@ public class Unit implements ifSerializable {
     public String SerializeClipboard() {
         String data = "";
 
-        data += CommonTools.spaceRight(this.TypeModel.trim(), 30) + CommonTools.Tab;
-        data += String.format("%1$,.0f", Tonnage) + CommonTools.Tab;
-        data += String.format("%1$,.0f", BaseBV) + "" + CommonTools.Tab;
-        data += CommonTools.spaceRight(this.getMechwarrior(), 30) + CommonTools.Tab;
-        data += CommonTools.spaceRight(this.Group, 20) + CommonTools.Tab;
-        data += this.getGunnery() + "/" + this.getPiloting() + CommonTools.Tab;
-        data += String.format("%1$,.0f", TotalBV) + "";
+        for ( Column c : CommonTools.ScenarioClipboardColumns() ) {
+            data += CommonTools.spaceRight(convertColumn(c), c.preferredWidth) + CommonTools.Tab;
+        }
+//        data += CommonTools.spaceRight(this.TypeModel.trim(), 30) + CommonTools.Tab;
+//        data += String.format("%1$,.0f", Tonnage) + CommonTools.Tab;
+//        data += String.format("%1$,.0f", BaseBV) + "" + CommonTools.Tab;
+//        data += CommonTools.spaceRight(this.getMechwarrior(), 30) + CommonTools.Tab;
+//        data += CommonTools.spaceRight(this.Group, 30) + CommonTools.Tab;
+//        data += this.getGunnery() + "/" + this.getPiloting() + CommonTools.Tab;
+//        data += String.format("%1$,.0f", TotalBV) + "";
 
         return data;
     }
 
+    private String convertColumn( Column c ) {
+        if ( c.Title.equals("Unit") ) {
+            return this.TypeModel.trim();
+        } else if ( c.Title.equals("Tons") ) {
+            return String.format("%1$,.0f", Tonnage);
+        } else if ( c.Title.equals("BV") ) {
+            return String.format("%1$,.0f", BaseBV);
+        } else if ( c.Title.equals("Mechwarrior") ) {
+            return this.getMechwarrior();
+        } else if ( c.Title.equals("Lance/Star") ) {
+            return this.Group;
+        } else if ( c.Title.equals("G/P") ) {
+            return this.GetSkills();
+        } else if ( c.Title.equals("Adj BV") ) {
+            return String.format("%1$,.0f", TotalBV);
+        } else {
+            return "";
+        }
+    }
+
     public String SerializeData() {
         return "";
+    }
+
+    @Override
+    public String toString() {
+        return TypeModel + " (" + warrior.getName() + " " + warrior.getGunnery() + "/" + warrior.getPiloting() + ")";
     }
 
     public void LoadMech() {
@@ -336,5 +366,35 @@ public class Unit implements ifSerializable {
     
     public String getInfo() {
         return Info;
+    }
+
+    public String getGroup() {
+        return Group;
+    }
+
+    public void setGroup(String Group) {
+        prevGroup = this.Group;
+        this.Group = Group;
+    }
+
+    public String getPrevGroup() {
+        return prevGroup;
+    }
+
+    public String isUsingC3() {
+        String val = "N/A";
+        LoadMech();
+        if ( m != null ) {
+            if ( m.HasC3() ) {
+                if ( UsingC3 ) {
+                    val = "Yes";
+                } else {
+                    val = "No";
+                }
+            }
+        } else {
+            val = "**";
+        }
+        return val;
     }
 }
