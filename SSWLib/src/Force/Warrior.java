@@ -43,7 +43,7 @@ public class Warrior {
                     Rank = "",
                     Faction = "",
                     Quirks = "",
-                    Status = "Actives",
+                    Status = "Active",
                     Notes = "";
     private int     Gunnery = 4,
                     Piloting = 5;
