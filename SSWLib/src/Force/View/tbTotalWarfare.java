@@ -45,7 +45,7 @@ public class tbTotalWarfare extends abTable {
         Columns.add(new Column( 5, "Base BV", "BaseBV", 20, Integer.class ));
         Columns.add(new Column( 6, "G", "Gunnery", 20, true, Integer.class ));
         Columns.add(new Column( 7, "P", "Piloting", 20, true, Integer.class ));
-        Columns.add(new Column( 8, "Mod", "Mod", 30, false, Double.class ));
+        Columns.add(new Column( 8, "MD", "MD", 30, false, Double.class ));
         Columns.add(new Column( 9, "C3", "UsesC3", 30, false, String.class ));
         Columns.add(new Column( 10, "Adj BV", "TotalBV", false, 40, Integer.class, true, SortOrder.ASCENDING ));
 
@@ -56,7 +56,7 @@ public class tbTotalWarfare extends abTable {
     }
 
     public Object getValueAt( int row, int col ) {
-        Unit u = (Unit) force.Units.get( row );
+        Unit u = force.getUnits().get( row );
         switch( col ) {
             case 0:
                 return u.TypeModel;
@@ -65,7 +65,7 @@ public class tbTotalWarfare extends abTable {
             case 2:
                 return u.getMechwarrior();
             case 3:
-                return u.Group;
+                return u.getGroup();
             case 4:
                 return (int) u.Tonnage;
             case 5:
@@ -77,11 +77,7 @@ public class tbTotalWarfare extends abTable {
             case 8:
                 return u.MiscMod;
             case 9:
-                if( u.UsingC3 ) {
-                    return "Yes";
-                } else {
-                    return "No";
-                }
+                return u.isUsingC3();
             case 10:
                 return String.format( "%1$,.0f", u.TotalBV );
         }
@@ -89,13 +85,14 @@ public class tbTotalWarfare extends abTable {
     }
     @Override
     public void setValueAt( Object value, int row, int col ) {
-        Unit u = (Unit) force.Units.get( row );
+        Unit u = force.getUnits().get( row );
         switch( col ) {
             case 2:
                 u.setMechwarrior(value.toString());
                 break;
             case 3:
-                u.Group = value.toString();
+                u.setGroup(value.toString());
+                force.GroupUnit(u);
                 break;
             case 6:
                 u.setGunnery(Integer.parseInt(value.toString()));

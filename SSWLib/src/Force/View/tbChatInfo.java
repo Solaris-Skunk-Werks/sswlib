@@ -43,7 +43,7 @@ public class tbChatInfo extends abTable {
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Unit u = (Unit) force.Units.get( rowIndex );
+        Unit u = (Unit) force.getUnits().get( rowIndex );
         switch( columnIndex ) {
             case 0:
                 return u.TypeModel;

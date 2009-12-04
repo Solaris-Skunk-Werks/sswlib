@@ -48,14 +48,14 @@ public class tbTotalWarfareSmall extends abTable {
     }
 
     public Object getValueAt( int row, int col ) {
-        Unit u = (Unit) force.Units.get( row );
+        Unit u = force.getUnits().get( row );
         switch( col ) {
             case 0:
                 return u.TypeModel;
             case 1:
                 return CommonTools.UnitTypes[u.UnitType];
             case 2:
-                return u.Group;
+                return u.getGroup();
             case 3:
                 return u.Tonnage;
             case 4:
@@ -72,10 +72,11 @@ public class tbTotalWarfareSmall extends abTable {
 
     @Override
     public void setValueAt( Object value, int row, int col ) {
-        Unit u = (Unit) force.Units.get( row );
+        Unit u = force.getUnits().get( row );
         switch( col ) {
             case 2:
-                u.Group = value.toString();
+                u.setGroup(value.toString());
+                force.GroupUnit(u);
                 break;
             case 5:
                 u.setGunnery(Integer.parseInt(value.toString()));

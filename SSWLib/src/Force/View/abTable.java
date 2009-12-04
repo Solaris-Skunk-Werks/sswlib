@@ -77,7 +77,7 @@ public abstract class abTable extends AbstractTableModel {
     @Override
     public String getColumnName( int col ) { return Columns.get(col).Title; }
     public int getColumnCount() { return Columns.size(); }
-    public int getRowCount() { return force.Units.size(); }
+    public int getRowCount() { return force.getUnits().size(); }
     @Override
     public Class getColumnClass(int c) { return Columns.get(c).classType; }
     public Object getClassOf( int row, int col ) { return Columns.get(col).classType; }

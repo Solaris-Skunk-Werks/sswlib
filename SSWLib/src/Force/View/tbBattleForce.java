@@ -47,19 +47,20 @@ public class tbBattleForce extends abTable {
         Columns.add(new Column( 8, "Wt", "Wt", 20, Integer.class ));
         Columns.add(new Column( 9, "OV", "OV", 20, Integer.class ));
         Columns.add(new Column( 10, "A/S", "Armor", 20, Integer.class ));
-        Columns.add(new Column( 11, "Base PV", "BaseBV", 30, Integer.class ));
-        Columns.add(new Column( 12, "Adj PV", "TotalBV", false, 40, Integer.class, true, SortOrder.ASCENDING ));
+        Columns.add(new Column( 11, "Skill", "Skill", 20, Integer.class ));
+        Columns.add(new Column( 12, "Base PV", "BaseBV", 30, Integer.class ));
+        Columns.add(new Column( 13, "Adj PV", "TotalBV", false, 40, Integer.class, true, SortOrder.ASCENDING ));
     }
 
     public Object getValueAt( int row, int col ) {
-        Unit u = force.Units.get( row );
+        Unit u = force.getUnits().get( row );
         switch( col ) {
             case 0:
                 return u.getBFStats().getElement();
             case 1:
                 return CommonTools.UnitTypes[u.UnitType];
             case 2:
-                return u.Group;
+                return u.getGroup();
             case 3:
                 return u.getBFStats().getMovement();
             case 4:
@@ -77,18 +78,21 @@ public class tbBattleForce extends abTable {
             case 10:
                 return u.getBFStats().getArmor() + " (" + u.getBFStats().getInternal() + ")";
             case 11:
-                return u.getBFStats().getBasePV();
+                return u.getBFStats().getSkill();
             case 12:
+                return u.getBFStats().getBasePV();
+            case 13:
                 return u.getBFStats().getPointValue();
         }
         return null;
     }
     @Override
     public void setValueAt( Object value, int row, int col ) {
-        Unit u = (Unit) force.Units.get( row );
+        Unit u = force.getUnits().get( row );
         switch( col ) {
             case 2:
-                u.Group = value.toString();
+                u.setGroup(value.toString());
+                force.GroupUnit(u);
                 break;
         }
         force.isDirty = true;
