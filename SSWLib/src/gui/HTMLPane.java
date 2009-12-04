@@ -102,6 +102,10 @@ public class HTMLPane extends JPanel implements ActionListener {
     private HTMLEditorKit.InsertHTMLTextAction BulletAction
         = new HTMLEditorKit.InsertHTMLTextAction( "Bullets", "<li> </li>", HTML.Tag.UL, HTML.Tag.LI );*/
 
+    public HTMLPane() {
+        this(false);
+    }
+
     public HTMLPane( boolean OneLine ) {
         HTMLEditorKit Kit = new HTMLEditorKit();
         Document = (HTMLDocument) Kit.createDefaultDocument();
@@ -161,6 +165,7 @@ public class HTMLPane extends JPanel implements ActionListener {
         String text = Text.getText();
         int start = text.indexOf( "<body>" ) + 7;
         int end = text.indexOf( "</body>" ) - 3;
+        if ( end <= start ) { end = start + 1; }
         return text.substring( start, end ).replace( "\n", "" );
     }
 
@@ -394,6 +399,7 @@ public class HTMLPane extends JPanel implements ActionListener {
             Single.add( MenuAlign );
             Single.add( Box.createRigidArea( new java.awt.Dimension( 5, 0 ) ) );
             Single.add( Controls );
+            Single.add( Box.createHorizontalGlue() );
             add( Single );
         } else {
             add( MenuAlign );
