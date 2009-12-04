@@ -199,7 +199,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                 if ( chkBFOnePerPage.isSelected() ) {
                     Vector<BattleForce> forcelist = new Vector<BattleForce>();
                     forcelist.addAll(scenario.getAttackerForce().toBattleForceByGroup( 12 ));
-                    if ( scenario.getDefenderForce().Units.size() > 0 ) { forcelist.addAll(scenario.getDefenderForce().toBattleForceByGroup( 12 )); }
+                    if ( scenario.getDefenderForce().getUnits().size() > 0 ) { forcelist.addAll(scenario.getDefenderForce().toBattleForceByGroup( 12 )); }
 
                     for ( BattleForce f : forcelist ) {
                         BattleforcePrinter bf = new BattleforcePrinter(f, imageTracker);
@@ -213,7 +213,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                     topBF.setPrintMechs(chkImage.isSelected());
                     printer.Append( BFBPrinter.Letter.toPage(), topBF );
 
-                    if ( scenario.getDefenderForce().Units.size() > 0 ) {
+                    if ( scenario.getDefenderForce().getUnits().size() > 0 ) {
                         BattleforcePrinter bottomBF = new BattleforcePrinter(scenario.getDefenderForce().toBattleForce(), imageTracker);
                         bottomBF.setPrintLogo(chkLogo.isSelected());
                         bottomBF.setPrintMechs(chkImage.isSelected());
@@ -223,7 +223,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             } else {
                     Vector<BattleForce> forces = new Vector<BattleForce>();
                     forces.addAll(scenario.getAttackerForce().toBattleForceByGroup( 6 ));
-                    if ( scenario.getDefenderForce().Units.size() > 0 ) { forces.addAll(scenario.getDefenderForce().toBattleForceByGroup( 6 )); }
+                    if ( scenario.getDefenderForce().getUnits().size() > 0 ) { forces.addAll(scenario.getDefenderForce().toBattleForceByGroup( 6 )); }
 
                     for ( BattleForce f : forces ) {
                         BattleforceCardPrinter bf = new BattleforceCardPrinter(f, imageTracker);
@@ -237,7 +237,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         if ( chkPrintRecordsheets.isSelected() ) {
             imageTracker.preLoadMechImages();
             for ( Force force : scenario.getForces() ) {
-                for ( Unit u : force.Units ) {
+                for ( Unit u : force.getUnits() ) {
                     u.LoadMech();
                     PrintMech pm = new PrintMech(u.m,u.getMechwarrior(), u.getGunnery(), u.getPiloting(), imageTracker);
                     pm.setCanon(chkCanon.isSelected());
@@ -313,6 +313,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         cmbBFSheetType = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
         btnPreview = new javax.swing.JButton();
+        btnSaveOptions = new javax.swing.JButton();
         jToolBar1 = new javax.swing.JToolBar();
         btnBack = new javax.swing.JButton();
         btnForward = new javax.swing.JButton();
@@ -594,6 +595,13 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             }
         });
 
+        btnSaveOptions.setText("Save Default Options");
+        btnSaveOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveOptionsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -601,16 +609,18 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(btnPreview))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(pnlPrintOptions, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(pnlHow, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(pnlHow, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnSaveOptions)
+                            .addComponent(btnPreview))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -625,7 +635,9 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnPreview)
-                .addGap(71, 71, 71))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSaveOptions)
+                .addGap(42, 42, 42))
         );
 
         jToolBar1.setFloatable(false);
@@ -779,6 +791,10 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         PrinterSetup();
     }//GEN-LAST:event_btnPreviewActionPerformed
 
+    private void btnSaveOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveOptionsActionPerformed
+        setPreferences();
+}//GEN-LAST:event_btnSaveOptionsActionPerformed
+
     private void WaitCursor() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
@@ -796,6 +812,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JButton btnPageWidth;
     private javax.swing.JButton btnPreview;
     private javax.swing.JButton btnPrint;
+    private javax.swing.JButton btnSaveOptions;
     private javax.swing.JButton btnZoomIn;
     private javax.swing.JButton btnZoomOut;
     private javax.swing.JCheckBox chkBFOnePerPage;

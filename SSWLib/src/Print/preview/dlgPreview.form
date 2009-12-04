@@ -59,10 +59,6 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                          <Component id="btnPreview" min="-2" max="-2" attributes="0"/>
-                      </Group>
                       <Group type="103" alignment="0" groupAlignment="0" attributes="0">
                           <Component id="pnlPrintOptions" alignment="1" min="-2" max="-2" attributes="1"/>
                           <Group type="103" alignment="1" groupAlignment="1" attributes="0">
@@ -71,6 +67,13 @@
                                   <Component id="jPanel4" alignment="1" min="-2" max="-2" attributes="1"/>
                                   <Component id="pnlHow" alignment="0" min="-2" max="-2" attributes="1"/>
                               </Group>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="btnSaveOptions" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnPreview" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -90,7 +93,9 @@
                   <Component id="jPanel4" min="-2" max="-2" attributes="1"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btnPreview" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="btnSaveOptions" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -474,6 +479,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPreviewActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnSaveOptions">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Save Default Options"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveOptionsActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
