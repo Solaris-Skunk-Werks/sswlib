@@ -253,7 +253,7 @@ public class Unit implements ifSerializable {
     public String SerializeClipboard() {
         String data = "";
 
-        for ( Column c : CommonTools.ScenarioClipboardColumns() ) {
+        for ( Column c : Force.ScenarioClipboardColumns() ) {
             data += CommonTools.spaceRight(convertColumn(c), c.preferredWidth) + CommonTools.Tab;
         }
 //        data += CommonTools.spaceRight(this.TypeModel.trim(), 30) + CommonTools.Tab;

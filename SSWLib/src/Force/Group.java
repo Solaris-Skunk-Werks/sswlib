@@ -104,7 +104,7 @@ public class Group {
 
     public String SerializeClipboard() {
         String data = "";
-        for ( Column c : CommonTools.ScenarioClipboardColumns() ) {
+        for ( Column c : Force.ScenarioClipboardColumns() ) {
             if ( c.Title.equals("Unit") && !getName().isEmpty() ) {
                 data += CommonTools.spaceRight(getName(), c.preferredWidth) + CommonTools.Tab;
             } else {
@@ -118,7 +118,7 @@ public class Group {
         }
 
         if ( force.Groups.size() > 1 ) {
-            for ( Column c : CommonTools.ScenarioClipboardColumns() ) {
+            for ( Column c : Force.ScenarioClipboardColumns() ) {
                 if ( c.Title.equals("Adj BV") ) {
                     data += String.format("%1$,.0f", getTotalBV());
                 } else {

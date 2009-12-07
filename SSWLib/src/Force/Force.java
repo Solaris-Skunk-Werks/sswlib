@@ -38,18 +38,12 @@ import filehandlers.ImageTracker;
 import java.awt.Image;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import list.view.Column;
 import org.w3c.dom.Node;
 
-/**
- *
- * @author gblouin
- */
 public class Force extends AbstractTableModel implements ifSerializable {
     private Vector<Unit> Units = new Vector<Unit>();
     public Vector<Group> Groups = new Vector<Group>();
@@ -72,6 +66,19 @@ public class Force extends AbstractTableModel implements ifSerializable {
     public boolean isDirty = false,
                     useUnevenForceMod = true;
     private abTable currentModel = new tbTotalWarfare(this);
+
+
+    public static Vector<Column> ScenarioClipboardColumns() {
+        Vector<Column> cols = new Vector<Column>();
+        cols.add(new Column(0, "Unit", "Unit", 30));
+        cols.add(new Column(0, "Tons", "Tons", 6));
+        cols.add(new Column(0, "BV", "BV", 6));
+        cols.add(new Column(0, "Mechwarrior", "Mechwarrior", 30));
+        //cols.add(new Column(0, "Lance/Star", "Group", 30));
+        cols.add(new Column(0, "G/P", "Gunnery", 3));
+        cols.add(new Column(0, "Adj BV", "TotalBV", 7));
+        return cols;
+    }
 
     public Force(){
         Groups.add(new Group("", Type, this));
@@ -267,7 +274,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
             data += g.SerializeClipboard();
         }
 
-        for ( Column c : CommonTools.ScenarioClipboardColumns() ) {
+        for ( Column c : Force.ScenarioClipboardColumns() ) {
             if ( c.Title.equals("Adj BV") ) {
                 data += String.format("%1$,.0f", TotalAdjustedBV);
             } else {

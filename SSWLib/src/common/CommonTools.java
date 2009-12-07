@@ -29,8 +29,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package common;
 
 import components.*;
-import java.awt.Font;
+import java.io.File;
 import java.text.DecimalFormat;
+import java.util.Vector;
+import list.view.Column;
 
 public class CommonTools {
     private final static DecimalFormat dft = new DecimalFormat( "#.###" ),
@@ -1001,5 +1003,23 @@ public class CommonTools {
 
     public static double RoundFractionalCost( double d ) {
         return Double.valueOf( dfc.format( d ) );
+    }
+
+    public static String shortenPath( String path, int maxlength ) {
+        String newPath = path;
+        if ( path.length() > maxlength ) {
+            String[] parts = path.split("\\" + File.separator.toString());
+            newPath = parts[0] + File.separator;
+            for ( int i=1; i <= parts.length-2; i++ ) {
+                if ( (newPath + parts[i] + File.separator + parts[parts.length-1]).length() <= (maxlength-3) ) {
+                    newPath += parts[i] + File.separator;
+                } else {
+                    newPath += "...";
+                    break;
+                }
+            }
+            newPath += parts[parts.length-1];
+        }
+        return newPath;
     }
 }
