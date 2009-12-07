@@ -82,25 +82,27 @@ public class PrintDeclaration implements Printable {
     private void PreparePrint() {
         Reset();
         for ( Force force : forces ) {
-            Image logo = force.getLogo(imageTracker);
-            for ( Unit unit : force.Units ) {
-                for (int k=0; k<Types.length; k++) {
-                    int shift = 5;
-                    Graphic.setFont(PrintConsts.SmallFont);
-                    if ( logo != null ) {
-                        Graphic.drawImage(logo, currentX+1, currentY-10, 25, 25, null);
-                        shift = 30;
-                    }
-                    Graphic.drawString(unit.TypeModel, currentX+shift, currentY);
-                    Graphic.drawString((unit.Group + " (" + unit.getMechwarrior() + ")").replace("()", ""), currentX+shift, currentY+10);
-                    Graphic.drawRect(currentX, currentY-12, 175, 30);
-                    Graphic.setFont(PrintConsts.BoldFont);
-                    Graphic.drawString(Types[k], currentX+125, currentY+3);
+            for ( Group group : force.Groups ) {
+                Image logo = imageTracker.getImage(group.getLogo());
+                for ( Unit unit : group.getUnits() ) {
+                    for (int k=0; k<Types.length; k++) {
+                        int shift = 5;
+                        Graphic.setFont(PrintConsts.SmallFont);
+                        if ( logo != null ) {
+                            Graphic.drawImage(logo, currentX+1, currentY-10, 25, 25, null);
+                            shift = 30;
+                        }
+                        Graphic.drawString(unit.TypeModel, currentX+shift, currentY);
+                        Graphic.drawString((unit.getGroup() + " (" + unit.getMechwarrior() + ")").replace("()", ""), currentX+shift, currentY+10);
+                        Graphic.drawRect(currentX, currentY-12, 175, 30);
+                        Graphic.setFont(PrintConsts.BoldFont);
+                        Graphic.drawString(Types[k], currentX+125, currentY+3);
 
-                    currentX += 175;
+                        currentX += 175;
+                    }
+                    currentX = (int) format.getImageableX();
+                    currentY += 30;
                 }
-                currentX = (int) format.getImageableX();
-                currentY += 30;
             }
         }
     }

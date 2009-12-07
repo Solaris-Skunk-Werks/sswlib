@@ -66,7 +66,7 @@ public class BFBPrinter {
         this(imageTracker);
         this.forces = forces;
         for ( Force force : forces ) {
-            unitSize += force.Units.size();
+            unitSize += force.getUnits().size();
         }
         sheet.AddForces(forces);
         chits.AddForces(forces);
@@ -75,7 +75,7 @@ public class BFBPrinter {
     public BFBPrinter( Force force, ImageTracker imageTracker ) {
         this(imageTracker);
         this.forces.add(force);
-        unitSize += force.Units.size();
+        unitSize += force.getUnits().size();
         sheet.AddForce(force);
         chits.AddForce(force);
     }
