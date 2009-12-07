@@ -74,7 +74,7 @@ public class dlgImageMgr extends javax.swing.JDialog {
     public void Load() {
         //load units without images
         for ( Force force : forces ) {
-            for ( Unit u : force.Units ) {
+            for ( Unit u : force.getUnits() ) {
                 u.LoadMech();
                 if ( u.m != null ) {
                     if ( u.m.GetSSWImage().isEmpty() || u.m.GetSSWImage().toLowerCase().equals("../images/no_image.png") ) {

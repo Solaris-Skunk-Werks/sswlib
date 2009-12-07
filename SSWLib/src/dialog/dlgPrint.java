@@ -193,7 +193,7 @@ public class dlgPrint extends javax.swing.JDialog {
         if (chkPrintRecordsheets.isSelected()) {
             imageTracker.preLoadMechImages();
             for ( Force force : scenario.getForces() ) {
-                for ( Unit u : force.Units ) {
+                for ( Unit u : force.getUnits() ) {
                     u.LoadMech();
                     PrintMech pm = new PrintMech(u.m, u.getMechwarrior(), u.getGunnery(), u.getPiloting(), imageTracker);
                     pm.setCanon(chkCanon.isSelected());

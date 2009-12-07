@@ -65,10 +65,10 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
 
     private TableModelListener forceChanged = new TableModelListener() {
         public void tableChanged(TableModelEvent e) {
-            getForce().setupTable(tblForce);
+            force.setupTable(tblForce);
             lblTotalBV.setText(String.format("%1$,.0f", getForce().TotalAdjustedBV));
             lblTotalTons.setText(String.format("%1$,.0f", getForce().TotalTonnage) + " Tons");
-            lblTotalUnits.setText(getForce().Units.size() + " Units");
+            lblTotalUnits.setText(getForce().getUnits().size() + " Units");
         }
     };
 
@@ -86,7 +86,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
     private void LoadMech() {
         try
         {
-            Unit Data = (Unit) ((abTable) tblForce.getModel()).getForce().Units.get( tblForce.convertRowIndexToModel( tblForce.getSelectedRow() ) );
+            Unit Data = (Unit) ((abTable) tblForce.getModel()).getForce().getUnits().get( tblForce.convertRowIndexToModel( tblForce.getSelectedRow() ) );
             Data.LoadMech();
             if ( Data.m != null ) {
                 Vector u = new Vector();
@@ -105,7 +105,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
     }
 
     public void Add( Mech m ) {
-        force.Units.add(new Unit(m));
+        force.getUnits().add(new Unit(m));
     }
 
 
@@ -709,10 +709,11 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
             if ( javax.swing.JOptionPane.showOptionDialog(this, "What would you like to do with this unit?", "Unit Options", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Load in Designer", "Load Unit for Editing"}, null) == javax.swing.JOptionPane.YES_OPTION ) {
                 LoadMech();
             } else {
-                Unit u = force.Units.get(tblForce.convertRowIndexToModel(tblForce.getSelectedRow()));
-                dlgUnit dUnit = new dlgUnit(this, true, force, u, imageTracker);
+                Unit u = force.getUnits().get(tblForce.convertRowIndexToModel(tblForce.getSelectedRow()));
+                dlgUnit dUnit = new dlgUnit(this, false, force, u, imageTracker);
                 dUnit.setLocationRelativeTo(this);
                 dUnit.setVisible(true);
+                force.RefreshBV();
             }
         }
     }//GEN-LAST:event_tblForceMouseClicked
@@ -730,15 +731,15 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         if ( tblForce.getSelectedRowCount() > 0 ) {
             int[] rows = tblForce.getSelectedRows();
             for ( int i=0; i < rows.length; i++ ) {
-                Unit data = (Unit) force.Units.get(tblForce.convertRowIndexToModel(rows[i]));
-                force.Units.remove(data);
+                Unit data = (Unit) force.getUnits().get(tblForce.convertRowIndexToModel(rows[i]));
+                force.getUnits().remove(data);
             }
             force.RefreshBV();
         }
     }//GEN-LAST:event_btnRemoveUnitActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        if ( force.Units.size() > 0 ) {
+        if ( force.getUnits().size() > 0 ) {
             File saveFile = media.SelectFile(prefs.get("LastOpenForce", ""), "force", "Save To...");
             if ( saveFile != null ) {
                 ForceWriter writer = new ForceWriter();
@@ -816,8 +817,8 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         String mtfDir = media.GetDirectorySelection(null, prefs.get( "MTFExportPath", "" ) );
         if (!mtfDir.endsWith(File.separator)) { mtfDir += File.separator; }
         
-        for ( int i = 0; i < force.Units.size(); i++ ) {
-            Unit u = (Unit) force.Units.get(i);
+        for ( int i = 0; i < force.getUnits().size(); i++ ) {
+            Unit u = (Unit) force.getUnits().get(i);
             u.LoadMech();
             mtf.setMech(u.m);
             try {
@@ -838,8 +839,8 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
 
     private void txtGunneryKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGunneryKeyReleased
         if ( !txtGunnery.getText().isEmpty() ) {
-            for ( int i = 0; i < force.Units.size(); i++ ) {
-                Unit u = (Unit) force.Units.get(i);
+            for ( int i = 0; i < force.getUnits().size(); i++ ) {
+                Unit u = (Unit) force.getUnits().get(i);
                 u.setGunnery(Integer.parseInt(txtGunnery.getText()));
                 u.Refresh();
             }
@@ -849,8 +850,8 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
 
     private void txtPilotingKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPilotingKeyReleased
         if ( !txtPiloting.getText().isEmpty() ) {
-            for ( int i = 0; i < force.Units.size(); i++ ) {
-                Unit u = (Unit) force.Units.get(i);
+            for ( int i = 0; i < force.getUnits().size(); i++ ) {
+                Unit u = (Unit) force.getUnits().get(i);
                 u.setPiloting(Integer.parseInt(txtPiloting.getText()));
                 u.Refresh();
             }
@@ -871,7 +872,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
             int[] rows = tblForce.getSelectedRows();
             for ( int i=0; i < rows.length; i++ ) {
                 try {
-                    Unit data = (Unit) force.Units.get( tblForce.convertRowIndexToModel( rows[i] ) );
+                    Unit data = (Unit) force.getUnits().get( tblForce.convertRowIndexToModel( rows[i] ) );
                     data.LoadMech();
                     if ( data.m != null ) {
                         dlgAmmoChooser Ammo = new dlgAmmoChooser( this, false, data.m, new DataFactory(data.m) );
