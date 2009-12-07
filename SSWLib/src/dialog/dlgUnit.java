@@ -35,6 +35,7 @@ import filehandlers.Media;
 import filehandlers.MechWriter;
 import filehandlers.TXTWriter;
 import battleforce.BattleForceStats;
+import common.CommonTools;
 import components.ifMechLoadout;
 
 import filehandlers.ImageTracker;
@@ -76,7 +77,7 @@ public class dlgUnit extends javax.swing.JDialog {
         chkC3Active.setSelected(unit.UsingC3);
         txtMod.setText(unit.MiscMod+"");
         lblFilename.setForeground(new Color(Color.black.getRGB()));
-        lblFilename.setText(unit.Filename);
+        lblFilename.setText(CommonTools.shortenPath(unit.Filename, 100));
         tpnMechwarriorQuirks.setText(unit.getMechwarriorQuirks());
         tpnBattleMechQuirks.setText(unit.UnitQuirks);
         spnSkillSeperationLimit.setModel(new SpinnerNumberModel(3, 0, 7, 1));
@@ -386,6 +387,11 @@ public class dlgUnit extends javax.swing.JDialog {
         lblModel.setText("Sirocco SRC-3C BattleMech");
 
         chkC3Active.setText("C3 Active");
+        chkC3Active.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkC3ActiveActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Plt");
 
@@ -535,7 +541,7 @@ public class dlgUnit extends javax.swing.JDialog {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(spnTRO, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
+            .addComponent(spnTRO, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -676,7 +682,7 @@ public class dlgUnit extends javax.swing.JDialog {
                         .addComponent(rdoPiloting)
                         .addGap(18, 18, 18)
                         .addComponent(btnFilter))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel10))
         );
@@ -726,7 +732,7 @@ public class dlgUnit extends javax.swing.JDialog {
                         .addComponent(lblRandomSkill)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnApply)))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -793,9 +799,9 @@ public class dlgUnit extends javax.swing.JDialog {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addComponent(btnSelectWarrior)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
                         .addComponent(btnLoadFile))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -857,7 +863,7 @@ public class dlgUnit extends javax.swing.JDialog {
                         .addComponent(jLabel14)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblSSWImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(148, Short.MAX_VALUE))
+                .addContainerGap(150, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -894,8 +900,8 @@ public class dlgUnit extends javax.swing.JDialog {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel16)
                     .addComponent(jLabel17)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -1065,7 +1071,7 @@ public class dlgUnit extends javax.swing.JDialog {
         jPanel10.setLayout(jPanel10Layout);
         jPanel10Layout.setHorizontalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlBFStats, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
+            .addComponent(pnlBFStats, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1088,7 +1094,7 @@ public class dlgUnit extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblFilename)
-                .addContainerGap(509, Short.MAX_VALUE))
+                .addContainerGap(511, Short.MAX_VALUE))
         );
         pnlFileLayout.setVerticalGroup(
             pnlFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1111,7 +1117,7 @@ public class dlgUnit extends javax.swing.JDialog {
                         .addComponent(pnlFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE)))
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1304,11 +1310,19 @@ public class dlgUnit extends javax.swing.JDialog {
                     unit.Refresh();
                     setupFrame();
                 }
+                Prefs.put("ListPath", mech.getCanonicalPath());
             } catch (IOException ex) {
                 Media.Messager("Error loading file\n" + ex.getMessage());
             }
         }
     }//GEN-LAST:event_btnSelectMechActionPerformed
+
+    private void chkC3ActiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkC3ActiveActionPerformed
+        unit.UsingC3 = chkC3Active.isSelected();
+        unit.Refresh();
+        setBV();
+        force.RefreshBV();
+    }//GEN-LAST:event_chkC3ActiveActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApply;
