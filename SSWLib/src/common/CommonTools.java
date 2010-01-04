@@ -31,8 +31,6 @@ package common;
 import components.*;
 import java.io.File;
 import java.text.DecimalFormat;
-import java.util.Vector;
-import list.view.Column;
 
 public class CommonTools {
     private final static DecimalFormat dft = new DecimalFormat( "#.###" ),
