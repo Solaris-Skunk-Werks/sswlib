@@ -45,7 +45,7 @@ import list.view.Column;
 import org.w3c.dom.Node;
 
 public class Force extends AbstractTableModel implements ifSerializable {
-    private Vector<Unit> Units = new Vector<Unit>();
+    public Vector<Unit> Units = new Vector<Unit>();
     public Vector<Group> Groups = new Vector<Group>();
     public String ForceName = "",
                   LogoPath = "";
