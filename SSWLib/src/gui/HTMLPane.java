@@ -109,6 +109,8 @@ public class HTMLPane extends JPanel implements ActionListener {
     public HTMLPane( boolean OneLine ) {
         HTMLEditorKit Kit = new HTMLEditorKit();
         Document = (HTMLDocument) Kit.createDefaultDocument();
+        Document.putProperty( "IgnoreCharsetDirective", true );
+        Document.setPreservesUnknownTags( false );
         Document.addUndoableEditListener( UndoHandler );
         InitComponents( OneLine );
         ResetUndoManager();
@@ -166,7 +168,7 @@ public class HTMLPane extends JPanel implements ActionListener {
         int start = text.indexOf( "<body>" ) + 7;
         int end = text.indexOf( "</body>" ) - 3;
         if ( end <= start ) { end = start + 1; }
-        return text.substring( start, end ).replace( "\n", "" );
+        return text.substring( start, end ).replace( "\n", "" ).replace( "      ", "" ).replace( "    ", "" ).replace( "<p style=\"margin-top: 0\"></p>", "" );
     }
 
 /**
@@ -179,7 +181,11 @@ public class HTMLPane extends JPanel implements ActionListener {
         String retval = "Operation Failed!";
         try {
             retval = Doc.getText( 0, Doc.getLength() );
-            return retval.replace( "\n", "" );
+            // remove the extraneous crap when nothing is in the box.
+            retval = retval.replace( "<p style=\"margin-top: 0\"></p>\n", "" );
+            retval = retval.replace( "\n", "" );
+            if( retval.replace( "\n\r", "" ).length() < 2 ) { return ""; }
+            return ">" + retval.replace( "      ", "" ) + "<";
         } catch( Exception e ) {
             return retval;
         }
@@ -204,6 +210,8 @@ public class HTMLPane extends JPanel implements ActionListener {
         if( OldDoc != null ) { OldDoc.removeUndoableEditListener( UndoHandler ); }
         HTMLEditorKit Kit = new HTMLEditorKit();
         Document = (HTMLDocument) Kit.createDefaultDocument();
+        Document.putProperty( "IgnoreCharsetDirective", true );
+        Document.setPreservesUnknownTags( false );
         Text.setDocument( Document );
         Text.getDocument().addUndoableEditListener( UndoHandler );
         ResetUndoManager();

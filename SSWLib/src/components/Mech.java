@@ -34,8 +34,6 @@ import battleforce.*;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.prefs.Preferences;
-import states.stEngineFuelCell;
-import states.stEngineICE;
 import visitors.*;
 
 public class Mech implements ifBattleforce {
@@ -1814,19 +1812,6 @@ public class Mech implements ifBattleforce {
             defresult = 1.0;
         }
 
-        // now get the defensive BV for any armored components that weren't
-        // already covered.
-        if( RulesLevel == AvailableCode.RULES_EXPERIMENTAL && Era == AvailableCode.ERA_CLAN_INVASION ) {
-            defresult += CurEngine.GetDefensiveBV();
-            defresult += CurCockpit.GetDefensiveBV();
-            defresult += NullSig.GetDefensiveBV();
-            defresult += Chameleon.GetDefensiveBV();
-            defresult += BlueShield.GetDefensiveBV();
-            defresult += VoidSig.GetDefensiveBV();
-            defresult += Wing.GetDefensiveBV();
-            defresult += EnviroSealing.GetDefensiveBV();
-            defresult += Tracks.GetDefensiveBV();
-        }
         return defresult;
     }
 
@@ -1840,6 +1825,20 @@ public class Mech implements ifBattleforce {
         }
         if( UsingTC() ) {
             result += GetTC().GetDefensiveBV();
+        }
+        // now get the defensive BV for any armored components that weren't
+        // already covered.
+        if( RulesLevel >= AvailableCode.RULES_EXPERIMENTAL && Era >= AvailableCode.ERA_CLAN_INVASION ) {
+            result += CurEngine.GetDefensiveBV();
+            result += CurCockpit.GetDefensiveBV();
+            result += NullSig.GetDefensiveBV();
+            result += Chameleon.GetDefensiveBV();
+            result += BlueShield.GetDefensiveBV();
+            result += VoidSig.GetDefensiveBV();
+            result += Wing.GetDefensiveBV();
+            result += EnviroSealing.GetDefensiveBV();
+            result += Tracks.GetDefensiveBV();
+            result += CurLoadout.GetActuators().GetDefensiveBV();
         }
         return result;
     }
@@ -2302,7 +2301,15 @@ public class Mech implements ifBattleforce {
         // round off to the nearest two digits
         result = (double) Math.floor( result * 100 + 0.5 ) / 100;
 
-        return result;
+        double cockpitMultiplier = 1.0;
+        if( ! CurCockpit.HasFireControl() ) {
+            cockpitMultiplier -= 0.1;
+        }
+        if( CurCockpit.LookupName().contains( "Primitive Industrial" ) ) {
+            cockpitMultiplier -= 0.1;
+        }
+
+        return result * cockpitMultiplier;
     }
 
     public ifMechLoadout GetLoadout() {

@@ -903,6 +903,7 @@ public class MechReader {
         // enhancement next
         n = d.getElementsByTagName( "enhancement" );
         if( n.getLength() > 0 ) {
+            map = n.item( 0 ).getAttributes();
             l = new LocationIndex();
             n = n.item( 0 ).getChildNodes();
             Type = null;
@@ -917,6 +918,16 @@ public class MechReader {
                 throw new Exception( "The Enhancement type could not be found (missing type node).\nThe Mech cannot be loaded." );
             } else {
                 v = m.Lookup( Type.getTextContent() );
+                if( map.getNamedItem( "techbase" ) == null ) {
+                    // old style save file, set the armor based on the 'Mech's techbase
+                    if( m.GetTechBase() == AvailableCode.TECH_CLAN ) {
+                        v.SetClan( true );
+                    }
+                } else {
+                    if( Integer.parseInt( map.getNamedItem( "techbase" ).getTextContent() ) == AvailableCode.TECH_CLAN ) {
+                        v.SetClan( true );
+                    }
+                }
                 if( v == null ) {
                     throw new Exception( "The Enhancement type could not be found (lookup name missing or incorrect).\nThe Mech cannot be loaded." );
                 } else {

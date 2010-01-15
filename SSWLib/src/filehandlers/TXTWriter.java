@@ -1046,7 +1046,7 @@ public class TXTWriter {
             } else{
                 retval += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5" + tformat, ((MGArray) p).GetNumMGs() + " " + a.CritName() + "s", loc, ((RangedWeapon) a).GetHeat() * ((MGArray) p).GetNumMGs(), ((MGArray) p).GetNumMGs(), ( ((MGArray) p).GetMGTons() * ((MGArray) p).GetNumMGs() ) ) + NL;
             }
-       } else if( p instanceof Equipment ) {
+        } else if( p instanceof Equipment ) {
             retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, name, loc, ((Equipment) p).GetHeat() * numthisloc, crits, p.GetTonnage() * numthisloc ) + NL;
         } else {
             retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, name, loc, "-", crits, p.GetTonnage() * numthisloc ) + NL;
@@ -1059,6 +1059,10 @@ public class TXTWriter {
         // we're basically checking length here to limit it to 80 chars in length
         // first, seperate out all the newlines.
         s = s.replaceAll( "\n\r", "\n" );
+        s = s.replace( "      ", "" );
+        s = s.replace( "    ", "" );
+        s = s.replace( "<p style=\"margin-top: 0\">", "" );
+        s = s.replace( "</p>", "\n" );
         String[] newline = s.split( "\n" );
         String retval = "";
         for( int i = 0; i < newline.length; i++ ) {
