@@ -697,7 +697,7 @@ public class Mech implements ifBattleforce {
     }
 
     public int GetTechBase() {
-        return MainLoadout.GetTechBase();
+        return CurLoadout.GetTechBase();
     }
 
     public void SetBiped() {
@@ -731,6 +731,8 @@ public class Mech implements ifBattleforce {
 
         // Get a new Biped Loadout and load up the queue
         ifMechLoadout l = new BipedLoadout( Constants.BASELOADOUT_NAME, this );
+        l.SetTechBase( MainLoadout.GetTechBase() );
+        l.SetRulesLevel( RulesLevel );
         CurLoadout.Transfer( l );
         CurLoadout.ClearLoadout();
 
@@ -908,7 +910,9 @@ public class Mech implements ifBattleforce {
 
         // Get a new Quad Loadout and load up the queue
         ifMechLoadout l = new QuadLoadout( Constants.BASELOADOUT_NAME, this );
-        CurLoadout.Transfer(l);
+        l.SetTechBase( MainLoadout.GetTechBase() );
+        l.SetRulesLevel( RulesLevel );
+        CurLoadout.Transfer( l );
         CurLoadout.ClearLoadout();
 
         // Now set the new main loadout and current loadout

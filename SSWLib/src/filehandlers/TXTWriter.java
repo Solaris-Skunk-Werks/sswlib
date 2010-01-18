@@ -858,6 +858,8 @@ public class TXTWriter {
         retval += NL + "Equipment                                 Location    Heat    Critical    Mass  " + NL;
         retval += "--------------------------------------------------------------------------------" + NL;
 
+        if( equips.length < 1 ) { return retval; }
+
         // we'll want to consolidate equipment within locations.
         int numthisloc = 1;
         abPlaceable cur = equips[0];

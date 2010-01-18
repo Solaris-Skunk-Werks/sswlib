@@ -31,14 +31,14 @@ package components;
 import states.*;
 
 public class Cockpit extends abPlaceable {
-    private final static ifCockpit StandardCockpit = new stCockpitStandard(),
-                                   SmallCockpit = new stCockpitISSmall(),
-                                   TorsoCockpit = new stCockpitTorsoMount(),
-                                   Primitive = new stCockpitISPrimitive(),
-                                   IndustrialCockpit = new stCockpitIndustrial(),
-                                   IndusAFCCockpit = new stCockpitIndustrialAFC(),
-                                   PrimIndustrial = new stCockpitPrimIndustrial(),
-                                   PrimIndusAFC = new stCockpitPrimIndustrialAFC();
+    private final ifCockpit StandardCockpit = new stCockpitStandard(),
+                            SmallCockpit = new stCockpitISSmall(),
+                            TorsoCockpit = new stCockpitTorsoMount(),
+                            Primitive = new stCockpitISPrimitive(),
+                            IndustrialCockpit = new stCockpitIndustrial(),
+                            IndusAFCCockpit = new stCockpitIndustrialAFC(),
+                            PrimIndustrial = new stCockpitPrimIndustrial(),
+                            PrimIndusAFC = new stCockpitPrimIndustrialAFC();
     private ifCockpit CurConfig = StandardCockpit;
     private Mech Owner;
 

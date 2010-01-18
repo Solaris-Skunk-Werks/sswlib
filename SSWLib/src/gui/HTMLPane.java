@@ -39,6 +39,8 @@ package gui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.Writer;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Box;
@@ -53,14 +55,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.HTMLWriter;
+import javax.swing.text.html.MinimalHTMLWriter;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
@@ -107,7 +113,7 @@ public class HTMLPane extends JPanel implements ActionListener {
     }
 
     public HTMLPane( boolean OneLine ) {
-        HTMLEditorKit Kit = new HTMLEditorKit();
+        SSWHTMLEditorKit Kit = new SSWHTMLEditorKit();
         Document = (HTMLDocument) Kit.createDefaultDocument();
         Document.putProperty( "IgnoreCharsetDirective", true );
         Document.setPreservesUnknownTags( false );
@@ -208,7 +214,7 @@ public class HTMLPane extends JPanel implements ActionListener {
     public void StartNewDocument(){
         Document OldDoc = Text.getDocument();
         if( OldDoc != null ) { OldDoc.removeUndoableEditListener( UndoHandler ); }
-        HTMLEditorKit Kit = new HTMLEditorKit();
+        HTMLEditorKit Kit = new SSWHTMLEditorKit();
         Document = (HTMLDocument) Kit.createDefaultDocument();
         Document.putProperty( "IgnoreCharsetDirective", true );
         Document.setPreservesUnknownTags( false );
@@ -533,6 +539,37 @@ public class HTMLPane extends JPanel implements ActionListener {
                 StyleConstants.setStrikeThrough( sas, strikeThrough );
                 setCharacterAttributes( editor, sas, false );
             }
+        }
+    }
+
+    private class SSWHTMLEditorKit extends HTMLEditorKit {
+        @Override
+        public void write(Writer out, Document doc, int pos, int len) throws IOException, BadLocationException {
+            if (doc instanceof HTMLDocument) {
+                SSWHTMLWriter w = new SSWHTMLWriter(out, (HTMLDocument)doc, pos, len);
+                w.write();
+            } else if (doc instanceof StyledDocument) {
+                MinimalHTMLWriter w = new MinimalHTMLWriter(out, (StyledDocument)doc, pos, len);
+                w.write();
+            } else {
+                super.write(out, doc, pos, len);
+            }
+        }
+    }
+
+    private class SSWHTMLWriter extends HTMLWriter {
+        public SSWHTMLWriter( Writer w, HTMLDocument doc ) {
+            super( w, doc );
+            setIndentSpace( 0 );
+            setCanWrapLines( true );
+            setLineSeparator( "" );
+        }
+
+        public SSWHTMLWriter( Writer w, HTMLDocument doc, int pos, int len ) {
+            super( w, doc, pos, len );
+            setIndentSpace( 0 );
+            setCanWrapLines( true );
+            setLineSeparator( "" );
         }
     }
 }
