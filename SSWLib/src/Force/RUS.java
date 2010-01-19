@@ -36,6 +36,40 @@ public class RUS {
     private Vector Choices = new Vector();
     private DefaultListModel Selection = new DefaultListModel();
 
+    public final static String ParseDesignName( String selection ) {
+        String Name = "", Model = "";
+        String[] parts = selection.split(" ");
+        for ( String part : parts ) {
+            if ( part.contains("-") ) {
+                //This must be a model
+                Model = part;
+                continue;
+            }
+
+            if ( part.contains("(") ) {
+                //Remove any extra (35) or (3050)
+                if ( Model.isEmpty() ) {
+                    Model = part.replaceAll("\\([\\w]*\\)", "");
+                } else {
+                    Name = part.replaceAll("\\([\\w]*\\)", "");
+                }
+                continue;
+            }
+
+            if ( ! Name.isEmpty() ) { Name += " "; }
+            Name += part;
+        }
+
+        //Clan mechs are reversed in the text files for some reason, so if we have A then swap
+        if ( (Name.length() == 1) && (Model.length() > 1) ) {
+            String temp = Name;
+            Name = Model;
+            Model = temp;
+        }
+
+        return Name + " " + Model;
+    }
+
     public RUS() {
 
     }
