@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package states;
 
 import components.AvailableCode;
+import components.Mech;
 import components.MechModifier;
 
 public class stEnginePrimitiveICE implements ifEngine, ifState {
@@ -75,7 +76,7 @@ public class stEnginePrimitiveICE implements ifEngine, ifState {
         return 2;
     }
 
-    public boolean CanSupportRating( int rate ) {
+    public boolean CanSupportRating( int rate, Mech m ) {
         rate = (int) ( Math.floor( ( ( rate * 1.2f ) + 4.5f ) / 5 ) * 5 );
         if( rate < 5 || rate > 400 || rate % 5 != 0 ) {
             return false;

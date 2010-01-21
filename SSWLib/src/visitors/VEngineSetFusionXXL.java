@@ -67,7 +67,7 @@ public class VEngineSetFusionXXL implements ifVisitor {
         e.Remove( l );
 
         // change the engine type
-        switch( CurMech.GetTechBase() ) {
+        switch( CurMech.GetBaseTechbase() ) {
             case AvailableCode.TECH_INNER_SPHERE:
                 e.SetISXXLEngine();
                 break;

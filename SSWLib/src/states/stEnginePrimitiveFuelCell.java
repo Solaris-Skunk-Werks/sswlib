@@ -30,6 +30,7 @@ package states;
 
 import common.CommonTools;
 import components.AvailableCode;
+import components.Mech;
 import components.MechModifier;
 
 public class stEnginePrimitiveFuelCell implements ifEngine, ifState {
@@ -81,7 +82,7 @@ public class stEnginePrimitiveFuelCell implements ifEngine, ifState {
         return 2;
     }
 
-    public boolean CanSupportRating( int rate ) {
+    public boolean CanSupportRating( int rate, Mech m ) {
         rate = (int) ( Math.floor( ( ( rate * 1.2f ) + 4.5f ) / 5 ) * 5 );
         if( rate < 5 || rate > 400 || rate % 5 != 0 ) {
             return false;

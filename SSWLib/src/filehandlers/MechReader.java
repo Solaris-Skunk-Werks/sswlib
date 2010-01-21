@@ -300,7 +300,7 @@ public class MechReader {
         } else {
             if( map.getNamedItem( "techbase" ) == null ) {
                 // old style save file, set the gyro based on the 'Mech's techbase
-                if( m.GetTechBase() == AvailableCode.TECH_CLAN ) {
+                if( m.GetBaseTechbase() == AvailableCode.TECH_CLAN ) {
                     v.SetClan( true );
                 }
             } else {
@@ -331,7 +331,7 @@ public class MechReader {
         } else {
             if( map.getNamedItem( "techbase" ) == null ) {
                 // old style save file, set the engine based on the 'Mech's techbase
-                if( m.GetTechBase() == AvailableCode.TECH_CLAN ) {
+                if( m.GetBaseTechbase() == AvailableCode.TECH_CLAN ) {
                     v.SetClan( true );
                 }
             } else {
@@ -410,7 +410,7 @@ public class MechReader {
             } else {
                 if( map.getNamedItem( "techbase" ) == null ) {
                     // old style save file, set the internal structure based on the 'Mech's techbase
-                    if( m.GetTechBase() == AvailableCode.TECH_CLAN ) {
+                    if( m.GetBaseTechbase() == AvailableCode.TECH_CLAN ) {
                         v.SetClan( true );
                     }
                 } else {
@@ -502,7 +502,7 @@ public class MechReader {
                     } else {
                         if( map.getNamedItem( "techbase" ) == null ) {
                             // old style save file, set the armor based on the 'Mech's techbase
-                            if( m.GetTechBase() == AvailableCode.TECH_CLAN ) {
+                            if( m.GetBaseTechbase() == AvailableCode.TECH_CLAN ) {
                                 v.SetClan( true );
                             }
                         } else {
@@ -862,7 +862,7 @@ public class MechReader {
                 }
                 if( map.getNamedItem( "techbase" ) == null ) {
                     // old style save file, set the armor based on the 'Mech's techbase
-                    if( m.GetTechBase() == AvailableCode.TECH_CLAN ) {
+                    if( m.GetBaseTechbase() == AvailableCode.TECH_CLAN ) {
                         v.SetClan( true );
                     }
                 } else {
@@ -920,7 +920,7 @@ public class MechReader {
                 v = m.Lookup( Type.getTextContent() );
                 if( map.getNamedItem( "techbase" ) == null ) {
                     // old style save file, set the armor based on the 'Mech's techbase
-                    if( m.GetTechBase() == AvailableCode.TECH_CLAN ) {
+                    if( m.GetBaseTechbase() == AvailableCode.TECH_CLAN ) {
                         v.SetClan( true );
                     }
                 } else {
@@ -1003,7 +1003,15 @@ public class MechReader {
                     if( n.item( i ).getNodeName().equals( "source" ) ) {
                         m.SetSource( n.item( i ).getTextContent() );
                     } else if( n.item( i ).getNodeName().equals( "techbase" ) ) {
-                        m.SetTechBase( Integer.parseInt( n.item( i ).getTextContent() ) );
+                        if( SaveFileVersion < 3 ) {
+                            m.SetTechBase( Integer.parseInt( n.item( i ).getTextContent() ) );
+                        } else {
+                            if( n.item( i ).getTextContent().equals( AvailableCode.TechBaseSTR[AvailableCode.TECH_CLAN] ) ) {
+                                m.SetTechBase( AvailableCode.TECH_CLAN );
+                            } else if( n.item( i ).getTextContent().equals( AvailableCode.TechBaseSTR[AvailableCode.TECH_BOTH] ) ) {
+                                m.SetTechBase( AvailableCode.TECH_BOTH );
+                            }
+                        }
                     } else if( n.item( i ).getNodeName().equals( "actuators" ) ) {
                         map = n.item( i ).getAttributes();
                         boolean usella = ParseBoolean( map.getNamedItem( "lla" ).getTextContent() );
@@ -1064,7 +1072,7 @@ public class MechReader {
                         int Check = m.GetHeatSinks().GetBaseLoadoutNumHS() - m.GetEngine().InternalHeatSinks();
                         if( Check < 0 ) { Check = 0; }
                         if( hsLoc.size() + Check != m.GetHeatSinks().GetPlacedHeatSinks().length ) {
-                            throw new Exception( "The heat sinks in the loadout do not match the heatsinks that are saved.\nThe Mech cannot be loaded." );
+                            throw new Exception( "The heat sinks in the loadout " + m.GetLoadout().GetName() + " do not match the heatsinks that are saved.\nThe Mech cannot be loaded." );
                         } else {
                             loadout = m.GetLoadout();
                             HeatSink[] hsList = m.GetHeatSinks().GetPlacedHeatSinks();

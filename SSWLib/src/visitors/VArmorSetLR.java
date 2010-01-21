@@ -53,7 +53,7 @@ public class VArmorSetLR implements ifVisitor {
         l.Remove( a );
 
         // set the armor type
-        switch( CurMech.GetTechBase() ) {
+        switch( CurMech.GetBaseTechbase() ) {
             case AvailableCode.TECH_INNER_SPHERE:
                 a.SetISLR();
                 break;

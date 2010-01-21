@@ -66,7 +66,7 @@ public class AESSystem extends abPlaceable {
     }
 
     public String MegaMekName( boolean UseRear ) {
-        if( Owner.GetTechBase() >= AvailableCode.TECH_CLAN ) {
+        if( Owner.GetBaseTechbase() >= AvailableCode.TECH_CLAN ) {
             return "CLAES";
         } else {
             return "ISAES";

@@ -48,7 +48,7 @@ public class VEnhanceSetMASC implements ifVisitor {
         PhysicalEnhancement p = CurMech.GetPhysEnhance();
 
         CurMech.GetLoadout().Remove( p );
-        switch( CurMech.GetTechBase() ) {
+        switch( CurMech.GetBaseTechbase() ) {
             case AvailableCode.TECH_INNER_SPHERE:
                 p.SetISMASC();
                 break;

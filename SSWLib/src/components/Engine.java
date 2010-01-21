@@ -35,22 +35,23 @@ public class Engine extends abPlaceable {
 
     // Declares
     private int EngineRating;
-    private boolean FoolLoadoutCT = true;
+    private boolean FoolLoadoutCT = true,
+                    UseLargePlacement = false;
     private ifEngine CurConfig;
-    private final static ifEngine ICEngine = new stEngineICE(),
-                                  PICEngine = new stEnginePrimitiveICE(),
-                                  FCEngine = new stEngineFuelCell(),
-                                  PFCEngine = new stEnginePrimitiveFuelCell(),
-                                  FIEngine = new stEngineFission(),
-                                  PFIEngine = new stEnginePrimitiveFission(),
-                                  ISCFEngine = new stEngineISCF(),
-                                  FUEngine = new stEngineFusion(),
-                                  PFUEngine = new stEnginePrimitiveFusion(),
-                                  ISLFEngine = new stEngineISLF(),
-                                  ISXLEngine = new stEngineISXL(),
-                                  ISXXLEngine = new stEngineISXXL(),
-                                  CLXLEngine = new stEngineCLXL(),
-                                  CLXXLEngine = new stEngineCLXXL();
+    private final ifEngine ICEngine = new stEngineICE( this ),
+                           PICEngine = new stEnginePrimitiveICE(),
+                           FCEngine = new stEngineFuelCell(),
+                           PFCEngine = new stEnginePrimitiveFuelCell(),
+                           FIEngine = new stEngineFission(),
+                           PFIEngine = new stEnginePrimitiveFission(),
+                           ISCFEngine = new stEngineISCF(),
+                           FUEngine = new stEngineFusion( this ),
+                           PFUEngine = new stEnginePrimitiveFusion(),
+                           ISLFEngine = new stEngineISLF( this ),
+                           ISXLEngine = new stEngineISXL( this ),
+                           ISXXLEngine = new stEngineISXXL( this ),
+                           CLXLEngine = new stEngineCLXL( this ),
+                           CLXXLEngine = new stEngineCLXXL( this );
     private Mech Owner;
 
     // Constructor
@@ -159,8 +160,8 @@ public class Engine extends abPlaceable {
         return CurConfig.GetSideTorsoCrits();
     }
 
-    public boolean CanSupportRating( int rate ) {
-        return CurConfig.CanSupportRating( rate );
+    public boolean CanSupportRating( int rate, Mech m ) {
+        return CurConfig.CanSupportRating( rate, m );
     }
 
     public int NumCrits() {
@@ -168,6 +169,9 @@ public class Engine extends abPlaceable {
         // engine four times in three different locations.  No other item has
         // to act this way.
         if( FoolLoadoutCT ) {
+            if( UseLargePlacement ) {
+                return GetCTCrits() + 2;
+            }
             return GetCTCrits();
         } else {
             return GetSideTorsoCrits();
@@ -223,6 +227,9 @@ public class Engine extends abPlaceable {
 
     public int ReportCrits() {
         // returns the reporting crits of the engine/
+        if( EngineRating > 500 ) {
+            return CurConfig.GetFullCrits() + 2;
+        }
         return CurConfig.GetFullCrits();
     }
 
@@ -267,6 +274,11 @@ public class Engine extends abPlaceable {
             return false;
         }
 
+        // if we are large, tell the loadout so.
+        if( EngineRating > 400 ) {
+            UseLargePlacement = true;
+        }
+
         // Figure out how many times to place this engine in the CT and do it.
         if( CurConfig.NumCTBlocks() == 2 ) {
             // try the first block, used when we have a compact gyro
@@ -294,6 +306,9 @@ public class Engine extends abPlaceable {
                 }
             }
         }
+
+        // reset the large placement anyway.
+        UseLargePlacement = false;
 
         // CT slots have been placed, time to do the side torsos, if any.
         if( CurConfig.GetSideTorsoCrits() > 0 ) {
@@ -332,6 +347,11 @@ public class Engine extends abPlaceable {
             return false;
         }
 
+        // if we are large, tell the loadout so.
+        if( EngineRating > 400 ) {
+            UseLargePlacement = true;
+        }
+
         // Figure out how many times to place this engine in the CT and do it.
         if( CurConfig.NumCTBlocks() == 2 ) {
             // try the first block, used when we have a compact gyro
@@ -359,6 +379,9 @@ public class Engine extends abPlaceable {
                 }
             }
         }
+
+        // reset the large placement anyway.
+        UseLargePlacement = false;
 
         // CT slots have been placed, time to do the side torsos, if any.
         if( CurConfig.GetSideTorsoCrits() > 0 ) {

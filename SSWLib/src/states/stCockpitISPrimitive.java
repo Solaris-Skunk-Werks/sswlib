@@ -123,7 +123,7 @@ public class stCockpitISPrimitive implements ifCockpit, ifState {
     }
 
     public boolean HasFireControl() {
-        return false;
+        return true;
     }
 
     public double BVMod() {

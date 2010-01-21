@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package states;
 
 import components.AvailableCode;
+import components.Mech;
 import components.MechModifier;
 
 public interface ifEngine {
@@ -46,7 +47,7 @@ public interface ifEngine {
     public int GetCTCrits();
     public int GetSideTorsoCrits();
     public int NumCTBlocks();
-    public boolean CanSupportRating( int rate );
+    public boolean CanSupportRating( int rate, Mech m );
     public double GetCost( int MechTonnage, int Rating );
     public double GetBVMult();
     public AvailableCode GetAvailability();

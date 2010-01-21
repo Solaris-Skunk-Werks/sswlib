@@ -110,9 +110,9 @@ public class TXTWriter {
         retval += CurMech.GetName() + " " + CurMech.GetModel() + NL + NL;
         retval += "Mass: " + CurMech.GetTonnage() + " tons" + NL;
         if( CurMech.IsPrimitive() )  {
-            retval += "Tech Base: " + CommonTools.GetTechbaseString( CurMech.GetTechBase() ) + " (Primitive)" + NL;
+            retval += "Tech Base: " + CommonTools.GetTechbaseString( CurMech.GetBaseTechbase() ) + " (Primitive)" + NL;
         } else {
-            retval += "Tech Base: " + CommonTools.GetTechbaseString( CurMech.GetTechBase() ) + NL;
+            retval += "Tech Base: " + CommonTools.GetTechbaseString( CurMech.GetBaseTechbase() ) + NL;
         }
         if( CurMech.IsQuad() ) {
             if( CurMech.IsOmnimech() ) {
@@ -770,7 +770,7 @@ public class TXTWriter {
         retval += String.format( "Loadout Name: %1$-46s Cost: %2$,.0f", CurMech.GetLoadout().GetName(), Math.floor( CurMech.GetTotalCost() + 0.5 ) ) + NL;
         retval += String.format( "Tech Rating/Era Availability: %1$-31s BV2: %2$,d", CurMech.GetAvailability().GetBestCombinedCode(), CurMech.GetCurrentBV() ) + NL;
         if( CurMech.GetBaseRulesLevel() != CurMech.GetLoadout().GetRulesLevel() ) {
-            if( CurMech.GetTechBase() != CurMech.GetLoadout().GetTechBase() ) {
+            if( CurMech.GetBaseTechbase() != CurMech.GetLoadout().GetTechBase() ) {
                 retval += String.format( "Rules Level: %1$-42s %2$s", CommonTools.GetRulesLevelString( CurMech.GetLoadout().GetRulesLevel() ), "Tech Base: " + CommonTools.GetTechbaseString( CurMech.GetLoadout().GetTechBase() ) ) + NL;
             } else {
                 retval += "Rules Level: " + CommonTools.GetRulesLevelString( CurMech.GetLoadout().GetRulesLevel() ) + NL;

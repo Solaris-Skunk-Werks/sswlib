@@ -30,6 +30,7 @@ package states;
 
 import common.CommonTools;
 import components.AvailableCode;
+import components.Mech;
 import components.MechModifier;
 
 public class stEngineISCF implements ifEngine, ifState {
@@ -76,7 +77,7 @@ public class stEngineISCF implements ifEngine, ifState {
         return 1;
     }
     
-    public boolean CanSupportRating( int rate ) {
+    public boolean CanSupportRating( int rate, Mech m ) {
         if( rate < 5 || rate > 400 || rate % 5 != 0 ) {
             return false;
         } else {

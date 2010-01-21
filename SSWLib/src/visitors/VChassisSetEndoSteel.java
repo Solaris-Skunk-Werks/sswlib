@@ -55,7 +55,7 @@ public class VChassisSetEndoSteel implements ifVisitor {
         i.Remove(l);
 
         // change the internal structure type
-        switch( CurMech.GetTechBase() ) {
+        switch( CurMech.GetBaseTechbase() ) {
             case AvailableCode.TECH_INNER_SPHERE:
                 if( CurMech.IsQuad() ) {
                     // standard quad

@@ -28,22 +28,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
+import common.CommonTools;
 import components.AvailableCode;
+import components.Engine;
+import components.Mech;
 import components.MechModifier;
 
 public class stEngineICE implements ifEngine, ifState {
     // An Inner Sphere I.C.E. Engine
-    private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
+    private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH ),
+                                       LARGE_AC = new AvailableCode( AvailableCode.TECH_BOTH );
     private final static double[] Masses = { 1.0,1.0,1.0,1.0,2.0,2.0,2.0,
         2.0,3.0,3.0,3.0,4.0,4.0,4.0,5.0,5.0,6.0,6.0,6.0,7.0,7.0,
         8.0,8.0,8.0,9.0,9.0,10.0,10.0,11.0,11.0,12.0,12.0,12.0,
         14.0,14.0,15.0,15.0,16.0,17.0,17.0,18.0,19.0,20.0,20.0,21.0,
         22.0,23.0,24.0,25.0,26.0,27.0,28.0,29.0,31.0,32.0,33.0,35.0,
         36.0,38.0,39.0,41.0,43.0,45.0,47.0,49.0,51.0,54.0,57.0,59.0,
-        63.0,66.0,69.0,73.0,77.0,82.0,87.0,92.0,98.0,105.0 };
+        63.0,66.0,69.0,73.0,77.0,82.0,87.0,92.0,98.0,105.0,113.0,
+        122.0,133.0,145.0,159.0,175.0,194.0,215.0,239.0,267.0,300.0,
+        337.0,380.0,429.0,486.0,551.0,626.0,712.0,811.0,925.0};
     private final static int[] BFStructure = {1,1,2,2,3,3,3,4,4,5,5,5,6,6,6,7,7,8,8};
+    private Engine Owner;
 
-    public stEngineICE() {
+    public stEngineICE( Engine e ) {
         AC.SetISCodes( 'C', 'A', 'A', 'A' );
         AC.SetISDates( 0, 0, false, 1950, 0, 0, false, false );
         AC.SetISFactions( "", "", "PS", "" );
@@ -51,6 +58,14 @@ public class stEngineICE implements ifEngine, ifState {
         AC.SetCLDates( 0, 0, false, 1950, 0, 0, false, false );
         AC.SetCLFactions( "", "", "PS", "" );
         AC.SetRulesLevels( AvailableCode.RULES_ADVANCED, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_TOURNAMENT );
+        LARGE_AC.SetISCodes( 'C', 'A', 'A', 'A' );
+        LARGE_AC.SetISDates( 2550, 2630, true, 2630, 0, 0, false, false );
+        LARGE_AC.SetISFactions( "PS", "PS", "", "" );
+        LARGE_AC.SetCLCodes( 'C', 'X', 'A', 'A' );
+        LARGE_AC.SetCLDates( 2550, 2630, true, 2630, 0, 0, false, false );
+        LARGE_AC.SetCLFactions( "PS", "PS", "", "" );
+        LARGE_AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL );
+        Owner = e;
     }
 
     public boolean HasCounterpart() {
@@ -73,11 +88,19 @@ public class stEngineICE implements ifEngine, ifState {
         return 2;
     }
 
-    public boolean CanSupportRating( int rate ) {
-        if( rate < 5 || rate > 400 || rate % 5 != 0 ) {
-            return false;
+    public boolean CanSupportRating( int rate, Mech m ) {
+        if( CommonTools.IsAllowed( LARGE_AC, m ) ) {
+            if( rate < 5 || rate > 500 || rate % 5 != 0 ) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
-            return true;
+            if( rate < 5 || rate > 400 || rate % 5 != 0 ) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 
@@ -110,9 +133,10 @@ public class stEngineICE implements ifEngine, ifState {
     }
     
     public AvailableCode GetAvailability() {
+        if( Owner.GetRating() > 400 ) { return LARGE_AC; }
         return AC;
     }
-    
+
     public int FreeHeatSinks() {
         return 0;
     }

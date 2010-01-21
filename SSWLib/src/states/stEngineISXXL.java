@@ -30,25 +30,36 @@ package states;
 
 import common.CommonTools;
 import components.AvailableCode;
+import components.Engine;
+import components.Mech;
 import components.MechModifier;
 
 public class stEngineISXXL implements ifEngine, ifState {
     // An Inner Sphere XXL Fusion Engine
-    private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
+    private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE ),
+                                       LARGE_AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
     private final static double[] Masses = {0.5,0.5,0.5,0.5,0.5,0.5,0.5,
         0.5,0.5,0.5,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.5,1.5,
         1.5,1.5,1.5,1.5,1.5,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.5,2.5,
         2.5,2.5,3.0,3.0,3.0,3.0,3.5,3.5,3.5,3.5,4.0,4.0,4.0,
         4.5,4.5,4.5,5.0,5.0,5.5,5.5,5.5,6.0,6.0,6.5,6.5,
         7.0,7.5,7.5,8.0,8.5,8.5,9.0,9.5,10.0,10.5,11.0,11.5,
-        12.5,13.0,14.0,14.5,15.5,16.5,17.5};
+        12.5,13.0,14.0,14.5,15.5,16.5,17.5,19.0,20.5,22.5,24.5,
+        26.5,29.5,32.5,36.0,40.0,44.5,50.0,56.5,63.5,71.5,81.0,
+        92.0,104.5,119.0,135.5,154.5};
     private final static int[] BFStructure = {1,1,1,1,2,2,2,2,3,3,3,4,4,4,4,5,5,5,5};
+    private Engine Owner;
 
-    public stEngineISXXL() {
+    public stEngineISXXL( Engine e ) {
         AC.SetISCodes( 'F', 'X', 'X', 'F' );
         AC.SetISDates( 2582, 3055, true, 3055, 0, 0, false, false );
         AC.SetISFactions( "TH", "FC", "", "" );
         AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL );
+        LARGE_AC.SetISCodes( 'F', 'X', 'X', 'F' );
+        LARGE_AC.SetISDates( 2582, 3055, true, 3055, 0, 0, false, false );
+        LARGE_AC.SetISFactions( "TH", "FC", "", "" );
+        LARGE_AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL );
+        Owner = e;
     }
 
     public boolean HasCounterpart() {
@@ -78,11 +89,19 @@ public class stEngineISXXL implements ifEngine, ifState {
         return 2;
     }
     
-    public boolean CanSupportRating( int rate ) {
-        if( rate < 5 || rate > 400 || rate % 5 != 0 ) {
-            return false;
+    public boolean CanSupportRating( int rate, Mech m ) {
+        if( CommonTools.IsAllowed( LARGE_AC, m ) ) {
+            if( rate < 5 || rate > 500 || rate % 5 != 0 ) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
-            return true;
+            if( rate < 5 || rate > 400 || rate % 5 != 0 ) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 
@@ -115,9 +134,10 @@ public class stEngineISXXL implements ifEngine, ifState {
     }
     
     public AvailableCode GetAvailability() {
+        if( Owner.GetRating() > 400 ) { return LARGE_AC; }
         return AC;
     }
-    
+
     public int FreeHeatSinks() {
         return 10;
     }

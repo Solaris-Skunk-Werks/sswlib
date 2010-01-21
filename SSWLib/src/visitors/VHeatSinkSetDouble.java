@@ -47,7 +47,7 @@ public class VHeatSinkSetDouble implements ifVisitor {
         CurMech = m;
         HeatSinkFactory h = CurMech.GetHeatSinks();
 
-        switch( CurMech.GetTechBase() ) {
+        switch( CurMech.GetBaseTechbase() ) {
             case AvailableCode.TECH_INNER_SPHERE:
                 h.SetISDHS();
                 break;

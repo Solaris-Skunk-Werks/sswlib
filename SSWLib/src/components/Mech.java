@@ -700,6 +700,10 @@ public class Mech implements ifBattleforce {
         return CurLoadout.GetTechBase();
     }
 
+    public int GetBaseTechbase() {
+        return MainLoadout.GetTechBase();
+    }
+
     public void SetBiped() {
         // this performs all the neccesary actions to change this mech into a biped
         // see if we have any CASE systems installed first.
@@ -1453,10 +1457,24 @@ public class Mech implements ifBattleforce {
         return SSWImage;
     }
 
-    public void SetEngineRating( int rate ) {
-        if( CurEngine.CanSupportRating( rate ) ) {
-            CurEngine.SetRating( rate );
-            WalkMP = (int) rate / Tonnage;
+    public void SetEngineRating( int rate ) throws Exception {
+        int oldrate = CurEngine.GetRating();
+        if( CurEngine.CanSupportRating( rate, this ) ) {
+            if( ( CurEngine.GetRating() < 405 && rate > 400 ) || ( CurEngine.GetRating() > 400 && rate < 405 ) ) {
+                MainLoadout.Remove( CurEngine );
+                CurEngine.SetRating( rate );
+                if( ! CurEngine.Place( MainLoadout ) ) {
+                    MainLoadout.Remove( CurEngine );
+                    CurEngine.SetRating( oldrate );
+                    WalkMP = (int) oldrate / Tonnage;
+                    CurEngine.Place( MainLoadout );
+                    throw new Exception( "The engine cannot support the new rating of " + rate + "\nbecause there is no room for the engine!" );
+                }
+                WalkMP = (int) rate / Tonnage;
+            } else {
+                CurEngine.SetRating( rate );
+                WalkMP = (int) rate / Tonnage;
+            }
         } else {
             SetWalkMP( 1 );
         }
@@ -1471,6 +1489,8 @@ public class Mech implements ifBattleforce {
     public int GetMaxWalkMP() {
         if( CurEngine.IsPrimitive() ) {
             return (int) Math.floor( 400 / Tonnage / 1.2 );
+        } else if( CurEngine.CanSupportRating( 500, this ) ) {
+            return (int) Math.floor( 500 / Tonnage );
         } else {
             return (int) Math.floor( 400 / Tonnage );
         }
@@ -1482,12 +1502,27 @@ public class Mech implements ifBattleforce {
         return retval;
     }
 
-    public void SetWalkMP( int mp ) {
+    public void SetWalkMP( int mp ) throws Exception {
         int MaxWalk = GetMaxWalkMP();
+        int oldrate = CurEngine.GetRating();
         if( mp > MaxWalk ) { mp = MaxWalk; }
         if( mp < 1 ) { mp = 1; }
-        WalkMP = mp;
-        CurEngine.SetRating( WalkMP * Tonnage );
+        int rate = mp * Tonnage;
+        if( ( oldrate < 405 && rate > 400 ) || ( oldrate > 400 && rate < 405 ) ) {
+            MainLoadout.Remove( CurEngine );
+            CurEngine.SetRating( rate );
+            if( ! CurEngine.Place( MainLoadout ) ) {
+                MainLoadout.Remove( CurEngine );
+                CurEngine.SetRating( oldrate );
+                WalkMP = (int) oldrate / Tonnage;
+                CurEngine.Place( MainLoadout );
+                throw new Exception( "The engine cannot support the new rating of " + rate + "\nbecause there is no room for the engine!" );
+            }
+            WalkMP = mp;
+        } else {
+            CurEngine.SetRating( rate );
+            WalkMP = mp;
+        }
 
         SetChanged( true );
     }
@@ -2155,11 +2190,15 @@ public class Mech implements ifBattleforce {
         // find out the total BV of rear and forward firing weapons
         for( int i = 0; i < wep.size(); i++ ) {
             a = ((abPlaceable) wep.get( i ));
-            UseAESMod = UseAESModifier( a );
-            if( a.IsMountedRear() ) {
-                rearBV += a.GetCurOffensiveBV( false, TC, UseAESMod );
-            } else {
-                foreBV += a.GetCurOffensiveBV( false, TC, UseAESMod );
+            // arm mounted weapons always count their full BV, so ignore them.
+            int loc = CurLoadout.Find( a );
+            if( loc != LocationIndex.MECH_LOC_LA && loc != LocationIndex.MECH_LOC_RA ) {
+                UseAESMod = UseAESModifier( a );
+                if( a.IsMountedRear() ) {
+                    rearBV += a.GetCurOffensiveBV( true, TC, UseAESMod );
+                } else {
+                    foreBV += a.GetCurOffensiveBV( false, TC, UseAESMod );
+                }
             }
         }
         if( rearBV > foreBV ) { UseRear = true; }
@@ -2169,8 +2208,13 @@ public class Mech implements ifBattleforce {
             // no need for extensive calculations, return the weapon BV
             for( int i = 0; i < wep.size(); i++ ) {
                 a = ((abPlaceable) wep.get( i ));
+                int loc = CurLoadout.Find( a );
                 UseAESMod = UseAESModifier( a );
-                result += a.GetCurOffensiveBV( UseRear, TC, UseAESMod );
+                if( loc != LocationIndex.MECH_LOC_LA && loc != LocationIndex.MECH_LOC_RA ) {
+                    result += a.GetCurOffensiveBV( UseRear, TC, UseAESMod );
+                } else {
+                    result += a.GetCurOffensiveBV( false, TC, UseAESMod );
+                }
             }
             return result;
         }
@@ -2181,14 +2225,27 @@ public class Mech implements ifBattleforce {
         // calculate the BV of the weapons based on heat
         int curheat = 0;
         for( int i = 0; i < sorted.length; i++ ) {
+            int loc = CurLoadout.Find( sorted[i] );
             UseAESMod = UseAESModifier( sorted[i] );
             if( curheat < heff ) {
-                result += sorted[i].GetCurOffensiveBV( UseRear, UsingTC(), UseAESMod );
-            } else {
-                if( ((ifWeapon) sorted[i]).GetBVHeat() <= 0 ) {
+                if( loc != LocationIndex.MECH_LOC_LA && loc != LocationIndex.MECH_LOC_RA ) {
                     result += sorted[i].GetCurOffensiveBV( UseRear, UsingTC(), UseAESMod );
                 } else {
-                    result += sorted[i].GetCurOffensiveBV( UseRear, UsingTC(), UseAESMod ) * 0.5;
+                    result += sorted[i].GetCurOffensiveBV( false, UsingTC(), UseAESMod );
+                }
+            } else {
+                if( ((ifWeapon) sorted[i]).GetBVHeat() <= 0 ) {
+                    if( loc != LocationIndex.MECH_LOC_LA && loc != LocationIndex.MECH_LOC_RA ) {
+                        result += sorted[i].GetCurOffensiveBV( UseRear, UsingTC(), UseAESMod );
+                    } else {
+                        result += sorted[i].GetCurOffensiveBV( false, UsingTC(), UseAESMod );
+                    }
+                } else {
+                    if( loc != LocationIndex.MECH_LOC_LA && loc != LocationIndex.MECH_LOC_RA ) {
+                        result += sorted[i].GetCurOffensiveBV( UseRear, UsingTC(), UseAESMod ) * 0.5;
+                    } else {
+                        result += sorted[i].GetCurOffensiveBV( false, UsingTC(), UseAESMod ) * 0.5;
+                    }
                 }
             }
             curheat += ((ifWeapon) sorted[i]).GetBVHeat();
@@ -2310,7 +2367,7 @@ public class Mech implements ifBattleforce {
             cockpitMultiplier -= 0.1;
         }
         if( CurCockpit.LookupName().contains( "Primitive Industrial" ) ) {
-            cockpitMultiplier -= 0.1;
+            cockpitMultiplier -= 0.05;
         }
 
         return result * cockpitMultiplier;

@@ -63,7 +63,7 @@ public class MechWriter {
         FR.newLine();
 
         // version number for new files
-        FR.write( tab + "<ssw_savefile_version>2</ssw_savefile_version>" );
+        FR.write( tab + "<ssw_savefile_version>3</ssw_savefile_version>" );
         FR.newLine();
 
         // add the battle value if this is not an omnimech.  otherwise, we'll
@@ -107,7 +107,7 @@ public class MechWriter {
         }
         FR.newLine();
 
-        FR.write( tab + "<techbase manufacturer=\"" + FileCommon.EncodeFluff( CurMech.GetCompany() ) + "\" location=\"" + FileCommon.EncodeFluff( CurMech.GetLocation() ) + "\">" + GetTechbase() + "</techbase>" );
+        FR.write( tab + "<techbase manufacturer=\"" + FileCommon.EncodeFluff( CurMech.GetCompany() ) + "\" location=\"" + FileCommon.EncodeFluff( CurMech.GetLocation() ) + "\">" + GetBaseTechbase() + "</techbase>" );
         FR.newLine();
 
         FR.write( tab + "<year restricted=\"" + GetBoolean( CurMech.IsYearRestricted() ) + "\">" + CurMech.GetYear() + "</year>" );
@@ -357,8 +357,8 @@ public class MechWriter {
                 stat.SerializeXML(FR, 2);
                 FR.newLine();
 
-                if( CurMech.GetTechBase() != CurMech.GetLoadout().GetTechBase() ) {
-                    FR.write( tab + tab + "<techbase>" + CurMech.GetLoadout().GetTechBase() + "</techbase>" );
+                if( CurMech.GetBaseTechbase() != CurMech.GetLoadout().GetTechBase() ) {
+                    FR.write( tab + tab + "<techbase>" + GetTechbase() + "</techbase>" );
                     FR.newLine();
                 }
 
@@ -447,6 +447,10 @@ public class MechWriter {
         } else {
             return "FALSE";
         }
+    }
+
+    private String GetBaseTechbase() {
+        return AvailableCode.TechBaseSTR[CurMech.GetBaseTechbase()];
     }
 
     private String GetTechbase() {
