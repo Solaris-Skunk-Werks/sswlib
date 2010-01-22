@@ -115,7 +115,11 @@ public class Scenario implements ifSerializable {
     }
 
     public void AddForce( Force f ) {
-        forces.add(f);
+        try {
+            forces.add(f);
+        } catch ( Exception e ) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void AddListener( TableModelListener listener ) {
