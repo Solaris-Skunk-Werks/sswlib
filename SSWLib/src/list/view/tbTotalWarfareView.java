@@ -36,7 +36,7 @@ public class tbTotalWarfareView extends abView {
         this.list = list;
 
         Columns.add(new Column( 0, "Tons", "Tonnage", false, 20, Integer.class, true, SortOrder.ASCENDING ));
-        Columns.add(new Column( 1, "Type/Model", "Name", false, 100, String.class, true, SortOrder.ASCENDING ));
+        Columns.add(new Column( 1, "Type/Model", "Name", false, 0, String.class, true, SortOrder.ASCENDING ));
         Columns.add(new Column( 2, "BV", "BV", 30, Integer.class ));
         Columns.add(new Column( 3, "Cost", "Cost", 30, Double.class ));
         Columns.add(new Column( 4, "Level", "Level", 40 ));
@@ -45,6 +45,9 @@ public class tbTotalWarfareView extends abView {
         Columns.add(new Column( 7, "Year", "Year", 20, Integer.class ));
         Columns.add(new Column( 8, "Source", "Source", 30 ));
 
+        SortFields.add(Columns.get(0));
+        SortFields.add(Columns.get(1));
+        SortFields.add(Columns.get(2));
     }
 
     public Object getValueAt( int row, int col ) {
@@ -57,7 +60,7 @@ public class tbTotalWarfareView extends abView {
             case 2:
                 return (int) m.getBV();
             case 3:
-                return ""; //s String.format( "%1$,.2f", m.getCost() );
+                return m.getCost();
             case 4:
                 return m.getLevel();
             case 5:
