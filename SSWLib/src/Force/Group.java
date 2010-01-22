@@ -70,6 +70,39 @@ public class Group {
         this.force = g.getForce();
     }
 
+    public void sortUnits() {
+        int i = 1, j = 2;
+        Unit swap;
+        boolean doSwap = false;
+        while( i < Units.size() ) {
+            //Are the units correctly sorted by tonnage
+            if( Units.get( i - 1 ).Tonnage < Units.get( i ).Tonnage ) {
+                i = j;
+                j += 1;
+            } else if ( Units.get( i - 1 ).Tonnage == Units.get( i ).Tonnage ) {
+                if ( Units.get( i - 1 ).TypeModel.compareToIgnoreCase( Units.get( i ).TypeModel) <= 0 ) {
+                    i = j;
+                    j += 1;
+                } else {
+                    doSwap = true;
+                }
+            } else {
+                doSwap = true;
+            }
+
+            if ( doSwap ) {
+                swap = Units.get( i - 1 );
+                Units.setElementAt( Units.get( i ), i - 1 );
+                Units.setElementAt( swap, i );
+                i -= 1;
+                if( i == 0 ) {
+                    i = 1;
+                }
+                doSwap = false;
+            }
+        }
+    }
+
     public Vector<BattleForce> toBattleForce( int SizeLimit ) {
         Vector<BattleForce> bforces = new Vector<BattleForce>();
         BattleForce bf = new BattleForce();

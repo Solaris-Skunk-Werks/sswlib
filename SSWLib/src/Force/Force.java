@@ -127,8 +127,9 @@ public class Force extends AbstractTableModel implements ifSerializable {
                     Node n = ForceNode.getChildNodes().item(i);
                     if (n.getNodeName().equals("unit")) {
                         try {
-                            Groups.get(0).AddUnit(new Unit(n));
+                            Groups.firstElement().AddUnit(new Unit(n));
                         } catch (Exception e) {
+                            System.out.println(e.getMessage());
                             throw e;
                         }
                     }
@@ -175,7 +176,6 @@ public class Force extends AbstractTableModel implements ifSerializable {
             }
         }
 
-        sortForPrinting();
         fireTableDataChanged();
     }
 
@@ -191,7 +191,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
             }
         }
         if ( !isAdded ) {
-            Group g = new Group(u.getGroup(), u.Type, this);
+            Group g = new Group(u.getGroup(), Type, this);
             g.AddUnit(u);
             Groups.add(g);
         }
@@ -204,7 +204,6 @@ public class Force extends AbstractTableModel implements ifSerializable {
         for ( Group g : Groups ) {
             if ( g.getName().equals( u.getGroup() ) ) {
                 g.getUnits().remove(u);
-                if ( g.getUnits().size() == 0 ) { Groups.remove(g); }
                 break;
             }
         }
@@ -218,8 +217,6 @@ public class Force extends AbstractTableModel implements ifSerializable {
         for ( Group g : Groups ) {
             if ( g.getName().equals( u.getPrevGroup() ) ) {
                 g.getUnits().remove(u);
-
-                if ( g.getUnits().size() == 0 ) { Groups.remove(g); }
             }
 
             if ( g.getName().equals(u.getGroup() ) ) {
@@ -228,9 +225,23 @@ public class Force extends AbstractTableModel implements ifSerializable {
             }
         }
         if ( !isAdded ) {
-            Group g = new Group(u.getGroup(), u.Type, this);
+            Group g = new Group(u.getGroup(), Type, this);
             g.AddUnit(u);
             Groups.add(g);
+        }
+
+        clearEmptyGroups();
+    }
+
+    public void clearEmptyGroups() {
+        Vector<Group> remove = new Vector<Group>();
+
+        for ( Group g : Groups ) {
+            if ( g.getUnits().size() == 0 ) { remove.add(g); }
+        }
+        
+        for ( Group d : remove ) {
+            Groups.remove(d);
         }
     }
 
@@ -292,7 +303,6 @@ public class Force extends AbstractTableModel implements ifSerializable {
 
     public void RenderPrint(ForceListPrinter p, ImageTracker imageTracker) {
         if ( getUnits().size() == 0 ) { return; }
-        sortForPrinting();
         p.setFont(PrintConsts.SectionHeaderFont);
         if ( p.PrintLogo() ) {
             loadLogo(imageTracker);
@@ -419,95 +429,35 @@ public class Force extends AbstractTableModel implements ifSerializable {
     }
 
     public void sortForPrinting() {
-       // Hashtable<String, Vector> list = new Hashtable<String, Vector>();
-       // String group;
-
         //Sort by Group
-        Groups = sortByGroupName(Groups);
+        sortByGroupName();
 
-        //Sorty inside each group by tonnage then Name
+        //Sort inside each group by tonnage then Name
         for ( Group g : Groups ) {
-            Vector<Unit> v = sortByTonnage(g.getUnits());
-            v = sortByUnitName(v);
-            g.setUnits(v);
-
-            if ( g.getUnits().size() == 0 ) { Groups.remove(g); }
-        }
-
-        //Rebuild units
-        Units.clear();
-        for ( Group grp : Groups ) {
-            Units.addAll(grp.getUnits());
+            g.sortUnits();
         }
     }
 
-    public Vector sortByTonnage( Vector v ) {
+    public void sortByGroupName() {
         int i = 1, j = 2;
-        Object swap;
-        while( i < v.size() ) {
+        Group swap;
+        while( i < Groups.size() ) {
             // get the two items we'll be comparing
-            if( ((Unit) v.get( i - 1 )).Tonnage <= ((Unit) v.get( i )).Tonnage ) {
+            if( Groups.get( i - 1 ).getName().compareToIgnoreCase( Groups.get( i ).getName()) <= 0 ) {
                 i = j;
                 j += 1;
             } else {
-                swap = v.get( i - 1 );
-                v.setElementAt( v.get( i ), i - 1 );
-                v.setElementAt( swap, i );
+                swap = Groups.get( i - 1 );
+                Groups.setElementAt( Groups.get( i ), i - 1 );
+                Groups.setElementAt( swap, i );
                 i -= 1;
                 if( i == 0 ) {
                     i = 1;
                 }
             }
         }
-        return v;
     }
 
-    public Vector sortByGroupName( Vector v ) {
-        int i = 1, j = 2;
-        Object swap;
-        while( i < v.size() ) {
-            // get the two items we'll be comparing
-            if( ((Group) v.get( i - 1 )).getName().compareToIgnoreCase(((Group) v.get( i )).getName()) <= 0 ) {
-                i = j;
-                j += 1;
-            } else {
-                swap = v.get( i - 1 );
-                v.setElementAt( v.get( i ), i - 1 );
-                v.setElementAt( swap, i );
-                i -= 1;
-                if( i == 0 ) {
-                    i = 1;
-                }
-            }
-        }
-        return v;
-    }
-
-    public Vector sortByUnitName( Vector v ) {
-        int i = 1, j = 2;
-        Object swap;
-        while( i < v.size() ) {
-            // get the two items we'll be comparing
-            if ( ((Unit) v.get( i - 1 )).Tonnage == ((Unit) v.get( i )).Tonnage ) {
-                if( ((Unit) v.get( i - 1 )).TypeModel.compareToIgnoreCase(((Unit) v.get( i )).TypeModel) <= 0 ) {
-                    i = j;
-                    j += 1;
-                } else {
-                    swap = v.get( i - 1 );
-                    v.setElementAt( v.get( i ), i - 1 );
-                    v.setElementAt( swap, i );
-                    i -= 1;
-                    if( i == 0 ) {
-                        i = 1;
-                    }
-                }
-            } else {
-                i = j;
-                j += 1;
-            }
-        }
-        return v;
-    }
 
     public BattleForce toBattleForce() {
         sortForPrinting();
