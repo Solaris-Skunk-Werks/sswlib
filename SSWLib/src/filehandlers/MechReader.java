@@ -175,6 +175,7 @@ public class MechReader {
                 n = OmniLoads.item( k ).getChildNodes();
                 for ( int dex=0; dex < n.getLength(); dex++ ) {
                     Node node = n.item(dex);
+                    if (node.getNodeName().equals("techbase")) {Config.setTech( node.getTextContent() );}
                     if (node.getNodeName().equals("battle_value")) {Config.setBV( Integer.parseInt( node.getTextContent() ) );}
                     if (node.getNodeName().equals("cost")) {Config.setCost( Double.parseDouble( node.getTextContent() ) );}
                     if (node.getNodeName().equals("source")) {Config.setSource( node.getTextContent() );}
