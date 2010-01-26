@@ -956,6 +956,8 @@ public class CommonTools {
         s = s.replaceAll("%", "%25");
         s = s.replaceAll(" ", "%20");
         s = s.replaceAll("!", "%21");
+        s = s.replaceAll("\"", "");
+        s = s.replaceAll("'", "");
         s = s.replaceAll("[{(}]", "%28");
         s = s.replaceAll("[{)}]", "%29");
         s = s.replaceAll("[{;}]", "%3B");
@@ -974,7 +976,7 @@ public class CommonTools {
     }
 
     public static String FormatFileName(String filename) {
-        return filename.replace("'", "").replace(" ", "_");
+        return filename.replace("'", "").replace( "\"", "");
     }
 
     public static String spaceRight(String value, int length) {
