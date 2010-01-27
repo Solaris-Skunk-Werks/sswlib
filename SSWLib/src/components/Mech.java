@@ -36,7 +36,7 @@ import java.util.Vector;
 import java.util.prefs.Preferences;
 import visitors.*;
 
-public class Mech implements ifBattleforce {
+public class Mech implements ifUnit, ifBattleforce {
     // A mech for the designer.  This is a large container class that will
     // handle calculations and settings for the design.
 

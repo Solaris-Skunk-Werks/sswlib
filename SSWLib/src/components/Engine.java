@@ -52,14 +52,14 @@ public class Engine extends abPlaceable {
                            ISXXLEngine = new stEngineISXXL( this ),
                            CLXLEngine = new stEngineCLXL( this ),
                            CLXXLEngine = new stEngineCLXXL( this );
-    private Mech Owner;
+    private ifUnit Owner;
 
     // Constructor
-    public Engine( Mech m ) {
+    public Engine( ifUnit u ) {
         // Set it to a 20 rated standard fusion to start.
         EngineRating = 20;
         CurConfig = FUEngine;
-        Owner = m;
+        Owner = u;
     }
 
     // Public Methods
