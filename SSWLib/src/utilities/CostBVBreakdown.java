@@ -113,7 +113,7 @@ public class CostBVBreakdown {
         retval += String.format( "%1$-71s %2$,8.2f", "Mech Tonnage (" + CurMech.GetTonnage() + ") * Gyro Type Modifer (" + CurMech.GetGyro().GetBVTypeMult() + ")", CurMech.GetGyro().GetDefensiveBV() ) + NL;
         retval += String.format( "%1$-71s %2$,8.2f", "Total Defensive BV of all Equipment", CurMech.GetDefensiveEquipBV() ) + NL;
         retval += String.format( "%1$-71s %2$,8.2f", "Explosive Ammunition Penalty", CurMech.GetExplosiveAmmoPenalty() ) + NL;
-        retval += String.format( "%1$-71s %2$,8.2f", "Explosive Weapon Penalty", CurMech.GetExplosiveWeaponPenalty() ) + NL;
+        retval += String.format( "%1$-71s %2$,8.2f", "Explosive Item Penalty  ", CurMech.GetExplosiveWeaponPenalty() ) + NL;
         retval += String.format( "%1$-71s %2$,8.2f", "Subtotal", CurMech.GetUnmodifiedDefensiveBV() ) + NL;
         retval += "Defensive Speed Factor Breakdown:" + NL;
         retval += PrintDefensiveFactorCalculations();
@@ -277,9 +277,9 @@ public class CostBVBreakdown {
         if( wep.size() <= 0 ) { return retval; }
 
         // now get the mech's heat efficiency and the total heat from weapons
-        int heff = 6 + CurMech.GetHeatSinks().TotalDissipation() - CurMech.GetBVMovementHeat();
+        double heff = 6 + CurMech.GetHeatSinks().TotalDissipation() - CurMech.GetBVMovementHeat();
         heff += GetBonusFromCP();
-        int wheat = CurMech.GetBVWeaponHeat();
+        double wheat = CurMech.GetBVWeaponHeat();
 
         // find out the total BV of rear and forward firing weapons
         for( int i = 0; i < wep.size(); i++ ) {

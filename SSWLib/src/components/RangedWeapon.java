@@ -473,8 +473,8 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
         return Heat;
     }
 
-    public int GetBVHeat() {
-        int retval = Heat;
+    public double GetBVHeat() {
+        double retval = Heat;
         if( UsingCapacitor ) {
             retval += 5;
         }
@@ -483,8 +483,8 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
         }
         if( Rotary ) { retval *= 6; }
         if( Ultra ) { retval *= 2; }
-        if( OneShot ) { retval = (int) Math.round( retval * 0.25 ); }
-        if( Streak ) { retval =  (int) Math.round( retval * 0.5 ); }
+        if( OneShot ) { retval *= 0.25; }
+        if( Streak ) { retval *= 0.5; }
         if( retval < 0 ) { retval = 0; }
         return retval;
     }

@@ -274,7 +274,7 @@ public class InternalStructure extends abPlaceable {
     }
 
     public double GetBVTypeMult() {
-        return Config.GetBVMult() + Owner.GetTotalModifiers( false, true ).InternalMultiplier();
+        return Config.GetBVMult() + Owner.GetTotalModifiers( true, true ).InternalMultiplier();
     }
 
     public ifState[] GetStates( boolean biped ) {

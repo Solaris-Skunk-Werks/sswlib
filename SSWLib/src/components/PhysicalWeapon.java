@@ -442,7 +442,7 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
         return Heat;
     }
 
-    public int GetBVHeat() {
+    public double GetBVHeat() {
         return Heat;
     }
 

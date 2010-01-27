@@ -254,8 +254,8 @@ public class MGArray extends abPlaceable implements ifWeapon {
         return 0;
     }
 
-    public int GetBVHeat() {
-        return 0;
+    public double GetBVHeat() {
+        return 0.0;
     }
 
     public int GetDamageShort() {

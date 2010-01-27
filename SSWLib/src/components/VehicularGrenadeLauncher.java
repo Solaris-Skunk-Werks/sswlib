@@ -218,8 +218,8 @@ public class VehicularGrenadeLauncher extends abPlaceable implements ifWeapon {
         return 1;
     }
 
-    public int GetBVHeat() {
-        return 1;
+    public double GetBVHeat() {
+        return 1.0;
     }
 
     public int GetDamageShort() {

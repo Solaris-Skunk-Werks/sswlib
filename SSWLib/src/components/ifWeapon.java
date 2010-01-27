@@ -44,7 +44,7 @@ public interface ifWeapon {
     public String GetSpecials();
     public int GetWeaponClass();
     public int GetHeat();
-    public int GetBVHeat();
+    public double GetBVHeat();
     public int GetDamageShort();
     public int GetDamageMedium();
     public int GetDamageLong();

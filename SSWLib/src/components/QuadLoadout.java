@@ -652,6 +652,10 @@ public class QuadLoadout implements ifMechLoadout {
             if( Find( Owner.GetCockpit() ) == LocationIndex.MECH_LOC_HD ) {
                 throw new Exception( p.CritName() + " cannot be allocated to the head\nbecause the head contains the cockpit." );
             }
+        } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
+            if( Find( Owner.GetCockpit() ) != LocationIndex.MECH_LOC_HD ) {
+                throw new Exception( p.CritName() + " cannot be allocated to the head\nbecause the head does not contain the cockpit." );
+            }
         }
         try {
             Allocate( p, SIndex, HDCrits );
@@ -669,6 +673,10 @@ public class QuadLoadout implements ifMechLoadout {
             if( Find( Owner.GetCockpit() ) == LocationIndex.MECH_LOC_CT ) {
                 throw new Exception( p.CritName() + " cannot be allocated to the center torso\nbecause the center torso contains the cockpit." );
             }
+        } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
+            if( Find( Owner.GetCockpit() ) != LocationIndex.MECH_LOC_CT ) {
+                throw new Exception( p.CritName() + " cannot be allocated to the center torso\nbecause the center torso does not contain the cockpit." );
+            }
         }
         try {
             Allocate( p, SIndex, CTCrits );
@@ -682,6 +690,8 @@ public class QuadLoadout implements ifMechLoadout {
         if( ! p.CanAllocTorso() ) {
             throw new Exception( p.CritName() +
                 " cannot be allocated to the right torso." );
+        } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
+            throw new Exception( p.CritName() + " cannot be allocated to the right torso\nbecause the right torso does not contain the cockpit." );
         } else {
             if (p instanceof PhysicalWeapon){
                 // Ensure that no other physical weapons of the same class are mounted in this location,
@@ -706,6 +716,8 @@ public class QuadLoadout implements ifMechLoadout {
         if( ! p.CanAllocTorso() ) {
             throw new Exception( p.CritName() +
                 " cannot be allocated to the left torso." );
+        } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
+            throw new Exception( p.CritName() + " cannot be allocated to the left torso\nbecause the left torso does not contain the cockpit." );
         } else {
             if (p instanceof PhysicalWeapon){
                 // Ensure that no other physical weapons of the same class are mounted in this location,
@@ -730,6 +742,8 @@ public class QuadLoadout implements ifMechLoadout {
         if( ! p.CanAllocLegs() ) {
             throw new Exception( p.CritName() +
                 " cannot be allocated to the right front leg." );
+        } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
+            throw new Exception( p.CritName() + " cannot be allocated to the right front leg\nbecause the right front leg does not contain the cockpit." );
         } else {
             try {
                 Allocate( p, SIndex, RACrits );
@@ -744,6 +758,8 @@ public class QuadLoadout implements ifMechLoadout {
         if( ! p.CanAllocLegs() ) {
             throw new Exception( p.CritName() +
                 " cannot be allocated to the left front leg." );
+        } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
+            throw new Exception( p.CritName() + " cannot be allocated to the left front leg\nbecause the left front leg does not contain the cockpit." );
         } else {
             try {
                 Allocate( p, SIndex, LACrits );
@@ -758,6 +774,8 @@ public class QuadLoadout implements ifMechLoadout {
         if( ! p.CanAllocLegs() ) {
             throw new Exception( p.CritName() +
                 " cannot be allocated to the right rear leg." );
+        } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
+            throw new Exception( p.CritName() + " cannot be allocated to the right rear leg\nbecause the right rear leg does not contain the cockpit." );
         } else {
             try {
                 Allocate( p, SIndex, RLCrits );
@@ -772,6 +790,8 @@ public class QuadLoadout implements ifMechLoadout {
         if( ! p.CanAllocLegs() ) {
             throw new Exception( p.CritName() +
                 " cannot be allocated to the left rear leg." );
+        } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
+            throw new Exception( p.CritName() + " cannot be allocated to the left rear leg\nbecause the left rear leg does not contain the cockpit." );
         } else {
             try {
                 Allocate( p, SIndex, LLCrits );

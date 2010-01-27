@@ -29,7 +29,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package components;
 
 import common.CommonTools;
-import java.text.DecimalFormat;
 import states.*;
 
 public class Armor  extends abPlaceable {
@@ -560,7 +559,7 @@ public class Armor  extends abPlaceable {
     }
 
     public double GetBVTypeMult() {
-        return Config.GetBVTypeMult() + Owner.GetTotalModifiers( false, true ).ArmorMultiplier();
+        return Config.GetBVTypeMult() + Owner.GetTotalModifiers( true, true ).ArmorMultiplier();
     }
 
     public ifState[] GetStates() {
@@ -589,9 +588,9 @@ public class Armor  extends abPlaceable {
 
     public double GetDefensiveBV() {
         if( Owner.GetCockpit().IsTorsoMounted() ) {
-            return ( GetArmorValue() + ArmorPoints[LocationIndex.MECH_LOC_CT] + ArmorPoints[LocationIndex.MECH_LOC_CTR] + GetModularArmorValue() ) * Config.GetBVTypeMult() * 2.5;
+            return ( GetArmorValue() + ArmorPoints[LocationIndex.MECH_LOC_CT] + ArmorPoints[LocationIndex.MECH_LOC_CTR] + GetModularArmorValue() ) * GetBVTypeMult() * 2.5;
         } else {
-            return ( GetArmorValue() + GetModularArmorValue() ) * Config.GetBVTypeMult() * 2.5;
+            return ( GetArmorValue() + GetModularArmorValue() ) * GetBVTypeMult() * 2.5;
         }
     }
 
