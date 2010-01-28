@@ -33,6 +33,7 @@ import components.AvailableCode;
 import components.Engine;
 import components.Mech;
 import components.MechModifier;
+import components.ifUnit;
 
 public class stEngineCLXXL implements ifEngine, ifState {
     // A Clan XXL Fusion Engine

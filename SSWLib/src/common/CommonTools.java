@@ -149,62 +149,138 @@ public class CommonTools {
         return result;
     }
 
-    public static boolean IsAllowed( AvailableCode AC, Mech m ) {
+    public static boolean IsAllowed( AvailableCode AC, ifUnit u ) {
         // check an available code to see if it can be used legally
 
-        // ensure it's within our rules-level first
-        switch( m.GetRulesLevel() ) {
-            case AvailableCode.RULES_INTRODUCTORY:
-                // tournament legal
-                if( m.IsIndustrialmech() ) {
-                    if( AC.GetRulesLevel_IM() != AvailableCode.RULES_INTRODUCTORY ) { return false; }
+        // switch by type and filter.
+        switch( u.GetUnitType() ) {
+            case AvailableCode.UNIT_BATTLEMECH:
+                if( ! ( u instanceof Mech ) ) { return false; }
+                switch( u.GetRulesLevel() ) {
+                    case AvailableCode.RULES_INTRODUCTORY:
+                        if( AC.GetRulesLevel_BM() != AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    case AvailableCode.RULES_TOURNAMENT:
+                        if( AC.GetRulesLevel_BM() > AvailableCode.RULES_TOURNAMENT ||
+                            AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    case AvailableCode.RULES_ADVANCED:
+                        if( AC.GetRulesLevel_BM() > AvailableCode.RULES_ADVANCED ||
+                            AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    case AvailableCode.RULES_EXPERIMENTAL:
+                        if( AC.GetRulesLevel_BM() > AvailableCode.RULES_EXPERIMENTAL ||
+                            AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    case AvailableCode.RULES_ERA_SPECIFIC:
+                        if( AC.GetRulesLevel_BM() > AvailableCode.RULES_ERA_SPECIFIC ||
+                            AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    default:
+                        return false;
+                }
+                // is the 'Mech primitive and is this equipment allowed?
+                if( ((Mech) u).IsPrimitive() ) {
+                    if( ! AC.IsPBMAllowed() ) { return false; }
                 } else {
-                    if( AC.GetRulesLevel_BM() != AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                    if( AC.IsPrimitiveOnly() ) { return false; }
                 }
                 break;
-            case AvailableCode.RULES_TOURNAMENT:
-                // tournament legal
-                if( m.IsIndustrialmech() ) {
-                    if( AC.GetRulesLevel_IM() > AvailableCode.RULES_TOURNAMENT || AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+            case AvailableCode.UNIT_INDUSTRIALMECH:
+                if( ! ( u instanceof Mech ) ) { return false; }
+                switch( u.GetRulesLevel() ) {
+                    case AvailableCode.RULES_INTRODUCTORY:
+                        if( AC.GetRulesLevel_IM() != AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    case AvailableCode.RULES_TOURNAMENT:
+                        if( AC.GetRulesLevel_IM() > AvailableCode.RULES_TOURNAMENT ||
+                            AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    case AvailableCode.RULES_ADVANCED:
+                        if( AC.GetRulesLevel_IM() > AvailableCode.RULES_ADVANCED ||
+                            AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    case AvailableCode.RULES_EXPERIMENTAL:
+                        if( AC.GetRulesLevel_IM() > AvailableCode.RULES_EXPERIMENTAL ||
+                            AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    case AvailableCode.RULES_ERA_SPECIFIC:
+                        if( AC.GetRulesLevel_IM() > AvailableCode.RULES_ERA_SPECIFIC ||
+                            AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    default:
+                        return false;
+                }
+                // is the 'Mech primitive and is this equipment allowed?
+                if( ((Mech) u).IsPrimitive() ) {
+                    if( ! AC.IsPIMAllowed() ) { return false; }
                 } else {
-                    if( AC.GetRulesLevel_BM() > AvailableCode.RULES_TOURNAMENT || AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                    if( AC.IsPrimitiveOnly() ) { return false; }
                 }
                 break;
-            case AvailableCode.RULES_ADVANCED:
-                // advanced rules
-                if( m.IsIndustrialmech() ) {
-                    if( AC.GetRulesLevel_IM() > AvailableCode.RULES_ADVANCED || AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                } else {
-                    if( AC.GetRulesLevel_BM() > AvailableCode.RULES_ADVANCED || AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+            case AvailableCode.UNIT_COMBATVEHICLE:
+                switch( u.GetRulesLevel() ) {
+                    case AvailableCode.RULES_INTRODUCTORY:
+                        if( AC.GetRulesLevel_CV() != AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    case AvailableCode.RULES_TOURNAMENT:
+                        if( AC.GetRulesLevel_CV() > AvailableCode.RULES_TOURNAMENT ||
+                            AC.GetRulesLevel_CV() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    case AvailableCode.RULES_ADVANCED:
+                        if( AC.GetRulesLevel_CV() > AvailableCode.RULES_ADVANCED ||
+                            AC.GetRulesLevel_CV() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    case AvailableCode.RULES_EXPERIMENTAL:
+                        if( AC.GetRulesLevel_CV() > AvailableCode.RULES_EXPERIMENTAL ||
+                            AC.GetRulesLevel_CV() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    case AvailableCode.RULES_ERA_SPECIFIC:
+                        if( AC.GetRulesLevel_CV() > AvailableCode.RULES_ERA_SPECIFIC ||
+                            AC.GetRulesLevel_CV() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+                        break;
+                    default:
+                        return false;
                 }
                 break;
-            case AvailableCode.RULES_EXPERIMENTAL:
-                // experimental rules.  everything allowed.
-                if( m.IsIndustrialmech() ) {
-                    if( AC.GetRulesLevel_IM() > AvailableCode.RULES_EXPERIMENTAL || AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                } else {
-                    if( AC.GetRulesLevel_BM() > AvailableCode.RULES_EXPERIMENTAL || AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+            case AvailableCode.UNIT_CONVFIGHTER:
+                switch( u.GetRulesLevel() ) {
+                    case AvailableCode.RULES_INTRODUCTORY:
+                        break;
+                    case AvailableCode.RULES_TOURNAMENT:
+                        break;
+                    case AvailableCode.RULES_ADVANCED:
+                        break;
+                    case AvailableCode.RULES_EXPERIMENTAL:
+                        break;
+                    case AvailableCode.RULES_ERA_SPECIFIC:
+                        break;
+                    default:
+                        return false;
                 }
                 break;
-            case AvailableCode.RULES_ERA_SPECIFIC:
-                if( m.IsIndustrialmech() ) {
-                    if( AC.GetRulesLevel_IM() > AvailableCode.RULES_ERA_SPECIFIC || AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                } else {
-                    if( AC.GetRulesLevel_BM() > AvailableCode.RULES_ERA_SPECIFIC || AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
+            case AvailableCode.UNIT_AEROFIGHTER:
+                switch( u.GetRulesLevel() ) {
+                    case AvailableCode.RULES_INTRODUCTORY:
+                        break;
+                    case AvailableCode.RULES_TOURNAMENT:
+                        break;
+                    case AvailableCode.RULES_ADVANCED:
+                        break;
+                    case AvailableCode.RULES_EXPERIMENTAL:
+                        break;
+                    case AvailableCode.RULES_ERA_SPECIFIC:
+                        break;
+                    default:
+                        return false;
                 }
                 break;
             default:
-                // Unallowed or Era Specific.  everything allowed until we know better.
-                if( m.IsIndustrialmech() ) {
-                    if( AC.GetRulesLevel_IM() > AvailableCode.RULES_EXPERIMENTAL || AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                } else {
-                    if( AC.GetRulesLevel_BM() > AvailableCode.RULES_EXPERIMENTAL || AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                }
-                break;
+                return false;
         }
 
         // is this within our techbase?
-        switch( m.GetLoadout().GetTechBase() ) {
+        switch( u.GetTechbase() ) {
             case AvailableCode.TECH_INNER_SPHERE:
                 if( AC.GetTechBase() == AvailableCode.TECH_CLAN ) { return false; }
                 break;
@@ -218,38 +294,27 @@ public class CommonTools {
                 return false;
         }
 
-        // is the 'Mech primitive and is this equipment allowed?
-        if( m.IsPrimitive() ) {
-            if( m.IsIndustrialmech() ) {
-                if( ! AC.IsPIMAllowed() ) { return false; }
-            } else {
-                if( ! AC.IsPBMAllowed() ) { return false; }
-            }
-        } else {
-            if( AC.IsPrimitiveOnly() ) { return false; }
-        }
-
         // are we restricting by year?
-        if( m.IsYearRestricted() ) {
+        if( u.IsYearRestricted() ) {
             // we are.
-            switch( m.GetLoadout().GetTechBase() ) {
+            switch( u.GetTechbase() ) {
                 case AvailableCode.TECH_INNER_SPHERE:
                     if( AC.WentExtinctIS() ) {
                         if( AC.WasReIntrodIS() ) {
-                            if( ( m.GetYear() >= AC.GetISIntroDate() && m.GetYear() < AC.GetISExtinctDate() ) || m.GetYear() >= AC.GetISReIntroDate() ) {
+                            if( ( u.GetYear() >= AC.GetISIntroDate() && u.GetYear() < AC.GetISExtinctDate() ) || u.GetYear() >= AC.GetISReIntroDate() ) {
                                 return true;
                             } else {
                                 return false;
                             }
                         } else {
-                            if( m.GetYear() >= AC.GetISIntroDate() && m.GetYear() < AC.GetISExtinctDate() ) {
+                            if( u.GetYear() >= AC.GetISIntroDate() && u.GetYear() < AC.GetISExtinctDate() ) {
                                 return true;
                             } else {
                                 return false;
                             }
                         }
                     } else {
-                        if( m.GetYear() >= AC.GetISIntroDate() ) {
+                        if( u.GetYear() >= AC.GetISIntroDate() ) {
                             return true;
                         } else {
                             return false;
@@ -258,20 +323,20 @@ public class CommonTools {
                 case AvailableCode.TECH_CLAN:
                     if( AC.WentExtinctCL() ) {
                         if( AC.WasReIntrodCL() ) {
-                            if( ( m.GetYear() >= AC.GetCLIntroDate() && m.GetYear() < AC.GetCLExtinctDate() ) || m.GetYear() >= AC.GetCLReIntroDate() ) {
+                            if( ( u.GetYear() >= AC.GetCLIntroDate() && u.GetYear() < AC.GetCLExtinctDate() ) || u.GetYear() >= AC.GetCLReIntroDate() ) {
                                 return true;
                             } else {
                                 return false;
                             }
                         } else {
-                            if( m.GetYear() >= AC.GetCLIntroDate() && m.GetYear() < AC.GetCLExtinctDate() ) {
+                            if( u.GetYear() >= AC.GetCLIntroDate() && u.GetYear() < AC.GetCLExtinctDate() ) {
                                 return true;
                             } else {
                                 return false;
                             }
                         }
                     } else {
-                        if( m.GetYear() >= AC.GetCLIntroDate() ) {
+                        if( u.GetYear() >= AC.GetCLIntroDate() ) {
                             return true;
                         } else {
                             return false;
@@ -281,20 +346,20 @@ public class CommonTools {
                     boolean Okay_IS = false, Okay_CL = false;
                     if( AC.WentExtinctIS() ) {
                         if( AC.WasReIntrodIS() ) {
-                            if( ( m.GetYear() >= AC.GetISIntroDate() && m.GetYear() < AC.GetISExtinctDate() ) || m.GetYear() >= AC.GetISReIntroDate() ) {
+                            if( ( u.GetYear() >= AC.GetISIntroDate() && u.GetYear() < AC.GetISExtinctDate() ) || u.GetYear() >= AC.GetISReIntroDate() ) {
                                 Okay_IS = true;
                             } else {
                                 Okay_IS = false;
                             }
                         } else {
-                            if( m.GetYear() >= AC.GetISIntroDate() && m.GetYear() < AC.GetISExtinctDate() ) {
+                            if( u.GetYear() >= AC.GetISIntroDate() && u.GetYear() < AC.GetISExtinctDate() ) {
                                 Okay_IS = true;
                             } else {
                                 Okay_IS = false;
                             }
                         }
                     } else {
-                        if( m.GetYear() >= AC.GetISIntroDate() ) {
+                        if( u.GetYear() >= AC.GetISIntroDate() ) {
                             Okay_IS = true;
                         } else {
                             Okay_IS = false;
@@ -302,20 +367,20 @@ public class CommonTools {
                     }
                     if( AC.WentExtinctCL() ) {
                         if( AC.WasReIntrodCL() ) {
-                            if( ( m.GetYear() >= AC.GetCLIntroDate() && m.GetYear() < AC.GetCLExtinctDate() ) || m.GetYear() >= AC.GetCLReIntroDate() ) {
+                            if( ( u.GetYear() >= AC.GetCLIntroDate() && u.GetYear() < AC.GetCLExtinctDate() ) || u.GetYear() >= AC.GetCLReIntroDate() ) {
                                 Okay_CL = true;
                             } else {
                                 Okay_CL = false;
                             }
                         } else {
-                            if( m.GetYear() >= AC.GetCLIntroDate() && m.GetYear() < AC.GetCLExtinctDate() ) {
+                            if( u.GetYear() >= AC.GetCLIntroDate() && u.GetYear() < AC.GetCLExtinctDate() ) {
                                 Okay_CL = true;
                             } else {
                                 Okay_CL = false;
                             }
                         }
                     } else {
-                        if( m.GetYear() >= AC.GetCLIntroDate() ) {
+                        if( u.GetYear() >= AC.GetCLIntroDate() ) {
                             Okay_CL = true;
                         } else {
                             Okay_CL = false;
@@ -329,9 +394,9 @@ public class CommonTools {
             }
         } else {
             // we aren't, go by the era
-            switch( m.GetEra() ) {
+            switch( u.GetEra() ) {
             case AvailableCode.ERA_STAR_LEAGUE:
-                switch( m.GetLoadout().GetTechBase() ) {
+                switch( u.GetTechbase() ) {
                     case AvailableCode.TECH_INNER_SPHERE: case AvailableCode.TECH_BOTH:
                         if( AC.GetISSLCode() < 'X' ) {
                             return true;
@@ -342,9 +407,9 @@ public class CommonTools {
                         return false;
                 }
             case AvailableCode.ERA_SUCCESSION:
-                switch( m.GetLoadout().GetTechBase() ) {
+                switch( u.GetTechbase() ) {
                     case AvailableCode.TECH_INNER_SPHERE:
-                        if( m.GetRulesLevel() > AvailableCode.RULES_TOURNAMENT ) {
+                        if( u.GetRulesLevel() > AvailableCode.RULES_TOURNAMENT ) {
                             if( AC.GetISSWCode() < 'X' ) {
                                 return true;
                             } else {
@@ -373,7 +438,7 @@ public class CommonTools {
                         return false;
                 }
             case AvailableCode.ERA_CLAN_INVASION:
-                switch( m.GetLoadout().GetTechBase() ) {
+                switch( u.GetTechbase() ) {
                     case AvailableCode.TECH_INNER_SPHERE:
                         if( AC.GetISCICode() < 'X' ) {
                             return true;
@@ -396,285 +461,7 @@ public class CommonTools {
                         return false;
                 }
             case AvailableCode.ERA_DARK_AGES:
-                switch( m.GetLoadout().GetTechBase() ) {
-                    case AvailableCode.TECH_INNER_SPHERE:
-                        if( AC.GetISCICode() < 'X' ) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    case AvailableCode.TECH_CLAN:
-                        if( AC.GetCLCICode() < 'X' ) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    case AvailableCode.TECH_BOTH:
-                        if( AC.GetBestCICode() < 'X' ) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    default:
-                        return false;
-                }
-            case AvailableCode.ERA_ALL:
-                // the "All" era.
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static boolean IsAllowed( AvailableCode AC, int RulesLevel, int TechBase, boolean Primitive, boolean Industrial, int Era, boolean Restrict, int Year ) {
-        // check an available code to see if it can be used legally
-
-        // ensure it's within our rules-level first
-        switch( RulesLevel ) {
-            case AvailableCode.RULES_INTRODUCTORY:
-                // tournament legal
-                if( Industrial ) {
-                    if( AC.GetRulesLevel_IM() != AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                } else {
-                    if( AC.GetRulesLevel_BM() != AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                }
-                break;
-            case AvailableCode.RULES_TOURNAMENT:
-                // tournament legal
-                if( Industrial ) {
-                    if( AC.GetRulesLevel_IM() > AvailableCode.RULES_TOURNAMENT || AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                } else {
-                    if( AC.GetRulesLevel_BM() > AvailableCode.RULES_TOURNAMENT || AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                }
-                break;
-            case AvailableCode.RULES_ADVANCED:
-                // advanced rules
-                if( Industrial ) {
-                    if( AC.GetRulesLevel_IM() > AvailableCode.RULES_ADVANCED || AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                } else {
-                    if( AC.GetRulesLevel_BM() > AvailableCode.RULES_ADVANCED || AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                }
-                break;
-            case AvailableCode.RULES_EXPERIMENTAL:
-                // experimental rules.  everything allowed.
-                if( Industrial ) {
-                    if( AC.GetRulesLevel_IM() > AvailableCode.RULES_EXPERIMENTAL || AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                } else {
-                    if( AC.GetRulesLevel_BM() > AvailableCode.RULES_EXPERIMENTAL || AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                }
-                break;
-            case AvailableCode.RULES_ERA_SPECIFIC:
-                if( Industrial ) {
-                    if( AC.GetRulesLevel_IM() > AvailableCode.RULES_ERA_SPECIFIC || AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                } else {
-                    if( AC.GetRulesLevel_BM() > AvailableCode.RULES_ERA_SPECIFIC || AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                }
-                break;
-            default:
-                // Unallowed or Era Specific.  everything allowed until we know better.
-                if( Industrial ) {
-                    if( AC.GetRulesLevel_IM() > AvailableCode.RULES_EXPERIMENTAL || AC.GetRulesLevel_IM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                } else {
-                    if( AC.GetRulesLevel_BM() > AvailableCode.RULES_EXPERIMENTAL || AC.GetRulesLevel_BM() < AvailableCode.RULES_INTRODUCTORY ) { return false; }
-                }
-                break;
-        }
-
-        // is this within our techbase?
-        switch( TechBase ) {
-            case AvailableCode.TECH_INNER_SPHERE:
-                if( AC.GetTechBase() == AvailableCode.TECH_CLAN ) { return false; }
-                break;
-            case AvailableCode.TECH_CLAN:
-                if( AC.GetTechBase() == AvailableCode.TECH_INNER_SPHERE ) { return false; }
-                break;
-            case AvailableCode.TECH_BOTH:
-                // this does nothing, put here to avoid default
-                break;
-            default:
-                return false;
-        }
-
-        // is the 'Mech primitive and is this equipment allowed?
-        if( Primitive ) {
-            if( Industrial ) {
-                if( ! AC.IsPIMAllowed() ) { return false; }
-            } else {
-                if( ! AC.IsPBMAllowed() ) { return false; }
-            }
-        } else {
-            if( AC.IsPrimitiveOnly() ) { return false; }
-        }
-
-        // are we restricting by year?
-        if( Restrict ) {
-            // we are.
-            switch( TechBase ) {
-                case AvailableCode.TECH_INNER_SPHERE:
-                    if( AC.WentExtinctIS() ) {
-                        if( AC.WasReIntrodIS() ) {
-                            if( ( Year >= AC.GetISIntroDate() && Year < AC.GetISExtinctDate() ) || Year >= AC.GetISReIntroDate() ) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        } else {
-                            if( Year >= AC.GetISIntroDate() && Year < AC.GetISExtinctDate() ) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
-                    } else {
-                        if( Year >= AC.GetISIntroDate() ) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                case AvailableCode.TECH_CLAN:
-                    if( AC.WentExtinctCL() ) {
-                        if( AC.WasReIntrodCL() ) {
-                            if( ( Year >= AC.GetCLIntroDate() && Year < AC.GetCLExtinctDate() ) || Year >= AC.GetCLReIntroDate() ) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        } else {
-                            if( Year >= AC.GetCLIntroDate() && Year < AC.GetCLExtinctDate() ) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
-                    } else {
-                        if( Year >= AC.GetCLIntroDate() ) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                case AvailableCode.TECH_BOTH:
-                    boolean Okay_IS = false, Okay_CL = false;
-                    if( AC.WentExtinctIS() ) {
-                        if( AC.WasReIntrodIS() ) {
-                            if( ( Year >= AC.GetISIntroDate() && Year < AC.GetISExtinctDate() ) || Year >= AC.GetISReIntroDate() ) {
-                                Okay_IS = true;
-                            } else {
-                                Okay_IS = false;
-                            }
-                        } else {
-                            if( Year >= AC.GetISIntroDate() && Year < AC.GetISExtinctDate() ) {
-                                Okay_IS = true;
-                            } else {
-                                Okay_IS = false;
-                            }
-                        }
-                    } else {
-                        if( Year >= AC.GetISIntroDate() ) {
-                            Okay_IS = true;
-                        } else {
-                            Okay_IS = false;
-                        }
-                    }
-                    if( AC.WentExtinctCL() ) {
-                        if( AC.WasReIntrodCL() ) {
-                            if( ( Year >= AC.GetCLIntroDate() && Year < AC.GetCLExtinctDate() ) || Year >= AC.GetCLReIntroDate() ) {
-                                Okay_CL = true;
-                            } else {
-                                Okay_CL = false;
-                            }
-                        } else {
-                            if( Year >= AC.GetCLIntroDate() && Year < AC.GetCLExtinctDate() ) {
-                                Okay_CL = true;
-                            } else {
-                                Okay_CL = false;
-                            }
-                        }
-                    } else {
-                        if( Year >= AC.GetCLIntroDate() ) {
-                            Okay_CL = true;
-                        } else {
-                            Okay_CL = false;
-                        }
-                    }
-                    if( Okay_IS || Okay_CL ) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-            }
-        } else {
-            // we aren't, go by the era
-            switch( Era ) {
-            case AvailableCode.ERA_STAR_LEAGUE:
-                switch( TechBase ) {
-                    case AvailableCode.TECH_INNER_SPHERE: case AvailableCode.TECH_BOTH:
-                        if( AC.GetISSLCode() < 'X' ) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    case AvailableCode.TECH_CLAN:
-                        return false;
-                }
-            case AvailableCode.ERA_SUCCESSION:
-                switch( TechBase ) {
-                    case AvailableCode.TECH_INNER_SPHERE:
-                        if( RulesLevel > AvailableCode.RULES_TOURNAMENT ) {
-                            if( AC.GetISSWCode() < 'X' ) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        } else {
-                            if( AC.GetISSWCode() < 'F' ) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
-                    case AvailableCode.TECH_CLAN:
-                        if( AC.GetCLSWCode() < 'X' ) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    case AvailableCode.TECH_BOTH:
-                        if( AC.GetBestSWCode() < 'X' ) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    default:
-                        return false;
-                }
-            case AvailableCode.ERA_CLAN_INVASION:
-                switch( TechBase ) {
-                    case AvailableCode.TECH_INNER_SPHERE:
-                        if( AC.GetISCICode() < 'X' ) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    case AvailableCode.TECH_CLAN:
-                        if( AC.GetCLCICode() < 'X' ) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    case AvailableCode.TECH_BOTH:
-                        if( AC.GetBestCICode() < 'X' ) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    default:
-                        return false;
-                }
-            case AvailableCode.ERA_DARK_AGES:
-                switch( TechBase ) {
+                switch( u.GetTechbase() ) {
                     case AvailableCode.TECH_INNER_SPHERE:
                         if( AC.GetISCICode() < 'X' ) {
                             return true;

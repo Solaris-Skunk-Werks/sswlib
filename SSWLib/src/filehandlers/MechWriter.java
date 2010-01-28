@@ -139,7 +139,7 @@ public class MechWriter {
         }
         if( ls.Index == 12 ) { ls.Index = -1; }
         if( rs.Index == 12 ) { rs.Index = -1; }
-//        FR.write( tab + "<engine rating=\"" + CurMech.GetEngine().GetRating() + "\" manufacturer=\"" + FileCommon.EncodeFluff( CurMech.GetEngineManufacturer() ) + "\" lsstart=\"" + ls.Index + "\" rsstart=\"" + rs.Index + "\" techbase=\"" + CurMech.GetEngine().GetTechBase() + "\">" + CurMech.GetEngine().GetLookupName() + "</engine>" );
+//        FR.write( tab + "<engine rating=\"" + CurMech.GetEngine().GetRating() + "\" manufacturer=\"" + FileCommon.EncodeFluff( CurMech.GetEngineManufacturer() ) + "\" lsstart=\"" + ls.Index + "\" rsstart=\"" + rs.Index + "\" techbase=\"" + CurMech.GetEngine().GetTechbase() + "\">" + CurMech.GetEngine().GetLookupName() + "</engine>" );
         FR.write( tab + "<engine rating=\"" + GetBaseEngineRating() + "\" manufacturer=\"" + FileCommon.EncodeFluff( CurMech.GetEngineManufacturer() ) + "\" lsstart=\"" + ls.Index + "\" rsstart=\"" + rs.Index + "\" techbase=\"" + CurMech.GetEngine().GetTechBase() + "\">" + CurMech.GetEngine().LookupName() + "</engine>" );
         FR.newLine();
 
@@ -454,7 +454,7 @@ public class MechWriter {
     }
 
     private String GetTechbase() {
-        return AvailableCode.TechBaseSTR[CurMech.GetTechBase()];
+        return AvailableCode.TechBaseSTR[CurMech.GetTechbase()];
     }
 
     private String GetMotiveType() {

@@ -33,6 +33,7 @@ import components.AvailableCode;
 import components.Engine;
 import components.Mech;
 import components.MechModifier;
+import components.ifUnit;
 
 public class stEngineISXXL implements ifEngine, ifState {
     // An Inner Sphere XXL Fusion Engine

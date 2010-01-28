@@ -696,12 +696,20 @@ public class Mech implements ifUnit, ifBattleforce {
         SetChanged( true );
     }
 
-    public int GetTechBase() {
+    public int GetTechbase() {
         return CurLoadout.GetTechBase();
     }
 
     public int GetBaseTechbase() {
         return MainLoadout.GetTechBase();
+    }
+
+    public int GetUnitType() {
+        if( IndustrialMech ) {
+            return AvailableCode.UNIT_INDUSTRIALMECH;
+        } else {
+            return AvailableCode.UNIT_BATTLEMECH;
+        }
     }
 
     public void SetBiped() {

@@ -6,8 +6,14 @@
 package components;
 
 public interface ifUnit {
+    public int GetUnitType();
+    public int GetRulesLevel();
+    public int GetTechbase();
+    public int GetBaseTechbase();
+    public int GetEra();
+    public int GetYear();
     public int GetTonnage();
-    public ifMechLoadout GetLoadout();
+    public boolean IsYearRestricted();
     public boolean UsingFractionalAccounting();
     public void SetChanged( boolean b );
 }

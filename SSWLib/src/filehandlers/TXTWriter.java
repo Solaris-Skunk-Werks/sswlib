@@ -212,7 +212,7 @@ public class TXTWriter {
 
         if ( CurrentLoadoutOnly ) {
             retval += CurMech.GetName() + " " + CurMech.GetModel() + NL + NL;
-            retval += "Tech Base: " + CommonTools.GetTechbaseString( CurMech.GetTechBase() ) + NL;
+            retval += "Tech Base: " + CommonTools.GetTechbaseString( CurMech.GetTechbase() ) + NL;
             retval += "Chassis Config: ";
             String chassisString = "Biped";
             if ( CurMech.IsQuad() ) { chassisString.replace("Biped", "Quad"); }

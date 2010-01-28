@@ -33,6 +33,7 @@ import components.AvailableCode;
 import components.Engine;
 import components.Mech;
 import components.MechModifier;
+import components.ifUnit;
 
 public class stEngineISLF implements ifEngine, ifState {
     // An Inner Sphere Light Fusion Engine

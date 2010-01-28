@@ -601,7 +601,7 @@ public class MechReader {
                 if( eType.equals( "TargetingComputer" ) || eType.equals( "CASE" ) || eType.equals( "CASEII" ) || eType.equals( "Supercharger" ) ) {
                     if( eType.equals( "TargetingComputer") ) {
                         if( SaveFileVersion == 0 ) {
-                            if( m.GetTechBase() == AvailableCode.TECH_CLAN ) {
+                            if( m.GetTechbase() == AvailableCode.TECH_CLAN ) {
                                 m.UseTC( true, true );
                             } else {
                                 m.UseTC( true, false );
@@ -1167,7 +1167,7 @@ public class MechReader {
                         if( eType.equals( "TargetingComputer" ) || eType.equals( "CASE" ) || eType.equals( "CASEII" ) || eType.equals( "Supercharger" ) ) {
                             if( eType.equals( "TargetingComputer") ) {
                                 if( SaveFileVersion == 0 ) {
-                                    if( m.GetTechBase() == AvailableCode.TECH_CLAN ) {
+                                    if( m.GetTechbase() == AvailableCode.TECH_CLAN ) {
                                         m.UseTC( true, true );
                                     } else {
                                         m.UseTC( true, false );
@@ -1393,7 +1393,7 @@ public class MechReader {
         if( ! name.contains( "(CL)" ) |! name.contains( "(IS)" ) ) {
             // old style save file or an item that can be used by both techbases
             // we'll need to check.
-            if( m.GetTechBase() == AvailableCode.TECH_CLAN ) {
+            if( m.GetTechbase() == AvailableCode.TECH_CLAN ) {
                 prepend = "(CL) ";
             } else {
                 prepend = "(IS) ";

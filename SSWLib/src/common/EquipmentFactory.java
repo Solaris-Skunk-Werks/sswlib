@@ -116,7 +116,7 @@ public class EquipmentFactory {
                 Ammunition a = (Ammunition) Ammo.get( i );
                 AvailableCode AC = a.GetAvailability();
                 if( v.contains( a ) ) { break; }
-                if( CommonTools.IsAllowed(AC, RulesLevel, m.GetLoadout().GetTechBase(), m.IsPrimitive(), m.IsIndustrialmech(), 0, true, Year ) ) { v.add( a ); }
+                if( CommonTools.IsAllowed( AC, m ) ) { v.add( a ); }
             }
         }
 
