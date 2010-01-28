@@ -40,6 +40,7 @@ import states.stCVHover;
 import states.stCVHydrofoil;
 import states.stCVSubmarine;
 import states.stCVTracked;
+import states.stCVVTOL;
 import states.stCVWheeled;
 import states.stCVWiGE;
 import visitors.ifVisitor;
@@ -69,6 +70,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     private int Era,
                 Year,
                 RulesLevel,
+                HeatSinks = 10,
                 Tonnage = 20,
                 CruiseMP;
     private double JJMult;
@@ -81,11 +83,13 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     private static ifCombatVehicle Wheeled = new stCVWheeled(),
                                  Tracked = new stCVTracked(),
                                  Hover = new stCVHover(),
+                                 VTOL = new stCVVTOL(),
                                  WiGE = new stCVWiGE(),
                                  Displacement = new stCVDisplacement(),
                                  Hydrofoil = new stCVHydrofoil(),
                                  Submarine = new stCVSubmarine();
     private Engine CurEngine = new Engine( this );
+    private Cockpit CurCockpit = new Cockpit( this );
     private ifCombatVehicle CurConfig = Tracked;
     private ifMechLoadout MainLoadout = new CVLoadout( Constants.BASELOADOUT_NAME, this ),
                     CurLoadout = MainLoadout;
@@ -96,8 +100,18 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     private AvailableCode OmniAvailable = new AvailableCode( AvailableCode.TECH_BOTH );
     private Preferences Prefs;
 
+    public CombatVehicle() {
+        HeatSinks = CurEngine.FreeHeatSinks();
+    }
+
     public void Visit( ifVisitor v ) throws Exception {
         v.Visit( this );
+    }
+
+    public void Validate() {
+        if ( Tonnage > CurConfig.GetMaxTonnage() ) {
+            Tonnage = CurConfig.GetMaxTonnage();
+        }
     }
 
     public void SetWheeled() {
@@ -112,6 +126,16 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
     public void SetHover() {
         CurConfig = Hover;
+        SetChanged(true);
+    }
+
+    public void setVTOL() {
+        CurConfig = VTOL;
+        SetChanged(true);
+    }
+
+    public void SetWiGE() {
+        CurConfig = WiGE;
         SetChanged(true);
     }
 
@@ -130,9 +154,12 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         SetChanged(true);
     }
 
-    public void SetWiGE() {
-        CurConfig = WiGE;
-        SetChanged(true);
+    public boolean CanUseJump() {
+        return CurConfig.CanUseJumpMP();
+    }
+
+    public boolean CanBeTrailer() {
+        return CurConfig.CanBeTrailer();
     }
 
     public int GetMaxTonnage() {
@@ -141,6 +168,22 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
     public int GetTonnage() {
         return Tonnage;
+    }
+
+    public HeatSinkFactory GetHeatSinks() {
+        return CurLoadout.GetHeatSinks();
+    }
+
+    public JumpJetFactory GetJumpJets() {
+        return CurLoadout.GetJumpJets();
+    }
+
+    public CVArmor GetArmor() {
+        return CurArmor;
+    }
+
+    public Cockpit GetCockpit() {
+        return CurCockpit;
     }
 
     public ifMechLoadout GetLoadout() {
@@ -163,6 +206,24 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         return Year;
     }
 
+    public int GetCurrentBV() {
+        // returns the final battle value of the mech
+        //TODO Fix this!
+        return (int) Math.floor( CurCockpit.BVMod() * ( 0 + 0 ) + 0.5 );
+    }
+
+    public double GetTotalCost() {
+        // final cost calculations
+        //TODO Fix this!
+        double base = ( 0 + 0 ) * 1;
+        if( base - (int) base > 0.998 ) { base = (int) base; }
+        return base + 0;
+    }
+
+    public double GetCurrentTons() {
+        // returns the current total tonnage of the mech
+        return GetTonnage();
+    }
     public boolean UsingFractionalAccounting() {
         return FractionalAccounting;
     }
@@ -175,6 +236,10 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         Changed = b;
     }
 
+    public boolean HasChanged() {
+        return Changed;
+    }
+    
     //Battleforce Specific Methods
     public int GetBFSize() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -218,5 +283,34 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
     public int GetBFPoints() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int GetUnitType() {
+        return AvailableCode.UNIT_COMBATVEHICLE;
+    }
+
+    public int GetRulesLevel() {
+        return GetLoadout().GetRulesLevel();
+    }
+
+    public int GetTechbase() {
+        return GetLoadout().GetTechBase();
+    }
+
+    public int GetBaseTechbase() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int GetEra() {
+        return Era;
+    }
+
+    public boolean IsYearRestricted() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public boolean HasFHES() {
+        //No such thing for a Vehicle
+        return false;
     }
 }

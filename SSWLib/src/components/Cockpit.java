@@ -40,9 +40,9 @@ public class Cockpit extends abPlaceable {
                             PrimIndustrial = new stCockpitPrimIndustrial(),
                             PrimIndusAFC = new stCockpitPrimIndustrialAFC();
     private ifCockpit CurConfig = StandardCockpit;
-    private Mech Owner;
+    private ifUnit Owner;
 
-    public Cockpit( Mech m ) {
+    public Cockpit( ifUnit m ) {
         Owner = m;
     }
 

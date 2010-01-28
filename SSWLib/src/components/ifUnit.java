@@ -16,4 +16,5 @@ public interface ifUnit {
     public boolean IsYearRestricted();
     public boolean UsingFractionalAccounting();
     public void SetChanged( boolean b );
+    public boolean HasFHES();
 }
