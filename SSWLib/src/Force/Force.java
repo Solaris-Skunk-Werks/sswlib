@@ -64,7 +64,8 @@ public class Force extends AbstractTableModel implements ifSerializable {
     public int  NumC3 = 0,
                 OpForSize = 0;
     public boolean isDirty = false,
-                    useUnevenForceMod = true;
+                    useUnevenForceMod = true,
+                    unitsChanged = false;
     private abTable currentModel = new tbTotalWarfare(this);
 
 
@@ -122,18 +123,20 @@ public class Force extends AbstractTableModel implements ifSerializable {
             if ( ForceNode.getChildNodes().item(1).getNodeName().equals("group") ) {
                 Load( ForceNode, 2 );
             } else {
-                Groups.add( new Group("", Type, this) );
+                Group g = new Group("", Type, this);
                 for (int i=0; i < ForceNode.getChildNodes().getLength(); i++) {
                     Node n = ForceNode.getChildNodes().item(i);
                     if (n.getNodeName().equals("unit")) {
                         try {
-                            Groups.firstElement().AddUnit(new Unit(n));
+                            g.AddUnit( new Unit(n) );
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                             throw e;
                         }
                     }
                 }
+                Groups.add( g );
+                unitsChanged = true;
             }
             RefreshBV();
         } catch ( Exception e ) {
@@ -182,7 +185,6 @@ public class Force extends AbstractTableModel implements ifSerializable {
     public void AddUnit( Unit u ) {
         boolean isAdded = false;
         u.Refresh();
-        Units.add( u );
         for ( Group g : Groups ) {
             if ( g.getName().equals( u.getGroup() ) ) {
                 g.AddUnit(u);
@@ -197,10 +199,10 @@ public class Force extends AbstractTableModel implements ifSerializable {
         }
         RefreshBV();
         isDirty = true;
+        unitsChanged = true;
     }
 
     public void RemoveUnit( Unit u ){
-        Units.remove(u);
         for ( Group g : Groups ) {
             if ( g.getName().equals( u.getGroup() ) ) {
                 g.getUnits().remove(u);
@@ -209,6 +211,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
         }
         RefreshBV();
         isDirty = true;
+        unitsChanged = true;
     }
 
     public void GroupUnit( Unit u ) {
@@ -651,9 +654,12 @@ public class Force extends AbstractTableModel implements ifSerializable {
     }
 
     public Vector<Unit> getUnits() {
-        Units.clear();
-        for ( Group g : Groups ) {
-            Units.addAll(g.getUnits());
+        if ( unitsChanged ) {
+            Units.clear();
+            for ( Group g : Groups ) {
+                Units.addAll(g.getUnits());
+            }
+            unitsChanged = false;
         }
         return Units;
     }

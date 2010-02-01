@@ -44,7 +44,8 @@ public class Unit implements ifSerializable {
     public String TypeModel = "",
                   Type = "",
                   Model = "",
-                  Info = "";
+                  Info = "",
+                  C3Type = "";
     private String Mechwarrior = "";
     public String Filename = "",
                   Configuration = "";
@@ -63,7 +64,8 @@ public class Unit implements ifSerializable {
     private int Gunnery = 4;
     public int UnitType = CommonTools.BattleMech;
     public Warrior warrior = new Warrior();
-    public boolean UsingC3 = false;
+    public boolean UsingC3 = false,
+                    C3Available = false;
     private boolean isOmni = false;
     public Mech m = null;
     private BattleForceStats BFStats = new BattleForceStats();
@@ -81,6 +83,10 @@ public class Unit implements ifSerializable {
         this.Configuration = m.getConfig();
         this.Info = m.getInfo();
         this.BFStats = m.getBattleForceStats();
+        if ( Info.contains("C3") ) {
+            C3Available = true;
+            C3Type = Info.substring( Info.indexOf("C3"), Info.indexOf("C3")+4 ).trim();
+        }
         Refresh();
     }
 
@@ -91,6 +97,11 @@ public class Unit implements ifSerializable {
         Tonnage = m.GetTonnage();
         BaseBV = m.GetCurrentBV();
         Info = m.GetChatInfo();
+
+        if ( m.HasC3() ) {
+            C3Available = true;
+            C3Type = Info.substring( Info.indexOf("C3"), Info.indexOf("C3")+4 ).trim();
+        }
 
         if ( m.IsOmnimech() ) {
             setOmni(true);
@@ -165,6 +176,10 @@ public class Unit implements ifSerializable {
             }
             if ( node.getNodeName().equals("info") ) {
                 this.Info = node.getTextContent().trim();
+                if ( Info.contains("C3") ) {
+                    C3Available = true;
+                    C3Type = Info.substring( Info.indexOf("C3"), Info.indexOf("C3")+4 ).trim();
+                }
             }
         }
         this.Refresh();
@@ -179,13 +194,13 @@ public class Unit implements ifSerializable {
         TotalBV += CommonTools.GetFullAdjustedBV(BaseBV, getGunnery(), getPiloting(), MiscMod);
         if (UsingC3) { C3BV += TotalBV * .05;}
 
-        if ( BFStats.getPointValue() == 0 ) {
-            LoadMech();
-            if ( m != null ) {
-                BFStats = new BattleForceStats(m);
-                BFStats.setWarrior(warrior.getName());
-            }
-        }
+//        if ( BFStats.getPointValue() == 0 ) {
+//            LoadMech();
+//            if ( m != null ) {
+//                BFStats = new BattleForceStats(m);
+//                BFStats.setWarrior(warrior.getName());
+//            }
+//        }
     }
 
     public void UpdateByMech() {
@@ -195,6 +210,10 @@ public class Unit implements ifSerializable {
             Configuration = m.GetLoadout().GetName();
             BaseBV = m.GetCurrentBV();
             Info = m.GetChatInfo();
+            if ( Info.contains("C3") ) {
+                C3Available = true;
+                C3Type = Info.substring( Info.indexOf("C3"), Info.indexOf("C3")+4 ).trim();
+            }
             BFStats = new BattleForceStats(m);
         }
         Refresh();
@@ -383,17 +402,13 @@ public class Unit implements ifSerializable {
 
     public String isUsingC3() {
         String val = "N/A";
-        LoadMech();
-        if ( m != null ) {
-            if ( m.HasC3() ) {
-                if ( UsingC3 ) {
-                    val = "Yes";
-                } else {
-                    val = "No";
-                }
+        if ( C3Available ) {
+            if ( UsingC3 ) {
+                val = "Yes";
+            } else {
+                val = "No";
             }
-        } else {
-            val = "**";
+            val += " (" + C3Type + ")";
         }
         return val;
     }
