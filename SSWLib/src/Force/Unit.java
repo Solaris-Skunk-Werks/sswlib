@@ -323,6 +323,9 @@ public class Unit implements ifSerializable {
                 if ( ! this.Configuration.isEmpty() ) {
                     this.m.SetCurLoadout(this.Configuration.trim());
                 }
+                if ( BFStats.getPointValue() == 0 ) {
+                    BFStats = new BattleForceStats(m);
+                }
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
