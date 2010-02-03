@@ -61,10 +61,7 @@ public class Mech implements ifUnit, ifBattleforce {
                    Solaris7ID = "0",
                    Solaris7ImageID = "0",
                    SSWImage = "";
-    private int Era,
-                Year,
-                RulesLevel,
-                Tonnage = 20,
+    private int Tonnage = 20,
                 WalkMP;
     private double JJMult,
                   MechMult;
@@ -75,8 +72,6 @@ public class Mech implements ifUnit, ifBattleforce {
                     Omnimech,
                     Primitive = false,
                     IndustrialMech = false,
-                    YearSpecified = false,
-                    YearRestricted = false,
                     HasNullSig = false,
                     HasVoidSig = false,
                     HasChameleon = false,
@@ -140,11 +135,7 @@ public class Mech implements ifUnit, ifBattleforce {
 
         // Set the names and years to blank so the user doesn't have to overtype
         Name = "";
-        Era = AvailableCode.ERA_STAR_LEAGUE;
         MainLoadout.SetTechBase( AvailableCode.TECH_INNER_SPHERE );
-        RulesLevel = AvailableCode.RULES_TOURNAMENT;
-        Year = 2750;
-        YearRestricted = false;
 
         // Basic setup for the mech.  This is an arbitrary default chassis
         Quad = false;
@@ -331,7 +322,11 @@ public class Mech implements ifUnit, ifBattleforce {
     }
 
     public void SetEra( int e ) {
-        Era = e;
+        if( Omnimech ) {
+            CurLoadout.SetEra( e );
+        } else {
+            MainLoadout.SetEra( e );
+        }
         SetChanged( true );
     }
 
@@ -339,25 +334,31 @@ public class Mech implements ifUnit, ifBattleforce {
         if( Omnimech ) {
             CurLoadout.SetRulesLevel( r );
         } else {
-            RulesLevel = r;
             MainLoadout.SetRulesLevel( r );
         }
         SetChanged( true );
     }
 
     public void SetYear( int y, boolean specified ) {
-        Year = y;
-        YearSpecified = specified;
+        if( Omnimech ) {
+            CurLoadout.SetYear( y, specified );
+        } else {
+            MainLoadout.SetYear( y, specified );
+        }
         SetChanged( true );
     }
 
     public void SetYearRestricted( boolean y ) {
-        YearRestricted = y;
+        if( Omnimech ) {
+            CurLoadout.SetYearRestricted( y );
+        } else {
+            MainLoadout.SetYearRestricted( y );
+        }
         SetChanged( true );
     }
 
     public boolean IsYearRestricted() {
-        return YearRestricted;
+        return CurLoadout.IsYearRestricted();
     }
 
     public boolean SetTechBase( int t ) {
@@ -744,7 +745,7 @@ public class Mech implements ifUnit, ifBattleforce {
         // Get a new Biped Loadout and load up the queue
         ifMechLoadout l = new BipedLoadout( Constants.BASELOADOUT_NAME, this );
         l.SetTechBase( MainLoadout.GetTechBase() );
-        l.SetRulesLevel( RulesLevel );
+        l.SetRulesLevel( MainLoadout.GetRulesLevel() );
         CurLoadout.Transfer( l );
         CurLoadout.ClearLoadout();
 
@@ -923,7 +924,7 @@ public class Mech implements ifUnit, ifBattleforce {
         // Get a new Quad Loadout and load up the queue
         ifMechLoadout l = new QuadLoadout( Constants.BASELOADOUT_NAME, this );
         l.SetTechBase( MainLoadout.GetTechBase() );
-        l.SetRulesLevel( RulesLevel );
+        l.SetRulesLevel( MainLoadout.GetRulesLevel() );
         CurLoadout.Transfer( l );
         CurLoadout.ClearLoadout();
 
@@ -1296,19 +1297,23 @@ public class Mech implements ifUnit, ifBattleforce {
     }
 
     public int GetEra() {
-        return Era;
+        return CurLoadout.GetEra();
+    }
+
+    public int GetBaseEra() {
+        return MainLoadout.GetEra();
     }
 
     public int GetRulesLevel() {
         if( Omnimech ) {
             return CurLoadout.GetRulesLevel();
         } else {
-            return RulesLevel;
+            return MainLoadout.GetRulesLevel();
         }
     }
 
     public int GetBaseRulesLevel() {
-        return RulesLevel;
+        return MainLoadout.GetRulesLevel();
     }
 
     public String GetFullName() {
@@ -1446,11 +1451,15 @@ public class Mech implements ifUnit, ifBattleforce {
     }
 
     public int GetYear() {
-        return Year;
+        return CurLoadout.GetYear();
+    }
+
+    public int GetBaseYear() {
+        return MainLoadout.GetYear();
     }
 
     public boolean YearWasSpecified() {
-        return YearSpecified;
+        return CurLoadout.YearWasSpecified();
     }
 
     public String GetSolaris7ID() {
@@ -1875,7 +1884,7 @@ public class Mech implements ifUnit, ifBattleforce {
         }
         // now get the defensive BV for any armored components that weren't
         // already covered.
-        if( RulesLevel >= AvailableCode.RULES_EXPERIMENTAL && Era >= AvailableCode.ERA_CLAN_INVASION ) {
+        if( CurLoadout.GetRulesLevel() >= AvailableCode.RULES_EXPERIMENTAL && CurLoadout.GetEra() >= AvailableCode.ERA_CLAN_INVASION ) {
             result += CurEngine.GetDefensiveBV();
             result += CurCockpit.GetDefensiveBV();
             result += NullSig.GetDefensiveBV();
@@ -2505,7 +2514,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if( ! CurPhysEnhance.IsTSM() ) {
             // this is standard musculature.  If we have TSM, it's handled later
             // hack here for very early Primitive 'Mech costs
-            if( Primitive && Year > 2449 ) {
+            if( Primitive && CurLoadout.GetYear() > 2449 ) {
                 result += 1000 * Tonnage;
             } else {
                 result += 2000 * Tonnage;
@@ -3500,7 +3509,7 @@ public class Mech implements ifUnit, ifBattleforce {
         }
 
         // now adjust for the era.
-        if( Era == AvailableCode.ERA_SUCCESSION ) {
+        if( CurLoadout.GetEra() == AvailableCode.ERA_SUCCESSION ) {
             // cut out the Star League stuff.
             AvailableCode SW = new AvailableCode( Base.GetTechBase() );
             SW.SetCodes( 'A', 'X', 'A', 'A', 'A', 'X', 'A', 'A' );
@@ -3509,7 +3518,7 @@ public class Mech implements ifUnit, ifBattleforce {
             SW.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
             Base.Combine( SW );
         }
-        if( Era == AvailableCode.ERA_CLAN_INVASION ) {
+        if( CurLoadout.GetEra() == AvailableCode.ERA_CLAN_INVASION ) {
             // cut out the Star League and Succession Wars stuff.
             AvailableCode CI = new AvailableCode( Base.GetTechBase() );
             CI.SetCodes( 'A', 'X', 'X', 'A', 'A', 'X', 'X', 'A' );

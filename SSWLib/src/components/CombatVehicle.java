@@ -30,7 +30,6 @@ package components;
 
 import battleforce.BattleForceStats;
 import battleforce.ifBattleforce;
-import common.Constants;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.prefs.Preferences;
@@ -89,13 +88,11 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
                                  Hydrofoil = new stCVHydrofoil(),
                                  Submarine = new stCVSubmarine();
     private Engine CurEngine = new Engine( this );
-    private Cockpit CurCockpit = new Cockpit( this );
     private ifCombatVehicle CurConfig = Tracked;
-    private ifMechLoadout MainLoadout = new CVLoadout( Constants.BASELOADOUT_NAME, this ),
-                    CurLoadout = MainLoadout;
-    private Vector<ifMechLoadout> Loadouts = new Vector<ifMechLoadout>();
+    private Vector<ifCVLoadout> Loadouts = new Vector<ifCVLoadout>();
+    private ifCVLoadout MainLoadout,
+                        CurLoadout;
     private CVArmor CurArmor = new CVArmor( this );
-    private AvailableCode FHESAC = new AvailableCode( AvailableCode.TECH_BOTH );
     private Hashtable Lookup = new Hashtable();
     private AvailableCode OmniAvailable = new AvailableCode( AvailableCode.TECH_BOTH );
     private Preferences Prefs;
@@ -170,24 +167,16 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         return Tonnage;
     }
 
-    public HeatSinkFactory GetHeatSinks() {
-        return CurLoadout.GetHeatSinks();
-    }
-
-    public JumpJetFactory GetJumpJets() {
-        return CurLoadout.GetJumpJets();
-    }
-
     public CVArmor GetArmor() {
         return CurArmor;
     }
 
-    public Cockpit GetCockpit() {
-        return CurCockpit;
+    public ifCVLoadout GetLoadout() {
+        return CurLoadout;
     }
 
-    public ifMechLoadout GetLoadout() {
-        return CurLoadout;
+    public ifCVLoadout GetMainLoadout() {
+        return MainLoadout;
     }
 
     public boolean IsOmni() {
@@ -209,7 +198,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     public int GetCurrentBV() {
         // returns the final battle value of the mech
         //TODO Fix this!
-        return (int) Math.floor( CurCockpit.BVMod() * ( 0 + 0 ) + 0.5 );
+        return 0;
     }
 
     public double GetTotalCost() {
@@ -224,6 +213,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         // returns the current total tonnage of the mech
         return GetTonnage();
     }
+
     public boolean UsingFractionalAccounting() {
         return FractionalAccounting;
     }
@@ -290,11 +280,11 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public int GetRulesLevel() {
-        return GetLoadout().GetRulesLevel();
+        return 0;
     }
 
     public int GetTechbase() {
-        return GetLoadout().GetTechBase();
+        return 0;
     }
 
     public int GetBaseTechbase() {

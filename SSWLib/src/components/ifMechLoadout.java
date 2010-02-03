@@ -45,6 +45,13 @@ public interface ifMechLoadout {
     public boolean SetRulesLevel( int NewLevel );
     public int GetTechBase();
     public void SetTechBase( int NewLevel );
+    public int GetEra();
+    public boolean SetEra( int era );
+    public int GetYear();
+    public void SetYear( int year, boolean specified );
+    public boolean YearWasSpecified();
+    public void SetYearRestricted( boolean b );
+    public boolean IsYearRestricted();
     public void AddToQueue( abPlaceable p );
     public void RemoveFromQueue( abPlaceable p );
     public abPlaceable GetFromQueueByIndex( int Index );

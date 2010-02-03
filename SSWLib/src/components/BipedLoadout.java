@@ -68,13 +68,17 @@ public class BipedLoadout implements ifMechLoadout {
                     UseAVFCS = false,
                     UseApollo = false,
                     Use_TC = false,
-                    UsingClanCASE = false;
+                    UsingClanCASE = false,
+                    YearSpecified = false,
+                    YearRestricted = false;
     private TargetingComputer CurTC = new TargetingComputer( this, false );
     private ifMechLoadout BaseLoadout = null;
     private PowerAmplifier PowerAmp = new PowerAmplifier( this );
     private Supercharger SCharger = new Supercharger( this );
-    private int RulesLevel = AvailableCode.RULES_TOURNAMENT;
-    private int TechBase = AvailableCode.TECH_INNER_SPHERE;
+    private int RulesLevel = AvailableCode.RULES_TOURNAMENT,
+                TechBase = AvailableCode.TECH_INNER_SPHERE,
+                Era = AvailableCode.ERA_STAR_LEAGUE,
+                Year = 2750;
 
     // Fill up and initialize the critical space arrays.  This is where all the
     // stuff in the loadout will get placed.
@@ -181,6 +185,45 @@ public class BipedLoadout implements ifMechLoadout {
 
     public void SetTechBase( int NewLevel ) {
         TechBase = NewLevel;
+    }
+
+    public int GetEra() {
+        return Era;
+    }
+
+    public boolean SetEra( int era ) {
+        if( Owner.IsOmnimech() ) {
+            if( era < Owner.GetBaseEra() ) {
+                return false;
+            } else {
+                Era = era;
+                return true;
+            }
+        } else {
+            Era = era;
+            return true;
+        }
+    }
+
+    public int GetYear() {
+        return Year;
+    }
+
+    public void SetYear( int year, boolean specified ) {
+        Year = year;
+        YearSpecified = specified;
+    }
+
+    public boolean YearWasSpecified() {
+        return YearSpecified;
+    }
+
+    public void SetYearRestricted( boolean b ) {
+        YearRestricted = b;
+    }
+
+    public boolean IsYearRestricted() {
+        return YearRestricted;
     }
 
     public void AddToQueue( abPlaceable p ) {
