@@ -1003,6 +1003,10 @@ public class MechReader {
                     // the main loadout routine
                     if( n.item( i ).getNodeName().equals( "source" ) ) {
                         m.SetSource( n.item( i ).getTextContent() );
+                    } else if( n.item( i ).getNodeName().equals( "loadout_era" ) ) {
+                        m.SetEra( Integer.parseInt( n.item( i ).getTextContent() ) );
+                    } else if( n.item( i ).getNodeName().equals( "loadout_year" ) ) {
+                        m.SetYear( Integer.parseInt( n.item( i ).getTextContent() ), false );
                     } else if( n.item( i ).getNodeName().equals( "techbase" ) ) {
                         if( SaveFileVersion < 3 ) {
                             m.SetTechBase( Integer.parseInt( n.item( i ).getTextContent() ) );

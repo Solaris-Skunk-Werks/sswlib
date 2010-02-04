@@ -349,6 +349,10 @@ public class MechWriter {
                 FR.newLine();
                 FR.write( tab + tab + "<source>" + FileCommon.EncodeFluff( CurMech.GetSource() ) + "</source>" );
                 FR.newLine();
+                FR.write( tab + tab + "<loadout_era>" + CurMech.GetEra() + "</loadout_era>" );
+                FR.newLine();
+                FR.write( tab + tab + "<loadout_year>" + CurMech.GetYear() + "</loadout_year>" );
+                FR.newLine();
                 // chat information
                 FR.write( tab + tab + "<info>" + CurMech.GetChatInfo() + "</info>" );
                 FR.newLine();

@@ -3453,6 +3453,7 @@ public class BipedLoadout implements ifMechLoadout {
             HeatSinks, Jumps );
         clone.SetRulesLevel( RulesLevel );
         clone.SetTechBase( TechBase );
+        clone.SetEra( Era );
         clone.SetHDCrits( HDCrits.clone() );
         clone.SetCTCrits( CTCrits.clone() );
         clone.SetLTCrits( LTCrits.clone() );

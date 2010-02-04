@@ -66,16 +66,11 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
                    Solaris7ID = "0",
                    Solaris7ImageID = "0",
                    SSWImage = "";
-    private int Era,
-                Year,
-                RulesLevel,
-                HeatSinks = 10,
+    private int HeatSinks = 10,
                 Tonnage = 20,
                 CruiseMP;
     private double JJMult;
     private boolean Omni = false,
-                    YearSpecified = false,
-                    YearRestricted = false,
                     HasEnviroSealing = false,
                     FractionalAccounting = false,
                     Changed = false;
@@ -184,7 +179,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public int GetBaseRulesLevel() {
-        return RulesLevel;
+        return MainLoadout.GetRulesLevel();
     }
     
     public Engine GetEngine() {
@@ -192,7 +187,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public int GetYear() {
-        return Year;
+        return CurLoadout.GetYear();
     }
 
     public int GetCurrentBV() {
@@ -229,7 +224,28 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     public boolean HasChanged() {
         return Changed;
     }
-    
+
+    public void AddHeatSinks( int i ) {
+
+    }
+
+    public void SetHeatSinks( int i ) {
+
+    }
+
+    public void RemoveHeatSinks( int i ) {
+        // be sure to check against the engine's free heat sinks!
+    }
+
+    public int NumHeatSinks() {
+        return 0;
+    }
+
+    public double GetHeatSinkTonnage() {
+        // remember to not include the engine's free sinks.
+        return 0.0;
+    }
+
     //Battleforce Specific Methods
     public int GetBFSize() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -280,27 +296,26 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public int GetRulesLevel() {
-        return 0;
+        return CurLoadout.GetRulesLevel();
     }
 
     public int GetTechbase() {
-        return 0;
+        return CurLoadout.GetTechBase();
     }
 
     public int GetBaseTechbase() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return MainLoadout.GetTechBase();
     }
 
     public int GetEra() {
-        return Era;
+        return CurLoadout.GetEra();
     }
 
     public boolean IsYearRestricted() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return CurLoadout.IsYearRestricted();
     }
 
     public boolean HasFHES() {
-        //No such thing for a Vehicle
-        return false;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
