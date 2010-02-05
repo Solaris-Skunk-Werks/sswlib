@@ -338,7 +338,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         chkPrintForce.setText("Force List");
         chkPrintForce.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemChanged(evt);
+                chkPrintForceActionPerformed(evt);
             }
         });
 
@@ -794,6 +794,10 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
     private void btnSaveOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveOptionsActionPerformed
         setPreferences();
 }//GEN-LAST:event_btnSaveOptionsActionPerformed
+
+    private void chkPrintForceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkPrintForceActionPerformed
+        Verify();
+    }//GEN-LAST:event_chkPrintForceActionPerformed
 
     private void WaitCursor() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
