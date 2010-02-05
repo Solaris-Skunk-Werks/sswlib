@@ -3454,6 +3454,7 @@ public class BipedLoadout implements ifMechLoadout {
         clone.SetRulesLevel( RulesLevel );
         clone.SetTechBase( TechBase );
         clone.SetEra( Era );
+        clone.SetYear( Year, false );
         clone.SetHDCrits( HDCrits.clone() );
         clone.SetCTCrits( CTCrits.clone() );
         clone.SetLTCrits( LTCrits.clone() );
