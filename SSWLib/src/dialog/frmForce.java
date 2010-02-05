@@ -325,6 +325,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         tlbActions.add(jSeparator4);
 
         btnAmmoChooser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ammo.png"))); // NOI18N
+        btnAmmoChooser.setToolTipText("Ammo Selector");
         btnAmmoChooser.setFocusable(false);
         btnAmmoChooser.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnAmmoChooser.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
