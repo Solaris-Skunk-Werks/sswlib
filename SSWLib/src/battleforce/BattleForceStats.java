@@ -37,6 +37,8 @@ import java.io.IOException;
 
 public class BattleForceStats {
     private String Element = "",
+                    Name = "",
+                    Model = "",
                     MV = "",
                     Unit = "",
                     Image = "",
@@ -66,6 +68,9 @@ public class BattleForceStats {
 
     public BattleForceStats( Mech m ) {
         Element = m.GetFullName();
+        Name = m.GetName();
+        Model = m.GetModel();
+        if ( m.IsOmnimech() ) { Model = m.GetLoadout().GetName(); }
         Abilities = m.GetBFAbilities();
         int[] Data = m.GetBFDamage( this );
         S = Data[BFConstants.BF_SHORT];
@@ -342,5 +347,21 @@ public class BattleForceStats {
 
     public void setWarrior(String Warrior) {
         this.Warrior = Warrior;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String Name) {
+        this.Name = Name;
+    }
+
+    public String getModel() {
+        return Model;
+    }
+
+    public void setModel(String Model) {
+        this.Model = Model;
     }
 }
