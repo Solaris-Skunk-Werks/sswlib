@@ -64,6 +64,7 @@ public class PrintConsts {
                                BF_CL_Unit = "./Data/Printing/BF_CL_Unit.png",
                                BF_Card = "./Data/Printing/BF_Card.png",
                                BF_Chart = "./Data/Printing/BF_Chart.png",
+                               QS_Card = "./Data/Printing/QSCard.png",
                                BFB_BG = "./Data/Printing/bfb_bg.png",
                                BT_LOGO = "./Data/Printing/BT_Logo.png",
                                PATTERNS = "./Data/Printing/patterns.zip";
