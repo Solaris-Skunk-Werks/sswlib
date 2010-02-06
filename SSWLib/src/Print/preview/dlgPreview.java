@@ -195,32 +195,35 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
 
         if ( chkPrintBattleforce.isSelected() ) {
             imageTracker.preLoadBattleForceImages();
-            if ( cmbBFSheetType.getSelectedIndex() == 0 ){
-                if ( chkBFOnePerPage.isSelected() ) {
-                    Vector<BattleForce> forcelist = new Vector<BattleForce>();
-                    forcelist.addAll(scenario.getAttackerForce().toBattleForceByGroup( 12 ));
-                    if ( scenario.getDefenderForce().getUnits().size() > 0 ) { forcelist.addAll(scenario.getDefenderForce().toBattleForceByGroup( 12 )); }
+            switch ( cmbBFSheetType.getSelectedIndex() ) {
+                case 0:
+                    if ( chkBFOnePerPage.isSelected() ) {
+                        Vector<BattleForce> forcelist = new Vector<BattleForce>();
+                        forcelist.addAll(scenario.getAttackerForce().toBattleForceByGroup( 12 ));
+                        if ( scenario.getDefenderForce().getUnits().size() > 0 ) { forcelist.addAll(scenario.getDefenderForce().toBattleForceByGroup( 12 )); }
 
-                    for ( BattleForce f : forcelist ) {
-                        BattleforcePrinter bf = new BattleforcePrinter(f, imageTracker);
-                        bf.setPrintLogo(chkLogo.isSelected());
-                        bf.setPrintMechs(chkImage.isSelected());
-                        printer.Append( BFBPrinter.Letter.toPage(), bf);
-                    }
-                } else {
-                    BattleforcePrinter topBF = new BattleforcePrinter(scenario.getAttackerForce().toBattleForce(), imageTracker);
-                    topBF.setPrintLogo(chkLogo.isSelected());
-                    topBF.setPrintMechs(chkImage.isSelected());
-                    printer.Append( BFBPrinter.Letter.toPage(), topBF );
+                        for ( BattleForce f : forcelist ) {
+                            BattleforcePrinter bf = new BattleforcePrinter(f, imageTracker);
+                            bf.setPrintLogo(chkLogo.isSelected());
+                            bf.setPrintMechs(chkImage.isSelected());
+                            printer.Append( BFBPrinter.Letter.toPage(), bf);
+                        }
+                    } else {
+                        BattleforcePrinter topBF = new BattleforcePrinter(scenario.getAttackerForce().toBattleForce(), imageTracker);
+                        topBF.setPrintLogo(chkLogo.isSelected());
+                        topBF.setPrintMechs(chkImage.isSelected());
+                        printer.Append( BFBPrinter.Letter.toPage(), topBF );
 
-                    if ( scenario.getDefenderForce().getUnits().size() > 0 ) {
-                        BattleforcePrinter bottomBF = new BattleforcePrinter(scenario.getDefenderForce().toBattleForce(), imageTracker);
-                        bottomBF.setPrintLogo(chkLogo.isSelected());
-                        bottomBF.setPrintMechs(chkImage.isSelected());
-                        printer.Append( BFBPrinter.Letter.toPage(), bottomBF );
+                        if ( scenario.getDefenderForce().getUnits().size() > 0 ) {
+                            BattleforcePrinter bottomBF = new BattleforcePrinter(scenario.getDefenderForce().toBattleForce(), imageTracker);
+                            bottomBF.setPrintLogo(chkLogo.isSelected());
+                            bottomBF.setPrintMechs(chkImage.isSelected());
+                            printer.Append( BFBPrinter.Letter.toPage(), bottomBF );
+                        }
                     }
-                }
-            } else {
+                    break;
+
+                case 1:
                     Vector<BattleForce> forces = new Vector<BattleForce>();
                     forces.addAll(scenario.getAttackerForce().toBattleForceByGroup( 6 ));
                     if ( scenario.getDefenderForce().getUnits().size() > 0 ) { forces.addAll(scenario.getDefenderForce().toBattleForceByGroup( 6 )); }
@@ -231,6 +234,22 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                         bf.setPrintMechs(chkImage.isSelected());
                         printer.Append( BFBPrinter.Letter.toPage(), bf);
                     }
+                    break;
+
+                case 2:
+                    Vector<BattleForce> forcelist = new Vector<BattleForce>();
+                    forcelist.addAll(scenario.getAttackerForce().toBattleForceByGroup( 6 ));
+                    if ( scenario.getDefenderForce().getUnits().size() > 0 ) { forcelist.addAll(scenario.getDefenderForce().toBattleForceByGroup( 6 )); }
+
+                    for ( BattleForce f : forcelist ) {
+                        QuickStrikeCardPrinter qs = new QuickStrikeCardPrinter(f, imageTracker);
+                        qs.setPrintLogo(chkLogo.isSelected());
+                        qs.setPrintMechs(chkImage.isSelected());
+                        printer.Append( BFBPrinter.Letter.toPage(), qs);
+                    }
+                    break;
+
+                default:
             }
         }
 
@@ -555,7 +574,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             }
         });
 
-        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Strategic Ops", "BattleForce Cards" }));
+        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Strategic Ops", "BattleForce Cards", "QuickStrike Cards" }));
         cmbBFSheetType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 itemChanged(evt);
