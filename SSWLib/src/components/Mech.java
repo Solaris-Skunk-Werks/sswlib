@@ -130,7 +130,7 @@ public class Mech implements ifUnit, ifBattleforce {
         Load();
     }
 
-    private void Load(){
+    private void Load() {
         BuildLookupTable();
 
         // Set the names and years to blank so the user doesn't have to overtype
@@ -746,6 +746,7 @@ public class Mech implements ifUnit, ifBattleforce {
         ifMechLoadout l = new BipedLoadout( Constants.BASELOADOUT_NAME, this );
         l.SetTechBase( MainLoadout.GetTechBase() );
         l.SetRulesLevel( MainLoadout.GetRulesLevel() );
+        l.SetEra( MainLoadout.GetEra() );
         CurLoadout.Transfer( l );
         CurLoadout.ClearLoadout();
 
@@ -925,6 +926,7 @@ public class Mech implements ifUnit, ifBattleforce {
         ifMechLoadout l = new QuadLoadout( Constants.BASELOADOUT_NAME, this );
         l.SetTechBase( MainLoadout.GetTechBase() );
         l.SetRulesLevel( MainLoadout.GetRulesLevel() );
+        l.SetEra( MainLoadout.GetEra() );
         CurLoadout.Transfer( l );
         CurLoadout.ClearLoadout();
 
@@ -1548,11 +1550,25 @@ public class Mech implements ifUnit, ifBattleforce {
         return (int) Math.floor( GetWalkingMP() * 1.5 + 0.5 );
     }
 
+    public int GetRunningMP( int MiniMult ) {
+        return (int) Math.floor( ( GetWalkingMP() * MiniMult ) * 1.5 + 0.5 );
+    }
+
     public int GetAdjustedRunningMP( boolean BV, boolean MASCTSM ) {
         // this had to become more complicated because of the peculiar
         // idiosyncracies of the BV system.  Stupid.
         MechModifier m = GetTotalModifiers( BV, MASCTSM );
         int WalkValue = GetAdjustedWalkingMP( BV, MASCTSM );
+        double Multiplier = 1.5 + m.RunningMultiplier();
+        return (int) Math.floor( WalkValue * Multiplier + 0.5 ) + m.RunningAdder();
+    }
+
+    public int GetAdjustedRunningMP( boolean BV, boolean MASCTSM, int MiniMult ) {
+        // this had to become more complicated because of the peculiar
+        // idiosyncracies of the BV system.  Stupid.
+        // this method provided for miniatures-scale printing
+        MechModifier m = GetTotalModifiers( BV, MASCTSM );
+        int WalkValue = GetAdjustedWalkingMP( BV, MASCTSM ) * MiniMult;
         double Multiplier = 1.5 + m.RunningMultiplier();
         return (int) Math.floor( WalkValue * Multiplier + 0.5 ) + m.RunningAdder();
     }

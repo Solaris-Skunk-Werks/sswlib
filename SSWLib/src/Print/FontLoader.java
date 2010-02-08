@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FontLoader {
-    private static String[] names = { "Eurosti.TTF" };
+    private static String[] names = { "Eurosti.ttf" };
     private static Map<String, Font> cache = new ConcurrentHashMap<String, Font>(names.length);
 
     static {
