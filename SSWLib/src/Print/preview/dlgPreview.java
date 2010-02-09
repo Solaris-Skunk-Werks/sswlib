@@ -164,9 +164,12 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             cmbHexConvFactor.setEnabled(false);
         }
 
-        if ( cmbBFSheetType.getSelectedIndex() == 1 ) {
-            chkBFOnePerPage.setSelected(true);
-            chkBFOnePerPage.setEnabled(false);
+        switch ( cmbBFSheetType.getSelectedIndex() ) {
+            case 0:
+                chkBFOnePerPage.setEnabled(true);
+                break;
+            default:
+                chkBFOnePerPage.setEnabled(false);
         }
     }
 
@@ -206,18 +209,21 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                             BattleforcePrinter bf = new BattleforcePrinter(f, imageTracker);
                             bf.setPrintLogo(chkLogo.isSelected());
                             bf.setPrintMechs(chkImage.isSelected());
+                            if ( chkBFTerrainMV.isSelected() ) bf.setTerrain(true);
                             printer.Append( BFBPrinter.Letter.toPage(), bf);
                         }
                     } else {
                         BattleforcePrinter topBF = new BattleforcePrinter(scenario.getAttackerForce().toBattleForce(), imageTracker);
                         topBF.setPrintLogo(chkLogo.isSelected());
                         topBF.setPrintMechs(chkImage.isSelected());
+                        if ( chkBFTerrainMV.isSelected() ) topBF.setTerrain(true);
                         printer.Append( BFBPrinter.Letter.toPage(), topBF );
 
                         if ( scenario.getDefenderForce().getUnits().size() > 0 ) {
                             BattleforcePrinter bottomBF = new BattleforcePrinter(scenario.getDefenderForce().toBattleForce(), imageTracker);
                             bottomBF.setPrintLogo(chkLogo.isSelected());
                             bottomBF.setPrintMechs(chkImage.isSelected());
+                            if ( chkBFTerrainMV.isSelected() ) bottomBF.setTerrain(true);
                             printer.Append( BFBPrinter.Letter.toPage(), bottomBF );
                         }
                     }
@@ -232,20 +238,18 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                         BattleforceCardPrinter bf = new BattleforceCardPrinter(f, imageTracker);
                         bf.setPrintLogo(chkLogo.isSelected());
                         bf.setPrintMechs(chkImage.isSelected());
+                        if ( chkBFTerrainMV.isSelected() ) bf.setTerrain(true);
                         printer.Append( BFBPrinter.Letter.toPage(), bf);
                     }
                     break;
 
                 case 2:
-                    Vector<BattleForce> forcelist = new Vector<BattleForce>();
-                    forcelist.addAll(scenario.getAttackerForce().toBattleForceByGroup( 6 ));
-                    if ( scenario.getDefenderForce().getUnits().size() > 0 ) { forcelist.addAll(scenario.getDefenderForce().toBattleForceByGroup( 6 )); }
-
-                    for ( BattleForce f : forcelist ) {
+                   for ( BattleForce f : scenario.toBattleForceBySize(8) ) {
                         QuickStrikeCardPrinter qs = new QuickStrikeCardPrinter(f, imageTracker);
                         qs.setPrintLogo(chkLogo.isSelected());
                         qs.setPrintMechs(chkImage.isSelected());
-                        printer.Append( BFBPrinter.Letter.toPage(), qs);
+                        if ( chkBFTerrainMV.isSelected() ) qs.setTerrain(true);
+                        printer.Append( BFBPrinter.FullLetter.toPage(), qs);
                     }
                     break;
 
@@ -331,6 +335,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         chkBFOnePerPage = new javax.swing.JCheckBox();
         cmbBFSheetType = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
+        chkBFTerrainMV = new javax.swing.JCheckBox();
         btnPreview = new javax.swing.JButton();
         btnSaveOptions = new javax.swing.JButton();
         jToolBar1 = new javax.swing.JToolBar();
@@ -583,18 +588,31 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
 
         jLabel3.setText("BattleForce Sheet Type:");
 
+        chkBFTerrainMV.setText("Print Miniature Scale");
+        chkBFTerrainMV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkBFTerrainMVActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(cmbBFSheetType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(chkBFOnePerPage)))
-            .addComponent(jLabel3)
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(cmbBFSheetType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(chkBFOnePerPage)))
+                    .addComponent(jLabel3)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(chkBFTerrainMV)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -604,6 +622,8 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                 .addComponent(cmbBFSheetType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(chkBFOnePerPage)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chkBFTerrainMV)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -760,8 +780,8 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spnPreview, javax.swing.GroupLayout.DEFAULT_SIZE, 595, Short.MAX_VALUE))
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE)
+                .addComponent(spnPreview, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
         );
 
         pack();
@@ -818,6 +838,10 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         Verify();
     }//GEN-LAST:event_chkPrintForceActionPerformed
 
+    private void chkBFTerrainMVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkBFTerrainMVActionPerformed
+        // TODO add your handling code here:
+}//GEN-LAST:event_chkBFTerrainMVActionPerformed
+
     private void WaitCursor() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
@@ -839,6 +863,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JButton btnZoomIn;
     private javax.swing.JButton btnZoomOut;
     private javax.swing.JCheckBox chkBFOnePerPage;
+    private javax.swing.JCheckBox chkBFTerrainMV;
     private javax.swing.JCheckBox chkCanon;
     private javax.swing.JCheckBox chkImage;
     private javax.swing.JCheckBox chkLogo;
