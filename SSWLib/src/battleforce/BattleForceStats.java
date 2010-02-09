@@ -381,6 +381,7 @@ public class BattleForceStats {
     }
 
     public void setTerrain() {
+        if ( MV.length() == 0 ) { return; }
         for ( String s : MV.split("/") ) {
             TerrainMV = (Integer.parseInt(s.replace("j", "")) * 2) + "";
             if (s.contains("j")) TerrainMV += "j";
