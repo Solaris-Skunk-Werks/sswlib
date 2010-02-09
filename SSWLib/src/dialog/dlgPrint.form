@@ -409,6 +409,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="chkBFTerrainMV" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="chkBFOnePerPage" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="10" pref="10" max="10" attributes="0"/>
@@ -416,7 +417,7 @@
                           </Group>
                           <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="16" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -428,7 +429,9 @@
                       <Component id="cmbBFSheetType" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="chkBFOnePerPage" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="59" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="chkBFTerrainMV" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="36" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -445,9 +448,10 @@
             <Component class="javax.swing.JComboBox" name="cmbBFSheetType">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
+                  <StringArray count="3">
                     <StringItem index="0" value="Strategic Ops"/>
                     <StringItem index="1" value="BattleForce Cards"/>
+                    <StringItem index="2" value="Quick Strike Cards"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -459,6 +463,15 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="BattleForce Sheet Type:"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="chkBFTerrainMV">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Print Miniatures Scale"/>
+                <Property name="toolTipText" type="java.lang.String" value="Converts MV to use 2&quot; hexes"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkBFTerrainMVitemChanged"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

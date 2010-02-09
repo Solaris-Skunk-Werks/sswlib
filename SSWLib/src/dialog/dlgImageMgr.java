@@ -229,6 +229,7 @@ public class dlgImageMgr extends javax.swing.JDialog {
                 try {
                     bfbPrefs.put("LastMechImage", imageFile.getCanonicalPath());
                     curUnit.m.SetSSWImage(imageFile.getCanonicalPath());
+                    curUnit.getBFStats().setImage(imageFile.getCanonicalPath());
                     media.setLogo(lblImage, new File(curUnit.m.GetSSWImage()));
 
                     MechWriter writer = new MechWriter();

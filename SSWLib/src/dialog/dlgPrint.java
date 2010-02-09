@@ -39,7 +39,6 @@ import java.util.Vector;
 import java.util.prefs.Preferences;
 
 public class dlgPrint extends javax.swing.JDialog {
-    private Runtime runtime = Runtime.getRuntime();
     private ImageTracker imageTracker;
     private Scenario scenario;
     private Preferences bfbPrefs = Preferences.userNodeForPackage("/bfb/gui/frmBase".getClass());
@@ -97,33 +96,37 @@ public class dlgPrint extends javax.swing.JDialog {
             cmbHexConvFactor.setEnabled(false);
         }
 
+        switch ( cmbBFSheetType.getSelectedIndex() ) {
+            case 0:
+                chkBFOnePerPage.setEnabled(true);
+                break;
+            default:
+                chkBFOnePerPage.setEnabled(false);
+        }
+
         if (cmbBFSheetType.getSelectedIndex() == 1) {
             chkBFOnePerPage.setSelected(true);
             chkBFOnePerPage.setEnabled(false);
         }
 
+        String iconPath = "/images/Recordsheet_BG.png";
         if (chkPrintRecordsheets.isSelected()) {
-            if (chkTables.isSelected()) {
-                lblRecordsheetIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/RecordsheetTables_BG.png")));
-            } else {
-                lblRecordsheetIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Recordsheet_BG.png")));
-            }
+            if (chkTables.isSelected()) { iconPath = "/images/RecordsheetTables_BG.png"; }
+            lblRecordsheetIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource(iconPath)));
         }
         
         if ( chkPrintBattleforce.isSelected() ) {
-            if ( cmbBFSheetType.getSelectedIndex() == 1 ) {
-                lblBattleForceIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/BFCard_BG.png")));
-            } else {
-                lblBattleForceIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/BattleForce_BG.png")));
+            iconPath = "/images/BattleForce_BG.png";
+            switch ( cmbBFSheetType.getSelectedIndex() ) {
+                case 1:
+                    iconPath = "/images/BFCard_BG.png";
+                    break;
+                case 2:
+                    iconPath = "/images/QSCard_BG.png";
+                    break;
             }
+            lblBattleForceIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource(iconPath)));
         }
-
-//        if ((runtime.maxMemory() / 1024) < 260160) {
-//            chkCanon.setSelected(false);
-//            chkCanon.setEnabled(false);
-//            setStatus("Not enough memory to print canon patterns");
-//            this.repaint();
-//        }
     }
 
     private PagePrinter SetupPrinter() {
@@ -152,41 +155,62 @@ public class dlgPrint extends javax.swing.JDialog {
 
         if (chkPrintBattleforce.isSelected()) {
             imageTracker.preLoadBattleForceImages();
-            if (cmbBFSheetType.getSelectedIndex() == 0) {
-                if (chkBFOnePerPage.isSelected()) {
-                    Vector<BattleForce> forces = new Vector<BattleForce>();
-                    forces.addAll(scenario.getAttackerForce().toBattleForceByGroup( 12 ));
-                    forces.addAll(scenario.getDefenderForce().toBattleForceByGroup( 12 ));
+            switch ( cmbBFSheetType.getSelectedIndex() ) {
+                case 0:
+                    if ( chkBFOnePerPage.isSelected() ) {
+                        Vector<BattleForce> forcelist = new Vector<BattleForce>();
+                        forcelist.addAll(scenario.getAttackerForce().toBattleForceByGroup( 12 ));
+                        if ( scenario.getDefenderForce().getUnits().size() > 0 ) { forcelist.addAll(scenario.getDefenderForce().toBattleForceByGroup( 12 )); }
 
-                    for (BattleForce f : forces) {
-                        BattleforcePrinter bf = new BattleforcePrinter(f, imageTracker);
+                        for ( BattleForce f : forcelist ) {
+                            BattleforcePrinter bf = new BattleforcePrinter(f, imageTracker);
+                            bf.setPrintLogo(chkLogo.isSelected());
+                            bf.setPrintMechs(chkImage.isSelected());
+                            if ( chkBFTerrainMV.isSelected() ) bf.setTerrain(true);
+                            printer.Append( BFBPrinter.Letter.toPage(), bf);
+                        }
+                    } else {
+                        BattleforcePrinter topBF = new BattleforcePrinter(scenario.getAttackerForce().toBattleForce(), imageTracker);
+                        topBF.setPrintLogo(chkLogo.isSelected());
+                        topBF.setPrintMechs(chkImage.isSelected());
+                        if ( chkBFTerrainMV.isSelected() ) topBF.setTerrain(true);
+                        printer.Append( BFBPrinter.Letter.toPage(), topBF );
+
+                        if ( scenario.getDefenderForce().getUnits().size() > 0 ) {
+                            BattleforcePrinter bottomBF = new BattleforcePrinter(scenario.getDefenderForce().toBattleForce(), imageTracker);
+                            bottomBF.setPrintLogo(chkLogo.isSelected());
+                            bottomBF.setPrintMechs(chkImage.isSelected());
+                            if ( chkBFTerrainMV.isSelected() ) bottomBF.setTerrain(true);
+                            printer.Append( BFBPrinter.Letter.toPage(), bottomBF );
+                        }
+                    }
+                    break;
+
+                case 1:
+                    Vector<BattleForce> forces = new Vector<BattleForce>();
+                    forces.addAll(scenario.getAttackerForce().toBattleForceByGroup( 6 ));
+                    if ( scenario.getDefenderForce().getUnits().size() > 0 ) { forces.addAll(scenario.getDefenderForce().toBattleForceByGroup( 6 )); }
+
+                    for ( BattleForce f : forces ) {
+                        BattleforceCardPrinter bf = new BattleforceCardPrinter(f, imageTracker);
                         bf.setPrintLogo(chkLogo.isSelected());
                         bf.setPrintMechs(chkImage.isSelected());
-                        printer.Append(BFBPrinter.Letter.toPage(), bf);
+                        if ( chkBFTerrainMV.isSelected() ) bf.setTerrain(true);
+                        printer.Append( BFBPrinter.Letter.toPage(), bf);
                     }
-                } else {
-                    BattleforcePrinter topBF = new BattleforcePrinter(scenario.getAttackerForce().toBattleForce(), imageTracker);
-                    topBF.setPrintLogo(chkLogo.isSelected());
-                    topBF.setPrintMechs(chkImage.isSelected());
+                    break;
 
-                    BattleforcePrinter bottomBF = new BattleforcePrinter(scenario.getDefenderForce().toBattleForce(), imageTracker);
-                    bottomBF.setPrintLogo(chkLogo.isSelected());
-                    bottomBF.setPrintMechs(chkImage.isSelected());
+                case 2:
+                   for ( BattleForce f : scenario.toBattleForceBySize(8) ) {
+                        QuickStrikeCardPrinter qs = new QuickStrikeCardPrinter(f, imageTracker);
+                        qs.setPrintLogo(chkLogo.isSelected());
+                        qs.setPrintMechs(chkImage.isSelected());
+                        if ( chkBFTerrainMV.isSelected() ) qs.setTerrain(true);
+                        printer.Append( BFBPrinter.FullLetter.toPage(), qs);
+                    }
+                    break;
 
-                    printer.Append(BFBPrinter.Letter.toPage(), topBF);
-                    printer.Append(BFBPrinter.Letter.toPage(), bottomBF);
-                }
-            } else {
-                Vector<BattleForce> forces = new Vector<BattleForce>();
-                forces.addAll(scenario.getAttackerForce().toBattleForceByGroup( 6 ));
-                forces.addAll(scenario.getDefenderForce().toBattleForceByGroup( 6 ));
-
-                for (BattleForce f : forces) {
-                    BattleforceCardPrinter bf = new BattleforceCardPrinter(f, imageTracker);
-                    bf.setPrintLogo(chkLogo.isSelected());
-                    bf.setPrintMechs(chkImage.isSelected());
-                    printer.Append(BFBPrinter.Letter.toPage(), bf);
-                }
+                default:
             }
         }
 
@@ -269,6 +293,7 @@ public class dlgPrint extends javax.swing.JDialog {
         chkBFOnePerPage = new javax.swing.JCheckBox();
         cmbBFSheetType = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
+        chkBFTerrainMV = new javax.swing.JCheckBox();
         pnlRecordsheet = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         cmbHexConvFactor = new javax.swing.JComboBox();
@@ -384,7 +409,7 @@ public class dlgPrint extends javax.swing.JDialog {
                     .addGroup(pnlWhatLayout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(lblBattleForceIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pnlWhatLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkPrintBattleforce, chkPrintFireChits, chkPrintForce, chkPrintRecordsheets, chkPrintScenario});
@@ -481,7 +506,7 @@ public class dlgPrint extends javax.swing.JDialog {
             }
         });
 
-        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Strategic Ops", "BattleForce Cards" }));
+        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Strategic Ops", "BattleForce Cards", "Quick Strike Cards" }));
         cmbBFSheetType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 itemChanged(evt);
@@ -490,6 +515,14 @@ public class dlgPrint extends javax.swing.JDialog {
 
         jLabel3.setText("BattleForce Sheet Type:");
 
+        chkBFTerrainMV.setText("Print Miniatures Scale");
+        chkBFTerrainMV.setToolTipText("Converts MV to use 2\" hexes");
+        chkBFTerrainMV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkBFTerrainMVitemChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlBattleForceLayout = new javax.swing.GroupLayout(pnlBattleForce);
         pnlBattleForce.setLayout(pnlBattleForceLayout);
         pnlBattleForceLayout.setHorizontalGroup(
@@ -497,12 +530,13 @@ public class dlgPrint extends javax.swing.JDialog {
             .addGroup(pnlBattleForceLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlBattleForceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chkBFTerrainMV)
                     .addComponent(chkBFOnePerPage)
                     .addGroup(pnlBattleForceLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(cmbBFSheetType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel3))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         pnlBattleForceLayout.setVerticalGroup(
             pnlBattleForceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -512,7 +546,9 @@ public class dlgPrint extends javax.swing.JDialog {
                 .addComponent(cmbBFSheetType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(chkBFOnePerPage)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chkBFTerrainMV)
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         pnlRecordsheet.setBorder(javax.swing.BorderFactory.createTitledBorder("Recordsheet Options"));
@@ -684,14 +720,14 @@ public class dlgPrint extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
+                    .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 647, Short.MAX_VALUE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(btnPreview)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(pnlWhat, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlHow, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(pnlHow, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -763,12 +799,17 @@ public class dlgPrint extends javax.swing.JDialog {
         Verify();
 }//GEN-LAST:event_itemChanged
 
+    private void chkBFTerrainMVitemChanged(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkBFTerrainMVitemChanged
+        // TODO add your handling code here:
+}//GEN-LAST:event_chkBFTerrainMVitemChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnImageMgr;
     private javax.swing.JButton btnPreview;
     private javax.swing.JButton btnPrint;
     private javax.swing.JCheckBox chkBFOnePerPage;
+    private javax.swing.JCheckBox chkBFTerrainMV;
     private javax.swing.JCheckBox chkCanon;
     private javax.swing.JCheckBox chkImage;
     private javax.swing.JCheckBox chkLogo;
