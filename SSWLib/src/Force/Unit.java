@@ -85,7 +85,9 @@ public class Unit implements ifSerializable {
         this.BFStats = m.getBattleForceStats();
         if ( Info.contains("C3") ) {
             C3Available = true;
-            C3Type = Info.substring( Info.indexOf("C3"), Info.indexOf("C3")+4 ).trim();
+            for ( String Item : Info.split(",") ) {
+                if ( Item.contains("C3") ) C3Type = Item.trim();
+            }
         }
         Refresh();
     }
@@ -100,7 +102,9 @@ public class Unit implements ifSerializable {
 
         if ( m.HasC3() ) {
             C3Available = true;
-            C3Type = Info.substring( Info.indexOf("C3"), Info.indexOf("C3")+4 ).trim();
+            for ( String Item : Info.split(",") ) {
+                if ( Item.contains("C3") ) C3Type = Item.trim();
+            }
         }
 
         if ( m.IsOmnimech() ) {
@@ -173,6 +177,8 @@ public class Unit implements ifSerializable {
                 this.BFStats.setPiloting(Piloting);
                 this.BFStats.setGunnery(Gunnery);
                 this.BFStats.setWarrior(warrior.getName());
+                this.BFStats.setName(this.Type);
+                this.BFStats.setModel(this.Model);
             }
             if ( node.getNodeName().equals("info") ) {
                 this.Info = node.getTextContent().trim();

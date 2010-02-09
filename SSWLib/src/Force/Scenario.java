@@ -31,6 +31,8 @@ import common.CommonTools;
 import filehandlers.Media;
 import Force.View.abTable;
 
+import battleforce.BattleForce;
+import battleforce.BattleForceStats;
 import filehandlers.FileCommon;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -143,6 +145,33 @@ public class Scenario implements ifSerializable {
         for ( Force force : getForces() ) {
             force.setCurrentModel(model);
         }
+    }
+
+    public Vector<BattleForce> toBattleForceBySize( int SizeLimit ) {
+        Vector<BattleForce> BattleForces = new Vector<BattleForce>();
+        BattleForce bf = new BattleForce();
+        for ( Force f : forces ) {
+            f.sortForPrinting();
+
+            for ( Group g : f.Groups ) {
+                for ( Unit u : g.getUnits() ) {
+                    BattleForceStats stat = u.getBFStats();
+                    if ( stat.getImage().isEmpty() ) {
+                        u.LoadMech();
+                        stat.setImage(u.m.GetSSWImage());
+                    }
+                    bf.BattleForceStats.add(stat);
+                    
+                    if ( bf.BattleForceStats.size() == SizeLimit ) {
+                        BattleForces.add(bf);
+                        bf = new BattleForce();
+                    }
+                }
+            }
+        }
+        if ( bf.BattleForceStats.size() > 0 ) BattleForces.add(bf);
+
+        return BattleForces;
     }
 
     public void SerializeXML(BufferedWriter file) throws IOException {
