@@ -40,11 +40,13 @@ public class BattleForceStats {
                     Name = "",
                     Model = "",
                     MV = "",
+                    TerrainMV = "",
                     Unit = "",
                     Image = "",
                     Warrior = "";
     private double[] Mods = {2.63, 2.24, 1.82, 1.38, 1.00, 0.86, 0.77, 0.68};
 
+    private boolean isTerrainModified = false;
     private Vector<String> Abilities = new Vector<String>();
     private Vector<String> AltMunitions = new Vector<String>();
 
@@ -86,10 +88,12 @@ public class BattleForceStats {
         Internal = m.GetBFStructure();
 
         MV = m.GetBFPrimeMovement() + m.GetBFPrimeMovementMode();
+        TerrainMV = (m.GetBFPrimeMovement() * 2) + m.GetBFPrimeMovementMode();
         if ( m.GetBFSecondaryMovement() != 0 ) {
             if ( !m.GetBFSecondaryMovementMode().isEmpty() &&
                  !m.GetBFSecondaryMovementMode().isEmpty() ) { MV = m.GetBFPrimeMovement() + ""; }
             MV += "/" + m.GetBFSecondaryMovement() + m.GetBFSecondaryMovementMode();
+            TerrainMV += "/" + ( m.GetBFSecondaryMovement() * 2 ) + m.GetBFSecondaryMovementMode();
         }
 
         Image = m.GetSSWImage();
@@ -106,6 +110,7 @@ public class BattleForceStats {
         BasePV = Integer.parseInt(n.getAttributes().getNamedItem("pv").getTextContent());
         PV = BasePV;
         MV = n.getAttributes().getNamedItem("mv").getTextContent();
+        setTerrain();
         Wt = Integer.parseInt(n.getAttributes().getNamedItem("wt").getTextContent());
         S = Integer.parseInt(n.getAttributes().getNamedItem("s").getTextContent());
         M = Integer.parseInt(n.getAttributes().getNamedItem("m").getTextContent());
@@ -128,6 +133,7 @@ public class BattleForceStats {
         BasePV = Integer.parseInt(items[1]);
         Wt = Integer.parseInt(items[2]);
         MV = items[3];
+        setTerrain();
         S = Integer.parseInt(items[4]);
         M = Integer.parseInt(items[5]);
         L = Integer.parseInt(items[6]);
@@ -291,6 +297,15 @@ public class BattleForceStats {
         return MV;
     }
 
+    public String getMovement(boolean useTerrain) {
+        if ( useTerrain ) {
+            if ( TerrainMV.isEmpty() ) { setTerrain(); }
+            return TerrainMV;
+        } else {
+            return MV;
+        }
+    }
+
     public int getPointValue() {
         return PV;
     }
@@ -363,5 +378,14 @@ public class BattleForceStats {
 
     public void setModel(String Model) {
         this.Model = Model;
+    }
+
+    public void setTerrain() {
+        for ( String s : MV.split("/") ) {
+            TerrainMV = (Integer.parseInt(s.replace("j", "")) * 2) + "";
+            if (s.contains("j")) TerrainMV += "j";
+            TerrainMV += "/";
+        }
+        TerrainMV = TerrainMV.substring(0, TerrainMV.length()-1);
     }
 }
