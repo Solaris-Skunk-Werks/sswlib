@@ -163,7 +163,7 @@ public class MechList extends AbstractTableModel {
                 if (! mData.getLevel().equals(filter.getLevel()) ) remove = true;
             }
             if ( ! filter.getType().isEmpty() ) {
-                if (! mData.getType().equals(filter.getType()) ) remove = true;
+                if (! mData.getType().equals(filter.getType().replace(" ", "")) ) remove = true;
             }
             if ( ! filter.getMotive().isEmpty() ) {
                 if (! mData.getMotive().equals(filter.getMotive()) ) remove = true;

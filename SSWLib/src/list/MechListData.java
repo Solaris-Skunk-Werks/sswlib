@@ -113,6 +113,8 @@ public class MechListData extends abUnitData {
         if ( !Config.isEmpty() ) { this.Omni = true; }
 
         this.bfstat = new BattleForceStats( new String[]{this.TypeModel, Items[pv], Items[wt], Items[mv], Items[s], Items[m], Items[l], Items[e], Items[ov], Items[armor], Items[internal], Items[abilities]} );
+        this.bfstat.setName(Name);
+        this.bfstat.setModel(Model);
 
     }
 
@@ -168,5 +170,10 @@ public class MechListData extends abUnitData {
         data += this.bfstat.getInternal();
 
         return data;
+    }
+
+    @Override
+    public String toString() {
+        return getFullName() + " (" + getBV() + ") " + getInfo();
     }
 }
