@@ -96,6 +96,9 @@ public class Force extends AbstractTableModel implements ifSerializable {
     public void Load( Node ForceNode, int Version ) {
         this.ForceName = ForceNode.getAttributes().getNamedItem("name").getTextContent().trim();
         this.LogoPath = ForceNode.getAttributes().getNamedItem("logo").getTextContent().trim();
+        if ( ForceNode.getAttributes().getNamedItem("type") != null )
+                this.Type = ForceNode.getAttributes().getNamedItem("type").getTextContent().trim();
+
         for (int i=0; i < ForceNode.getChildNodes().getLength(); i++) {
             Node n = ForceNode.getChildNodes().item(i);
             if (n.getNodeName().equals("group")) {
