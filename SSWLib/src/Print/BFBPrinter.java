@@ -54,6 +54,7 @@ public class BFBPrinter {
     public final static PaperSize Landscape = new PaperSize(11d, 8.5d);
     public final static PaperSize A4 = new PaperSize(595, 842, 18, 18, 559, 806);
     public final static PaperSize Legal = new PaperSize(8.5d, 14.0d);
+    public final static PaperSize FullLetter = new PaperSize(612, 791, 10, 10, 592, 771);
 
     public BFBPrinter( ImageTracker imageTracker) {
         this.imageTracker = imageTracker;

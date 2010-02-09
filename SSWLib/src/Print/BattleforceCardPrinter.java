@@ -56,7 +56,8 @@ public class BattleforceCardPrinter implements Printable {
                 UnitImageHeight = 234,
                 ElementLimit = 2;
     private boolean printMechs = true,
-                    printLogo = true;
+                    printLogo = true,
+                    useTerrainMod = false;
 
     private int x = 0,
                 y = 0;
@@ -179,8 +180,8 @@ public class BattleforceCardPrinter implements Printable {
             graphic.setFont( PrintConsts.PlainFont );
             //Movement (MV)
             int offset = 15;
-            if ( stats.getMovement().length() > 2 ) { offset -= 5; }
-            graphic.drawString(stats.getMovement(), x+offset, y+218);
+            if ( stats.getMovement(useTerrainMod).length() > 2 ) { offset -= 5; }
+            graphic.drawString(stats.getMovement(useTerrainMod), x+offset, y+218);
 
             //Damage Values (S,M,L,E)
             graphic.drawString(stats.getShort()+"", x+34, y+218);
@@ -212,7 +213,6 @@ public class BattleforceCardPrinter implements Printable {
             }
 
             //Internal Structure
-
             xoffset = 132;
             yoffset += 10;
             indexer = 0;
@@ -262,4 +262,11 @@ public class BattleforceCardPrinter implements Printable {
         this.printLogo = printLogo;
     }
 
+    public boolean UseTerrain() {
+        return useTerrainMod;
+    }
+
+    public void setTerrain(boolean useTerrainMod) {
+        this.useTerrainMod = useTerrainMod;
+    }
 }

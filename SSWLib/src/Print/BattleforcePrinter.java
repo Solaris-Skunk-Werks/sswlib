@@ -51,7 +51,8 @@ public class BattleforcePrinter implements Printable {
     private int UnitSize = 4,
                 UnitImageHeight = 225;
     private boolean printMechs = true,
-                    printLogo = true;
+                    printLogo = true,
+                    useTerrainMod = false;
 
     private int x = 0,
                 y = 0;
@@ -218,7 +219,7 @@ public class BattleforcePrinter implements Printable {
             //graphic.setFont( PrintConsts.BoldFont );
             y2 = y + 25;
             x += 42;
-            graphic.drawString(stats.getMovement(), x, y2);
+            graphic.drawString(stats.getMovement(useTerrainMod), x, y2);
 
             //Damage Values (S,M,L,E)
             x += 35;
@@ -291,6 +292,14 @@ public class BattleforcePrinter implements Printable {
 
     public void setPrintLogo(boolean printLogo) {
         this.printLogo = printLogo;
+    }
+
+    public boolean UseTerrain() {
+        return useTerrainMod;
+    }
+
+    public void setTerrain(boolean useTerrainMod) {
+        this.useTerrainMod = useTerrainMod;
     }
 
 }
