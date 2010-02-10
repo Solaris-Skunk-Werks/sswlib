@@ -56,6 +56,7 @@ public class Scenario implements ifSerializable {
                     Aftermath = "";
     private Vector<Force> forces = new Vector<Force>();
     private Warchest warchest = new Warchest();
+    private abTable currentModel;
 
     public Scenario() {
         forces.add(new Force());
@@ -126,24 +127,47 @@ public class Scenario implements ifSerializable {
 
     public void AddListener( TableModelListener listener ) {
         for ( Force force : getForces() ) {
-            force.addTableModelListener(listener);
+            force.getCurrentModel().addTableModelListener(listener);
         }
     }
 
-    public void setupTable(JTable[] tables) {
-        int i = 0;
-        for ( Force force : getForces() ) {
-            force.setupTable(tables[i]);
-            i++;
-        }
+    public void setupTables(JTable top, JTable bottom) {
+        getAttackerForce().setupTable(top);
+        getDefenderForce().setupTable(bottom);
+    }
 
-        forces.get(0).OpForSize = getForces().get(1).getUnits().size();
-        forces.get(1).OpForSize = getForces().get(0).getUnits().size();
+    public void updateOpFor( boolean UseMod ) {
+        for ( Force f : forces ) {
+            f.useUnevenForceMod = UseMod;
+        }
+        
+        if ( UseMod ) {
+            setOpFor();
+        } else {
+            clearOpFor();
+        }
+        Refresh();
+    }
+
+    public void setOpFor() {
+        getAttackerForce().OpForSize = getDefenderForce().getUnits().size();
+        getDefenderForce().OpForSize = getAttackerForce().getUnits().size();
+    }
+
+    public void clearOpFor() {
+        getAttackerForce().OpForSize = 0;
+        getDefenderForce().OpForSize = 0;
     }
 
     public void setModel( abTable model ) {
         for ( Force force : getForces() ) {
-            force.setCurrentModel(model);
+            force.setCurrentModel(model.Create(force));
+        }
+    }
+
+    public void Refresh() {
+        for ( Force f : forces ) {
+            f.RefreshBV();
         }
     }
 

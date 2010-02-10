@@ -34,9 +34,7 @@ import javax.swing.SortOrder;
 import list.view.Column;
 
 public class tbTotalWarfare extends abTable {
-    public tbTotalWarfare( Force f ) {
-        force = f;
-
+    public tbTotalWarfare( ) {
         Columns.add(new Column( 0, "Unit", "TypeModel", false, 150, String.class, true, SortOrder.ASCENDING ));
         Columns.add(new Column( 1, "Type", "UnitType", 50 ));
         Columns.add(new Column( 2, "Mechwarrior", "Mechwarrior", 150, true));
@@ -53,6 +51,23 @@ public class tbTotalWarfare extends abTable {
         SortFields.add(Columns.get(4));
         SortFields.add(Columns.get(0));
         SortFields.add(Columns.get(10));
+    }
+
+    public tbTotalWarfare( Force f ) {
+        this();
+        force = f;
+    }
+
+    public void setForce( Force f ) {
+        this.force = f;
+    }
+
+    public tbTotalWarfare Create() {
+        return new tbTotalWarfare();
+    }
+
+    public tbTotalWarfare Create( Force f ) {
+        return new tbTotalWarfare(f);
     }
 
     public Object getValueAt( int row, int col ) {

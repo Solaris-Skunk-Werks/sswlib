@@ -42,6 +42,9 @@ public abstract class abTable extends AbstractTableModel {
     public Vector<Column> SortFields = new Vector<Column>();
     public Force force;
 
+    public abstract void setForce( Force f );
+    public abstract abTable Create();
+    public abstract abTable Create(Force f);
     public Force getForce() {
         return force;
     };

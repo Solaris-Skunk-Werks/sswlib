@@ -182,7 +182,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
             }
         }
 
-        fireTableDataChanged();
+        currentModel.fireTableDataChanged();
     }
 
     public void AddUnit( Unit u ) {

@@ -33,13 +33,28 @@ import javax.swing.SortOrder;
 import list.view.Column;
 
 public class tbChatInfo extends abTable {
-    public tbChatInfo( Force f ) {
-        force = f;
-
+    public tbChatInfo() {
         Columns.add(new Column( 0, "Unit", "TypeModel", 100 ));
         Columns.add(new Column( 1, "Info", "ChatInfo", 400, false));
         Columns.add(new Column( 2, "Base BV", "BaseBV", 20, Integer.class ));
         Columns.add(new Column( 3, "Adj BV", "TotalBV", false, 20, Integer.class, true, SortOrder.ASCENDING ));
+    }
+
+    public tbChatInfo( Force f ) {
+        this();
+        force = f;
+    }
+
+    public void setForce( Force f ) {
+        this.force = f;
+    }
+
+    public tbChatInfo Create() {
+        return new tbChatInfo();
+    }
+
+    public tbChatInfo Create( Force f ) {
+        return new tbChatInfo(f);
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {

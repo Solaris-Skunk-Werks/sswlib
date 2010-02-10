@@ -79,8 +79,9 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         this.parent = Parent;
         this.imageTracker = imageTracker;
 
+
         force.setCurrentModel(new tbTotalWarfareSmall(force));
-        force.addTableModelListener(forceChanged);
+        force.getCurrentModel().addTableModelListener(forceChanged);
     }
 
     private void LoadMech() {
