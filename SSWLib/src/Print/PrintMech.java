@@ -779,7 +779,10 @@ public class PrintMech implements Printable {
         graphics.setFont( PrintConsts.SmallFont );
         if (a.length >= 9) { graphics.setFont( PrintConsts.XtraSmallFont ); }
         int offset = 0;
+        Vector<AmmoData> AmmoList = GetAmmo();
         boolean PrintSpecials = false;
+        boolean isATM = false,
+                doneATM = false;
         for( int i = 0; i < a.length; i++ ) {
             PlaceableInfo item = a[i];
             graphics.drawString( item.Count + "", p[0].x, p[0].y + offset );
@@ -798,6 +801,7 @@ public class PrintMech implements Printable {
             }
             if( item.Item instanceof ifWeapon ) {
                 if( ((ifWeapon) item.Item).GetWeaponClass() == ifWeapon.W_MISSILE ) {
+                    if ( ((ifWeapon) item.Item).CritName().contains("ATM") ) isATM = true;
                     graphics.drawString( ((ifWeapon) item.Item).GetDamageShort() + "/m", p[4].x, p[4].y + offset );
                     PrintSpecials = true;
                 } else {
@@ -861,6 +865,35 @@ public class PrintMech implements Printable {
 
             offset += graphics.getFont().getSize();
 
+            //We want to output the damage/range data for the other ATM ammo types
+            if ( isATM && !doneATM ) {
+                //ER Ammo
+                if ( AmmoContains(AmmoList, "ER")) {
+                    graphics.drawString( "  ATM ER Ammo", p[1].x, p[1].y + offset );
+                    graphics.drawString( "1/m", p[4].x, p[4].y + offset );
+                    graphics.drawString( (4 * MiniConvRate ) + "", p[5].x, p[5].y + offset );
+                    graphics.drawString( (9 * MiniConvRate ) + "", p[6].x, p[6].y + offset );
+                    graphics.drawString( (18 * MiniConvRate ) + "", p[7].x, p[7].y + offset );
+                    graphics.drawString( (27 * MiniConvRate ) + "", p[8].x, p[8].y + offset );
+                    offset += graphics.getFont().getSize();
+                    doneATM = true;
+                }
+
+                //HE Ammo
+                if ( AmmoContains(AmmoList, "HE") ) {
+                    graphics.drawString( "  ATM HE Ammo", p[1].x, p[1].y + offset );
+                    graphics.drawString( "3/m", p[4].x, p[4].y + offset );
+                    graphics.drawString( "-", p[5].x, p[5].y + offset );
+                    graphics.drawString( (3 * MiniConvRate ) + "", p[6].x, p[6].y + offset );
+                    graphics.drawString( (6 * MiniConvRate ) + "", p[7].x, p[7].y + offset );
+                    graphics.drawString( (9 * MiniConvRate ) + "", p[8].x, p[8].y + offset );
+                    offset += graphics.getFont().getSize();
+                    doneATM = true;
+                }
+
+                isATM = false;
+            }
+
             // check to see how if we need to print our special codes.
             if( PrintSpecials ) {
                 String Codes = "";
@@ -883,10 +916,9 @@ public class PrintMech implements Printable {
             graphics.drawString(tc.CritName(), p[1].x, p[1].y + offset);
             offset += graphics.getFont().getSize();
         }
-        offset += (graphics.getFont().getSize() * 2);
+        offset += graphics.getFont().getSize();
 
         //Output the list of Ammunition
-        Vector AmmoList = GetAmmo();
         if ( AmmoList.size() > 0 ) {
             graphics.drawString("Ammunition Type", p[0].x, p[0].y + offset);
             graphics.drawString("Rounds", p[3].x, p[3].y + offset);
@@ -1082,10 +1114,10 @@ public class PrintMech implements Printable {
         }
     }
 
-    private Vector GetAmmo() {
+    private Vector<AmmoData> GetAmmo() {
         //Output the list of Ammunition
         Vector all = CurMech.GetLoadout().GetNonCore();
-        Vector AmmoList = new Vector();
+        Vector<AmmoData> AmmoList = new Vector<AmmoData>();
         for ( int index=0; index < all.size(); index++ ) {
             if(  all.get( index ) instanceof Ammunition ) {
                 AmmoData CurAmmo = new AmmoData((Ammunition) all.get(index));
@@ -1105,6 +1137,13 @@ public class PrintMech implements Printable {
             }
         }
         return AmmoList;
+    }
+
+    private boolean AmmoContains( Vector<AmmoData> AmmoList, String CheckExpr ) {
+        for ( AmmoData data : AmmoList ) {
+            if ( data.Format().contains(CheckExpr) ) return true;
+        }
+        return false;
     }
 
     private PlaceableInfo[] SortEquipmentByLocation() {
