@@ -821,7 +821,7 @@ public class PrintMech implements Printable {
                         ifWeapon weap = ((ifWeapon) item.Item);
                         String damage = weap.GetDamageShort() + "/" + weap.GetDamageMedium() + "/" + weap.GetDamageLong();
                         if ( damage.length() >= 8 ) graphics.setFont( PrintConsts.ReallySmallFont );
-                        graphics.drawString( ((ifWeapon) item.Item).GetDamageShort() + "/" + ((ifWeapon) item.Item).GetDamageMedium() + "/" + ((ifWeapon) item.Item).GetDamageLong(), p[4].x-8, p[4].y + offset );
+                        graphics.drawString( damage, p[4].x-8, p[4].y + offset );
                         graphics.setFont(curFont);
                         PrintSpecials = true;
                     } else {
