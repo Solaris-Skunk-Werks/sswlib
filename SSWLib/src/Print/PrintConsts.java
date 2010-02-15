@@ -67,6 +67,8 @@ public class PrintConsts {
                                QS_Card = "./Data/Printing/QSCard.png",
                                BFB_BG = "./Data/Printing/bfb_bg.png",
                                BT_LOGO = "./Data/Printing/BT_Logo.png",
+                               LA_Shield = "./Data/Printing/LA_Shield.png",
+                               RA_Shield = "./Data/Printing/RA_Shield.png",
                                PATTERNS = "./Data/Printing/patterns.zip";
 
     public final static Font BaseFont = FontLoader.getFont("Eurosti.ttf").deriveFont(Font.PLAIN, 20);

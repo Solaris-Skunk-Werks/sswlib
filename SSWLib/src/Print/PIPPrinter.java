@@ -230,6 +230,10 @@ public class PIPPrinter {
     public void setMech( Mech mech ) {
         this.CurMech = mech;
     }
+
+    public void AddArmor( String Location, Point startingPoint, Point imageSize, int ArmorPoints ) {
+        Armor.put(Armor.size()+1, new PIPSettings(0, false, startingPoint, imageSize, Location, new Point[]{}, ArmorPoints));
+    }
 // </editor-fold>
 
     private class PIPSettings {
@@ -241,6 +245,7 @@ public class PIPPrinter {
         public Point[] points = null;
         public boolean Internal = false;
         public Image pattern = null;
+        private int PIPPoints = 0;
 
         public PIPSettings(int LocationID, boolean internal, Point startingPoint, Point imageSize, String locationPrefix, Point[] Points) {
             this.LocationID = LocationID;
@@ -250,6 +255,11 @@ public class PIPPrinter {
             this.points = Points;
             this.max = Points.length;
             this.Internal = internal;
+        }
+
+        public PIPSettings(int LocationID, boolean internal, Point startingPoint, Point imageSize, String locationPrefix, Point[] Points, int PIPPoints) {
+            this(LocationID, internal, startingPoint, imageSize, locationPrefix, Points);
+            this.PIPPoints = PIPPoints;
         }
 
         public int GetArmor() {
@@ -274,10 +284,14 @@ public class PIPPrinter {
 
         public String GetFileNumber() {
             String FileNumber = "";
-            if( Internal ) {
-                FileNumber = GetInternals() + "";
+            if ( PIPPoints == 0 ) {
+                if( Internal ) {
+                    FileNumber = GetInternals() + "";
+                } else {
+                    FileNumber = GetArmor() + "";
+                }
             } else {
-                FileNumber = GetArmor() + "";
+                FileNumber = PIPPoints + "";
             }
             if ( FileNumber.length() == 1 ) { FileNumber = "0" + FileNumber; }
             return FileNumber;

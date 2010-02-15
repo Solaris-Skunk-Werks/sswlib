@@ -71,6 +71,8 @@ public class PrintMech implements Printable {
     private Media media = new Media();
     private ImageTracker imageTracker;
     private Preferences Prefs = Preferences.userNodeForPackage("/ssw/gui/frmMain".getClass());
+    private PlaceableInfo[] Items;
+    private PIPPrinter ap;
 
     // <editor-fold desc="Constructors">
     public PrintMech( Mech m, Image i, boolean adv, boolean A4, ImageTracker images) {
@@ -197,20 +199,11 @@ public class PrintMech implements Printable {
     }
     
     private void PreparePrint( Graphics2D graphics ) {
+        Items = SortEquipmentByLocation();
+        ap = new PIPPrinter(graphics, CurMech, Canon, imageTracker);
         this.BV = CommonTools.GetAdjustedBV(CurMech.GetCurrentBV(), Gunnery, Piloting);
 
-        // adjust the printable area for A4 paper size
-        if( UseA4Paper ) {
-            graphics.scale( 0.9705d, 0.9705d );
-        }
-        
-        // adjust the printable area for use with helpful charts
-        if( Charts ) {
-            graphics.scale( 0.8d, 0.8d );
-        }
-
-        graphics.drawImage( RecordSheet, 0, 0, 576, 756, null );
-
+        DrawSheet( graphics );
         DrawPips( graphics );
         DrawCriticals( graphics );
         DrawMechData( graphics );
@@ -225,8 +218,23 @@ public class PrintMech implements Printable {
         //DrawGrid( graphics );
     }
 
+    private void DrawSheet( Graphics2D graphics ) {
+        // adjust the printable area for A4 paper size
+        if( UseA4Paper ) {
+            graphics.scale( 0.9705d, 0.9705d );
+        }
+
+        // adjust the printable area for use with helpful charts
+        if( Charts ) {
+            graphics.scale( 0.8d, 0.8d );
+        }
+
+        graphics.drawImage( RecordSheet, 0, 0, 576, 756, null );
+        CheckShields( graphics );
+
+    }
+
     private void DrawPips( Graphics2D graphics ) {
-        PIPPrinter ap = new PIPPrinter(graphics, CurMech, Canon, imageTracker);
         ap.Render();
     }
 
@@ -1144,6 +1152,46 @@ public class PrintMech implements Printable {
             if ( data.Format().contains(CheckExpr) ) return true;
         }
         return false;
+    }
+
+    private void CheckShields( Graphics2D graphics ) {
+        Image shieldImage;
+        Point startingLocation = new Point(0,0);
+        for( int i = 0; i < Items.length; i++ ) {
+            PlaceableInfo item = Items[i];
+            if ( item.Item instanceof PhysicalWeapon ) {
+                if ( ((PhysicalWeapon) item.Item).GetPWClass() == PhysicalWeapon.PW_CLASS_SHIELD ) {
+                    switch ( item.Location ) {
+                        case LocationIndex.MECH_LOC_LA:
+                            shieldImage = imageTracker.getImage(PrintConsts.LA_Shield);
+                            startingLocation = new Point(375, 7);
+                            graphics.drawImage(shieldImage, startingLocation.x, startingLocation.y, 57, 116, null);
+                            startingLocation.x += 1;
+                            startingLocation.y += 2;
+                            break;
+                        case LocationIndex.MECH_LOC_RA:
+                            shieldImage = imageTracker.getImage(PrintConsts.RA_Shield);
+                            startingLocation = new Point(511, 7);
+                            graphics.drawImage(shieldImage, startingLocation.x, startingLocation.y, 57, 116, null);
+                            startingLocation.x += 22;
+                            startingLocation.y += 2;
+                            break;
+                    }
+
+                    if ( item.Item.ActualName().contains("Small") ) {
+                        ap.AddArmor(FileCommon.EncodeLocation(item.Location, CurMech.IsQuad()) + "_SH_" , startingLocation, new Point(34, 101), 11);
+                    }
+
+                    if ( item.Item.ActualName().contains("Medium") ) {
+                        ap.AddArmor(FileCommon.EncodeLocation(item.Location, CurMech.IsQuad()) + "_SH_", startingLocation, new Point(34, 101), 18);
+                    }
+
+                    if ( item.Item.ActualName().contains("Large") ) {
+                        ap.AddArmor(FileCommon.EncodeLocation(item.Location, CurMech.IsQuad()) + "_SH_", startingLocation, new Point(34, 101), 25);
+                    }
+                }
+            }
+        }
     }
 
     private PlaceableInfo[] SortEquipmentByLocation() {
