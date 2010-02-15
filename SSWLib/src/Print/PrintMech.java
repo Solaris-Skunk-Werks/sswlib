@@ -790,7 +790,9 @@ public class PrintMech implements Printable {
         Vector<AmmoData> AmmoList = GetAmmo();
         boolean PrintSpecials = false;
         boolean isATM = false,
-                doneATM = false;
+                isMML = false,
+                doneATM = false,
+                doneMML = false;
         for( int i = 0; i < a.length; i++ ) {
             PlaceableInfo item = a[i];
             graphics.drawString( item.Count + "", p[0].x, p[0].y + offset );
@@ -810,11 +812,17 @@ public class PrintMech implements Printable {
             if( item.Item instanceof ifWeapon ) {
                 if( ((ifWeapon) item.Item).GetWeaponClass() == ifWeapon.W_MISSILE ) {
                     if ( ((ifWeapon) item.Item).CritName().contains("ATM") ) isATM = true;
+                    if ( ((ifWeapon) item.Item).CritName().contains("MML") ) isMML = true;
                     graphics.drawString( ((ifWeapon) item.Item).GetDamageShort() + "/m", p[4].x, p[4].y + offset );
                     PrintSpecials = true;
                 } else {
                     if( ((ifWeapon) item.Item).GetDamageShort() != ((ifWeapon) item.Item).GetDamageMedium() ||  ((ifWeapon) item.Item).GetDamageShort() != ((ifWeapon) item.Item).GetDamageLong() ||  ((ifWeapon) item.Item).GetDamageMedium() != ((ifWeapon) item.Item).GetDamageLong() ) {
-                        graphics.drawString( ((ifWeapon) item.Item).GetDamageShort() + "/" + ((ifWeapon) item.Item).GetDamageMedium() + "/" + ((ifWeapon) item.Item).GetDamageLong(), p[4].x, p[4].y + offset );
+                        Font curFont = graphics.getFont();
+                        ifWeapon weap = ((ifWeapon) item.Item);
+                        String damage = weap.GetDamageShort() + "/" + weap.GetDamageMedium() + "/" + weap.GetDamageLong();
+                        if ( damage.length() >= 8 ) graphics.setFont( PrintConsts.ReallySmallFont );
+                        graphics.drawString( ((ifWeapon) item.Item).GetDamageShort() + "/" + ((ifWeapon) item.Item).GetDamageMedium() + "/" + ((ifWeapon) item.Item).GetDamageLong(), p[4].x-8, p[4].y + offset );
+                        graphics.setFont(curFont);
                         PrintSpecials = true;
                     } else {
                         if( ((ifWeapon) item.Item).GetSpecials().equals( "-" ) ) {
@@ -900,6 +908,20 @@ public class PrintMech implements Printable {
                 }
 
                 isATM = false;
+            }
+
+            if ( isMML && !doneMML ) {
+                //ER Ammo
+                if ( AmmoContains(AmmoList, "SRM")) {
+                    graphics.drawString( "  SRM Ammo", p[1].x, p[1].y + offset );
+                    graphics.drawString( "2/m", p[4].x, p[4].y + offset );
+                    graphics.drawString( "-", p[5].x, p[5].y + offset );
+                    graphics.drawString( (3 * MiniConvRate ) + "", p[6].x, p[6].y + offset );
+                    graphics.drawString( (6 * MiniConvRate ) + "", p[7].x, p[7].y + offset );
+                    graphics.drawString( (9 * MiniConvRate ) + "", p[8].x, p[8].y + offset );
+                    offset += graphics.getFont().getSize();
+                    doneMML = true;
+                }
             }
 
             // check to see how if we need to print our special codes.
