@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
-import components.Armor;
+import components.MechArmor;
 import components.AvailableCode;
 import components.LocationIndex;
 import components.MechModifier;
@@ -73,7 +73,7 @@ public class stArmorISST implements ifArmor, ifState {
         return false;
     }
 
-    public boolean Place( Armor a, ifMechLoadout l ) {
+    public boolean Place( MechArmor a, ifMechLoadout l ) {
         // Place the armor in the mech
         boolean placed = false;
         int increment = 11;
@@ -196,7 +196,7 @@ public class stArmorISST implements ifArmor, ifState {
         return true;
     }
 
-    public boolean Place( Armor a, ifMechLoadout l, LocationIndex[] Locs ) {
+    public boolean Place( MechArmor a, ifMechLoadout l, LocationIndex[] Locs ) {
         LocationIndex li;
         try {
             for( int i = 0; i < Locs.length; i++ ) {
@@ -211,6 +211,10 @@ public class stArmorISST implements ifArmor, ifState {
 
     public int NumCrits() {
         return 12;
+    }
+
+    public int PatchworkCrits() {
+        return 2;
     }
 
     public double GetAVMult() {

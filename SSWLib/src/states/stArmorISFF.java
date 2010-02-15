@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
-import components.Armor;
+import components.MechArmor;
 import components.AvailableCode;
 import components.LocationIndex;
 import components.MechModifier;
@@ -73,19 +73,36 @@ public class stArmorISFF implements ifArmor, ifState {
         return true;
     }
 
-    public boolean Place( Armor a, ifMechLoadout l ) {
+    public boolean Place( MechArmor a, ifMechLoadout l ) {
         // Simply place the armor into the loadout queue
         l.AddToQueue( a );
         return true;
     }
 
-    public boolean Place( Armor a, ifMechLoadout l, LocationIndex[] Locs ) {
-        // not implemented yet, just place as normal
-        return Place( a, l );
+    public boolean Place( MechArmor a, ifMechLoadout l, LocationIndex[] Locs ) {
+        LocationIndex li;
+        try {
+            for( int i = 0; i < Locs.length; i++ ) {
+                li = (LocationIndex) Locs[i];
+                for( int x = 0; x < li.Number; x++ ) {
+                    int index = li.Index;
+                    if( index < 0 ) { index = l.FirstFree( l.GetCrits( li.Location ) ); }
+                    if( index >= l.GetCrits( li.Location ).length ) { return false; }
+                    l.AddTo( a, li.Location, index );
+                }
+            }
+        } catch( Exception e ) {
+            return false;
+        }
+        return true;
     }
 
     public int NumCrits() {
         return 14;
+    }
+
+    public int PatchworkCrits() {
+        return 2;
     }
 
     public double GetAVMult() {

@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
-import components.Armor;
+import components.MechArmor;
 import components.AvailableCode;
 import components.LocationIndex;
 import components.MechModifier;
@@ -41,9 +41,10 @@ public interface ifArmor {
     public String ChatName();
     public String MegaMekName( boolean UseRear );
     public String BookReference();
-    public boolean Place( Armor a, ifMechLoadout l );
-    public boolean Place( Armor a, ifMechLoadout l, LocationIndex[] Locs );
+    public boolean Place( MechArmor a, ifMechLoadout l );
+    public boolean Place( MechArmor a, ifMechLoadout l, LocationIndex[] Locs );
     public int NumCrits();
+    public int PatchworkCrits();
     public double GetAVMult();
     public double GetPointsPerTon();
     public boolean IsStealth();

@@ -34,30 +34,30 @@ import components.LocationIndex;
 import components.MechModifier;
 import components.ifMechLoadout;
 
-public class stArmorMS implements ifArmor, ifState {
+public class stArmorPatchwork implements ifArmor, ifState {
     boolean locked = false;
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
 
-    public stArmorMS() {
-        AC.SetISCodes( 'D', 'C', 'C', 'C' );
-        AC.SetISDates( 0, 0, false, 2470, 0, 0, false, false );
+    public stArmorPatchwork() {
+        AC.SetISCodes( 'A', 'A', 'A', 'A' );
+        AC.SetISDates( 0, 0, false, 2400, 0, 0, false, false );
         AC.SetISFactions( "", "", "TH", "" );
-        AC.SetCLCodes( 'D', 'X', 'B', 'B' );
-        AC.SetCLDates( 0, 0, false, 2470, 0, 0, false, false );
-        AC.SetCLFactions( "", "", "TH", "" );
-        AC.SetRulesLevels( AvailableCode.RULES_INTRODUCTORY, AvailableCode.RULES_INTRODUCTORY, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT );
+        AC.SetCLCodes( 'A', 'X', 'A', 'A' );
+        AC.SetISDates( 0, 0, false, 2400, 0, 0, false, false );
+        AC.SetISFactions( "", "", "TH", "" );
+        AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL );
     }
 
     public String ActualName() {
-        return "Military Standard Armor";
+        return "Patchwork Armor";
     }
 
     public String CritName() {
-        return "Standard Armor";
+        return "Patchwork";
     }
 
     public String LookupName() {
-        return "Standard Armor";
+        return "Patchwork Armor";
     }
 
     public String ChatName() {
@@ -69,7 +69,7 @@ public class stArmorMS implements ifArmor, ifState {
     }
 
     public String BookReference() {
-        return "Tech Manual";
+        return "Tactical Operations";
     }
 
     public boolean HasCounterpart() {
@@ -77,13 +77,65 @@ public class stArmorMS implements ifArmor, ifState {
     }
 
     public boolean Place( MechArmor a, ifMechLoadout l ) {
-        // IS military standard is never added to the loadout.
+        // Place all patchwork components.
+        try {
+            int idx = l.FirstFree( l.GetHDCrits() );
+            for( int i = 0; i < a.GetHDArmorType().PatchworkCrits(); i++ ) {
+                l.AddToHD( a, idx );
+                idx = l.FirstFree( l.GetHDCrits() );
+            }
+            idx = l.FirstFree( l.GetCTCrits() );
+            for( int i = 0; i < a.GetCTArmorType().PatchworkCrits(); i++ ) {
+                l.AddToCT( a, idx );
+                idx = l.FirstFree( l.GetCTCrits() );
+            }
+            idx = l.FirstFree( l.GetLTCrits() );
+            for( int i = 0; i < a.GetLTArmorType().PatchworkCrits(); i++ ) {
+                l.AddToLT( a, idx );
+                idx = l.FirstFree( l.GetLTCrits() );
+            }
+            idx = l.FirstFree( l.GetRTCrits() );
+            for( int i = 0; i < a.GetRTArmorType().PatchworkCrits(); i++ ) {
+                l.AddToRT( a, idx );
+                idx = l.FirstFree( l.GetRTCrits() );
+            }
+            idx = l.FirstFree( l.GetLACrits() );
+            for( int i = 0; i < a.GetLAArmorType().PatchworkCrits(); i++ ) {
+                l.AddToLA( a, idx );
+                idx = l.FirstFree( l.GetLACrits() );
+            }
+            idx = l.FirstFree( l.GetRACrits() );
+            for( int i = 0; i < a.GetRAArmorType().PatchworkCrits(); i++ ) {
+                l.AddToRA( a, idx );
+                idx = l.FirstFree( l.GetRACrits() );
+            }
+            idx = l.FirstFree( l.GetLLCrits() );
+            for( int i = 0; i < a.GetLLArmorType().PatchworkCrits(); i++ ) {
+                l.AddToLL( a, idx );
+                idx = l.FirstFree( l.GetLLCrits() );
+            }
+            idx = l.FirstFree( l.GetRLCrits() );
+            for( int i = 0; i < a.GetRLArmorType().PatchworkCrits(); i++ ) {
+                l.AddToRL( a, idx );
+                idx = l.FirstFree( l.GetRLCrits() );
+            }
+        } catch( Exception e ) {
+            return false;
+        }
         return true;
     }
 
     public boolean Place( MechArmor a, ifMechLoadout l, LocationIndex[] Locs ) {
-        // not implemented yet, just place as normal
-        return Place( a, l );
+        LocationIndex li;
+        try {
+            for( int i = 0; i < Locs.length; i++ ) {
+                li = (LocationIndex) Locs[i];
+                l.AddTo( a, li.Location, li.Index );
+            }
+        } catch( Exception e ) {
+            return false;
+        }
+        return true;
     }
 
     public int NumCrits() {
@@ -119,11 +171,10 @@ public class stArmorMS implements ifArmor, ifState {
     }
 
     public boolean LocationLocked() {
-        return locked;
+        return true;
     }
 
     public void SetLocked( boolean l ) {
-        locked = l;
     }
 
     public MechModifier GetMechModifier() {

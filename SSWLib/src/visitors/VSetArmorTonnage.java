@@ -34,9 +34,9 @@ import java.util.prefs.Preferences;
 public class VSetArmorTonnage implements ifVisitor {
     private double ArmorTons;
     private int ArmorPoints[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    private int CTRPerc = Armor.DEFAULT_CTR_ARMOR_PERCENT,
-                STRPerc = Armor.DEFAULT_STR_ARMOR_PERCENT,
-                ArmorPriority = Armor.ARMOR_PRIORITY_TORSO;
+    private int CTRPerc = MechArmor.DEFAULT_CTR_ARMOR_PERCENT,
+                STRPerc = MechArmor.DEFAULT_STR_ARMOR_PERCENT,
+                ArmorPriority = MechArmor.ARMOR_PRIORITY_TORSO;
     private Preferences Prefs;
 
     public VSetArmorTonnage( Preferences p ) {
@@ -56,10 +56,10 @@ public class VSetArmorTonnage implements ifVisitor {
 
     public void Visit(Mech m) {
         // only the armor changes, so pass us off
-        CTRPerc = Prefs.getInt( "ArmorCTRPercent", Armor.DEFAULT_CTR_ARMOR_PERCENT );
-        STRPerc = Prefs.getInt( "ArmorSTRPercent", Armor.DEFAULT_STR_ARMOR_PERCENT );
-        ArmorPriority = Prefs.getInt( "ArmorPriority", Armor.ARMOR_PRIORITY_TORSO );
-        Armor a = m.GetArmor();
+        CTRPerc = Prefs.getInt( "ArmorCTRPercent", MechArmor.DEFAULT_CTR_ARMOR_PERCENT );
+        STRPerc = Prefs.getInt( "ArmorSTRPercent", MechArmor.DEFAULT_STR_ARMOR_PERCENT );
+        ArmorPriority = Prefs.getInt( "ArmorPriority", MechArmor.ARMOR_PRIORITY_TORSO );
+        MechArmor a = m.GetArmor();
 
         // set the armor tonnage
         // zero out the armor to begin with.
@@ -109,7 +109,7 @@ public class VSetArmorTonnage implements ifVisitor {
         }
     }
 
-    private void AllocateArmor( Armor a ) {
+    private void AllocateArmor( MechArmor a ) {
         // testing out a new allocation routine
         // round the armor tonnage up to the nearest half ton
         double MidTons = ( (double) Math.floor( ArmorTons * 2.0f ) ) * 0.5f;
@@ -120,7 +120,7 @@ public class VSetArmorTonnage implements ifVisitor {
         ArmorPoints[LocationIndex.MECH_LOC_HD] = (int) Math.floor( AV * 0.06f );
         ArmorPoints[LocationIndex.MECH_LOC_CT] = (int) Math.floor( AV * 0.15f );
         ArmorPoints[LocationIndex.MECH_LOC_CTR] = (int) Math.round( ArmorPoints[LocationIndex.MECH_LOC_CT] * CTRPerc / 100 );
-        switch( Prefs.getInt( "ArmorPriority", Armor.ARMOR_PRIORITY_TORSO ) ) {
+        switch( Prefs.getInt( "ArmorPriority", MechArmor.ARMOR_PRIORITY_TORSO ) ) {
         case 0:
             // torsos
             ArmorPoints[LocationIndex.MECH_LOC_LT] = (int) Math.floor( AV * 0.13f );
@@ -167,7 +167,7 @@ public class VSetArmorTonnage implements ifVisitor {
         Symmetrize( a );
     }
 
-    private int CheckMaximums( Armor a, int AV ) {
+    private int CheckMaximums( MechArmor a, int AV ) {
         int result = AV;
 
         // head check
@@ -243,7 +243,7 @@ public class VSetArmorTonnage implements ifVisitor {
         return result;
     }
 
-    private void AllocateExtra( Armor a, int AV ) {
+    private void AllocateExtra( MechArmor a, int AV ) {
         // recursive routine for allocating the armor.  Pass in the AV we have
         // to distribute.   We'll do it round-robin style by priority
         boolean HeadMax = Prefs.getBoolean( "ArmorMaxHead", true );
@@ -388,7 +388,7 @@ public class VSetArmorTonnage implements ifVisitor {
         }
     }
 
-    private void Symmetrize( Armor a ) {
+    private void Symmetrize( MechArmor a ) {
         // this method attempts to fix any non-symmetrical allocations in a
         // graceful manner.  To simplify, we're taking a point or two from the CT.
         // Since there should never be more than one or two pairs out of alignment
@@ -451,7 +451,7 @@ public class VSetArmorTonnage implements ifVisitor {
         }
     }
 
-    private void FixArmor( Armor a ) {
+    private void FixArmor( MechArmor a ) {
         // fixes the armor values to the mech
         a.SetArmor( LocationIndex.MECH_LOC_HD, ArmorPoints[LocationIndex.MECH_LOC_HD] );
         a.SetArmor( LocationIndex.MECH_LOC_CT, ArmorPoints[LocationIndex.MECH_LOC_CT] );

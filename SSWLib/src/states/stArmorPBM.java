@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
-import components.Armor;
+import components.MechArmor;
 import components.AvailableCode;
 import components.LocationIndex;
 import components.MechModifier;
@@ -75,17 +75,21 @@ public class stArmorPBM implements ifArmor, ifState {
         return false;
     }
 
-    public boolean Place( Armor a, ifMechLoadout l ) {
+    public boolean Place( MechArmor a, ifMechLoadout l ) {
         // Industrial armor takes no extra crits.
         return true;
     }
 
-    public boolean Place( Armor a, ifMechLoadout l, LocationIndex[] Locs ) {
+    public boolean Place( MechArmor a, ifMechLoadout l, LocationIndex[] Locs ) {
         // not implemented yet, just place as normal
         return Place( a, l );
     }
 
     public int NumCrits() {
+        return 0;
+    }
+
+    public int PatchworkCrits() {
         return 0;
     }
 

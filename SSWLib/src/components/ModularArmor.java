@@ -46,7 +46,7 @@ public class ModularArmor extends abPlaceable {
         AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 
-   public void SetMegaMekName( String n ) {
+    public void SetMegaMekName( String n ) {
     }
 
     public String ActualName() {
@@ -62,7 +62,11 @@ public class ModularArmor extends abPlaceable {
     }
 
     public String LookupName() {
-        return "Modular Armor";
+        if( Rear ) {
+            return "(R) Modular Armor";
+        } else {
+            return "Modular Armor";
+        }
     }
 
     public String ChatName() {

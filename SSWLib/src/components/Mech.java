@@ -95,7 +95,7 @@ public class Mech implements ifUnit, ifBattleforce {
     private InternalStructure CurIntStruc = new InternalStructure( this );
     private Cockpit CurCockpit = new Cockpit( this );
     private PhysicalEnhancement CurPhysEnhance = new PhysicalEnhancement( this );
-    private Armor CurArmor = new Armor( this );
+    private MechArmor CurArmor = new MechArmor( this );
     private MultiSlotSystem NullSig,
                             VoidSig,
                             Chameleon,
@@ -1356,7 +1356,7 @@ public class Mech implements ifUnit, ifBattleforce {
         }
         info +=  "; ";
 
-        // Armor
+        // MechArmor
         info += GetArmor().GetTonnage() + "T " + GetArmor().ChatName() + "; ";
 
         // heat sinks
@@ -2152,7 +2152,7 @@ public class Mech implements ifUnit, ifBattleforce {
         // this is a safeguard for using MASC on an incredibly speedy chassis
         // there is currently no way to get a bonus higher anyway.
         if( RunMP > 29 ) { RunMP = 29; }
-        // safeguard for low walk mp (Modular Armor, for instance)
+        // safeguard for low walk mp (Modular MechArmor, for instance)
         if( RunMP < 0 ) { RunMP = 0; }
 
         // Get the defensive factors for jumping and running movement
@@ -2460,7 +2460,7 @@ public class Mech implements ifUnit, ifBattleforce {
         return CurLoadout.GetJumpJets();
     }
 
-    public Armor GetArmor() {
+    public MechArmor GetArmor() {
         return CurArmor;
     }
 
@@ -4064,7 +4064,7 @@ public class Mech implements ifUnit, ifBattleforce {
 
     public int GetBFArmor() {
 
-        Armor a = GetArmor();
+        MechArmor a = GetArmor();
         double armorpoints = a.GetArmorValue();
 
         if ( a.IsCommercial() ){
@@ -4368,7 +4368,7 @@ public class Mech implements ifUnit, ifBattleforce {
                 if ( !retval.contains("TSM") ) retval.add("TSM");
             }
 
-        //Mimetic Armor System
+        //Mimetic MechArmor System
         if ( HasVoidSig )
             if ( !retval.contains("MAS") ) retval.add("MAS");
 
@@ -4529,6 +4529,7 @@ public class Mech implements ifUnit, ifBattleforce {
         Lookup.put( "(CL) Reactive Armor", new VArmorSetRE() );
         Lookup.put( "Industrial Armor", new VArmorSetIndustrial() );
         Lookup.put( "Commercial Armor", new VArmorSetCommercial() );
+        Lookup.put( "Patchwork Armor", new VArmorSetPatchwork() );
         Lookup.put( "Standard Structure", new VChassisSetStandard() );
         Lookup.put( "Composite Structure", new VChassisSetComposite() );
         Lookup.put( "Endo-Steel", new VChassisSetEndoSteel() );

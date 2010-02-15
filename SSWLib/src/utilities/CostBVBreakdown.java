@@ -86,9 +86,53 @@ public class CostBVBreakdown {
             retval += String.format( "%1$-43s %2$,6.0f    %3$,6.0f    %4$,16.2f", "Power Amplifiers", 0.0f, 0.0f, CurMech.GetLoadout().GetPowerAmplifier().GetCost() ) + NL;
         }
         if( CurMech.IsPrimitive() && CurMech.GetYear() < 2450 ) {
-            retval += String.format( "Armor - %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().LookupName() + " (early)", CurMech.GetArmor().GetDefensiveBV(), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetCost() * 2.0f ) + NL;
+            retval += String.format( "Armor - %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().LookupName() + " (early)", CurMech.GetArmor().GetDefensiveBV(), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetCost() ) + NL;
+            if( CurMech.GetArmor().IsPatchwork() ) {
+                int[] ModArmor = CurMech.GetLoadout().FindModularArmor();
+                if( CurMech.IsQuad() ) {
+                    retval += String.format( "     HD: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetHDArmorType().LookupName(), CurMech.GetArmor().GetHDDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetHDCost() ) + NL;
+                    retval += String.format( "     CT: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetCTArmorType().LookupName(), CurMech.GetArmor().GetCTDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetCTCost() ) + NL;
+                    retval += String.format( "     LT: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetLTArmorType().LookupName(), CurMech.GetArmor().GetLTDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetLTCost() ) + NL;
+                    retval += String.format( "     RT: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetRTArmorType().LookupName(), CurMech.GetArmor().GetRTDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetRTCost() ) + NL;
+                    retval += String.format( "    FLL: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetLAArmorType().LookupName(), CurMech.GetArmor().GetLADefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetLACost() ) + NL;
+                    retval += String.format( "    FRL: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetRAArmorType().LookupName(), CurMech.GetArmor().GetRADefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetRACost() ) + NL;
+                    retval += String.format( "    RLL: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetLLArmorType().LookupName(), CurMech.GetArmor().GetLLDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetLLCost() ) + NL;
+                    retval += String.format( "    RRL: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetRLArmorType().LookupName(), CurMech.GetArmor().GetRLDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetRLCost() ) + NL;
+                } else {
+                    retval += String.format( "    HD: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetHDArmorType().LookupName(), CurMech.GetArmor().GetHDDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetHDCost() ) + NL;
+                    retval += String.format( "    CT: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetCTArmorType().LookupName(), CurMech.GetArmor().GetCTDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetCTCost() ) + NL;
+                    retval += String.format( "    LT: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetLTArmorType().LookupName(), CurMech.GetArmor().GetLTDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetLTCost() ) + NL;
+                    retval += String.format( "    RT: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetRTArmorType().LookupName(), CurMech.GetArmor().GetRTDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetRTCost() ) + NL;
+                    retval += String.format( "    LA: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetLAArmorType().LookupName(), CurMech.GetArmor().GetLADefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetLACost() ) + NL;
+                    retval += String.format( "    RA: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetRAArmorType().LookupName(), CurMech.GetArmor().GetRADefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetRACost() ) + NL;
+                    retval += String.format( "    LL: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetLLArmorType().LookupName(), CurMech.GetArmor().GetLLDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetLLCost() ) + NL;
+                    retval += String.format( "    RL: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetRLArmorType().LookupName(), CurMech.GetArmor().GetRLDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetRLCost() ) + NL;
+                }
+            }
         } else {
             retval += String.format( "Armor - %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().LookupName(), CurMech.GetArmor().GetDefensiveBV(), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetCost() ) + NL;
+            if( CurMech.GetArmor().IsPatchwork() ) {
+                int[] ModArmor = CurMech.GetLoadout().FindModularArmor();
+                if( CurMech.IsQuad() ) {
+                    retval += String.format( "     HD: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetHDArmorType().LookupName(), CurMech.GetArmor().GetHDDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetHDCost() ) + NL;
+                    retval += String.format( "     CT: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetCTArmorType().LookupName(), CurMech.GetArmor().GetCTDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetCTCost() ) + NL;
+                    retval += String.format( "     LT: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetLTArmorType().LookupName(), CurMech.GetArmor().GetLTDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetLTCost() ) + NL;
+                    retval += String.format( "     RT: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetRTArmorType().LookupName(), CurMech.GetArmor().GetRTDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetRTCost() ) + NL;
+                    retval += String.format( "    FLL: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetLAArmorType().LookupName(), CurMech.GetArmor().GetLADefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetLACost() ) + NL;
+                    retval += String.format( "    FRL: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetRAArmorType().LookupName(), CurMech.GetArmor().GetRADefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetRACost() ) + NL;
+                    retval += String.format( "    RLL: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetLLArmorType().LookupName(), CurMech.GetArmor().GetLLDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetLLCost() ) + NL;
+                    retval += String.format( "    RRL: %1$-34s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetRLArmorType().LookupName(), CurMech.GetArmor().GetRLDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetRLCost() ) + NL;
+                } else {
+                    retval += String.format( "    HD: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetHDArmorType().LookupName(), CurMech.GetArmor().GetHDDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetHDCost() ) + NL;
+                    retval += String.format( "    CT: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetCTArmorType().LookupName(), CurMech.GetArmor().GetCTDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetCTCost() ) + NL;
+                    retval += String.format( "    LT: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetLTArmorType().LookupName(), CurMech.GetArmor().GetLTDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetLTCost() ) + NL;
+                    retval += String.format( "    RT: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetRTArmorType().LookupName(), CurMech.GetArmor().GetRTDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetRTCost() ) + NL;
+                    retval += String.format( "    LA: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetLAArmorType().LookupName(), CurMech.GetArmor().GetLADefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetLACost() ) + NL;
+                    retval += String.format( "    RA: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetRAArmorType().LookupName(), CurMech.GetArmor().GetRADefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetRACost() ) + NL;
+                    retval += String.format( "    LL: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetLLArmorType().LookupName(), CurMech.GetArmor().GetLLDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetLLCost() ) + NL;
+                    retval += String.format( "    RL: %1$-35s %2$,6.0f    %3$,6.0f    %4$,16.2f", CurMech.GetArmor().GetRLArmorType().LookupName(), CurMech.GetArmor().GetRLDefensiveBV( ModArmor ), CurMech.GetArmor().GetOffensiveBV(), CurMech.GetArmor().GetRLCost() ) + NL;
+                }
+            }
         }
         retval += NL;
         retval += GetEquipmentCostLines();
@@ -102,14 +146,44 @@ public class CostBVBreakdown {
             retval += "(Note: BV Calculations include defensive BV for armored components.)" + NL;
         }
         retval += "________________________________________________________________________________" + NL;
-        if( CurMech.GetCockpit().IsTorsoMounted() ) {
-            retval += String.format( "%1$-71s %2$,8.2f", "Total Armor Factor (" + ( CurMech.GetArmor().GetArmorValue() + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CT) + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CTR) ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetBVTypeMult() + ") * 2.5", CurMech.GetArmor().GetDefensiveBV() ) + NL;
-            retval += "    (Front and Rear CT armor value doubled due to Torso-Mounted Cockpit)" + NL;
+        if( CurMech.GetArmor().IsPatchwork() ) {
+            retval += "Patchwork Armor Calculations" + NL;
+            if( CurMech.GetCockpit().IsTorsoMounted() ) {
+                retval += "    (Front and Rear CT armor value doubled due to Torso-Mounted Cockpit)" + NL;
+            }
+            int[] ModArmor = CurMech.GetLoadout().FindModularArmor();
+            retval += String.format( "    %1$-67s %2$,8.2f", "HD Armor Factor (" + ( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_HD) + ModArmor[LocationIndex.MECH_LOC_HD] ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetHDArmorType().GetBVTypeMult() + ")", CurMech.GetArmor().GetHDDefensiveBV( ModArmor ) ) + NL;
+            if( CurMech.GetCockpit().IsTorsoMounted() ) {
+                retval += String.format( "    %1$-67s %2$,8.2f", "( CT Armor Factor (" + ( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CT ) + ModArmor[LocationIndex.MECH_LOC_CT] + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CTR ) + ModArmor[LocationIndex.MECH_LOC_CTR] ) + ") ) * 2 * Armor Type Modifier (" + CurMech.GetArmor().GetCTArmorType().GetBVTypeMult() + ")", CurMech.GetArmor().GetCTDefensiveBV( ModArmor ) ) + NL;
+            } else {
+                retval += String.format( "    %1$-67s %2$,8.2f", "CT Armor Factor (" + ( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CT ) + ModArmor[LocationIndex.MECH_LOC_CT] + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CTR ) + ModArmor[LocationIndex.MECH_LOC_CTR] ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetCTArmorType().GetBVTypeMult() + ")", CurMech.GetArmor().GetCTDefensiveBV( ModArmor ) ) + NL;
+            }
+            retval += String.format( "    %1$-67s %2$,8.2f", "LT Armor Factor (" + ( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LT ) + ModArmor[LocationIndex.MECH_LOC_LT] + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LTR ) + ModArmor[LocationIndex.MECH_LOC_LTR] ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetLTArmorType().GetBVTypeMult() + ")", CurMech.GetArmor().GetLTDefensiveBV( ModArmor ) ) + NL;
+            retval += "Modular Armor on location: " + ( ModArmor[LocationIndex.MECH_LOC_LT] + ModArmor[LocationIndex.MECH_LOC_LTR] );
+            retval += String.format( "    %1$-67s %2$,8.2f", "RT Armor Factor (" + ( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RT ) + ModArmor[LocationIndex.MECH_LOC_RT] + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RTR ) + ModArmor[LocationIndex.MECH_LOC_RTR] ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetRTArmorType().GetBVTypeMult() + ")", CurMech.GetArmor().GetRTDefensiveBV( ModArmor ) ) + NL;
+            if( CurMech.IsQuad() ) {
+                retval += String.format( "    %1$-67s %2$,8.2f", "FLL Armor Factor (" + ( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LA ) + ModArmor[LocationIndex.MECH_LOC_LA] ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetLAArmorType().GetBVTypeMult() + ")", CurMech.GetArmor().GetLADefensiveBV( ModArmor ) ) + NL;
+                retval += String.format( "    %1$-67s %2$,8.2f", "FRL Armor Factor (" + ( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RA ) + ModArmor[LocationIndex.MECH_LOC_RA] ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetRAArmorType().GetBVTypeMult() + ")", CurMech.GetArmor().GetRADefensiveBV( ModArmor ) ) + NL;
+                retval += String.format( "    %1$-67s %2$,8.2f", "RLL Armor Factor (" + ( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LL ) + ModArmor[LocationIndex.MECH_LOC_LL] ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetLLArmorType().GetBVTypeMult() + ")", CurMech.GetArmor().GetLLDefensiveBV( ModArmor ) ) + NL;
+                retval += String.format( "    %1$-67s %2$,8.2f", "RRL Armor Factor (" + ( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RA ) + ModArmor[LocationIndex.MECH_LOC_RL] ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetRLArmorType().GetBVTypeMult() + ")", CurMech.GetArmor().GetRLDefensiveBV( ModArmor ) ) + NL;
+            } else {
+                retval += String.format( "    %1$-67s %2$,8.2f", "LA Armor Factor (" + ( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LA ) + ModArmor[LocationIndex.MECH_LOC_LA] ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetLAArmorType().GetBVTypeMult() + ")", CurMech.GetArmor().GetLADefensiveBV( ModArmor ) ) + NL;
+                retval += String.format( "    %1$-67s %2$,8.2f", "RA Armor Factor (" + ( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RA ) + ModArmor[LocationIndex.MECH_LOC_RA] ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetRAArmorType().GetBVTypeMult() + ")", CurMech.GetArmor().GetRADefensiveBV( ModArmor ) ) + NL;
+                retval += String.format( "    %1$-67s %2$,8.2f", "LL Armor Factor (" + ( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LL ) + ModArmor[LocationIndex.MECH_LOC_LL] ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetLLArmorType().GetBVTypeMult() + ")", CurMech.GetArmor().GetLLDefensiveBV( ModArmor ) ) + NL;
+                retval += String.format( "    %1$-67s %2$,8.2f", "RL Armor Factor (" + ( CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RA ) + ModArmor[LocationIndex.MECH_LOC_RL] ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetRLArmorType().GetBVTypeMult() + ")", CurMech.GetArmor().GetRLDefensiveBV( ModArmor ) ) + NL;
+            }
+            retval += String.format( "%1$-71s %2$,8.2f", "    Total Location Armor BV (" + ( CurMech.GetArmor().GetHDDefensiveBV( ModArmor ) + CurMech.GetArmor().GetCTDefensiveBV( ModArmor ) + CurMech.GetArmor().GetRTDefensiveBV( ModArmor ) + CurMech.GetArmor().GetLTDefensiveBV( ModArmor ) + CurMech.GetArmor().GetRADefensiveBV( ModArmor ) + CurMech.GetArmor().GetLADefensiveBV( ModArmor ) + CurMech.GetArmor().GetRLDefensiveBV( ModArmor ) + CurMech.GetArmor().GetLLDefensiveBV( ModArmor ) ) + ") * 2.5", CurMech.GetArmor().GetDefensiveBV() ) + NL;
         } else {
-            retval += String.format( "%1$-71s %2$,8.2f", "Total Armor Factor (" + CurMech.GetArmor().GetArmorValue() + ") * Armor Type Modifier (" + CurMech.GetArmor().GetBVTypeMult() + ") * 2.5", CurMech.GetArmor().GetDefensiveBV() ) + NL;
+            if( CurMech.GetCockpit().IsTorsoMounted() ) {
+                retval += "( Total Armor Factor (" + ( CurMech.GetArmor().GetArmorValue() + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CT) + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CTR) ) + ") * Armor Type Modifier (" + CurMech.GetArmor().GetBVTypeMult() + ")" + NL;
+                retval += String.format( "%1$-71s %2$,8.2f", "    + Modular Armor Value (" + CurMech.GetArmor().GetModularArmorValue() + ") ) * 2.5", CurMech.GetArmor().GetDefensiveBV() ) + NL;
+                retval += "    (Front and Rear CT armor value doubled due to Torso-Mounted Cockpit)" + NL;
+            } else {
+                retval += String.format( "%1$-71s %2$,8.2f", "Total Armor Factor (" + CurMech.GetArmor().GetArmorValue() + ") * Armor Type Modifier (" + CurMech.GetArmor().GetBVTypeMult() + ") * 2.5", CurMech.GetArmor().GetDefensiveBV() ) + NL;
+            }
         }
-        retval += "Total Structure Points (" + CurMech.GetIntStruc().GetTotalPoints() + ") * Structure Type Modifier (" + CurMech.GetIntStruc().GetBVTypeMult() + ") *" + NL;
-        retval += String.format( "%1$-71s %2$,8.2f", "    Engine Type Modifier (" + CurMech.GetEngine().GetBVMult() + ") * 1.5", CurMech.GetIntStruc().GetDefensiveBV() ) + NL;
+        retval += "Total Structure Points (" + CurMech.GetIntStruc().GetTotalPoints() + ") * Structure Type Modifier (" + CurMech.GetIntStruc().GetBVTypeMult() + ")" + NL;
+        retval += String.format( "%1$-71s %2$,8.2f", "    * Engine Type Modifier (" + CurMech.GetEngine().GetBVMult() + ") * 1.5", CurMech.GetIntStruc().GetDefensiveBV() ) + NL;
         retval += String.format( "%1$-71s %2$,8.2f", "Mech Tonnage (" + CurMech.GetTonnage() + ") * Gyro Type Modifer (" + CurMech.GetGyro().GetBVTypeMult() + ")", CurMech.GetGyro().GetDefensiveBV() ) + NL;
         retval += String.format( "%1$-71s %2$,8.2f", "Total Defensive BV of all Equipment", CurMech.GetDefensiveEquipBV() ) + NL;
         retval += String.format( "%1$-71s %2$,8.2f", "Explosive Ammunition Penalty", CurMech.GetExplosiveAmmoPenalty() ) + NL;

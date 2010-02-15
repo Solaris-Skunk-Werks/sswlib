@@ -50,7 +50,8 @@ public class VArmorSetIndustrial implements ifVisitor {
         // only the armor changes, so pass us off
         CurMech = m;
         ifMechLoadout l = CurMech.GetLoadout();
-        Armor a = CurMech.GetArmor();
+        MechArmor a = CurMech.GetArmor();
+        a.ResetPatchworkConfigs();
 
         // remove the old armor, if needed
         l.Remove( a );

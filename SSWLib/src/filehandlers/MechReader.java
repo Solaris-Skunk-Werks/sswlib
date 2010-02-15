@@ -39,6 +39,8 @@ import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.*;
+import visitors.VArmorSetPatchwork;
+import visitors.VArmorSetPatchworkLocation;
 
 public class MechReader {
     DataFactory data;
@@ -204,6 +206,7 @@ public class MechReader {
         LocationIndex l;
         Vector isLoc = new Vector();
         Vector armLoc = new Vector();
+        Vector<ArmorType> armTypes = new Vector<ArmorType>();
         Vector hsLoc = new Vector();
         Vector jjLoc = new Vector();
         Vector enhLoc = new Vector();
@@ -820,33 +823,75 @@ public class MechReader {
         // armor next
         n = d.getElementsByTagName( "armor" );
         map = n.item( 0 ).getAttributes();
+        m.SetArmorModel( FileCommon.DecodeFluff( map.getNamedItem( "manufacturer" ).getTextContent() ) );
         n = n.item( 0 ).getChildNodes();
+        String pwtype = "";
         int[] ArmorPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         Type = null;
         for( int i = 0; i < n.getLength(); i++ ) {
             if( n.item( i ).getNodeName().equals( "location" ) ) {
                 armLoc.add( DecodeLocation( n.item( i ) ) );
             } else if( n.item( i ).getNodeName().equals( "hd" ) ) {
+                map = n.item( i ).getAttributes();
+                if( map.getNamedItem( "type" ) != null ) {
+                    pwtype = map.getNamedItem( "type" ).getTextContent();
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_HD ) );
+                }
                 ArmorPoints[LocationIndex.MECH_LOC_HD] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "ct" ) ) {
+                map = n.item( i ).getAttributes();
+                if( map.getNamedItem( "type" ) != null ) {
+                    pwtype = map.getNamedItem( "type" ).getTextContent();
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_CT ) );
+                }
                 ArmorPoints[LocationIndex.MECH_LOC_CT] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "ctr" ) ) {
                 ArmorPoints[LocationIndex.MECH_LOC_CTR] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "lt" ) ) {
+                map = n.item( i ).getAttributes();
+                if( map.getNamedItem( "type" ) != null ) {
+                    pwtype = map.getNamedItem( "type" ).getTextContent();
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_LT ) );
+                }
                 ArmorPoints[LocationIndex.MECH_LOC_LT] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "ltr" ) ) {
                 ArmorPoints[LocationIndex.MECH_LOC_LTR] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "rt" ) ) {
+                map = n.item( i ).getAttributes();
+                if( map.getNamedItem( "type" ) != null ) {
+                    pwtype = map.getNamedItem( "type" ).getTextContent();
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_RT ) );
+                }
                 ArmorPoints[LocationIndex.MECH_LOC_RT] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "rtr" ) ) {
                 ArmorPoints[LocationIndex.MECH_LOC_RTR] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "la" ) ) {
+                map = n.item( i ).getAttributes();
+                if( map.getNamedItem( "type" ) != null ) {
+                    pwtype = map.getNamedItem( "type" ).getTextContent();
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_LA ) );
+                }
                 ArmorPoints[LocationIndex.MECH_LOC_LA] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "ra" ) ) {
+                map = n.item( i ).getAttributes();
+                if( map.getNamedItem( "type" ) != null ) {
+                    pwtype = map.getNamedItem( "type" ).getTextContent();
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_RA ) );
+                }
                 ArmorPoints[LocationIndex.MECH_LOC_RA] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "ll" ) ) {
+                map = n.item( i ).getAttributes();
+                if( map.getNamedItem( "type" ) != null ) {
+                    pwtype = map.getNamedItem( "type" ).getTextContent();
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_LL ) );
+                }
                 ArmorPoints[LocationIndex.MECH_LOC_LL] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "rl" ) ) {
+                map = n.item( i ).getAttributes();
+                if( map.getNamedItem( "type" ) != null ) {
+                    pwtype = map.getNamedItem( "type" ).getTextContent();
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_RL ) );
+                }
                 ArmorPoints[LocationIndex.MECH_LOC_RL] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "type" ) ) {
                 Type = n.item( i );
@@ -873,11 +918,23 @@ public class MechReader {
                         v.SetClan( true );
                     }
                 }
-                v.LoadLocations( Locs );
+                if( ! ( v instanceof VArmorSetPatchwork ) ) {
+                    v.LoadLocations( Locs );
+                }
                 m.Visit( v );
+                if( v instanceof VArmorSetPatchwork ) {
+                    for( int i = 0; i < armTypes.size(); i++ ) {
+                        ArmorType t = armTypes.get( i );
+                        VArmorSetPatchworkLocation v1 = new VArmorSetPatchworkLocation();
+                        v1.LoadLocations( Locs );
+                        v1.SetLocation( t.Location );
+                        v1.SetPatchworkType( t.Type );
+                        v1.SetClan( m.GetBaseTechbase() == AvailableCode.TECH_CLAN );
+                        m.Visit( v1 );
+                    }
+                }
             }
         }
-        m.SetArmorModel( FileCommon.DecodeFluff( map.getNamedItem( "manufacturer" ).getTextContent() ) );
         m.GetArmor().Recalculate();
         // set the armor points
         m.GetArmor().SetArmor( LocationIndex.MECH_LOC_HD, ArmorPoints[LocationIndex.MECH_LOC_HD] );
@@ -893,9 +950,9 @@ public class MechReader {
         m.GetArmor().SetArmor( LocationIndex.MECH_LOC_RL, ArmorPoints[LocationIndex.MECH_LOC_RL] );
 
         // place the armor
-        if( ! m.GetArmor().IsStealth() ) {
+        if( ! m.GetArmor().IsStealth() |! m.GetArmor().IsPatchwork() ) {
             if( armLoc.size() > 0 ) {
-                Armor a = m.GetArmor();
+                MechArmor a = m.GetArmor();
                 for( int i = 0; i < armLoc.size(); i++ ) {
                     l = (LocationIndex) armLoc.get( i );
                     loadout.AddTo( a, l.Location, l.Index );
@@ -1509,7 +1566,7 @@ public class MechReader {
                 retval = data.GetEquipment().GetRangedWeaponByName( prepend + name, m );
             }
         } else {
-            return null;
+            retval = data.GetEquipment().SearchForName( name, m );
         }
         // again, use a try statement for the correct error message
         try {
@@ -1524,5 +1581,14 @@ public class MechReader {
 
     public String GetMessages() {
         return Messages;
+    }
+
+    private class ArmorType {
+        public String Type = null;
+        public int Location = -1;
+        public ArmorType( String t, int l ) {
+            Type = t;
+            Location = l;
+        }
     }
 }

@@ -418,6 +418,31 @@ public class EquipmentFactory {
         }
     }
 
+    public abPlaceable SearchForName( String name, ifUnit m ) {
+        if( name.contains( "@" ) ) {
+            return GetAmmoByName( name, m );
+        } else {
+            for (int i = 0; i < Equipment.size(); i++) {
+                if (((abPlaceable) Equipment.get(i)).LookupName().equals(name)) {
+                    return GetCopy((abPlaceable) Equipment.get(i), m);
+                }
+            }
+            for( int i = 0; i < RangedWeapons.size(); i++ ) {
+                if( ((abPlaceable) RangedWeapons.get( i )).LookupName().equals( name ) ) {
+                    return GetCopy( (abPlaceable) RangedWeapons.get( i ), m );
+                }
+            }
+            for( int i = 0; i < PhysicalWeapons.size(); i++ ) {
+                if( ((abPlaceable) PhysicalWeapons.get( i )).LookupName().equals( name ) ) {
+                    PhysicalWeapon p = (PhysicalWeapon) GetCopy( (abPlaceable) PhysicalWeapons.get( i ), m );
+                    p.SetOwner( (Mech) m );
+                    return (abPlaceable) p;
+                }
+            }
+        }
+        return null;
+    }
+
     public void BuildMGArrays() {
         abPlaceable addBW;
         MGArray addMGA;
