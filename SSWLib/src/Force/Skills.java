@@ -43,6 +43,8 @@ public class Skills {
     private String MaxSkill = "";
     private RUSReader reader = new RUSReader();
     private RUS rus = new RUS();
+    private String skillLevel = "";
+    private float BV = 1.0f;
 
     public static String Gunnery = "Gunnery";
     public static String Piloting = "Piloting";
@@ -52,13 +54,18 @@ public class Skills {
     }
     
     public Skills(float BV) {
+        this.BV = BV;
+        SetSkills();
+    }
+
+    public void SetSkills() {
+        List.removeAllElements();
         for ( int G=0; G<=7; G++ ) {
             for ( int P=0; P<=7; P++ ) {
                 List.add(new Skill(G, P, CommonTools.GetSkillBV(BV, G, P)));
             }
         }
         sortByBV();
-
     }
 
     public void sortByBV() {
@@ -155,6 +162,13 @@ public class Skills {
         return model;
     }
 
+    public Skill generateRandomSkill() {
+        if ( !skillLevel.isEmpty() ) {
+            return generateRandomSkills(skillLevel);
+        }
+        return new Skill();
+    }
+
     public Skill generateRandomSkills( String SkillLevel ) {
         String skills = generateRandomSkill(SkillLevel);
         Skill skill = new Skill();
@@ -234,6 +248,23 @@ public class Skills {
      */
     public void setMaxSkill(String MaxSkill) {
         this.MaxSkill = MaxSkill;
+    }
+
+    public String getSkillLevel() {
+        return skillLevel;
+    }
+
+    public void setSkillLevel(String skillLevel) {
+        this.skillLevel = skillLevel;
+    }
+
+    public float getBV() {
+        return BV;
+    }
+
+    public void setBV(float BV) {
+        this.BV = BV;
+        SetSkills();
     }
 
     public class Skill {
