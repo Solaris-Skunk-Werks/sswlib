@@ -178,7 +178,7 @@ public class BattleForceStats {
 
     public void SerializeXML( BufferedWriter file, int Tabs ) throws IOException {
         file.write( CommonTools.Tabs(Tabs) +
-                    "<battleforce pv=\"" + getPointValue() + "\" " +
+                    "<battleforce pv=\"" + getBasePV() + "\" " +
                     "wt=\"" + getWeight() + "\" " +
                     "mv=\"" + getMovement() + "\" " +
                     "s=\"" + getShort() + "\" " +
