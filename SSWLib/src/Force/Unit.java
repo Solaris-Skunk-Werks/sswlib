@@ -165,6 +165,8 @@ public class Unit implements ifSerializable {
                     this.warrior = new Warrior(node);
                     this.Gunnery = warrior.getGunnery();
                     this.Piloting = warrior.getPiloting();
+                    this.BFStats.setGunnery(Gunnery);
+                    this.BFStats.setPiloting(Piloting);
                     this.MechwarriorQuirks = warrior.getQuirks();
                     this.Mechwarrior = (warrior.getRank() + " " + warrior.getName()).trim();
                 } catch (Exception ex) {
