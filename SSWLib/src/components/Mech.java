@@ -361,6 +361,10 @@ public class Mech implements ifUnit, ifBattleforce {
         return CurLoadout.IsYearRestricted();
     }
 
+    public int GetTechBase() {
+        return MainLoadout.GetTechBase();
+    }
+
     public boolean SetTechBase( int t ) {
         if( Omnimech ) {
             if( t != MainLoadout.GetTechBase() && t != AvailableCode.TECH_BOTH ) {
@@ -4316,7 +4320,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if ( dmgIF > 0 )
         {
             dmgIF = Math.round(dmgIF / 10);
-            bfs.addAbility( "IF "+(int)dmgIF );
+            if ( (int)dmgIF > 0 ) bfs.addAbility( "IF "+(int)dmgIF );
         }
         if ( dmgFLKMedium > 5 )
         {
