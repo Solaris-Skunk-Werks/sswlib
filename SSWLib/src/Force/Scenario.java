@@ -43,7 +43,8 @@ import org.w3c.dom.Node;
 
 public class Scenario implements ifSerializable {
     public int VersionNumber = 2;
-    private boolean allowOverwrite = true,
+    private boolean forceSizeModifier = false,
+                    allowOverwrite = true,
                     isDirty = false;
     private String Name = "",
                     Source = "",
@@ -78,6 +79,7 @@ public class Scenario implements ifSerializable {
         this.Name = node.getAttributes().getNamedItem("name").getTextContent().trim();
         this.VersionNumber = Integer.parseInt(node.getAttributes().getNamedItem("version").getTextContent().trim());
         this.allowOverwrite = Boolean.parseBoolean(node.getAttributes().getNamedItem("overwrite").getTextContent().trim());
+        if ( node.getAttributes().getNamedItem("forcesizemodifier") != null ) this.forceSizeModifier = Boolean.parseBoolean(node.getAttributes().getNamedItem("forcesizemodifier").getTextContent().trim());
 
         for (int i=0; i < node.getChildNodes().getLength(); i++) {
             Node n = node.getChildNodes().item(i);
@@ -142,8 +144,10 @@ public class Scenario implements ifSerializable {
         }
         
         if ( UseMod ) {
+            forceSizeModifier = true;
             setOpFor();
         } else {
+            forceSizeModifier = false;
             clearOpFor();
         }
         Refresh();
@@ -199,7 +203,7 @@ public class Scenario implements ifSerializable {
     }
 
     public void SerializeXML(BufferedWriter file) throws IOException {
-        file.write( "<scenario name=\"" + this.Name + "\" version=\"" + VersionNumber + "\" overwrite=\"" + allowOverwrite + "\">" );
+        file.write( "<scenario name=\"" + this.Name + "\" version=\"" + VersionNumber + "\" forcesizemodifier=\"" + this.forceSizeModifier + "\" overwrite=\"" + allowOverwrite + "\">" );
         file.newLine();
 
         file.write( CommonTools.tab + "<situation>" + FileCommon.EncodeFluff(this.Situation) + "</situation>" );
@@ -386,5 +390,9 @@ public class Scenario implements ifSerializable {
 
     public void MakeDirty(boolean isDirty) {
         this.isDirty = isDirty;
+    }
+
+    public boolean UseForceSizeModifier() {
+        return forceSizeModifier;
     }
 }
