@@ -4030,7 +4030,7 @@ public class Mech implements ifUnit, ifBattleforce {
         int walkMP = GetWalkingMP();
         int jumpMP = GetAdjustedJumpingMP(false);
 
-        if (walkMP == jumpMP){
+        if ( walkMP == jumpMP && GetBFPrimeMovement() == jumpMP ){
             if ( GetBFSecondaryMovementMode().isEmpty() ) {
                 return "j";
             } else {
@@ -4042,13 +4042,14 @@ public class Mech implements ifUnit, ifBattleforce {
     }
     
     public int GetBFSecondaryMovement(){
+        int baseMP = GetWalkingMP();
         int walkMP = GetBFPrimeMovement();
         int jumpMP = GetAdjustedJumpingMP(false);
 
         if ( jumpMP > 0 && walkMP != jumpMP ){
-            if ( jumpMP < walkMP && jumpMP*0.66 >= 1 )
+            if ( baseMP > jumpMP )
                 return (int)(Math.round(jumpMP*0.66));
-            else if ( jumpMP > walkMP )
+            else if ( baseMP == jumpMP && walkMP > jumpMP )
                 return jumpMP;
             else
                 return 0;
