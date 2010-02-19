@@ -125,6 +125,13 @@ public class PrintConsts {
                 line.append(word);
                 word.delete(0, word.length());
             }
+            if (chars[i] == '\n') {
+                line.append(word);
+                lines.add(line.toString());
+                
+                line.delete(0, line.length());
+                word.delete(0, word.length());
+            }
         }
 
         // handle any extra chars in current word

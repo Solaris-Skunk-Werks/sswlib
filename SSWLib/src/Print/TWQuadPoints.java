@@ -170,29 +170,33 @@ public class TWQuadPoints implements ifPrintPoints {
         new Point( 490, 337 ), new Point( 496, 337 ), new Point( 502, 337 ),
         new Point( 490, 345 ), new Point( 496, 345 ), new Point( 502, 345 ), new Point( 508, 345 ), new Point( 514, 345 ), new Point( 520, 345 ),
         new Point( 490, 351 ), new Point( 496, 351 ), new Point( 502, 351 ), new Point( 508, 351 ), new Point( 514, 351 ), new Point( 520, 351 ) };
+
+
     private final static Point[] CTCritPoints = {
-        new Point( 161, 461 ), new Point( 161, 470 ), new Point( 161, 479 ), new Point( 161, 487 ),
-        new Point( 161, 496 ), new Point( 161, 505 ), new Point( 161, 517 ), new Point( 161, 526 ),
-        new Point( 161, 535 ), new Point( 161, 543 ), new Point( 161, 552 ), new Point( 161, 561 ) };
+        new Point( 163, 461 ), new Point( 163, 470 ), new Point( 163, 479 ), new Point( 163, 487 ),
+        new Point( 163, 496 ), new Point( 163, 505 ), new Point( 163, 517 ), new Point( 163, 526 ),
+        new Point( 163, 535 ), new Point( 163, 543 ), new Point( 163, 552 ), new Point( 163, 561 ) };
     private final static Point[] HDCritPoints = {
-        new Point( 161, 390 ), new Point( 161, 399 ), new Point( 161, 408 ), new Point( 161, 416 ),
-        new Point( 161, 424 ), new Point( 161, 433 ) };
+        new Point( 163, 390 ), new Point( 163, 399 ), new Point( 163, 408 ), new Point( 163, 416 ),
+        new Point( 163, 424 ), new Point( 163, 433 ) };
     private final static Point[] LTCritPoints = {
-        new Point( 43, 516 ), new Point( 43, 525 ), new Point( 43, 534 ), new Point( 43, 543 ),
-        new Point( 43, 551 ), new Point( 43, 560 ), new Point( 43, 572 ), new Point( 43, 581 ),
-        new Point( 43, 590 ), new Point( 43, 598 ), new Point( 43, 607 ), new Point( 43, 616 ) };
-    private final static Point[] RTCritPoints = {
-        new Point( 281, 516 ), new Point( 281, 525 ), new Point( 281, 534 ), new Point( 281, 543 ),
-        new Point( 281, 551 ), new Point( 281, 560 ), new Point( 281, 572 ), new Point( 281, 581 ),
-        new Point( 281, 590 ), new Point( 281, 598 ), new Point( 281, 607 ), new Point( 281, 616 ) };
+        new Point( 45, 516 ), new Point( 45, 525 ), new Point( 45, 534 ), new Point( 45, 543 ),
+        new Point( 45, 551 ), new Point( 45, 560 ), new Point( 45, 572 ), new Point( 45, 581 ),
+        new Point( 45, 590 ), new Point( 45, 598 ), new Point( 45, 607 ), new Point( 45, 616 ) };
     private final static Point[] LACritPoints = {
-        new Point( 43, 429 ), new Point( 43, 439 ), new Point( 43, 447 ), new Point( 43, 456 ), new Point( 43, 464 ), new Point( 43, 473 ) };
-    private final static Point[] RACritPoints = {
-        new Point( 281, 429 ), new Point( 281, 439 ), new Point( 281, 447 ), new Point( 281, 456 ), new Point( 281, 464 ), new Point( 281, 473 ) };
+        new Point( 45, 429 ), new Point( 45, 439 ), new Point( 45, 447 ), new Point( 45, 456 ), new Point( 45, 464 ), new Point( 45, 473 ) };
     private final static Point[] LLCritPoints = {
-        new Point( 43, 657 ), new Point( 43, 666 ), new Point( 43, 674 ), new Point( 43, 682 ), new Point( 43, 691 ), new Point( 43, 700 ) };
+        new Point( 45, 657 ), new Point( 45, 666 ), new Point( 45, 674 ), new Point( 45, 682 ), new Point( 45, 691 ), new Point( 45, 700 ) };
+    private final static Point[] RTCritPoints = {
+        new Point( 283, 516 ), new Point( 283, 525 ), new Point( 283, 534 ), new Point( 283, 543 ),
+        new Point( 283, 551 ), new Point( 283, 560 ), new Point( 283, 572 ), new Point( 283, 581 ),
+        new Point( 283, 590 ), new Point( 283, 598 ), new Point( 283, 607 ), new Point( 283, 616 ) };
+    private final static Point[] RACritPoints = {
+        new Point( 283, 429 ), new Point( 283, 439 ), new Point( 283, 447 ), new Point( 283, 456 ), new Point( 283, 464 ), new Point( 283, 473 ) };
     private final static Point[] RLCritPoints = {
-        new Point( 281, 657 ), new Point( 281, 666 ), new Point( 281, 674 ), new Point( 281, 682 ), new Point( 281, 691 ), new Point( 281, 700 ) };
+        new Point( 283, 657 ), new Point( 283, 666 ), new Point( 283, 674 ), new Point( 283, 682 ), new Point( 283, 691 ), new Point( 283, 700 ) };
+
+
     private final static Point[] HDInternalPoints = {
         new Point( 456, 402 ), new Point( 452, 408 ), new Point( 459, 408 ) };
     private final static Point[] CTInternalPoints = {

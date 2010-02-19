@@ -5,10 +5,14 @@
 
 package Print;
 
+import Force.Bonus;
+import Force.Objective;
 import Force.Scenario;
 
+import filehandlers.ImageTracker;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.print.*;
 
@@ -23,13 +27,15 @@ public class ScenarioPrinter implements Printable {
                 pageHalfWidth = 0;
     private Point currentLocation = new Point(0, 0),
                     savePoint = new Point(0, 0);
+    private ImageTracker imageTracker;
 
-    public ScenarioPrinter() {
-
+    public ScenarioPrinter( ImageTracker imageTracker ) {
+        this.imageTracker = imageTracker;
     }
 
-    public ScenarioPrinter( Scenario scenario ) {
+    public ScenarioPrinter( Scenario scenario, ImageTracker imageTracker ) {
         this.scenario = scenario;
+        this.imageTracker = imageTracker;
     }
 
     public void SetScenario( Scenario scenario ) {
@@ -51,6 +57,11 @@ public class ScenarioPrinter implements Printable {
     private void PreparePrint() {
         Reset();
 
+        //Battletech Logo on top of sheet
+        Image Recordsheet = imageTracker.getImage( PrintConsts.BT_LOGO );
+        Graphic.drawImage( Recordsheet, 0, 0, 306, 49, null);
+        currentLocation.y += 50;
+
         Graphic.setFont( PrintConsts.TitleFont);
         Graphic.drawString(scenario.getName(), currentLocation.x, currentLocation.y);
         currentLocation.y += Graphic.getFont().getSize();
@@ -58,43 +69,77 @@ public class ScenarioPrinter implements Printable {
         RenderTitle("SITUATION");
         RenderText( scenario.getSituation(), characterWidth );
 
-        savePoint.setLocation(currentLocation);
         RenderTitle("GAME SETUP");
-        RenderText( scenario.getSetup(), characterHalfWidth );
+        RenderText( scenario.getSetup(), characterWidth );
 
-        currentLocation.setLocation(savePoint.x + pageHalfWidth, savePoint.y);
-        RenderTitle("Attacker");
-        RenderText( scenario.getAttacker(), characterHalfWidth );
+        RenderItalic("Attacker");
+        RenderText( scenario.getAttacker(), characterWidth );
 
-        currentLocation.x = (int) format.getImageableX();
-        savePoint.setLocation(currentLocation);
+        RenderItalic("Defender");
+        RenderText( scenario.getDefender(), characterWidth );
+
+        if ( scenario.getVictoryConditions().isEmpty() ) {
+            RenderTitle("Track Cost: " + scenario.getWarchest().getTrackCost());
+            currentLocation.y += 10;
+
+            RenderItalic("Optional Bonuses");
+            for ( Bonus b : scenario.getWarchest().getBonuses() ) {
+                RenderLine( b.toPrint(), characterWidth );
+            }
+            currentLocation.y += 10;
+
+            RenderItalic("Objectives");
+            for ( Objective o : scenario.getWarchest().getObjectives() ) {
+                RenderLine( o.toPrint(), characterWidth );
+            }
+            currentLocation.y += 10;
+            
+        } else {
+            RenderTitle("VICTORY CONDITIONS");
+            RenderText( scenario.getVictoryConditions(), characterWidth );
+        }
+        
+        RenderTitle("SPECIAL RULES");
+        RenderText( scenario.getSpecialRules(), characterWidth );
+
         RenderTitle("AFTERMATH");
-        RenderText( scenario.getAftermath(), characterHalfWidth );
-
-        currentLocation.setLocation(savePoint.x + pageHalfWidth, savePoint.y);
-        RenderTitle("Defender");
-        RenderText( scenario.getDefender(), characterHalfWidth );
-
+        RenderText( scenario.getAftermath(), characterWidth );
         
-        
+        Graphic.setFont( PrintConsts.SmallBoldFont );
+        Graphic.drawString(PrintConsts.getCopyright()[0], 100, (int)format.getHeight()-40);
+        Graphic.drawString(PrintConsts.getCopyright()[1], 60, (int)format.getHeight()-30);
     }
 
     private void RenderTitle( String title) {
         Graphic.setFont( PrintConsts.BoldFont );
-        Graphic.drawString(title, currentLocation.x, currentLocation.y);
-        currentLocation.y += Graphic.getFont().getSize();
+        RenderLine( title, characterWidth );
+        setPlain();
     }
+
+    private void RenderItalic( String title ) {
+        Graphic.setFont( PrintConsts.ItalicFont );
+        RenderLine( title, characterWidth );
+        setPlain();
+    }
+
     private void RenderText( String text, int Width ) {
-        Graphic.setFont( PrintConsts.PlainFont );
-        String[] formattedText = PrintConsts.wrapText(text, Width, true);
+        RenderLine( text, Width );
+        currentLocation.y += 10;
+    }
+
+    private void RenderLine( String text, int Width ) {
+        String[] formattedText = PrintConsts.wrapText(text, Width, false);
         for ( String line : formattedText ) {
             Graphic.drawString(line, currentLocation.x, currentLocation.y);
             currentLocation.y += Graphic.getFont().getSize();
         }
-        currentLocation.y += 10;
     }
 
     public void Reset() {
-        currentLocation.setLocation((int) format.getImageableX(), (int) format.getImageableY());
+        currentLocation.setLocation(10, (int) format.getImageableY());
+    }
+
+    private void setPlain() {
+        Graphic.setFont( PrintConsts.PlainFont );
     }
 }

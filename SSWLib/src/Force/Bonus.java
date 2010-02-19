@@ -67,4 +67,8 @@ public class Bonus extends abWarchestItem implements ifSerializable {
     public String toString() {
         return SerializeClipboard();
     }
+
+    public String toPrint() {
+        return "  " + SerializeClipboard();
+    }
 }

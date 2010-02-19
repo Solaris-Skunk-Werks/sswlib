@@ -59,6 +59,7 @@ public class dlgPrint extends javax.swing.JDialog {
 
         chkPrintForce.setSelected(bfbPrefs.getBoolean(Constants.Print_ForceList, true));
         chkPrintFireChits.setSelected(bfbPrefs.getBoolean(Constants.Print_FireDeclaration, false));
+        chkPrintScenario.setSelected(bfbPrefs.getBoolean(Constants.Print_Scenario, false));
         chkPrintRecordsheets.setSelected(bfbPrefs.getBoolean(Constants.Print_Recordsheet, true));
         chkPrintBattleforce.setSelected(bfbPrefs.getBoolean(Constants.Print_BattleForce, false));
         chkBFOnePerPage.setSelected(bfbPrefs.getBoolean(Constants.Format_OneForcePerPage, false));
@@ -143,7 +144,7 @@ public class dlgPrint extends javax.swing.JDialog {
         }
 
         if (chkPrintScenario.isSelected()) {
-            ScenarioPrinter scenarioPrint = new ScenarioPrinter(scenario);
+            ScenarioPrinter scenarioPrint = new ScenarioPrinter(scenario, imageTracker);
             printer.Append(BFBPrinter.Letter.toPage(), scenarioPrint);
         }
 
@@ -250,6 +251,7 @@ public class dlgPrint extends javax.swing.JDialog {
 
         bfbPrefs.putBoolean(Constants.Print_ForceList, chkPrintForce.isSelected());
         bfbPrefs.putBoolean(Constants.Print_FireDeclaration, chkPrintFireChits.isSelected());
+        bfbPrefs.putBoolean(Constants.Print_Scenario, chkPrintScenario.isSelected());
         bfbPrefs.putBoolean(Constants.Print_Recordsheet, chkPrintRecordsheets.isSelected());
         bfbPrefs.putBoolean(Constants.Print_BattleForce, chkPrintBattleforce.isSelected());
         bfbPrefs.putBoolean(Constants.Format_OneForcePerPage, chkBFOnePerPage.isSelected());

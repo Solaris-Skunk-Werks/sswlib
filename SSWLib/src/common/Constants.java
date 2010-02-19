@@ -41,6 +41,7 @@ public class Constants {
 
     public final static String Print_ForceList = "Print.ForceList",
                         Print_FireDeclaration = "Print.FireDeclaration",
+                        Print_Scenario = "Print.Scenario",
                         Print_Recordsheet = "Print.Recordsheets",
                         Print_BattleForce = "Print.BattleForce",
                         Format_Recordsheet = "UseRS",

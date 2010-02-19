@@ -85,6 +85,7 @@ public class Scenario implements ifSerializable {
             Node n = node.getChildNodes().item(i);
             if (n.getNodeName().equals("situation")) { setSituation(FileCommon.DecodeFluff(n.getTextContent())); }
             if (n.getNodeName().equals("setup")) { setSetup(FileCommon.DecodeFluff(n.getTextContent())); }
+            if (n.getNodeName().equals("specialrules")) { setSpecialRules(FileCommon.DecodeFluff(n.getTextContent())); }
             if (n.getNodeName().equals("victoryconditions")) { setVictoryConditions(FileCommon.DecodeFluff(n.getTextContent())); }
             if (n.getNodeName().equals("aftermath")) { setAftermath(FileCommon.DecodeFluff(n.getTextContent())); }
 
@@ -230,6 +231,9 @@ public class Scenario implements ifSerializable {
 
         getWarchest().SerializeXML(file);
 
+        file.write( CommonTools.tab + "<specialrules>" + FileCommon.EncodeFluff(this.SpecialRules) + "</specialrules>" );
+        file.newLine();
+
         file.write( CommonTools.tab + "<victoryconditions>" + FileCommon.EncodeFluff(this.VictoryConditions) + "</victoryconditions>" );
         file.newLine();
 
@@ -250,6 +254,7 @@ public class Scenario implements ifSerializable {
         data += "Defender" + CommonTools.NL + this.Defender + CommonTools.NL + CommonTools.NL;
         data += getDefenderForce().SerializeClipboard() + CommonTools.NL;
         data += getWarchest().SerializeClipboard() + CommonTools.NL;
+        data += "Special Rules" + CommonTools.NL + this.SpecialRules + CommonTools.NL + CommonTools.NL;
         data += "Victory Conditions" + CommonTools.NL + this.VictoryConditions + CommonTools.NL + CommonTools.NL;
         data += "Aftermath" + CommonTools.NL + this.Aftermath + CommonTools.NL + CommonTools.NL;
 
