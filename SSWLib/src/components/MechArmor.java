@@ -2049,39 +2049,39 @@ public class MechArmor  extends abPlaceable {
     }
 
     public double GetHDDefensiveBV( int[] ModArmor ) {
-        return ( ArmorPoints[LocationIndex.MECH_LOC_HD] + ModArmor[LocationIndex.MECH_LOC_HD] ) * HDConfig.GetBVTypeMult();
+        return ( ArmorPoints[LocationIndex.MECH_LOC_HD] + ModArmor[LocationIndex.MECH_LOC_HD] * 10 ) * HDConfig.GetBVTypeMult();
     }
 
     public double GetCTDefensiveBV( int[] ModArmor ) {
         if( Owner.GetCockpit().IsTorsoMounted() ) {
-            return ( ArmorPoints[LocationIndex.MECH_LOC_CT] + ArmorPoints[LocationIndex.MECH_LOC_CTR] + ModArmor[LocationIndex.MECH_LOC_CT] + ModArmor[LocationIndex.MECH_LOC_CTR] ) * CTConfig.GetBVTypeMult() * 2.0;
+            return ( ArmorPoints[LocationIndex.MECH_LOC_CT] + ArmorPoints[LocationIndex.MECH_LOC_CTR] + ModArmor[LocationIndex.MECH_LOC_CT] * 10 + ModArmor[LocationIndex.MECH_LOC_CTR] * 10 ) * CTConfig.GetBVTypeMult() * 2.0;
         } else {
-            return ( ArmorPoints[LocationIndex.MECH_LOC_CT] + ArmorPoints[LocationIndex.MECH_LOC_CTR] + ModArmor[LocationIndex.MECH_LOC_CT] + ModArmor[LocationIndex.MECH_LOC_CTR] ) * CTConfig.GetBVTypeMult();
+            return ( ArmorPoints[LocationIndex.MECH_LOC_CT] + ArmorPoints[LocationIndex.MECH_LOC_CTR] + ModArmor[LocationIndex.MECH_LOC_CT] * 10 + ModArmor[LocationIndex.MECH_LOC_CTR] * 10 ) * CTConfig.GetBVTypeMult();
         }
     }
 
     public double GetLTDefensiveBV( int[] ModArmor ) {
-        return ( ArmorPoints[LocationIndex.MECH_LOC_LT] + ArmorPoints[LocationIndex.MECH_LOC_LTR] + ModArmor[LocationIndex.MECH_LOC_RT] + ModArmor[LocationIndex.MECH_LOC_LTR] ) * LTConfig.GetBVTypeMult();
+        return ( ArmorPoints[LocationIndex.MECH_LOC_LT] + ArmorPoints[LocationIndex.MECH_LOC_LTR] + ModArmor[LocationIndex.MECH_LOC_RT] * 10 + ModArmor[LocationIndex.MECH_LOC_LTR] * 10 ) * LTConfig.GetBVTypeMult();
     }
 
     public double GetRTDefensiveBV( int[] ModArmor ) {
-        return ( ArmorPoints[LocationIndex.MECH_LOC_RT] + ArmorPoints[LocationIndex.MECH_LOC_RTR] + ModArmor[LocationIndex.MECH_LOC_LT] + ModArmor[LocationIndex.MECH_LOC_RTR] ) * RTConfig.GetBVTypeMult();
+        return ( ArmorPoints[LocationIndex.MECH_LOC_RT] + ArmorPoints[LocationIndex.MECH_LOC_RTR] + ModArmor[LocationIndex.MECH_LOC_LT] * 10 + ModArmor[LocationIndex.MECH_LOC_RTR] * 10 ) * RTConfig.GetBVTypeMult();
     }
 
     public double GetLADefensiveBV( int[] ModArmor ) {
-        return ( ArmorPoints[LocationIndex.MECH_LOC_LA] + ModArmor[LocationIndex.MECH_LOC_LA] ) * LAConfig.GetBVTypeMult();
+        return ( ArmorPoints[LocationIndex.MECH_LOC_LA] + ModArmor[LocationIndex.MECH_LOC_LA] * 10 ) * LAConfig.GetBVTypeMult();
     }
 
     public double GetRADefensiveBV( int[] ModArmor ) {
-        return ( ArmorPoints[LocationIndex.MECH_LOC_RA] + ModArmor[LocationIndex.MECH_LOC_RA] ) * RAConfig.GetBVTypeMult();
+        return ( ArmorPoints[LocationIndex.MECH_LOC_RA] + ModArmor[LocationIndex.MECH_LOC_RA] * 10 ) * RAConfig.GetBVTypeMult();
     }
 
     public double GetLLDefensiveBV( int[] ModArmor ) {
-        return ( ArmorPoints[LocationIndex.MECH_LOC_LL] + ModArmor[LocationIndex.MECH_LOC_LL] ) * LLConfig.GetBVTypeMult();
+        return ( ArmorPoints[LocationIndex.MECH_LOC_LL] + ModArmor[LocationIndex.MECH_LOC_LL] * 10 ) * LLConfig.GetBVTypeMult();
     }
 
     public double GetRLDefensiveBV( int[] ModArmor ) {
-        return ( ArmorPoints[LocationIndex.MECH_LOC_RL] + ModArmor[LocationIndex.MECH_LOC_RL] ) * RLConfig.GetBVTypeMult();
+        return ( ArmorPoints[LocationIndex.MECH_LOC_RL] + ModArmor[LocationIndex.MECH_LOC_RL] * 10 ) * RLConfig.GetBVTypeMult();
     }
 
     public int GetBAR() {
@@ -2159,9 +2159,10 @@ public class MechArmor  extends abPlaceable {
     public MechModifier GetMechModifier() {
         if( IsPatchwork() ) {
             if( LLConfig == Hardened || RLConfig == Hardened ) {
+                System.out.println( "Added Hardened Modifier, LLConfig = " + LLConfig.ActualName() + ", RLConfig = " + RLConfig.ActualName() );
                 return Hardened.GetMechModifier();
             } else {
-                return null;
+                return Config.GetMechModifier();
             }
         } else {
             return Config.GetMechModifier();

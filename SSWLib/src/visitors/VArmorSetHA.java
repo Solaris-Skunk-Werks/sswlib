@@ -41,7 +41,7 @@ public class VArmorSetHA implements ifVisitor {
         // does nothing here, but may later.
     }
 
-    public void Visit(Mech m) {
+    public void Visit( Mech m ) {
         // only the armor changes, so pass us off
         CurMech = m;
         ifMechLoadout l = CurMech.GetLoadout();

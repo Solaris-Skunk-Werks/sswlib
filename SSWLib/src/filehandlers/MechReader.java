@@ -571,6 +571,19 @@ public class MechReader {
                         loadout.AddTo( jjList[j], li.Location, li.Index );
                     }
                 }
+            } else if( n.item( i ).getNodeName().equals( "turret" ) ) {
+                map = n.item( i ).getAttributes();
+                String type = map.getNamedItem( "type" ).getTextContent();
+                int index = Integer.parseInt( map.getNamedItem( "index" ).getTextContent() );
+                if( type.equals( "head" ) ) {
+                    m.GetLoadout().SetHDTurret( true, index );
+                } else if( type.equals( "left torso" ) ) {
+                    m.GetLoadout().SetLTTurret( true, index );
+                } else if( type.equals( "right torso" ) ) {
+                    m.GetLoadout().SetRTTurret( true, index );
+                } else {
+                    throw new Exception( "A turret was specified but no type was given.\nCannot load 'Mech." );
+                }
             } else if( n.item( i ).getNodeName().equals( "equipment" ) ) {
                 NodeList nl = n.item( i ).getChildNodes();
                 Vector splitLoc = new Vector();
@@ -664,6 +677,12 @@ public class MechReader {
                         m.GetLoadout().SetSupercharger( true, l.Location, l.Index );
                     }
                 } else {
+                    boolean turreted = false;
+                    if( eName.length() > 4 ) {
+                        if( eName.substring( 0, 4 ).equals( "(T) " ) ) {
+                            turreted = true;
+                        }
+                    }
                     abPlaceable p = GetEquipmentByName( eName, eType, m );
                     if( p == null ) {
                         throw new Exception( "Could not find " + eName + " as a piece of equipment.\nThe Mech cannot be loaded." );
@@ -694,6 +713,38 @@ public class MechReader {
                     } else {
                         m.GetLoadout().AddToQueue( p );
                         m.GetLoadout().AddTo( p, l.Location, l.Index );
+                        if( turreted ) {
+                            if( l.Location == LocationIndex.MECH_LOC_HD ) {
+                                if( p instanceof RangedWeapon ) {
+                                    if( ! m.GetLoadout().HasHDTurret() ) {
+                                        throw new Exception( "A weapon was specified as turreted but there is no\nturret that it can legally be added to.\nThe 'Mech cannot be loaded." );
+                                    }
+                                    ((RangedWeapon) p).AddToTurret( m.GetLoadout().GetHDTurret() );
+                                } else {
+                                    throw new Exception( "An item that is not a weapon was specified as turreted\nbut only weapons can be turreted.\nThe 'Mech cannot be loaded." );
+                                }
+                            } else if( l.Location == LocationIndex.MECH_LOC_LT ) {
+                                if( p instanceof RangedWeapon ) {
+                                    if( ! m.GetLoadout().HasLTTurret() ) {
+                                        throw new Exception( "A weapon was specified as turreted but there is no\nturret that it can legally be added to.\nThe 'Mech cannot be loaded." );
+                                    }
+                                    ((RangedWeapon) p).AddToTurret( m.GetLoadout().GetLTTurret() );
+                                } else {
+                                    throw new Exception( "An item that is not a weapon was specified as turreted\nbut only weapons can be turreted.\nThe 'Mech cannot be loaded." );
+                                }
+                            } else if( l.Location == LocationIndex.MECH_LOC_RT ) {
+                                if( p instanceof RangedWeapon ) {
+                                    if( ! m.GetLoadout().HasRTTurret() ) {
+                                        throw new Exception( "A weapon was specified as turreted but there is no\nturret that it can legally be added to.\nThe 'Mech cannot be loaded." );
+                                    }
+                                    ((RangedWeapon) p).AddToTurret( m.GetLoadout().GetRTTurret() );
+                                } else {
+                                    throw new Exception( "An item that is not a weapon was specified as turreted\nbut only weapons can be turreted.\nThe 'Mech cannot be loaded." );
+                                }
+                            } else {
+                                throw new Exception( "A weapon was specified as turreted, but it is\nnot in a location that can have a turret.\nThe 'Mech cannot be loaded." );
+                            }
+                        }
                     }
                     if( p instanceof VehicularGrenadeLauncher ) {
                         ((VehicularGrenadeLauncher) p).SetArc( VGLArc );
@@ -1198,6 +1249,19 @@ public class MechReader {
                                 loadout.AddTo( (JumpJet) temp.get( j ), li.Location, li.Index );
                             }
                         }
+                    } else if( n.item( i ).getNodeName().equals( "turret" ) ) {
+                        map = n.item( i ).getAttributes();
+                        String type = map.getNamedItem( "type" ).getTextContent();
+                        int index = Integer.parseInt( map.getNamedItem( "index" ).getTextContent() );
+                        if( type.equals( "head" ) ) {
+                            m.GetLoadout().SetHDTurret( true, index );
+                        } else if( type.equals( "left torso" ) ) {
+                            m.GetLoadout().SetLTTurret( true, index );
+                        } else if( type.equals( "right torso" ) ) {
+                            m.GetLoadout().SetRTTurret( true, index );
+                        } else {
+                            throw new Exception( "A turret was specified for loadout \"" + m.GetLoadout().GetName() + "\" but no type was given.\nCannot load 'Mech." );
+                        }
                     } else if( n.item( i ).getNodeName().equals( "equipment" ) ) {
                         NodeList nl = n.item( i ).getChildNodes();
                         Vector splitLoc = new Vector();
@@ -1288,6 +1352,12 @@ public class MechReader {
                                 m.GetLoadout().SetSupercharger( true, l.Location, l.Index );
                             }
                         } else {
+                            boolean turreted = false;
+                            if( eName.length() > 4 ) {
+                                if( eName.substring( 0, 4 ).equals( "(T) " ) ) {
+                                    turreted = true;
+                                }
+                            }
                             abPlaceable p = GetEquipmentByName( eName, eType, m );
                             if( p == null ) {
                                 throw new Exception( "Could not find " + eName + " as a piece of equipment.\nThe Mech cannot be loaded." );
@@ -1315,6 +1385,38 @@ public class MechReader {
                             } else {
                                 m.GetLoadout().AddToQueue( p );
                                 m.GetLoadout().AddTo( p, l.Location, l.Index );
+                                if( turreted ) {
+                                    if( l.Location == LocationIndex.MECH_LOC_HD ) {
+                                        if( p instanceof RangedWeapon ) {
+                                            if( ! m.GetLoadout().HasHDTurret() ) {
+                                                throw new Exception( "A weapon was specified as turreted but there is no\nturret that it can legally be added to.\nThe 'Mech cannot be loaded." );
+                                            }
+                                            ((RangedWeapon) p).AddToTurret( m.GetLoadout().GetHDTurret() );
+                                        } else {
+                                            throw new Exception( "An item that is not a weapon was specified as turreted\nbut only weapons can be turreted.\nThe 'Mech cannot be loaded." );
+                                        }
+                                    } else if( l.Location == LocationIndex.MECH_LOC_LT ) {
+                                        if( p instanceof RangedWeapon ) {
+                                            if( ! m.GetLoadout().HasLTTurret() ) {
+                                                throw new Exception( "A weapon was specified as turreted but there is no\nturret that it can legally be added to.\nThe 'Mech cannot be loaded." );
+                                            }
+                                            ((RangedWeapon) p).AddToTurret( m.GetLoadout().GetLTTurret() );
+                                        } else {
+                                            throw new Exception( "An item that is not a weapon was specified as turreted\nbut only weapons can be turreted.\nThe 'Mech cannot be loaded." );
+                                        }
+                                    } else if( l.Location == LocationIndex.MECH_LOC_RT ) {
+                                        if( p instanceof RangedWeapon ) {
+                                            if( ! m.GetLoadout().HasRTTurret() ) {
+                                                throw new Exception( "A weapon was specified as turreted but there is no\nturret that it can legally be added to.\nThe 'Mech cannot be loaded." );
+                                            }
+                                            ((RangedWeapon) p).AddToTurret( m.GetLoadout().GetRTTurret() );
+                                        } else {
+                                            throw new Exception( "An item that is not a weapon was specified as turreted\nbut only weapons can be turreted.\nThe 'Mech cannot be loaded." );
+                                        }
+                                    } else {
+                                        throw new Exception( "A weapon was specified as turreted, but it is\nnot in a location that can have a turret.\nThe 'Mech cannot be loaded." );
+                                    }
+                                }
                             }
                             if( p instanceof VehicularGrenadeLauncher ) {
                                 ((VehicularGrenadeLauncher) p).SetArc( VGLArc );
@@ -1451,6 +1553,9 @@ public class MechReader {
             if( name.substring( 0, 4 ).equals( "(R) " ) ) {
                 name = FileCommon.LookupStripArc( name );
                 rear = true;
+            } else if( name.substring( 0, 4 ).equals( "(T) " ) ) {
+                // turreted items are handled elsewhere, unfortunately.
+                name = FileCommon.LookupStripArc( name );
             }
         }
         if( ! name.contains( "(CL)" ) |! name.contains( "(IS)" ) ) {

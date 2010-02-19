@@ -146,8 +146,7 @@ public class MechTurret extends abPlaceable implements ifTurret {
         return 1;
     }
 
-    @Override
-    public double GetTonnage() {
+    private double GetSize() {
         double retval = 0.0;
         for( int i = 0; i < weapons.size(); i++ ) {
             retval += weapons.get( i ).GetTonnage();
@@ -160,8 +159,17 @@ public class MechTurret extends abPlaceable implements ifTurret {
     }
 
     @Override
+    public double GetTonnage() {
+        double retval = GetSize();
+        if( IsArmored() ) { retval += 0.5; }
+        return retval;
+    }
+
+    @Override
     public double GetCost() {
-        return GetTonnage() * 10000.0;
+        double retval = GetSize() * 10000.0;
+        if( IsArmored() ) { retval += 150000.0; }
+        return retval;
     }
 
     @Override

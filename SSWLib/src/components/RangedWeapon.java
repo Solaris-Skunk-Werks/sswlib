@@ -438,17 +438,21 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
         if( UseTC && TCCapable ) {
             retval *= 1.25;
         }
-        if( UseRear ) {
-            if( MountedRear ) {
-                return retval;
-            } else {
-                return retval * 0.5;
-            }
+        if( IsTurreted() ) {
+            return retval;
         } else {
-            if( MountedRear ) {
-                return retval * 0.5;
+            if( UseRear ) {
+                if( MountedRear ) {
+                    return retval;
+                } else {
+                    return retval * 0.5;
+                }
             } else {
-                return retval;
+                if( MountedRear ) {
+                    return retval * 0.5;
+                } else {
+                    return retval;
+                }
             }
         }
     }
@@ -560,6 +564,8 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
     @Override
     public boolean CanMountRear() {
         // all weapons can be mounted to the rear.
+        // unless they're turreted
+        if( IsTurreted() ) { return false; }
         return true;
     }
 
