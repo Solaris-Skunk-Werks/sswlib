@@ -1619,6 +1619,9 @@ public class Mech implements ifUnit, ifBattleforce {
         if( CurLoadout.HasRACASEII() ) { result += CurLoadout.GetRACaseII().GetTonnage(); }
         if( CurLoadout.HasLLCASEII() ) { result += CurLoadout.GetLLCaseII().GetTonnage(); }
         if( CurLoadout.HasRLCASEII() ) { result += CurLoadout.GetRLCaseII().GetTonnage(); }
+        if( CurLoadout.HasHDTurret() ) { result += CurLoadout.GetHDTurret().GetTonnage(); }
+        if( CurLoadout.HasLTTurret() ) { result += CurLoadout.GetLTTurret().GetTonnage(); }
+        if( CurLoadout.HasRTTurret() ) { result += CurLoadout.GetRTTurret().GetTonnage(); }
         if( CurLoadout.UsingTC() ) { result += GetTC().GetTonnage(); }
         if( ! CurEngine.IsNuclear() ) { result += CurLoadout.GetPowerAmplifier().GetTonnage(); }
         if( HasBlueShield ) { result += BlueShield.GetTonnage(); }
@@ -1674,6 +1677,9 @@ public class Mech implements ifUnit, ifBattleforce {
         if( CurLoadout.HasRACASEII() ) { result += CurLoadout.GetRACaseII().GetTonnage(); }
         if( CurLoadout.HasLLCASEII() ) { result += CurLoadout.GetLLCaseII().GetTonnage(); }
         if( CurLoadout.HasRLCASEII() ) { result += CurLoadout.GetRLCaseII().GetTonnage(); }
+        if( CurLoadout.HasHDTurret() ) { result += CurLoadout.GetHDTurret().GetTonnage(); }
+        if( CurLoadout.HasLTTurret() ) { result += CurLoadout.GetLTTurret().GetTonnage(); }
+        if( CurLoadout.HasRTTurret() ) { result += CurLoadout.GetRTTurret().GetTonnage(); }
         if( CurLoadout.UsingTC() ) { result += GetTC().GetTonnage(); }
         if( ! CurEngine.IsNuclear() ) { result += CurLoadout.GetPowerAmplifier().GetTonnage(); }
         if( HasBlueShield ) { result += BlueShield.GetTonnage(); }
@@ -2496,6 +2502,9 @@ public class Mech implements ifUnit, ifBattleforce {
         if( CurLoadout.UsingTC() ) {
             result += GetTC().GetCost();
         }
+        if( CurLoadout.HasHDTurret() ) { result += CurLoadout.GetHDTurret().GetCost(); }
+        if( CurLoadout.HasLTTurret() ) { result += CurLoadout.GetLTTurret().GetCost(); }
+        if( CurLoadout.HasRTTurret() ) { result += CurLoadout.GetRTTurret().GetCost(); }
         if( CurLoadout.HasSupercharger() ) {
             result += CurLoadout.GetSupercharger().GetCost();
         }

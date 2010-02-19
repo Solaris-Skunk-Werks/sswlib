@@ -34,6 +34,7 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
     private LaserInsulator Insulator = null;
     private MGArray CurArray = null;
     private ifMissileGuidance FCS = null;
+    private ifTurret Turret = null;
     private String ActualName,
                    CritName,
                    MegaMekName,
@@ -288,6 +289,9 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
         if( UsingCaseless ) {
             retval += " (Caseless)";
         }
+        if( IsTurreted() ) {
+            retval = "(T) " + retval;
+        }
         if( MountedRear ) {
             return "(R) " + retval;
         } else {
@@ -305,6 +309,9 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
         }
         if( UsingCaseless ) {
             retval += " (Caseless)";
+        }
+        if( IsTurreted() ) {
+            retval = "(T) " + retval;
         }
         if( MountedRear ) {
             return "(R) " + retval;
@@ -844,6 +851,30 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
     public void SetLocationLinked( boolean b ) {
         LocationLinked = b;
         SetLocked( b );
+    }
+
+    public boolean AddToTurret( ifTurret t ) {
+        if( t.AddWeapon( this ) ) {
+            Turret = t;
+            return true;
+        } else {
+            Turret = null;
+            return false;
+        }
+    }
+
+    public void RemoveFromTurret( ifTurret t ) {
+        t.RemoveWeapon( this );
+        Turret = null;
+    }
+
+    public boolean IsTurreted() {
+        if( Turret != null ) { return true; }
+        return false;
+    }
+
+    public ifTurret GetTurret() {
+        return Turret;
     }
 
     public RangedWeapon Clone() {

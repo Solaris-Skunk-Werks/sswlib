@@ -950,7 +950,7 @@ public class MechReader {
         m.GetArmor().SetArmor( LocationIndex.MECH_LOC_RL, ArmorPoints[LocationIndex.MECH_LOC_RL] );
 
         // place the armor
-        if( ! m.GetArmor().IsStealth() |! m.GetArmor().IsPatchwork() ) {
+        if( ! m.GetArmor().IsStealth() &! m.GetArmor().IsPatchwork() ) {
             if( armLoc.size() > 0 ) {
                 MechArmor a = m.GetArmor();
                 for( int i = 0; i < armLoc.size(); i++ ) {

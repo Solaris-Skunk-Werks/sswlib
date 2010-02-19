@@ -2157,7 +2157,15 @@ public class MechArmor  extends abPlaceable {
 
     @Override
     public MechModifier GetMechModifier() {
-        return Config.GetMechModifier();
+        if( IsPatchwork() ) {
+            if( LLConfig == Hardened || RLConfig == Hardened ) {
+                return Hardened.GetMechModifier();
+            } else {
+                return null;
+            }
+        } else {
+            return Config.GetMechModifier();
+        }
     }
 
     @Override

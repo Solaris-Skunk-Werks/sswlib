@@ -64,6 +64,9 @@ public class QuadLoadout implements ifMechLoadout {
                    RACaseII = new CASEII( false ),
                    LLCaseII = new CASEII( false ),
                    RLCaseII = new CASEII( false );
+    private MechTurret HDTurret = new MechTurret( this ),
+                       LTTurret = new MechTurret( this ),
+                       RTTurret = new MechTurret( this );
     private boolean UseAIVFCS = false,
                     UseAVFCS = false,
                     UseApollo = false,
@@ -1815,6 +1818,17 @@ public class QuadLoadout implements ifMechLoadout {
             if( ((RangedWeapon) p).IsUsingInsulator() ) {
                 UnallocateAll( ((RangedWeapon) p).GetInsulator(), true );
             }
+            if( ((RangedWeapon) p).IsTurreted() ) {
+                if( ((RangedWeapon) p).GetTurret() == HDTurret ) {
+                    ((RangedWeapon) p).RemoveFromTurret( HDTurret );
+                }
+                if( ((RangedWeapon) p).GetTurret() == LTTurret ) {
+                    ((RangedWeapon) p).RemoveFromTurret( LTTurret );
+                }
+                if( ((RangedWeapon) p).GetTurret() == RTTurret ) {
+                    ((RangedWeapon) p).RemoveFromTurret( RTTurret );
+                }
+            }
         }
 
         // if the item is an MG Array, check for it's MGs and unallocate
@@ -1918,6 +1932,17 @@ public class QuadLoadout implements ifMechLoadout {
             }
             if( ((RangedWeapon) p).IsUsingInsulator() ) {
                 UnallocateAll( ((RangedWeapon) p).GetInsulator(), true );
+            }
+            if( ((RangedWeapon) p).IsTurreted() ) {
+                if( ((RangedWeapon) p).GetTurret() == HDTurret ) {
+                    ((RangedWeapon) p).RemoveFromTurret( HDTurret );
+                }
+                if( ((RangedWeapon) p).GetTurret() == LTTurret ) {
+                    ((RangedWeapon) p).RemoveFromTurret( LTTurret );
+                }
+                if( ((RangedWeapon) p).GetTurret() == RTTurret ) {
+                    ((RangedWeapon) p).RemoveFromTurret( RTTurret );
+                }
             }
         }
 
@@ -3190,6 +3215,15 @@ public class QuadLoadout implements ifMechLoadout {
         clone.SetLLCrits( LLCrits.clone() );
         // set the new actuators
         Actuators.Transfer( clone.GetActuators() );
+        if( HasHDTurret() ) {
+            clone.SetHDTurret( HDTurret );
+        }
+        if( HasLTTurret() ) {
+            clone.SetLTTurret( LTTurret );
+        }
+        if( HasRTTurret() ) {
+            clone.SetRTTurret( RTTurret );
+        }
         clone.SetClanCASE( UsingClanCASE );
         try {
             clone.SetFCSArtemisIV( UseAIVFCS );
@@ -4139,6 +4173,186 @@ public class QuadLoadout implements ifMechLoadout {
 
     public PowerAmplifier GetPowerAmplifier() {
         return PowerAmp;
+    }
+
+    public MechTurret GetHDTurret() {
+        return HDTurret;
+    }
+
+    public void SetHDTurret( boolean Add, int index ) throws Exception {
+        if( ! Add ) {
+            Remove( HDTurret );
+            ClearTurretWeapons( HDTurret );
+            return;
+        }
+        if( Add && HasHDTurret() ) {
+            return;
+        }
+
+        boolean placed = false;
+        int increment = 11;
+        if( index < 0 ) {
+            // general placement routine
+            while( placed == false ) {
+                if ( increment < 0 ) {
+                    throw new Exception( "There is not enough space in the CT for a Head Turret." );
+                }
+                try {
+                    AddToCT( HDTurret, increment );
+                    increment--;
+                    placed = true;
+                } catch ( Exception e ) {
+                    increment--;
+                }
+            }
+        } else {
+            // specific placement routine
+            try {
+                AddToCT( HDTurret, index );
+            } catch( Exception e ) {
+                throw new Exception( "Head Turret could not be allocated to slot " + index + ".\nHead Turret system was not installed in the CT." );
+            }
+        }
+
+        Owner.SetChanged( true );
+    }
+
+    public boolean HasHDTurret() {
+        return IsAllocated( HDTurret );
+    }
+
+    public void SetHDTurret( MechTurret t ) {
+        HDTurret = t;
+    }
+
+    public boolean CanUseHDTurret() {
+        if( Owner.GetCockpit().IsTorsoMounted() ) {
+            return true;
+        }
+        return false;
+    }
+
+    public MechTurret GetLTTurret() {
+        return LTTurret;
+    }
+
+    public void SetLTTurret( boolean Add, int index ) throws Exception {
+        if( ! Add ) {
+            Remove( LTTurret );
+            ClearTurretWeapons( LTTurret );
+            return;
+        }
+        if( Add && HasLTTurret() ) {
+            return;
+        }
+
+        boolean placed = false;
+        int increment = 11;
+        if( index < 0 ) {
+            // general placement routine
+            while( placed == false ) {
+                if ( increment < 0 ) {
+                    throw new Exception( "There is not enough space in the LT for a Turret." );
+                }
+                try {
+                    AddToLT( LTTurret, increment );
+                    increment--;
+                    placed = true;
+                } catch ( Exception e ) {
+                    increment--;
+                }
+            }
+        } else {
+            // specific placement routine
+            try {
+                AddToLT( LTTurret, index );
+            } catch( Exception e ) {
+                throw new Exception( "Turret could not be allocated to slot " + index + ".\nTurret system was not installed in the LT." );
+            }
+        }
+
+        Owner.SetChanged( true );
+    }
+
+    public boolean HasLTTurret() {
+        return IsAllocated( LTTurret );
+    }
+
+    public void SetLTTurret( MechTurret t ) {
+        LTTurret = t;
+    }
+
+    public boolean CanUseLTTurret() {
+        if( HasRTTurret() ) { return false; }
+        return true;
+    }
+
+    public MechTurret GetRTTurret() {
+        return RTTurret;
+    }
+
+    public void SetRTTurret( boolean Add, int index ) throws Exception {
+        if( ! Add ) {
+            Remove( RTTurret );
+            ClearTurretWeapons( RTTurret );
+            return;
+        }
+        if( Add && HasRTTurret() ) {
+            return;
+        }
+
+        boolean placed = false;
+        int increment = 11;
+        if( index < 0 ) {
+            // general placement routine
+            while( placed == false ) {
+                if ( increment < 0 ) {
+                    throw new Exception( "There is not enough space in the RT for a Turret." );
+                }
+                try {
+                    AddToRT( RTTurret, increment );
+                    increment--;
+                    placed = true;
+                } catch ( Exception e ) {
+                    increment--;
+                }
+            }
+        } else {
+            // specific placement routine
+            try {
+                AddToRT( RTTurret, index );
+            } catch( Exception e ) {
+                throw new Exception( "Turret could not be allocated to slot " + index + ".\nTurret system was not installed in the RT." );
+            }
+        }
+
+        Owner.SetChanged( true );
+    }
+
+    public boolean HasRTTurret() {
+        return IsAllocated( RTTurret );
+    }
+
+    public void SetRTTurret( MechTurret t ) {
+        RTTurret = t;
+    }
+
+    public boolean CanUseRTTurret() {
+        if( HasLTTurret() ) { return false; }
+        return true;
+    }
+
+    private void ClearTurretWeapons( MechTurret t ) {
+        for( int i = 0; i < NonCore.size(); i++ ) {
+            if( NonCore.get( i ) instanceof RangedWeapon ) {
+                RangedWeapon w = (RangedWeapon) NonCore.get( i );
+                if( w.IsTurreted() ) {
+                    if( w.GetTurret() == t ) {
+                        w.RemoveFromTurret( t );
+                    }
+                }
+            }
+        }
     }
 
     public void CheckExclusions( abPlaceable p ) throws Exception {
