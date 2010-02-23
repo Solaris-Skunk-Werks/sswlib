@@ -874,9 +874,20 @@ public class MechReader {
         // armor next
         n = d.getElementsByTagName( "armor" );
         map = n.item( 0 ).getAttributes();
-        m.SetArmorModel( FileCommon.DecodeFluff( map.getNamedItem( "manufacturer" ).getTextContent() ) );
         n = n.item( 0 ).getChildNodes();
         String pwtype = "";
+        boolean oldfile = false, clanarmor = false;
+        m.SetArmorModel( FileCommon.DecodeFluff( map.getNamedItem( "manufacturer" ).getTextContent() ) );
+        if( map.getNamedItem( "techbase" ) == null ) {
+            // old style save file, set the armor based on the 'Mech's techbase
+            if( m.GetBaseTechbase() == AvailableCode.TECH_CLAN ) {
+               oldfile = true;
+            }
+        } else {
+            if( Integer.parseInt( map.getNamedItem( "techbase" ).getTextContent() ) == AvailableCode.TECH_CLAN ) {
+                clanarmor = true;
+            }
+        }
         int[] ArmorPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         Type = null;
         for( int i = 0; i < n.getLength(); i++ ) {
@@ -959,13 +970,13 @@ public class MechReader {
                 for( int j = 0; j < armLoc.size(); j++ ) {
                     Locs[j] = (LocationIndex) armLoc.get( j );
                 }
-                if( map.getNamedItem( "techbase" ) == null ) {
+                if( oldfile ) {
                     // old style save file, set the armor based on the 'Mech's techbase
                     if( m.GetBaseTechbase() == AvailableCode.TECH_CLAN ) {
                         v.SetClan( true );
                     }
                 } else {
-                    if( Integer.parseInt( map.getNamedItem( "techbase" ).getTextContent() ) == AvailableCode.TECH_CLAN ) {
+                    if( clanarmor ) {
                         v.SetClan( true );
                     }
                 }
@@ -1541,6 +1552,8 @@ public class MechReader {
         l.Location = FileCommon.DecodeLocation( n.getTextContent() );
         if( map.getNamedItem( "number" ) != null ) {
             l.Number = Integer.parseInt( map.getNamedItem( "number" ).getTextContent() );
+        } else {
+            l.Number = 1;
         }
         return l;
     }

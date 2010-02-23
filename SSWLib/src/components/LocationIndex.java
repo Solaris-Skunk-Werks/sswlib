@@ -33,7 +33,7 @@ public class LocationIndex {
     // it provides a location index for any given item.
     public int Index = -1;
     public int Location = -1;
-    public int Number = -1; // used for contiguous split items.  otherwise
+    public int Number = 1; // used for contiguous split items.  otherwise
                             // should be ignored
 
     public static final int MECH_LOC_HD = 0,

@@ -224,9 +224,7 @@ public class MechWriter {
             FR.write( tab + tab + "<rl>" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RL ) + "</rl>" );
             FR.newLine();
         }
-        if( CurMech.GetArmor().NumCrits() > 0 || CurMech.GetArmor().IsPatchwork() ) {
-            FR.write( GetLocationLines( tab + tab, CurMech.GetArmor() ) );
-        }
+        FR.write( GetLocationLines( tab + tab, CurMech.GetArmor() ) );
         FR.write( tab + "</armor>" );
         FR.newLine();
 
