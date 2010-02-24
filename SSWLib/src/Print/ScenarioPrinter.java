@@ -58,9 +58,9 @@ public class ScenarioPrinter implements Printable {
         Reset();
 
         //Battletech Logo on top of sheet
-        Image Recordsheet = imageTracker.getImage( PrintConsts.BT_LOGO );
-        Graphic.drawImage( Recordsheet, 0, 0, 306, 49, null);
-        currentLocation.y += 50;
+        //Image Recordsheet = imageTracker.getImage( PrintConsts.BT_LOGO );
+        //Graphic.drawImage( Recordsheet, 0, 0, 306, 49, null);
+        //currentLocation.y += 50;
 
         Graphic.setFont( PrintConsts.TitleFont);
         Graphic.drawString(scenario.getName(), currentLocation.x, currentLocation.y);
@@ -78,36 +78,41 @@ public class ScenarioPrinter implements Printable {
         RenderItalic("Defender");
         RenderText( scenario.getDefender(), characterWidth );
 
-        if ( scenario.getVictoryConditions().isEmpty() ) {
+        if ( scenario.getWarchest().getTrackCost() > 0 ) {
             RenderTitle("Track Cost: " + scenario.getWarchest().getTrackCost());
             currentLocation.y += 10;
+        }
 
+        if ( scenario.getWarchest().getBonuses().size() > 0 ) {
             RenderItalic("Optional Bonuses");
             for ( Bonus b : scenario.getWarchest().getBonuses() ) {
                 RenderLine( b.toPrint(), characterWidth );
             }
             currentLocation.y += 10;
+        }
 
+        if ( scenario.getWarchest().getObjectives().size() > 0 ) {
             RenderItalic("Objectives");
             for ( Objective o : scenario.getWarchest().getObjectives() ) {
                 RenderLine( o.toPrint(), characterWidth );
             }
             currentLocation.y += 10;
-            
-        } else {
-            RenderTitle("VICTORY CONDITIONS");
-            RenderText( scenario.getVictoryConditions(), characterWidth );
         }
         
         RenderTitle("SPECIAL RULES");
         RenderText( scenario.getSpecialRules(), characterWidth );
 
+        if ( !scenario.getVictoryConditions().isEmpty() ) {
+            RenderTitle("VICTORY CONDITIONS");
+            RenderText( scenario.getVictoryConditions(), characterWidth );
+        }
+
         RenderTitle("AFTERMATH");
         RenderText( scenario.getAftermath(), characterWidth );
         
-        Graphic.setFont( PrintConsts.SmallBoldFont );
-        Graphic.drawString(PrintConsts.getCopyright()[0], 100, (int)format.getHeight()-40);
-        Graphic.drawString(PrintConsts.getCopyright()[1], 60, (int)format.getHeight()-30);
+        //Graphic.setFont( PrintConsts.SmallBoldFont );
+        //Graphic.drawString(PrintConsts.getCopyright()[0], 100, (int)format.getHeight()-40);
+        //Graphic.drawString(PrintConsts.getCopyright()[1], 60, (int)format.getHeight()-30);
     }
 
     private void RenderTitle( String title) {
@@ -124,7 +129,7 @@ public class ScenarioPrinter implements Printable {
 
     private void RenderText( String text, int Width ) {
         RenderLine( text, Width );
-        currentLocation.y += 10;
+        currentLocation.y += Graphic.getFont().getSize();
     }
 
     private void RenderLine( String text, int Width ) {
