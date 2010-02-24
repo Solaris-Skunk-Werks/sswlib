@@ -70,7 +70,8 @@ public class PrintMech implements Printable {
                   Grey = new Color( 128, 128, 128 );
     private Media media = new Media();
     private ImageTracker imageTracker;
-    private Preferences Prefs = Preferences.userNodeForPackage("/ssw/gui/frmMain".getClass());
+    private Preferences Prefs = Preferences.userRoot().node( "/ssw/gui" );
+
     private PlaceableInfo[] Items;
     private PIPPrinter ap;
 

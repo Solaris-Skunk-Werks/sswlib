@@ -723,7 +723,8 @@ public class FileCommon {
     public static String FormatAmmoExportName( Ammunition a, int tons ) {
         // this routine returns a user-defined ammunition name based on a user-
         // defined ammunition filter.
-        Preferences Prefs = Preferences.userNodeForPackage("/ssw/gui/frmMain".getClass());
+//        Preferences Prefs = Preferences.userNodeForPackage( "/ssw/gui/frmMain".getClass() );
+        Preferences Prefs = Preferences.userRoot().node( "/ssw/gui" );
         String retval = Prefs.get( "AmmoNameExportFormat", "@%P (%L)" );
         retval = retval.replace( "%F", a.ActualName().replace( "@ ", "" ) );
         retval = retval.replace( "%P", a.CritName().replace( "@ ", "" ) );

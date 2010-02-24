@@ -121,7 +121,7 @@ public class Mech implements ifUnit, ifBattleforce {
     // Constructors
     public Mech() {
         // no prefs file, create a default.
-        Prefs = Preferences.userRoot();
+        Prefs = Preferences.userRoot().node( "/ssw/gui" );
         Load();
     }
 
@@ -1797,44 +1797,36 @@ public class Mech implements ifUnit, ifBattleforce {
             if( a instanceof ifWeapon ) {
                 boolean OS = ((ifWeapon) a).IsOneShot();
                 boolean Rear = a.IsMountedRear();
+                int rate = 1;
+                if( ( a instanceof RangedWeapon ) && FullRate ) {
+                    if( ((RangedWeapon) a).IsUltra() ) {
+                        rate = 2;
+                    } else if( ((RangedWeapon) a).IsRotary() ) {
+                        rate = 6;
+                    }
+                }
                 if( ExcludeOS || ExcludeRear ) {
                     if( ExcludeOS ) {
                         if( ExcludeRear ) {
-                            if( ! OS &! Rear ) {
-                                result += ((ifWeapon) a).GetHeat();
+                            if( ! Rear &! OS ) {
+                                result += ((ifWeapon) a).GetHeat() * rate;
                             }
                         } else {
                             if( ! OS ) {
-                                result += ((ifWeapon) a).GetHeat();
+                                result += ((ifWeapon) a).GetHeat() * rate;
                             }
                         }
-                    } else if( ExcludeRear ) {
-                        if( ExcludeOS ) {
-                            if( ! OS &! Rear ) {
-                                result += ((ifWeapon) a).GetHeat();
+                    } else {
+                        if( ExcludeRear ) {
+                            if( ! Rear ) {
+                                result += ((ifWeapon) a).GetHeat() * rate;
                             }
                         } else {
-                            if( ! Rear ) {
-                                result += ((ifWeapon) a).GetHeat();
-                            }
+                            result += ((ifWeapon) a).GetHeat() * rate;
                         }
                     }
                 } else {
-                    if( FullRate ) {
-                        if( a instanceof RangedWeapon ) {
-                            if( ((RangedWeapon) a).IsUltra() ) {
-                                result += ((ifWeapon) a).GetHeat() * 2;
-                            } else if( ((RangedWeapon) a).IsRotary() ) {
-                                result += ((ifWeapon) a).GetHeat() * 6;
-                            } else {
-                                result += ((ifWeapon) a).GetHeat();
-                            }
-                        } else {
-                            result += ((ifWeapon) a).GetHeat();
-                        }
-                    } else {
-                        result += ((ifWeapon) a).GetHeat();
-                    }
+                    result += ((ifWeapon) a).GetHeat() * rate;
                 }
             } else if( a instanceof Equipment ) {
                 if( ! ExcludeEquip ) {
