@@ -90,8 +90,11 @@ public class ForceListPrinter implements Printable {
         Image Recordsheet = imageTracker.getImage( PrintConsts.BT_LOGO );
         Graphic.drawImage( Recordsheet, 0, 0, 306, 49, null);
         setFont(PrintConsts.BaseFont.deriveFont(Font.BOLD));
-        if ( Title.length() >= 26 ) { setFont(PrintConsts.BaseFont.deriveFont(Font.BOLD).deriveFont(PrintConsts.BaseFont.getSize()-4)); }
-        Graphic.drawString(Title, 310, 16);
+        currentY = 16;
+        for ( String line : PrintConsts.wrapText(Title, 28, false) ) {
+            Graphic.drawString(line, 310, currentY);
+            currentY += Graphic.getFont().getSize();
+        }
         currentY = 75;
 
         for ( Force force : forces ) {
