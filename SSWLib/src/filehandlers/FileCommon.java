@@ -740,18 +740,11 @@ public class FileCommon {
 
     public static String LookupStripArc( String s ) {
         // removes the arc from the lookupname for more precise grouping
-        String retval = "";
-        if( s.length() > 3 ) {
-            if( s.substring( 0, 4 ).equals( "(R) " ) || s.substring( 0, 4 ).equals( "(F) " ) || s.substring( 0, 4 ).equals( "(T) " ) ) {
-                retval = s.substring( 4 );
-            } else if( s.substring( 0, 5 ).equals( "(RS) " ) || s.substring( 0, 5 ).equals( "(FS) " ) ) {
-                retval = s.substring( 5 );
-            } else {
-                retval = s;
-            }
-        } else {
-            retval = s;
+        if ( s.startsWith("(R) ") || s.startsWith("(F) ") || s.startsWith("(T) ") ) {
+            return s.substring(0, 4);
+        } else if ( s.startsWith("(RS) ") || s.startsWith("(FS) ") ) {
+            return s.substring(0, 5);
         }
-        return retval;
+        return s;
     }
 }
