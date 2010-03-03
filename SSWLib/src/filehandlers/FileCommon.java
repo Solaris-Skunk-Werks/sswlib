@@ -741,9 +741,9 @@ public class FileCommon {
     public static String LookupStripArc( String s ) {
         // removes the arc from the lookupname for more precise grouping
         if ( s.startsWith("(R) ") || s.startsWith("(F) ") || s.startsWith("(T) ") ) {
-            return s.substring(0, 4);
+            return s.substring(4);
         } else if ( s.startsWith("(RS) ") || s.startsWith("(FS) ") ) {
-            return s.substring(0, 5);
+            return s.substring(5);
         }
         return s;
     }
