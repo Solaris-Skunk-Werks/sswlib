@@ -115,33 +115,47 @@ public class Media {
     public void RemoveImage(Image image ) {
         Tracker.removeImage(image);
     }
-    
+
+    public void setLogo( javax.swing.JLabel lblLogo, String url ) {
+        if ( !url.isEmpty() ) {
+            try {
+               ImageIcon icon = new ImageIcon(url);
+               setLogo( lblLogo, icon );
+            } catch ( Exception e ) {
+
+            }
+        }
+    }
+
+    public void setLogo( javax.swing.JLabel lblLogo, ImageIcon icon ) {
+        if( icon == null ) { return; }
+
+        // See if we need to scale
+        int lblH = lblLogo.getHeight()-lblLogo.getIconTextGap();
+        int lblW = lblLogo.getWidth()-lblLogo.getIconTextGap();
+
+        int h = icon.getIconHeight();
+        int w = icon.getIconWidth();
+        if ( w > lblW || h > lblH ) {
+            if ( h > lblH ) {
+                icon = new ImageIcon(icon.getImage().
+                    getScaledInstance(-1, lblH, Image.SCALE_SMOOTH));
+                w = icon.getIconWidth();
+            }
+            if ( w > lblW ) {
+                icon = new ImageIcon(icon.getImage().
+                    getScaledInstance(lblW, -1, Image.SCALE_SMOOTH));
+            }
+        }
+
+        lblLogo.setIcon(icon);
+    }
+
     public void setLogo( javax.swing.JLabel lblLogo, File Logo ) {
         if ( Logo != null && ! Logo.getPath().isEmpty() ) {
             try {
                ImageIcon icon = new ImageIcon(Logo.getPath());
-
-                if( icon == null ) { return; }
-
-                // See if we need to scale
-                int lblH = lblLogo.getHeight()-lblLogo.getIconTextGap();
-                int lblW = lblLogo.getWidth()-lblLogo.getIconTextGap();
-
-                int h = icon.getIconHeight();
-                int w = icon.getIconWidth();
-                if ( w > lblW || h > lblH ) {
-                    if ( h > lblH ) {
-                        icon = new ImageIcon(icon.getImage().
-                            getScaledInstance(-1, lblH, Image.SCALE_SMOOTH));
-                        w = icon.getIconWidth();
-                    }
-                    if ( w > lblW ) {
-                        icon = new ImageIcon(icon.getImage().
-                            getScaledInstance(lblW, -1, Image.SCALE_SMOOTH));
-                    }
-                }
-
-                lblLogo.setIcon(icon);
+               setLogo( lblLogo, icon );
             } catch ( Exception e ) {
 
             }
@@ -174,6 +188,13 @@ public class Media {
         Point offset = new Point(0, 0);
         //offset.x = originalDimensions.width - currentDimensions.width;
         offset.y = spaceDimensions.height - currentDimensions.height;
+        return offset;
+    }
+
+    public Point offsetImageCenter( Dimension spaceDimensions, Dimension currentDimensions ) {
+        Point offset = new Point(0, 0);
+        //offset.x = originalDimensions.width - currentDimensions.width;
+        offset.y = (spaceDimensions.height/2) - (currentDimensions.height/2);
         return offset;
     }
 
