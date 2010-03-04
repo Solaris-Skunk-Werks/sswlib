@@ -31,6 +31,7 @@ public class Group {
     public Group( Node node, int Version, Force force ) {
         this.force = force;
         this.Name = node.getAttributes().getNamedItem("name").getTextContent().trim();
+        this.Type = force.getType();
         if ( node.getAttributes().getNamedItem("logo") != null ) { this.Logo = node.getAttributes().getNamedItem("logo").getTextContent().trim(); }
         for (int i=0; i < node.getChildNodes().getLength(); i++) {
             Node n = node.getChildNodes().item(i);
@@ -107,7 +108,7 @@ public class Group {
         Vector<BattleForce> bforces = new Vector<BattleForce>();
         BattleForce bf = new BattleForce();
         bf.Type = getType();
-        bf.ForceName = getForce().ForceName;
+        bf.ForceName = force.ForceName;
         bf.LogoPath = getLogo();
         for ( Unit u : getUnits() ) {
             u.LoadMech();
@@ -126,7 +127,7 @@ public class Group {
     }
 
     public void SerializeXML( BufferedWriter file ) throws IOException {
-        file.write( CommonTools.Tabs(3) + "<group name=\"" + this.Name + "\" logo=\"" + this.Logo + "\" >");
+        file.write( CommonTools.Tabs(3) + "<group name=\"" + this.Name + "\" logo=\"" + this.Logo + "\" type=\"" + this.Type + "\" >");
         file.newLine();
         for ( Unit u : Units ) {
             u.SerializeXML(file);
@@ -222,5 +223,16 @@ public class Group {
 
     public void setUnits(Vector<Unit> Units) {
         this.Units = Units;
+    }
+
+    public void setType(String Type) {
+        this.Type = Type;
+    }
+
+    /**
+     * @param Name the Name to set
+     */
+    public void setName(String Name) {
+        this.Name = Name;
     }
 }
