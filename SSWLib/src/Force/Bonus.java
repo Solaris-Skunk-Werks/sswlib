@@ -59,7 +59,7 @@ public class Bonus extends abWarchestItem implements ifSerializable {
     public String SerializeClipboard() {
         String data = "";
 
-        data += "+" + getValue() + ": " + getDescription();
+        data += getValue() + ": " + getDescription();
         return data;
     }
 
