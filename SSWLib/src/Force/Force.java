@@ -200,9 +200,9 @@ public class Force extends AbstractTableModel implements ifSerializable {
             g.AddUnit(u);
             Groups.add(g);
         }
-        RefreshBV();
         isDirty = true;
         unitsChanged = true;
+        RefreshBV();
     }
 
     public void RemoveUnit( Unit u ){
@@ -212,9 +212,9 @@ public class Force extends AbstractTableModel implements ifSerializable {
                 break;
             }
         }
-        RefreshBV();
-        isDirty = true;
         unitsChanged = true;
+        isDirty = true;
+        RefreshBV();
     }
 
     public void GroupUnit( Unit u ) {
@@ -514,6 +514,9 @@ public class Force extends AbstractTableModel implements ifSerializable {
 
     public void setType(String Type) {
         this.Type = Type;
+        for ( Group g : Groups ) {
+            g.setType(Type);
+        }
     }
 
     @Override
