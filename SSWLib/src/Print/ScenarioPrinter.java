@@ -58,8 +58,8 @@ public class ScenarioPrinter implements Printable {
         Reset();
 
         //Battletech Logo on top of sheet
-        //Image Recordsheet = imageTracker.getImage( PrintConsts.BT_LOGO );
-        //Graphic.drawImage( Recordsheet, 0, 0, 306, 49, null);
+        Image Recordsheet = imageTracker.getImage( PrintConsts.BT_LOGO );
+        Graphic.drawImage( Recordsheet, ((int) format.getImageableWidth())-306, 0, 306, 49, null);
         //currentLocation.y += 50;
 
         Graphic.setFont( PrintConsts.TitleFont);
