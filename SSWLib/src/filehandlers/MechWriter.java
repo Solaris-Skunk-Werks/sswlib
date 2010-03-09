@@ -178,27 +178,27 @@ public class MechWriter {
         FR.write( tab + tab + "<type>" + CurMech.GetArmor().LookupName() + "</type>" );
         FR.newLine();
         if( CurMech.GetArmor().IsPatchwork() ) {
-            FR.write( tab + tab + "<hd type=\"" + CurMech.GetArmor().GetHDArmorType().LookupName() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_HD ) + "</hd>" );
+            FR.write( tab + tab + "<hd type=\"" + CurMech.GetArmor().GetHDArmorType().LookupName() + "\" techbase=\"" + CurMech.GetArmor().GetHDArmorType().GetAvailability().GetTechBase() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_HD ) + "</hd>" );
             FR.newLine();
-            FR.write( tab + tab + "<ct type=\"" + CurMech.GetArmor().GetCTArmorType().LookupName() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CT ) + "</ct>" );
+            FR.write( tab + tab + "<ct type=\"" + CurMech.GetArmor().GetCTArmorType().LookupName() + "\" techbase=\"" + CurMech.GetArmor().GetCTArmorType().GetAvailability().GetTechBase() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CT ) + "</ct>" );
             FR.newLine();
             FR.write( tab + tab + "<ctr>" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CTR ) + "</ctr>" );
             FR.newLine();
-            FR.write( tab + tab + "<lt type=\"" + CurMech.GetArmor().GetLTArmorType().LookupName() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LT ) + "</lt>" );
+            FR.write( tab + tab + "<lt type=\"" + CurMech.GetArmor().GetLTArmorType().LookupName() + "\" techbase=\"" + CurMech.GetArmor().GetLTArmorType().GetAvailability().GetTechBase() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LT ) + "</lt>" );
             FR.newLine();
             FR.write( tab + tab + "<ltr>" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LTR ) + "</ltr>" );
             FR.newLine();
-            FR.write( tab + tab + "<rt type=\"" + CurMech.GetArmor().GetRTArmorType().LookupName() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RT ) + "</rt>" );
+            FR.write( tab + tab + "<rt type=\"" + CurMech.GetArmor().GetRTArmorType().LookupName() + "\" techbase=\"" + CurMech.GetArmor().GetRTArmorType().GetAvailability().GetTechBase() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RT ) + "</rt>" );
             FR.newLine();
             FR.write( tab + tab + "<rtr>" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RTR ) + "</rtr>" );
             FR.newLine();
-            FR.write( tab + tab + "<la type=\"" + CurMech.GetArmor().GetLAArmorType().LookupName() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LA ) + "</la>" );
+            FR.write( tab + tab + "<la type=\"" + CurMech.GetArmor().GetLAArmorType().LookupName() + "\" techbase=\"" + CurMech.GetArmor().GetLAArmorType().GetAvailability().GetTechBase() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LA ) + "</la>" );
             FR.newLine();
-            FR.write( tab + tab + "<ra type=\"" + CurMech.GetArmor().GetRAArmorType().LookupName() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RA ) + "</ra>" );
+            FR.write( tab + tab + "<ra type=\"" + CurMech.GetArmor().GetRAArmorType().LookupName() + "\" techbase=\"" + CurMech.GetArmor().GetRAArmorType().GetAvailability().GetTechBase() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RA ) + "</ra>" );
             FR.newLine();
-            FR.write( tab + tab + "<ll type=\"" + CurMech.GetArmor().GetLLArmorType().LookupName() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LL ) + "</ll>" );
+            FR.write( tab + tab + "<ll type=\"" + CurMech.GetArmor().GetLLArmorType().LookupName() + "\" techbase=\"" + CurMech.GetArmor().GetLLArmorType().GetAvailability().GetTechBase() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LL ) + "</ll>" );
             FR.newLine();
-            FR.write( tab + tab + "<rl type=\"" + CurMech.GetArmor().GetRLArmorType().LookupName() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RL ) + "</rl>" );
+            FR.write( tab + tab + "<rl type=\"" + CurMech.GetArmor().GetRLArmorType().LookupName() + "\" techbase=\"" + CurMech.GetArmor().GetRLArmorType().GetAvailability().GetTechBase() + "\">" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RL ) + "</rl>" );
             FR.newLine();
         } else {
             FR.write( tab + tab + "<hd>" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_HD ) + "</hd>" );

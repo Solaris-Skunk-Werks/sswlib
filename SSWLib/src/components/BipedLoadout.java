@@ -4652,6 +4652,11 @@ public class BipedLoadout implements ifMechLoadout {
                 throw new Exception( p.CritName() + " may not be mounted as it requires a fusion engine." );
             }
         }
+        if( p instanceof ExtendedFuelTank ) {
+            if( ! Owner.GetEngine().IsICE() &! Owner.GetEngine().isFuelCell() ) {
+                throw new Exception( p.CritName() + " may not be mounted on this 'Mech because the engine is incompatible." );
+            }
+        }
         if( p.GetExclusions() == null ) { return; }
         String[] exclude = p.GetExclusions().GetExclusions();
 

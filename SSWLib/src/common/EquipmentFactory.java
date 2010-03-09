@@ -47,6 +47,7 @@ public class EquipmentFactory {
         if (( m.GetUnitType() == AvailableCode.UNIT_BATTLEMECH ) && ( m instanceof Mech) ) {
             BuildPhysicals( (Mech) m );
             PhysicalWeapons.add( new Talons( (Mech) m ) );
+            Equipment.add( new ExtendedFuelTank( (Mech) m ) );
         }
         BuildMGArrays();
     }
@@ -54,8 +55,9 @@ public class EquipmentFactory {
     public abPlaceable GetCopy( abPlaceable p, ifUnit m ) {
         // creates an equipment copy of p
         abPlaceable retval = null;
-
-        if( p instanceof Equipment ) {
+        if( p instanceof ExtendedFuelTank ) {
+            retval = new ExtendedFuelTank( (Mech) m );
+        } else if( p instanceof Equipment ) {
             retval = ((Equipment) p).Clone();
         } else if( p instanceof ModularArmor ) {
             retval = new ModularArmor();
@@ -559,6 +561,11 @@ public class EquipmentFactory {
         // this method rebuilds the physical weapons if the form's CurMech changes
         for( int i = 0; i < PhysicalWeapons.size(); i++ ) {
             ((PhysicalWeapon) PhysicalWeapons.get( i )).SetOwner( (Mech) m );
+        }
+        for( int i = 0; i < Equipment.size(); i++ ) {
+            if( Equipment.get( i ) instanceof ExtendedFuelTank ) {
+                ((ExtendedFuelTank) Equipment.get( i )).SetOwner( (Mech) m );
+            }
         }
     }
 }

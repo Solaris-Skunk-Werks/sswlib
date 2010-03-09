@@ -876,6 +876,7 @@ public class MechReader {
         map = n.item( 0 ).getAttributes();
         n = n.item( 0 ).getChildNodes();
         String pwtype = "";
+        int pwtech = 0;
         boolean oldfile = false, clanarmor = false;
         m.SetArmorModel( FileCommon.DecodeFluff( map.getNamedItem( "manufacturer" ).getTextContent() ) );
         if( map.getNamedItem( "techbase" ) == null ) {
@@ -897,14 +898,24 @@ public class MechReader {
                 map = n.item( i ).getAttributes();
                 if( map.getNamedItem( "type" ) != null ) {
                     pwtype = map.getNamedItem( "type" ).getTextContent();
-                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_HD ) );
+                    if( map.getNamedItem( "techbase" ) != null ) {
+                        pwtech = Integer.parseInt( map.getNamedItem( "techbase" ).getTextContent() );
+                    } else {
+                        pwtech = AvailableCode.TECH_INNER_SPHERE;
+                    }
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_HD, pwtech ) );
                 }
                 ArmorPoints[LocationIndex.MECH_LOC_HD] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "ct" ) ) {
                 map = n.item( i ).getAttributes();
                 if( map.getNamedItem( "type" ) != null ) {
                     pwtype = map.getNamedItem( "type" ).getTextContent();
-                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_CT ) );
+                    if( map.getNamedItem( "techbase" ) != null ) {
+                        pwtech = Integer.parseInt( map.getNamedItem( "techbase" ).getTextContent() );
+                    } else {
+                        pwtech = AvailableCode.TECH_INNER_SPHERE;
+                    }
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_CT, pwtech ) );
                 }
                 ArmorPoints[LocationIndex.MECH_LOC_CT] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "ctr" ) ) {
@@ -913,7 +924,12 @@ public class MechReader {
                 map = n.item( i ).getAttributes();
                 if( map.getNamedItem( "type" ) != null ) {
                     pwtype = map.getNamedItem( "type" ).getTextContent();
-                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_LT ) );
+                    if( map.getNamedItem( "techbase" ) != null ) {
+                        pwtech = Integer.parseInt( map.getNamedItem( "techbase" ).getTextContent() );
+                    } else {
+                        pwtech = AvailableCode.TECH_INNER_SPHERE;
+                    }
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_LT, pwtech ) );
                 }
                 ArmorPoints[LocationIndex.MECH_LOC_LT] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "ltr" ) ) {
@@ -922,7 +938,12 @@ public class MechReader {
                 map = n.item( i ).getAttributes();
                 if( map.getNamedItem( "type" ) != null ) {
                     pwtype = map.getNamedItem( "type" ).getTextContent();
-                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_RT ) );
+                    if( map.getNamedItem( "techbase" ) != null ) {
+                        pwtech = Integer.parseInt( map.getNamedItem( "techbase" ).getTextContent() );
+                    } else {
+                        pwtech = AvailableCode.TECH_INNER_SPHERE;
+                    }
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_RT, pwtech ) );
                 }
                 ArmorPoints[LocationIndex.MECH_LOC_RT] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "rtr" ) ) {
@@ -931,28 +952,48 @@ public class MechReader {
                 map = n.item( i ).getAttributes();
                 if( map.getNamedItem( "type" ) != null ) {
                     pwtype = map.getNamedItem( "type" ).getTextContent();
-                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_LA ) );
+                    if( map.getNamedItem( "techbase" ) != null ) {
+                        pwtech = Integer.parseInt( map.getNamedItem( "techbase" ).getTextContent() );
+                    } else {
+                        pwtech = AvailableCode.TECH_INNER_SPHERE;
+                    }
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_LA, pwtech ) );
                 }
                 ArmorPoints[LocationIndex.MECH_LOC_LA] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "ra" ) ) {
                 map = n.item( i ).getAttributes();
                 if( map.getNamedItem( "type" ) != null ) {
                     pwtype = map.getNamedItem( "type" ).getTextContent();
-                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_RA ) );
+                    if( map.getNamedItem( "techbase" ) != null ) {
+                        pwtech = Integer.parseInt( map.getNamedItem( "techbase" ).getTextContent() );
+                    } else {
+                        pwtech = AvailableCode.TECH_INNER_SPHERE;
+                    }
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_RA, pwtech ) );
                 }
                 ArmorPoints[LocationIndex.MECH_LOC_RA] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "ll" ) ) {
                 map = n.item( i ).getAttributes();
                 if( map.getNamedItem( "type" ) != null ) {
                     pwtype = map.getNamedItem( "type" ).getTextContent();
-                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_LL ) );
+                    if( map.getNamedItem( "techbase" ) != null ) {
+                        pwtech = Integer.parseInt( map.getNamedItem( "techbase" ).getTextContent() );
+                    } else {
+                        pwtech = AvailableCode.TECH_INNER_SPHERE;
+                    }
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_LL, pwtech ) );
                 }
                 ArmorPoints[LocationIndex.MECH_LOC_LL] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "rl" ) ) {
                 map = n.item( i ).getAttributes();
                 if( map.getNamedItem( "type" ) != null ) {
                     pwtype = map.getNamedItem( "type" ).getTextContent();
-                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_RL ) );
+                    if( map.getNamedItem( "techbase" ) != null ) {
+                        pwtech = Integer.parseInt( map.getNamedItem( "techbase" ).getTextContent() );
+                    } else {
+                        pwtech = AvailableCode.TECH_INNER_SPHERE;
+                    }
+                    armTypes.add( new ArmorType( pwtype, LocationIndex.MECH_LOC_RL, pwtech ) );
                 }
                 ArmorPoints[LocationIndex.MECH_LOC_RL] = Integer.parseInt( n.item( i ).getTextContent() );
             } else if( n.item( i ).getNodeName().equals( "type" ) ) {
@@ -991,7 +1032,7 @@ public class MechReader {
                         v1.LoadLocations( Locs );
                         v1.SetLocation( t.Location );
                         v1.SetPatchworkType( t.Type );
-                        v1.SetClan( m.GetBaseTechbase() == AvailableCode.TECH_CLAN );
+                        v1.SetClan( t.Techbase == AvailableCode.TECH_CLAN );
                         m.Visit( v1 );
                     }
                 }
@@ -1703,10 +1744,12 @@ public class MechReader {
 
     private class ArmorType {
         public String Type = null;
-        public int Location = -1;
-        public ArmorType( String t, int l ) {
-            Type = t;
-            Location = l;
+        public int Location = -1,
+                   Techbase = 0;
+        public ArmorType( String typ, int loc, int tech ) {
+            Type = typ;
+            Location = loc;
+            Techbase = tech;
         }
     }
 }
