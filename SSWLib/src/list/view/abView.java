@@ -48,9 +48,7 @@ public abstract class abView extends AbstractTableModel {
 
         if ( SortFields.size() > 0 ) {
             for ( Column col : SortFields ) {
-                if ( col.isSortable ) {
-                    sortKeys.add(new RowSorter.SortKey(col.Index, col.sortOrder));
-                }
+                sortKeys.add(new RowSorter.SortKey(col.Index, col.sortOrder));
             }
         } else {
             for ( Column col : Columns ) {
@@ -67,6 +65,10 @@ public abstract class abView extends AbstractTableModel {
                 tbl.getColumnModel().getColumn(col.Index).setPreferredWidth(col.preferredWidth);
             }
         }
+    }
+    
+    public Object Get( int index ) {
+        return list.Get(index);
     }
 
     @Override

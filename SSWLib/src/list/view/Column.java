@@ -10,8 +10,8 @@ public class Column {
     public boolean isEditable = false;
     public int preferredWidth = 0;
     public Class classType = String.class;
-    public boolean isSortable = false;
-    public SortOrder sortOrder = null;
+    public boolean isSortable = true;
+    public SortOrder sortOrder = SortOrder.ASCENDING;
     public String propertyName = "";
 
     public Column( int Index, String Title, String propertyName ) {
