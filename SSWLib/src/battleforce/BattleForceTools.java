@@ -85,7 +85,7 @@ public class BattleForceTools {
             int dmgModifier = 1;
             int shortMod = 0;   // Used for HAGs
             int longMod = 0;    // ...
-            if ( ((abPlaceable)w).CritName().contains("LB") )
+            if ( ((abPlaceable)w).CritName().contains("LB") || ((abPlaceable)w).CritName().equals("Silver Bullet Gauss") )
                 dmgModifier = w.GetDamageMedium();
             if ( ((abPlaceable)w).CritName().contains("HAG") )
             {
@@ -210,6 +210,8 @@ public class BattleForceTools {
         if (((abPlaceable)w).CritName().contains("SRM"))
             if ( w.IsStreak() )
                 return false;
+            else if ( ((RangedWeapon) w).IsUsingFCS() )
+                return false;
             else
                 return true;
         else
@@ -248,7 +250,7 @@ public class BattleForceTools {
         return false;
     }
 
-        public static boolean isBFFLK(ifWeapon w)
+    public static boolean isBFFLK(ifWeapon w)
     {
         String[] abilities = ((abPlaceable)w).GetBattleForceAbilities();
         for( int i = 0; i < abilities.length; i++ )

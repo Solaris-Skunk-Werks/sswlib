@@ -3552,8 +3552,22 @@ public class Mech implements ifUnit, ifBattleforce {
         return Base;
     }
 
-    // sorting routine for weapon BV calculation. this is undoubtedly slow
+    public Vector SortLoadout( Vector v ) {
+        return SortWeapons(v, false, false);
+    }
+
     public abPlaceable[] SortWeapons( Vector v, boolean rear ) {
+        // convert the results
+        Vector r = SortWeapons(v, rear, true);
+        abPlaceable[] result = new abPlaceable[r.size()];
+        for( int i = 0; i < r.size(); i++ ) {
+            result[i] = (abPlaceable) r.get( i );
+        }
+        return result;
+    }
+
+    // sorting routine for weapon BV calculation. this is undoubtedly slow
+    public Vector SortWeapons( Vector v, boolean rear, boolean DoRearHeatCheck ) {
         // sort by BV first (using gnomesort for less code.  may have to change 
         // this depending on the slowness of the program.  I figure lower overhead
         // will have better results at this time, and mechs typically don't
@@ -3581,43 +3595,39 @@ public class Mech implements ifUnit, ifBattleforce {
 
         // check our values, ensuring that rear-firing weapons, then lower heat
         // weapons take precedence
-        i = 1;
-        while( i < v.size() ) {
-            boolean AES1 = UseAESModifier( ((abPlaceable) v.get( i - 1 )) );
-            boolean AES2 = UseAESModifier( ((abPlaceable) v.get( i )) );
-            if( ((abPlaceable) v.get( i - 1 )).GetCurOffensiveBV( rear, TC, AES1 ) == ((abPlaceable) v.get( i )).GetCurOffensiveBV( rear, TC, AES2 ) ) {
-                if( rear ) {
-                    if( ((abPlaceable) v.get( i - 1 )).IsMountedRear() &! ((abPlaceable) v.get( i )).IsMountedRear() ) {
-                        swap = v.get( i - 1 );
-                        v.setElementAt( v.get( i ), i - 1 );
-                        v.setElementAt( swap, i );
-                    } else if( ((ifWeapon) v.get( i - 1)).GetHeat() > ((ifWeapon) v.get( i )).GetHeat() ) {
-                        swap = v.get( i - 1 );
-                        v.setElementAt( v.get( i ), i - 1 );
-                        v.setElementAt( swap, i );
-                    }
-                } else {
-                    if( ! ((abPlaceable) v.get( i - 1 )).IsMountedRear() && ((abPlaceable) v.get( i )).IsMountedRear() ) {
-                        swap = v.get( i - 1 );
-                        v.setElementAt( v.get( i ), i - 1 );
-                        v.setElementAt( swap, i );
-                    } else if( ((ifWeapon) v.get( i - 1)).GetHeat() > ((ifWeapon) v.get( i )).GetHeat() ) {
-                        swap = v.get( i - 1 );
-                        v.setElementAt( v.get( i ), i - 1 );
-                        v.setElementAt( swap, i );
+        if ( DoRearHeatCheck ) {
+            i = 1;
+            while( i < v.size() ) {
+                boolean AES1 = UseAESModifier( ((abPlaceable) v.get( i - 1 )) );
+                boolean AES2 = UseAESModifier( ((abPlaceable) v.get( i )) );
+                if( ((abPlaceable) v.get( i - 1 )).GetCurOffensiveBV( rear, TC, AES1 ) == ((abPlaceable) v.get( i )).GetCurOffensiveBV( rear, TC, AES2 ) ) {
+                    if( rear ) {
+                        if( ((abPlaceable) v.get( i - 1 )).IsMountedRear() &! ((abPlaceable) v.get( i )).IsMountedRear() ) {
+                            swap = v.get( i - 1 );
+                            v.setElementAt( v.get( i ), i - 1 );
+                            v.setElementAt( swap, i );
+                        } else if( ((ifWeapon) v.get( i - 1)).GetHeat() > ((ifWeapon) v.get( i )).GetHeat() ) {
+                            swap = v.get( i - 1 );
+                            v.setElementAt( v.get( i ), i - 1 );
+                            v.setElementAt( swap, i );
+                        }
+                    } else {
+                        if( ! ((abPlaceable) v.get( i - 1 )).IsMountedRear() && ((abPlaceable) v.get( i )).IsMountedRear() ) {
+                            swap = v.get( i - 1 );
+                            v.setElementAt( v.get( i ), i - 1 );
+                            v.setElementAt( swap, i );
+                        } else if( ((ifWeapon) v.get( i - 1)).GetHeat() > ((ifWeapon) v.get( i )).GetHeat() ) {
+                            swap = v.get( i - 1 );
+                            v.setElementAt( v.get( i ), i - 1 );
+                            v.setElementAt( swap, i );
+                        }
                     }
                 }
+                i++;
             }
-            i++;
         }
 
-        // convert the results
-        abPlaceable[] result = new abPlaceable[v.size()];
-        for( i = 0; i < v.size(); i++ ) {
-            result[i] = (abPlaceable) v.get( i );
-        }
-
-        return result;
+        return v;
     }
 
     public boolean UseAESModifier( abPlaceable a ) {
@@ -4100,248 +4110,85 @@ public class Mech implements ifUnit, ifBattleforce {
         // Loop through all weapons in non-core
         // and convert all weapon dmg
         Vector nc = GetLoadout().GetNonCore();
-
-        double dmgShort = 0.0;
-        double dmgMedium = 0.0;
-        double dmgLong = 0.0;
-        double dmgExtreme = 0.0;
-        int totalHeat = 0;
-
-        double dmgACShort = 0.0;
-        double dmgACMedium = 0.0;
-        double dmgACLong = 0.0;
-
-        double dmgLRMShort = 0.0;
-        double dmgLRMMedium = 0.0;
-        double dmgLRMLong = 0.0;
-
-        double dmgSRMShort = 0.0;
-        double dmgSRMMedium = 0.0;
-        double dmgSRMLong = 0.0;
-
-        double dmgIF = 0.0;
-        double dmgFLKShort = 0.0;
-        double dmgFLKMedium = 0.0;
-        double dmgFLKLong = 0.0;
+        BattleForceData Data = new BattleForceData();
 
         for ( int i = 0; i < nc.size(); i++ ) {
             if ( nc.get(i) instanceof ifWeapon ) {
                 double [] temp = BattleForceTools.GetDamage((ifWeapon)nc.get(i), (ifBattleforce)this);
 
-                dmgShort += temp[BFConstants.BF_SHORT];
-                dmgMedium += temp[BFConstants.BF_MEDIUM];
-                dmgLong += temp[BFConstants.BF_LONG];
-                dmgExtreme += temp[BFConstants.BF_EXTREME];
-
-                totalHeat += (int) temp[BFConstants.BF_OV];
-            
+                Data.AddBase(temp);
+        
                 if ( BattleForceTools.isBFAutocannon((ifWeapon)nc.get(i)) )
                 {
-                    dmgACShort += temp[BFConstants.BF_SHORT];
-                    dmgACMedium += temp[BFConstants.BF_MEDIUM];
-                    dmgACLong += temp[BFConstants.BF_LONG];
+                    Data.AC.AddBase(temp);
                 }
                 else if ( BattleForceTools.isBFLRM((ifWeapon)nc.get(i)) )
                 {
-                    dmgLRMShort += temp[BFConstants.BF_SHORT];
-                    dmgLRMMedium += temp[BFConstants.BF_MEDIUM];
-                    dmgLRMLong += temp[BFConstants.BF_LONG];
+                    Data.LRM.AddBase(temp);
                 }
                 else if ( BattleForceTools.isBFSRM((ifWeapon)nc.get(i)) )
                 {
-                    dmgSRMShort += temp[BFConstants.BF_SHORT];
-                    dmgSRMMedium += temp[BFConstants.BF_MEDIUM];
-                    dmgSRMLong += temp[BFConstants.BF_LONG];
+                    Data.SRM.AddBase(temp);
                 }
                 else if ( BattleForceTools.isBFMML((ifWeapon)nc.get(i)) )
                 {
-                    dmgSRMShort += temp[BFConstants.BF_SHORT];
-                    dmgSRMMedium += temp[BFConstants.BF_MEDIUM] / 2.0;
-                    dmgLRMMedium += temp[BFConstants.BF_MEDIUM] / 2.0;
-                    dmgLRMLong += temp[BFConstants.BF_LONG];
+                    Data.SRM.AddBase(new double[]{temp[BFConstants.BF_SHORT], temp[BFConstants.BF_MEDIUM]/2.0, 0.0, 0.0, temp[BFConstants.BF_OV]});
+                    Data.LRM.AddBase(new double[]{0.0, temp[BFConstants.BF_MEDIUM]/2.0, temp[BFConstants.BF_LONG], 0.0, temp[BFConstants.BF_OV]} );
                 }
                 if ( BattleForceTools.isBFIF((ifWeapon)nc.get(i)) )
                 {
-                    dmgIF += temp[BFConstants.BF_MEDIUM];
+                    Data.IF.AddBase(temp);
                 }
                 if ( BattleForceTools.isBFFLK((ifWeapon)nc.get(i)) )
                 {
-                    dmgFLKShort += temp[BFConstants.BF_SHORT];
-                    dmgFLKMedium += temp[BFConstants.BF_MEDIUM];
-                    dmgFLKLong += temp[BFConstants.BF_LONG];
+                    Data.FLK.AddBase(temp);
                 }
             }
-
         }
-
+        
         // Add in heat for movement
         if ( GetAdjustedJumpingMP(false) > 2 ) {
-            totalHeat += GetAdjustedJumpingMP(false);
+            Data.AddHeat(GetAdjustedJumpingMP(false));
         } else {
-            totalHeat += 2;
+            Data.AddHeat(2);
         }
 
         // Subtract 4 because Joel says so...
         // and besides, Joel is awesome and we should trust him
-        totalHeat -= 4;
+        Data.AddHeat(-4);
 
         // Also include Stealth heat, which is ALWAYS on in BF
         if ( GetArmor().IsStealth() ) {
-            totalHeat += 10;
+            Data.AddHeat(10);
         }
 
-        // What is the max damage? Used later for overheat calc
-        int maxShort = (int) Math.ceil(dmgShort / 10);
-        int maxMedium = (int) Math.ceil(dmgMedium / 10);
-
-        // Will this ifBattleForce overheat?
-        int heatcap = this.GetHeatSinks().TotalDissipation();
-        if ( heatcap < totalHeat )
-        {
-            // We must adjust weapon damage for heat...
-            // Adjust SA damage first and subtract if it lowers below 10
-            if ( dmgACMedium > 9 )
-            {
-                // We need to save the non-heat adjusted dmg values to subtract
-                // from the base damage if the adjusted damage remains > 10
-                double s = dmgACShort;
-                double m = dmgACMedium;
-                double l = dmgACLong;
-
-                dmgACShort = (dmgACShort * heatcap) / totalHeat;
-                dmgACMedium = (dmgACMedium * heatcap) / totalHeat;
-                dmgACLong = (dmgACLong * heatcap) / totalHeat;
-                if (dmgACMedium > 9)
-                {
-                    dmgShort -= s;
-                    dmgMedium -= m;
-                    dmgLong -= l;
-                }
-            }
-            if ( dmgLRMMedium > 9 )
-            {
-                // We need to save the non-heat adjusted dmg values to subtract
-                // from the base damage if the adjusted damage remains > 10
-                double s = dmgLRMShort;
-                double m = dmgLRMMedium;
-                double l = dmgLRMLong;
-
-                dmgLRMShort = (dmgLRMShort * heatcap) / totalHeat;
-                dmgLRMMedium = (dmgLRMMedium * heatcap) / totalHeat;
-                dmgLRMLong = (dmgLRMLong * heatcap) / totalHeat;
-                if (dmgLRMMedium > 9)
-                {
-                    dmgShort -= s;
-                    dmgMedium -= m;
-                    dmgLong -= l;
-                }
-            }
-            if ( dmgSRMMedium > 9 )
-            {
-                // We need to save the non-heat adjusted dmg values to subtract
-                // from the base damage if the adjusted damage remains > 10
-                double s = dmgSRMShort;
-                double m = dmgSRMMedium;
-                double l = dmgSRMLong;
-
-                dmgSRMShort = (dmgSRMShort * heatcap) / totalHeat;
-                dmgSRMMedium = (dmgSRMMedium * heatcap) / totalHeat;
-                dmgSRMLong = (dmgSRMLong * heatcap) / totalHeat;
-                if (dmgSRMMedium > 9)
-                {
-                    dmgShort -= s;
-                    dmgMedium -= m;
-                    dmgLong -= l;
-                }
-            }
-
-            // Adjust IF and FLK dmg accordingly
-            dmgIF = (dmgIF * heatcap) / totalHeat;
-            dmgFLKShort = (dmgFLKShort * heatcap) / totalHeat;
-            dmgFLKMedium = (dmgFLKMedium * heatcap) / totalHeat;
-            dmgFLKLong = (dmgFLKLong * heatcap) / totalHeat;
-
-            // Now adjust base damage
-            dmgShort = (dmgShort * heatcap) / totalHeat;
-            dmgMedium = (dmgMedium * heatcap) / totalHeat;
-            dmgLong = (dmgLong * heatcap) / totalHeat;
-
-        }
-        else
-        {
-            // No heat adjustment is required
-            // Remove non-heat adjusted SA dmg from base damage if applicable
-            if (dmgACMedium > 9)
-            {
-                dmgShort -= dmgACShort;
-                dmgMedium -= dmgACMedium;
-                dmgLong -= dmgACLong;
-            }
-            if (dmgLRMMedium > 9)
-            {
-                dmgShort -= dmgLRMShort;
-                dmgMedium -= dmgLRMMedium;
-                dmgLong -= dmgLRMLong;
-            }
-            if (dmgSRMMedium > 9)
-            {
-                dmgShort -= dmgSRMShort;
-                dmgMedium -= dmgSRMMedium;
-                dmgLong -= dmgSRMLong;
-            }
-        }
-
+        Data.SetHeat(this.GetHeatSinks().TotalDissipation());
+        Data.CheckSpecials();
+        
         // Convert all damage to BF scale
-        retval[BFConstants.BF_SHORT] = (int) Math.ceil(dmgShort / 10);
-        retval[BFConstants.BF_MEDIUM] = (int) Math.ceil(dmgMedium / 10);
-        retval[BFConstants.BF_LONG] = (int) Math.ceil(dmgLong / 10);
+        retval[BFConstants.BF_SHORT] = Data.AdjBase.getBFShort(); //(int) Math.ceil(dmgShort / 10);
+        retval[BFConstants.BF_MEDIUM] = Data.AdjBase.getBFMedium(); //(int) Math.ceil(dmgMedium / 10);
+        retval[BFConstants.BF_LONG] = Data.AdjBase.getBFLong(); //(int) Math.ceil(dmgLong / 10);
         retval[BFConstants.BF_EXTREME] = 0;   // Mechs dont have extreme range ever
 
         // Add Special Abilities to BattleForceStats if applicable
-        if ( dmgACMedium > 9 )
-        {
-            dmgACShort = (int) Math.round(dmgACShort / 10);
-            dmgACMedium = (int) Math.round(dmgACMedium / 10);
-            dmgACLong = (int) Math.round(dmgACLong / 10);
-            bfs.addAbility("AC "+(int)dmgACShort+"/"+(int)dmgACMedium+"/"+(int)dmgACLong);
-        }
-        if ( dmgLRMMedium > 9 )
-        {
-            dmgLRMShort = (int) Math.round(dmgLRMShort / 10);
-            dmgLRMMedium = (int) Math.round(dmgLRMMedium / 10);
-            dmgLRMLong = (int) Math.round(dmgLRMLong / 10);
-            bfs.addAbility("LRM "+(int)dmgLRMShort+"/"+(int)dmgLRMMedium+"/"+(int)dmgLRMLong);
-        }
-        if ( dmgSRMMedium > 9 )
-        {
-            dmgSRMShort = (int) Math.round(dmgSRMShort / 10);
-            dmgSRMMedium = (int) Math.round(dmgSRMMedium / 10);
-            dmgSRMLong = (int) Math.round(dmgSRMLong / 10);
-            bfs.addAbility("SRM "+(int)dmgSRMShort+"/"+(int)dmgSRMMedium+"/"+(int)dmgSRMLong);
-        }
-        if ( dmgIF > 0 )
-        {
-            dmgIF = Math.round(dmgIF / 10);
-            if ( (int)dmgIF > 0 ) bfs.addAbility( "IF "+(int)dmgIF );
-        }
-        if ( dmgFLKMedium > 5 )
-        {
-            dmgFLKShort = Math.round(dmgFLKShort / 10);
-            dmgFLKMedium = Math.round(dmgFLKMedium / 10);
-            dmgFLKLong = Math.round(dmgFLKLong / 10);
-            bfs.addAbility("FLK "+(int)dmgFLKShort+"/"+(int)dmgFLKMedium+"/"+(int)dmgFLKLong);
-        }
+        if ( Data.AC.CheckSpecial() ) bfs.addAbility("AC " + Data.AC.GetAbility() );
+        if ( Data.SRM.CheckSpecial() ) bfs.addAbility("SRM " + Data.SRM.GetAbility() );
+        if ( Data.LRM.CheckSpecial() ) bfs.addAbility("LRM " + Data.LRM.GetAbility() );
+        if ( Data.IF.getBFLong() > 0 )  bfs.addAbility("IF " + Data.IF.getBFLong() );
+        if ( Data.FLK.getBaseMedium() > 5 ) bfs.addAbility("FLK " + Data.FLK.GetAbility() );
 
         // Determine OverHeat
-        if ( maxMedium != 0 )
+        if ( Data.BaseMaxMedium() != 0 )
         {
-            int DmgMedium = retval[BFConstants.BF_MEDIUM] + (int)dmgSRMMedium + (int)dmgLRMMedium + (int)dmgACMedium;
-            retval[BFConstants.BF_OV] = maxMedium - DmgMedium;
+            int DmgMedium = retval[BFConstants.BF_MEDIUM] + Data.SRM.getBFMedium() + Data.LRM.getBFMedium() + Data.AC.getBFMedium();
+            retval[BFConstants.BF_OV] = Data.BaseMaxMedium() - DmgMedium;
+            //System.out.println( Data.BaseMaxMedium() + " - " + DmgMedium + " = " + (Data.BaseMaxMedium()-DmgMedium));
         }
         else
         {
-            int DmgShort = retval[BFConstants.BF_SHORT] + (int)dmgSRMShort + (int)dmgLRMShort + (int)dmgACShort;
-            retval[BFConstants.BF_OV] = maxShort - DmgShort;
+            int DmgShort = retval[BFConstants.BF_SHORT] + Data.SRM.getBFShort() + Data.LRM.getBFShort() + Data.AC.getBFShort();
+            retval[BFConstants.BF_OV] = Data.BaseMaxShort() - DmgShort;
         }
 
         // Maximum OV value is 4, minimum is 0
@@ -4350,6 +4197,8 @@ public class Mech implements ifUnit, ifBattleforce {
         if (retval[BFConstants.BF_OV] < 0)
             retval[BFConstants.BF_OV] = 0;
 
+        //System.out.println(Data.toString());
+        
         // Return final values
         return retval;
     }
