@@ -41,8 +41,8 @@ import java.util.prefs.Preferences;
 public class dlgPrint extends javax.swing.JDialog {
     private ImageTracker imageTracker;
     private Scenario scenario;
-    private Preferences bfbPrefs = Preferences.userNodeForPackage("/bfb/gui/frmBase".getClass());
-    private Preferences sswPrefs = Preferences.userNodeForPackage("/ssw/gui/frmMain".getClass());
+    private Preferences bfbPrefs = Preferences.userRoot().node( "/bfb/gui" );
+    private Preferences sswPrefs = Preferences.userRoot().node( "/ssw/gui" );
 
     /** Creates new form dlgPrint */
     public dlgPrint(java.awt.Frame parent, boolean modal, Scenario scenario, ImageTracker imageTracker) {
