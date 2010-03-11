@@ -36,6 +36,7 @@ import filehandlers.MechWriter;
 import filehandlers.TXTWriter;
 import battleforce.BattleForceStats;
 import common.CommonTools;
+import common.Constants;
 import components.ifMechLoadout;
 
 import filehandlers.ImageTracker;
@@ -55,7 +56,8 @@ public class dlgUnit extends javax.swing.JDialog {
     private Skills skills;
     private Warriors warriors;
     private ImageTracker imageTracker;
-    private Preferences Prefs = Preferences.userNodeForPackage("/bfb/gui/frmBase".getClass());
+    private Preferences Prefs = Preferences.userRoot().node( "/bfb/gui" );
+    private Preferences sswPrefs = Preferences.userRoot().node( "/ssw/gui" );
 
     public dlgUnit(java.awt.Frame parent, boolean modal, Force f, Unit u, ImageTracker imagetracker) {
         super(parent, modal);
@@ -1249,6 +1251,8 @@ public class dlgUnit extends javax.swing.JDialog {
         PagePrinter printer = new PagePrinter();
         unit.LoadMech();
         PrintMech pm = new PrintMech(unit.m, unit.getMechwarrior(), unit.getGunnery(), unit.getPiloting(), imageTracker);
+        pm.setCanon(sswPrefs.getBoolean(Constants.Format_CanonPattern, false));
+        pm.setCharts(sswPrefs.getBoolean(Constants.Format_Tables, false));
         printer.Append( BFBPrinter.Letter.toPage(), pm);
         printer.Print();
 }//GEN-LAST:event_btnPrintActionPerformed
