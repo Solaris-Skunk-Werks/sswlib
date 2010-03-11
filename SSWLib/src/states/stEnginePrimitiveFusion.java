@@ -91,7 +91,7 @@ public class stEnginePrimitiveFusion implements ifEngine, ifState {
     }
 
     public String CritName() {
-        return "Primitive Fusion";
+        return "Primitive Fusion Engine";
     }
 
     public String LookupName() {

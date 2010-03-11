@@ -90,7 +90,7 @@ public class stEngineISCF implements ifEngine, ifState {
     }
 
     public String CritName() {
-        return "Compact Engine";
+        return "Compact Fusion Engine";
     }
 
     public String LookupName() {

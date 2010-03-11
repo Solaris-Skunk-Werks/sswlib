@@ -98,7 +98,7 @@ public class stEnginePrimitiveFission implements ifEngine, ifState {
     }
 
     public String CritName() {
-        return "Primitive Fission";
+        return "Primitive Fission Engine";
     }
 
     public String LookupName() {

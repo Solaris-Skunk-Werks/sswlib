@@ -111,7 +111,7 @@ public class stEngineISXL implements ifEngine, ifState {
     }
 
     public String CritName() {
-        return "XL Engine";
+        return "XL Fusion Engine";
     }
 
     public String LookupName() {

@@ -87,7 +87,7 @@ public class stCockpitPrimIndustrialAFC implements ifCockpit, ifState {
     }
 
     public String CritName() {
-        return "Primitive Cockpit (AFC)";
+        return "Primitive Industrial Cockpit (AFC)";
     }
 
     public String LookupName() {

@@ -90,7 +90,7 @@ public class stEnginePrimitiveICE implements ifEngine, ifState {
     }
 
     public String CritName() {
-        return "Primitive I.C.E.";
+        return "Primitive I.C.E. Engine";
     }
 
     public String LookupName() {

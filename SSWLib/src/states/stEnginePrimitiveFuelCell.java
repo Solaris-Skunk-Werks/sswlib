@@ -96,7 +96,7 @@ public class stEnginePrimitiveFuelCell implements ifEngine, ifState {
     }
 
     public String CritName() {
-        return "Primitive Fuel-Cell";
+        return "Primitive Fuel-Cell Engine";
     }
 
     public String LookupName() {
