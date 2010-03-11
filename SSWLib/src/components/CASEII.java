@@ -62,7 +62,7 @@ public class CASEII extends abPlaceable {
     }
 
     public String CritName() {
-        return "C.A.S.E. II";
+        return "CASE II";
     }
 
     public String LookupName() {
