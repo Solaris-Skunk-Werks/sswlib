@@ -105,8 +105,10 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         }
     }
 
-    public void Add( Mech m ) {
-        force.getUnits().add(new Unit(m));
+    public void Add( Mech m, String filename ) {
+        Unit u = new Unit(m);
+        u.Filename = filename;
+        force.AddUnit(u);
     }
 
 
