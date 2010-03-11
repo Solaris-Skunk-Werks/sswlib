@@ -515,14 +515,19 @@ public class FileCommon {
         return retval;
     }
 
-    public static Vector SortEquipmentForStats( Mech m, Vector v ) {
+    public static Vector<abPlaceable> SortEquipmentForStats( Mech m, Vector v ) {
+        boolean ExportOut = m.GetPrefs().getBoolean( "ExportSortOut", true );
+        boolean AmmoEnd = m.GetPrefs().getBoolean( "AmmoGroupAtBottom", true );
+
+        return SortEquipmentForStats(m, v, ExportOut, AmmoEnd);
+    }
+    
+    public static Vector<abPlaceable> SortEquipmentForStats( Mech m, Vector v, boolean ExportOut, boolean AmmoEnd ) {
         // this routine takes the given vector of equipment and sorts it by
         // location, starting with the head and working down to legs.
-        Vector[] sort = { new Vector(), new Vector(), new Vector(), new Vector(),
-            new Vector(), new Vector(), new Vector(), new Vector() };
-        Vector retval = new Vector();
-        boolean ExportOut = m.GetPrefs().getBoolean( "ExportSortOut", false );
-        boolean AmmoEnd = m.GetPrefs().getBoolean( "AmmoGroupAtBottom", true );
+        Vector[] sort = { new Vector<abPlaceable>(), new Vector<abPlaceable>(), new Vector<abPlaceable>(), new Vector<abPlaceable>(),
+            new Vector<abPlaceable>(), new Vector<abPlaceable>(), new Vector<abPlaceable>(), new Vector<abPlaceable>() };
+        Vector retval = new Vector<abPlaceable>();
 
         // for each item in the given vector, find it's innermost location and
         // place it into the appropriate vector
@@ -539,83 +544,83 @@ public class FileCommon {
         // for each vector that has items, add them to the return vector in
         // the correct order, based on options.
         if( ExportOut ) {
-            if( sort[0].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_HD].size() > 0 ) {
                 for( int j = 0; j < sort[0].size(); j++ ) {
                     retval.add( sort[0].get( j ) );
                 }
             }
-            if( sort[1].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_CT].size() > 0 ) {
                 for( int j = 0; j < sort[1].size(); j++ ) {
                     retval.add( sort[1].get( j ) );
                 }
             }
-            if( sort[3].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_RT].size() > 0 ) {
                 for( int j = 0; j < sort[3].size(); j++ ) {
                     retval.add( sort[3].get( j ) );
                 }
             }
-            if( sort[2].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_LT].size() > 0 ) {
                 for( int j = 0; j < sort[2].size(); j++ ) {
                     retval.add( sort[2].get( j ) );
                 }
             }
-            if( sort[5].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_RA].size() > 0 ) {
                 for( int j = 0; j < sort[5].size(); j++ ) {
                     retval.add( sort[5].get( j ) );
                 }
             }
-            if( sort[4].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_LA].size() > 0 ) {
                 for( int j = 0; j < sort[4].size(); j++ ) {
                     retval.add( sort[4].get( j ) );
                 }
             }
-            if( sort[7].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_RL].size() > 0 ) {
                 for( int j = 0; j < sort[7].size(); j++ ) {
                     retval.add( sort[7].get( j ) );
                 }
             }
-            if( sort[6].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_LL].size() > 0 ) {
                 for( int j = 0; j < sort[6].size(); j++ ) {
                     retval.add( sort[6].get( j ) );
                 }
             }
         } else {
-            if( sort[5].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_RA].size() > 0 ) {
                 for( int j = 0; j < sort[5].size(); j++ ) {
                     retval.add( sort[5].get( j ) );
                 }
             }
-            if( sort[4].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_LA].size() > 0 ) {
                 for( int j = 0; j < sort[4].size(); j++ ) {
                     retval.add( sort[4].get( j ) );
                 }
             }
-            if( sort[3].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_RT].size() > 0 ) {
                 for( int j = 0; j < sort[3].size(); j++ ) {
                     retval.add( sort[3].get( j ) );
                 }
             }
-            if( sort[2].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_LT].size() > 0 ) {
                 for( int j = 0; j < sort[2].size(); j++ ) {
                     retval.add( sort[2].get( j ) );
                 }
             }
-            if( sort[1].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_CT].size() > 0 ) {
                 for( int j = 0; j < sort[1].size(); j++ ) {
                     retval.add( sort[1].get( j ) );
                 }
             }
-            if( sort[0].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_HD].size() > 0 ) {
                 for( int j = 0; j < sort[0].size(); j++ ) {
                     retval.add( sort[0].get( j ) );
                 }
             }
-            if( sort[7].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_RL].size() > 0 ) {
                 for( int j = 0; j < sort[7].size(); j++ ) {
                     retval.add( sort[7].get( j ) );
                 }
             }
-            if( sort[6].size() > 0 ) {
+            if( sort[LocationIndex.MECH_LOC_LL].size() > 0 ) {
                 for( int j = 0; j < sort[6].size(); j++ ) {
                     retval.add( sort[6].get( j ) );
                 }
@@ -640,6 +645,7 @@ public class FileCommon {
 
         return retval;
     }
+
 
     public static String EncodeFluff( String s ) {
         String retval = s.replaceAll( "&", "&amp;" );
@@ -704,12 +710,21 @@ public class FileCommon {
     }
 
     public static String FormatAmmoPrintName( Ammunition a, int tons ) {
+        return FormatAmmoPrintName(a, tons, false );
+    }
+
+    public static String FormatAmmoPrintName( Ammunition a, int tons, boolean RSFormat ) {
         // this routine returns a user-defined ammunition name based on a user-
         // defined ammunition filter.
-        Preferences Prefs = Preferences.userNodeForPackage("/ssw/gui/frmMain".getClass());
-        String retval = Prefs.get( "AmmoNamePrintFormat", "@%P (%L)" );
+        String retval = "";
+        if ( !RSFormat ) {
+            Preferences Prefs = Preferences.userRoot().node( "/ssw/gui" );
+            retval = Prefs.get( "AmmoNamePrintFormat", "@%P (%L)" );
+        } else {
+            retval = "Ammo (%P) %L";
+        }
         retval = retval.replace( "%F", a.LookupName().replace( "@ ", "" ) );
-        retval = retval.replace( "%P", a.CritName().replace( "@ ", "" ) );
+        retval = retval.replace( "%P", a.CritName().replace( "@ ", "" ).replace("(", "").replace(")", "").replace("-", " ") );
         retval = retval.replace( "%F", a.LookupName().replace( "@", "" ) );
         retval = retval.replace( "%P", a.CritName().replace( "@", "" ) );
         if( tons > 1 ) {
