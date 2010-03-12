@@ -35,16 +35,16 @@ public class tbChatInformation extends abView {
     public tbChatInformation( MechList list ) {
         this.list = list;
 
-        Columns.add(new Column( 0, "Type/Model", "Name", false, 0, String.class, true, SortOrder.ASCENDING ));
-        Columns.add(new Column( 1, "BV", "BV", false, 30, Integer.class, true, SortOrder.ASCENDING ));
-        Columns.add(new Column( 2, "Information", "ChatInfo", 300, String.class ));
-        Columns.add(new Column( 3, "Cost", "Cost", 30, Double.class ));
+        Columns.add(new Column( 0, "Type/Model", "Name", false, 125, String.class, true, SortOrder.ASCENDING ));
+        Columns.add(new Column( 1, "Information", "ChatInfo", false, 325, String.class, true, SortOrder.ASCENDING ));
+        Columns.add(new Column( 2, "BV", "BV", false, 20, Integer.class, true, SortOrder.ASCENDING ));
+        Columns.add(new Column( 3, "Cost", "Cost", false, 30, Double.class, true, SortOrder.ASCENDING ));
         Columns.add(new Column( 4, "Level", "Level", 40 ));
         Columns.add(new Column( 5, "Era", "Era", 20 ));
         Columns.add(new Column( 6, "Tech", "Tech", 20 ));
 
         SortFields.add(Columns.get(0));
-        SortFields.add(Columns.get(1));
+        SortFields.add(Columns.get(2));
         SortFields.add(Columns.get(3));
     }
 
@@ -54,11 +54,11 @@ public class tbChatInformation extends abView {
             case 0:
                 return (m.getName() + " " + m.getModel()).trim();
             case 1:
-                return (int) m.getBV();
-            case 2:
                 return m.getInfo();
+            case 2:
+                return (int) m.getBV();
             case 3:
-                return m.getCost();
+                return (int) m.getCost();
             case 4:
                 return m.getLevel();
             case 5:

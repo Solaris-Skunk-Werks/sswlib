@@ -36,12 +36,12 @@ public class tbTotalWarfareView extends abView {
         this.list = list;
 
         Columns.add(new Column( 0, "Tons", "Tonnage", false, 20, Integer.class, true, SortOrder.ASCENDING ));
-        Columns.add(new Column( 1, "Type/Model", "Name", false, 0, String.class, true, SortOrder.ASCENDING ));
-        Columns.add(new Column( 2, "BV", "BV", false, 30, Integer.class, true, SortOrder.ASCENDING ));
-        Columns.add(new Column( 3, "Cost", "Cost", 30, Double.class ));
-        Columns.add(new Column( 4, "Level", "Level", 40 ));
-        Columns.add(new Column( 5, "Era", "Era", 20 ));
-        Columns.add(new Column( 6, "Tech", "Tech", 20 ));
+        Columns.add(new Column( 1, "Type/Model", "Name", false, 150, String.class, true, SortOrder.ASCENDING ));
+        Columns.add(new Column( 2, "BV", "BV", false, 20, Integer.class, true, SortOrder.ASCENDING ));
+        Columns.add(new Column( 3, "Cost", "Cost", 60, Double.class ));
+        Columns.add(new Column( 4, "Level", "Level", 80 ));
+        Columns.add(new Column( 5, "Era", "Era", 100 ));
+        Columns.add(new Column( 6, "Tech", "Tech", 50 ));
         Columns.add(new Column( 7, "Year", "Year", 20, Integer.class ));
         Columns.add(new Column( 8, "Source", "Source", 30 ));
 

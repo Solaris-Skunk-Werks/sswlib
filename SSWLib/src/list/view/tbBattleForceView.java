@@ -43,9 +43,16 @@ public class tbBattleForceView extends abView {
         Columns.add(new Column( 5, "E", "E", 20, Integer.class ));
         Columns.add(new Column( 6, "Wt", "Wt", 20, Integer.class ));
         Columns.add(new Column( 7, "OV", "OV", 20, Integer.class ));
-        Columns.add(new Column( 8, "A/S", "Armor", 20, Integer.class ));
-        Columns.add(new Column( 9, "Base PV", "BaseBV", 30, Integer.class ));
-        Columns.add(new Column( 10, "Adj PV", "TotalBV", false, 40, Integer.class, true, SortOrder.ASCENDING ));
+        Columns.add(new Column( 8, "Arm", "Armor", 20, Integer.class ));
+        Columns.add(new Column( 9, "Str", "Structure", 20, Integer.class ));
+        Columns.add(new Column( 10, "Base PV", "BaseBV", 30, Integer.class ));
+        Columns.add(new Column( 11, "Adj PV", "TotalBV", false, 40, Integer.class, true, SortOrder.ASCENDING ));
+    
+        Columns.get(0).sortOrder = SortOrder.ASCENDING;
+        Columns.get(6).sortOrder = SortOrder.ASCENDING;
+
+        SortFields.add(Columns.get(6));
+        SortFields.add(Columns.get(0));
     }
 
     public Object getValueAt( int row, int col ) {
@@ -68,10 +75,12 @@ public class tbBattleForceView extends abView {
             case 7:
                 return m.getBattleForceStats().getOverheat();
             case 8:
-                return m.getBattleForceStats().getArmor() + "/" + m.getBattleForceStats().getInternal();
+                return m.getBattleForceStats().getArmor();
             case 9:
-                return m.getBattleForceStats().getBasePV();
+                return m.getBattleForceStats().getInternal();
             case 10:
+                return m.getBattleForceStats().getBasePV();
+            case 11:
                 return m.getBattleForceStats().getPointValue();
         }
         return null;
