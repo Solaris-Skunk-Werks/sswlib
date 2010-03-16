@@ -1005,7 +1005,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
     }//GEN-LAST:event_mnuExportTextActionPerformed
 
     private void mnuRunBFBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuRunBFBActionPerformed
-        String[] call = { "java", "-Xmx256m", "-jar", "bfb.jar" };
+        String[] call = { "java", "-Xmx256m", "-jar", "./bfb.jar" };
         try {
             Runtime.getRuntime().exec(call);
         } catch (Exception ex) {
