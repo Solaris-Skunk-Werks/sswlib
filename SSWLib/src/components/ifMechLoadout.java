@@ -212,6 +212,7 @@ public interface ifMechLoadout {
     public boolean HasRTTurret();
     public boolean CanUseRTTurret();
     public void SetRTTurret( MechTurret t );
+    public void UnallocateFuelTanks();
     public void CheckExclusions( abPlaceable a ) throws Exception;
     public void AddMechModifier( MechModifier m );
     public void RemoveMechMod( MechModifier m );

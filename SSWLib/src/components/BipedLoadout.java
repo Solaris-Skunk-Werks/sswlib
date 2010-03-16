@@ -4639,6 +4639,16 @@ public class BipedLoadout implements ifMechLoadout {
         }
     }
 
+    public void UnallocateFuelTanks() {
+        // removes the fuel tanks from the loadout (if needed) when the engine
+        // changes (the crit size may change).
+        for( int i = 0; i < NonCore.size(); i++ ) {
+            if( NonCore.get( i ) instanceof ExtendedFuelTank ) {
+                UnallocateAll( (abPlaceable) NonCore.get( i ), true );
+            }
+        }
+    }
+
     public void CheckExclusions( abPlaceable p ) throws Exception {
         // this checks all the items in the loadout vs. the placeable's exclusions
         // not worried about a return value since we're tossing exceptions
