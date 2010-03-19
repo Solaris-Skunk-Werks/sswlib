@@ -219,6 +219,7 @@ public abstract class abUnitData implements ifUnitData {
     }
 
     public String getTypeModel() {
+        if ( TypeModel.length() == 0 )  TypeModel = Name + " " + Model;
         return TypeModel;
     }
 
