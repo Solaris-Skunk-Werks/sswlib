@@ -49,9 +49,6 @@ import common.DataFactory;
 import common.DesignForm;
 import components.Mech;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 
@@ -769,7 +766,8 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         if ( forceFile != null ) {
             try {
                 force = new Force(reader.ReadNode(forceFile.getCanonicalPath(), "force"));
-                force.addTableModelListener(forceChanged);
+                force.setCurrentModel(new tbTotalWarfareSmall(force));
+                force.getCurrentModel().addTableModelListener(forceChanged);
                 txtForceName.setText(force.ForceName);
                 if ( force.getType().equals(BattleForce.InnerSphere) ) {
                     cmbUnitType.setSelectedIndex(0);
