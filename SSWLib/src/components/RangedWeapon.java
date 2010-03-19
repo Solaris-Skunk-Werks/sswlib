@@ -280,9 +280,9 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
 
     public String CritName() {
         String retval = CritName;
-        if( UsingCapacitor ) {
-            retval += " + PPC Capacitor";
-        }
+        //if( UsingCapacitor ) {
+        //    retval += " + PPC Capacitor";
+        //}
         if( UsingInsulator ) {
             retval += " (Insulated)";
         }
