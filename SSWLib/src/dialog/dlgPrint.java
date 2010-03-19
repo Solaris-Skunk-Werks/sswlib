@@ -35,6 +35,7 @@ import battleforce.BattleForce;
 import filehandlers.ImageTracker;
 
 import java.awt.Cursor;
+import java.awt.print.PageFormat;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 
@@ -63,7 +64,10 @@ public class dlgPrint extends javax.swing.JDialog {
         chkPrintRecordsheets.setSelected(bfbPrefs.getBoolean(Constants.Print_Recordsheet, true));
         chkPrintBattleforce.setSelected(bfbPrefs.getBoolean(Constants.Print_BattleForce, false));
         chkBFOnePerPage.setSelected(bfbPrefs.getBoolean(Constants.Format_OneForcePerPage, false));
+        chkBFBacks.setSelected(bfbPrefs.getBoolean("BF_Backs", false));
+        chkUseColor.setSelected(bfbPrefs.getBoolean("BF_Color", false));
 
+        if ( bfbPrefs.getInt(Constants.Format_BattleForceSheetChoice, 0) > 2 ) bfbPrefs.putInt(Constants.Format_BattleForceSheetChoice, 2);
         cmbBFSheetType.setSelectedIndex(bfbPrefs.getInt(Constants.Format_BattleForceSheetChoice, 0));
         cmbRSType.setSelectedIndex(bfbPrefs.getInt(Constants.Format_RecordsheetChoice, 0));
 
@@ -100,9 +104,18 @@ public class dlgPrint extends javax.swing.JDialog {
         switch ( cmbBFSheetType.getSelectedIndex() ) {
             case 0:
                 chkBFOnePerPage.setEnabled(true);
+                chkBFBacks.setEnabled(false);
+                chkUseColor.setEnabled(false);
+                break;
+            case 1:
+                chkBFOnePerPage.setEnabled(false);
+                chkBFBacks.setEnabled(false);
+                chkUseColor.setEnabled(false);
                 break;
             default:
                 chkBFOnePerPage.setEnabled(false);
+                chkBFBacks.setEnabled(true);
+                chkUseColor.setEnabled(true);
         }
 
         if (cmbBFSheetType.getSelectedIndex() == 1) {
@@ -119,10 +132,10 @@ public class dlgPrint extends javax.swing.JDialog {
         if ( chkPrintBattleforce.isSelected() ) {
             iconPath = "/images/BattleForce_BG.png";
             switch ( cmbBFSheetType.getSelectedIndex() ) {
-                case 1:
-                    iconPath = "/images/BFCard_BG.png";
-                    break;
                 case 2:
+                    iconPath = "/images/BFVertColor_BG.png";
+                    break;
+                case 1:
                     iconPath = "/images/QSCard_BG.png";
                     break;
             }
@@ -188,20 +201,6 @@ public class dlgPrint extends javax.swing.JDialog {
                     break;
 
                 case 1:
-                    Vector<BattleForce> forces = new Vector<BattleForce>();
-                    forces.addAll(scenario.getAttackerForce().toBattleForceByGroup( 6 ));
-                    if ( scenario.getDefenderForce().getUnits().size() > 0 ) { forces.addAll(scenario.getDefenderForce().toBattleForceByGroup( 6 )); }
-
-                    for ( BattleForce f : forces ) {
-                        BattleforceCardPrinter bf = new BattleforceCardPrinter(f, imageTracker);
-                        bf.setPrintLogo(chkLogo.isSelected());
-                        bf.setPrintMechs(chkImage.isSelected());
-                        if ( chkBFTerrainMV.isSelected() ) bf.setTerrain(true);
-                        printer.Append( BFBPrinter.Letter.toPage(), bf);
-                    }
-                    break;
-
-                case 2:
                    for ( BattleForce f : scenario.toBattleForceBySize(8) ) {
                         QuickStrikeCardPrinter qs = new QuickStrikeCardPrinter(f, imageTracker);
                         qs.setPrintLogo(chkLogo.isSelected());
@@ -211,31 +210,49 @@ public class dlgPrint extends javax.swing.JDialog {
                     }
                     break;
 
+                case 2:
+                    int MaxUnits = 8;
+                    if ( chkBFBacks.isSelected() ) MaxUnits = 4;
+                    for ( BattleForce f : scenario.toBattleForceBySize(MaxUnits) ) {
+                        QSVerticalCardPrinter qs = new QSVerticalCardPrinter(f, imageTracker);
+                        if ( !chkUseColor.isSelected() ) qs.setBlackAndWhite();
+                        qs.setCardBack(chkBFBacks.isSelected());
+                        qs.setPrintLogo(chkLogo.isSelected());
+                        qs.setPrintMechs(chkImage.isSelected());
+                        if ( chkBFTerrainMV.isSelected() ) qs.setTerrain(true);
+                        PageFormat letter = BFBPrinter.FullLetter.toPage();
+                        letter.setOrientation(PageFormat.LANDSCAPE);
+                        printer.Append( letter, qs);
+                    }
+                    break;
+                    
                 default:
             }
         }
 
-        if (chkPrintRecordsheets.isSelected()) {
+        if ( chkPrintRecordsheets.isSelected() ) {
             imageTracker.preLoadMechImages();
             for ( Force force : scenario.getForces() ) {
-                for ( Unit u : force.getUnits() ) {
-                    u.LoadMech();
-                    PrintMech pm = new PrintMech(u.m, u.getMechwarrior(), u.getGunnery(), u.getPiloting(), imageTracker);
-                    pm.setCanon(chkCanon.isSelected());
-                    pm.setCharts(chkTables.isSelected());
-                    if (chkUseHexConversion.isSelected()) {
-                        pm.SetMiniConversion(cmbHexConvFactor.getSelectedIndex());
+                for ( Group g : force.Groups ) {
+                    for ( Unit u : g.getUnits() ) {
+                        u.LoadMech();
+                        PrintMech pm = new PrintMech(u.m,u.getMechwarrior(), u.getGunnery(), u.getPiloting(), imageTracker);
+                        pm.setCanon(chkCanon.isSelected());
+                        pm.setCharts(chkTables.isSelected());
+                        if ( chkUseHexConversion.isSelected() ) {
+                            pm.SetMiniConversion(cmbHexConvFactor.getSelectedIndex());
+                        }
+                        if ( !chkImage.isSelected() ) {
+                            pm.setMechImage(null);
+                        }
+                        if ( chkLogo.isSelected() ) {
+                            pm.setLogoImage(imageTracker.getImage(g.getLogo()));
+                        }
+                        if ( cmbRSType.getSelectedIndex() == 1 ) {
+                            pm.setTRO(true);
+                        }
+                        printer.Append( BFBPrinter.Letter.toPage(), pm);
                     }
-                    if (!chkImage.isSelected()) {
-                        pm.setMechImage(null);
-                    }
-                    if (chkLogo.isSelected()) {
-                        pm.setLogoImage(force.getLogo(imageTracker));
-                    }
-                    if ( cmbRSType.getSelectedIndex() == 1 ) {
-                        pm.setTRO(true);
-                    }
-                    printer.Append(BFBPrinter.Letter.toPage(), pm);
                 }
             }
         }
@@ -255,6 +272,8 @@ public class dlgPrint extends javax.swing.JDialog {
         bfbPrefs.putBoolean(Constants.Print_Recordsheet, chkPrintRecordsheets.isSelected());
         bfbPrefs.putBoolean(Constants.Print_BattleForce, chkPrintBattleforce.isSelected());
         bfbPrefs.putBoolean(Constants.Format_OneForcePerPage, chkBFOnePerPage.isSelected());
+        bfbPrefs.putBoolean("BF_Backs", chkBFBacks.isSelected());
+        bfbPrefs.putBoolean("BF_Color", chkUseColor.isSelected());
 
         bfbPrefs.putInt(Constants.Format_BattleForceSheetChoice, cmbBFSheetType.getSelectedIndex());
         bfbPrefs.putInt(Constants.Format_RecordsheetChoice, cmbRSType.getSelectedIndex());
@@ -296,6 +315,8 @@ public class dlgPrint extends javax.swing.JDialog {
         cmbBFSheetType = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
         chkBFTerrainMV = new javax.swing.JCheckBox();
+        chkUseColor = new javax.swing.JCheckBox();
+        chkBFBacks = new javax.swing.JCheckBox();
         pnlRecordsheet = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         cmbHexConvFactor = new javax.swing.JComboBox();
@@ -411,7 +432,7 @@ public class dlgPrint extends javax.swing.JDialog {
                     .addGroup(pnlWhatLayout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(lblBattleForceIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         pnlWhatLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkPrintBattleforce, chkPrintFireChits, chkPrintForce, chkPrintRecordsheets, chkPrintScenario});
@@ -508,20 +529,34 @@ public class dlgPrint extends javax.swing.JDialog {
             }
         });
 
-        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Strategic Ops", "BattleForce Cards", "Quick Strike Cards" }));
+        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "*Strategic Ops", "*QuickStrike Cards", "Vertical Cards" }));
         cmbBFSheetType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 itemChanged(evt);
             }
         });
 
-        jLabel3.setText("BattleForce Sheet Type:");
+        jLabel3.setText("Sheet Type:");
 
         chkBFTerrainMV.setText("Print Miniatures Scale");
         chkBFTerrainMV.setToolTipText("Converts MV to use 2\" hexes");
         chkBFTerrainMV.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chkBFTerrainMVitemChanged(evt);
+            }
+        });
+
+        chkUseColor.setText("Print Full Color");
+        chkUseColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkUseColorActionPerformed(evt);
+            }
+        });
+
+        chkBFBacks.setText("Print Card Backs");
+        chkBFBacks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkBFBacksActionPerformed(evt);
             }
         });
 
@@ -532,6 +567,8 @@ public class dlgPrint extends javax.swing.JDialog {
             .addGroup(pnlBattleForceLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlBattleForceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chkUseColor)
+                    .addComponent(chkBFBacks)
                     .addComponent(chkBFTerrainMV)
                     .addComponent(chkBFOnePerPage)
                     .addGroup(pnlBattleForceLayout.createSequentialGroup()
@@ -550,7 +587,11 @@ public class dlgPrint extends javax.swing.JDialog {
                 .addComponent(chkBFOnePerPage)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chkBFTerrainMV)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chkUseColor)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chkBFBacks)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnlRecordsheet.setBorder(javax.swing.BorderFactory.createTitledBorder("Recordsheet Options"));
@@ -601,7 +642,7 @@ public class dlgPrint extends javax.swing.JDialog {
             }
         });
 
-        jLabel4.setText("Recordsheet Type:");
+        jLabel4.setText("Sheet Type:");
 
         chkCanon.setSelected(true);
         chkCanon.setText("Print Canon Dot Patterns");
@@ -722,14 +763,14 @@ public class dlgPrint extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 647, Short.MAX_VALUE)
+                    .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(btnPreview)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(pnlWhat, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlHow, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)))
+                        .addComponent(pnlHow, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -805,11 +846,20 @@ public class dlgPrint extends javax.swing.JDialog {
         // TODO add your handling code here:
 }//GEN-LAST:event_chkBFTerrainMVitemChanged
 
+    private void chkUseColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkUseColorActionPerformed
+        // TODO add your handling code here:
+}//GEN-LAST:event_chkUseColorActionPerformed
+
+    private void chkBFBacksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkBFBacksActionPerformed
+        // TODO add your handling code here:
+}//GEN-LAST:event_chkBFBacksActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnImageMgr;
     private javax.swing.JButton btnPreview;
     private javax.swing.JButton btnPrint;
+    private javax.swing.JCheckBox chkBFBacks;
     private javax.swing.JCheckBox chkBFOnePerPage;
     private javax.swing.JCheckBox chkBFTerrainMV;
     private javax.swing.JCheckBox chkCanon;
@@ -821,6 +871,7 @@ public class dlgPrint extends javax.swing.JDialog {
     private javax.swing.JCheckBox chkPrintRecordsheets;
     private javax.swing.JCheckBox chkPrintScenario;
     private javax.swing.JCheckBox chkTables;
+    private javax.swing.JCheckBox chkUseColor;
     private javax.swing.JCheckBox chkUseHexConversion;
     private javax.swing.JComboBox cmbBFSheetType;
     private javax.swing.JComboBox cmbHexConvFactor;

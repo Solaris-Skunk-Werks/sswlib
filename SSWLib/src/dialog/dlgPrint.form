@@ -28,7 +28,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lblStatus" alignment="0" pref="647" max="32767" attributes="0"/>
+                  <Component id="lblStatus" alignment="0" pref="671" max="32767" attributes="0"/>
                   <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                       <Group type="102" alignment="0" attributes="1">
                           <Component id="btnPreview" min="-2" max="-2" attributes="0"/>
@@ -36,7 +36,7 @@
                           <Component id="jPanel2" min="-2" pref="124" max="-2" attributes="0"/>
                       </Group>
                       <Component id="pnlWhat" alignment="0" min="0" max="32767" attributes="1"/>
-                      <Component id="pnlHow" alignment="0" pref="647" max="32767" attributes="1"/>
+                      <Component id="pnlHow" alignment="0" pref="671" max="32767" attributes="1"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -116,7 +116,7 @@
                           <Component id="lblBattleForceIcon" min="-2" pref="54" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="30" max="32767" attributes="0"/>
+                  <EmptySpace pref="54" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -409,6 +409,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="chkUseColor" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="chkBFBacks" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="chkBFTerrainMV" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="chkBFOnePerPage" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
@@ -431,7 +433,11 @@
                       <Component id="chkBFOnePerPage" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="chkBFTerrainMV" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="36" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="chkUseColor" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="chkBFBacks" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -449,9 +455,9 @@
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="3">
-                    <StringItem index="0" value="Strategic Ops"/>
-                    <StringItem index="1" value="BattleForce Cards"/>
-                    <StringItem index="2" value="Quick Strike Cards"/>
+                    <StringItem index="0" value="*Strategic Ops"/>
+                    <StringItem index="1" value="*QuickStrike Cards"/>
+                    <StringItem index="2" value="Vertical Cards"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -461,7 +467,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="BattleForce Sheet Type:"/>
+                <Property name="text" type="java.lang.String" value="Sheet Type:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="chkBFTerrainMV">
@@ -471,6 +477,22 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkBFTerrainMVitemChanged"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="chkUseColor">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Print Full Color"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkUseColorActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="chkBFBacks">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Print Card Backs"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkBFBacksActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
@@ -607,7 +629,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Recordsheet Type:"/>
+                <Property name="text" type="java.lang.String" value="Sheet Type:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="chkCanon">
