@@ -193,7 +193,7 @@ public class Media {
 
     public Point offsetImageCenter( Dimension spaceDimensions, Dimension currentDimensions ) {
         Point offset = new Point(0, 0);
-        //offset.x = originalDimensions.width - currentDimensions.width;
+        offset.x = (spaceDimensions.width/2) - (currentDimensions.width/2);
         offset.y = (spaceDimensions.height/2) - (currentDimensions.height/2);
         return offset;
     }
