@@ -59,7 +59,7 @@ public class PaperSize {
         ImageableHeight = ( PaperHeight - ( ImageableY * 2 ) );
     }
 
-    private int getInchesInPixels(double Inch) {
+    public static final int getInchesInPixels(double Inch) {
         return (int) Math.round((Inch / 0.0139));
     }
     

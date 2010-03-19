@@ -72,8 +72,9 @@ public class PrintMech implements Printable {
     private ImageTracker imageTracker;
     private Preferences Prefs = Preferences.userRoot().node( "/ssw/gui" );
 
-    private PlaceableInfo[] Items;
+    private Vector<PlaceableInfo> Items;
     private PIPPrinter ap;
+    private Vector<AmmoData> AmmoList;
 
     // <editor-fold desc="Constructors">
     public PrintMech( Mech m, Image i, boolean adv, boolean A4, ImageTracker images) {
@@ -84,6 +85,7 @@ public class PrintMech implements Printable {
         BV = CommonTools.GetAdjustedBV(CurMech.GetCurrentBV(), Gunnery, Piloting);
         UseA4Paper = A4;
         GetRecordSheet(imageTracker);
+        AmmoList = GetAmmo();
     }
 
     public PrintMech( Mech m, ImageTracker images ) {
@@ -204,11 +206,11 @@ public class PrintMech implements Printable {
         ap = new PIPPrinter(graphics, CurMech, Canon, imageTracker);
         this.BV = CommonTools.GetAdjustedBV(CurMech.GetCurrentBV(), Gunnery, Piloting);
 
+        //DrawImages( graphics );
         DrawSheet( graphics );
         DrawPips( graphics );
         DrawCriticals( graphics );
         DrawMechData( graphics );
-        DrawImages( graphics );
 
         if( Charts ) {
             // reset the scale and add the charts
@@ -229,10 +231,24 @@ public class PrintMech implements Printable {
         if( Charts ) {
             graphics.scale( 0.8d, 0.8d );
         }
-
+        
         graphics.drawImage( RecordSheet, 0, 0, 576, 756, null );
+        //graphics.drawImage( RecordSheet, 0, 0, 560, 757, null );
         CheckShields( graphics );
+        
+        Point start = points.GetMechImageLoc();
+        start.x -= 3;
+        start.y -= 6;
+        if( getMechImage() != null ) {
+            //graphics.drawRect(start.x, start.y, 160, 200);
+            Dimension d = media.reSize(getMechImage(), 160, 200);
+            Point offset = media.offsetImageCenter( new Dimension(160, 200), d);
+            graphics.drawImage( getMechImage(), start.x + offset.x, start.y + offset.y, d.width, d.height, null );
+        }
 
+        if ( LogoImage != null ) {
+            graphics.drawImage( LogoImage, points.GetLogoImageLoc().x, points.GetLogoImageLoc().y, 50, 50, null );
+        }
     }
 
     private void DrawPips( Graphics2D graphics ) {
@@ -240,12 +256,18 @@ public class PrintMech implements Printable {
     }
 
     private void DrawCriticals( Graphics2D graphics ) {
-        abPlaceable[] a = null;
-        Point[] p = null;
-        graphics.setFont( PrintConsts.SmallBoldFont );
+        graphics.setFont( PrintConsts.CritFont );
+        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_HD ), points.GetCritHDPoints() );
+        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_CT ), points.GetCritCTPoints() );
+        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_RT ), points.GetCritRTPoints() );
+        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_LT ), points.GetCritLTPoints() );
+        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_RA ), points.GetCritRAPoints() );
+        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_LA ), points.GetCritLAPoints() );
+        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_RL ), points.GetCritRLPoints() );
+        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_LL ), points.GetCritLLPoints() );
+    }
 
-        a = CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_HD );
-        p = points.GetCritHDPoints();
+    private void DrawLocationCrits( Graphics2D graphics, abPlaceable[] a, Point[] p ) {
         for( int i = 0; i < a.length && i < p.length; i++ ) {
             if( a[i].NumCrits() > 1 && a[i].Contiguous() &! ( a[i] instanceof Engine ) &! ( a[i] instanceof Gyro ) ) {
                 // print the multi-slot indicator before the item
@@ -291,685 +313,99 @@ public class PrintMech implements Printable {
             } else {
                 // single slot item
                 if( ! a[i].IsCritable() ) {
-                    DrawNonCritable( graphics, GetPrintName( a[i] ), p[i].x, p[i].y );
+                    DrawNonCritable( graphics, GetPrintName( a[i] ), p[i].x + 3, p[i].y );
                 } else {
                     if( a[i].IsArmored() ) {
                         graphics.drawOval( p[i].x, p[i].y - 5, 5, 5 );
                         graphics.drawString( GetPrintName( a[i] ), p[i].x + 7, p[i].y );
                     } else if( a[i] instanceof Ammunition ) {
-                        graphics.drawString( FileCommon.FormatAmmoPrintName( (Ammunition) a[i], 1 ), p[i].x, p[i].y );
+                        graphics.drawString( FileCommon.FormatAmmoPrintName( (Ammunition) a[i], 1, TRO ), p[i].x + 3, p[i].y );
                     } else {
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x, p[i].y );
-                    }
-                }
-            }
-        }
-
-        a = CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_CT );
-        p = points.GetCritCTPoints();
-        for( int i = 0; i < a.length && i < p.length; i++ ) {
-            if( a[i].NumCrits() > 1 && a[i].Contiguous() &! ( a[i] instanceof Engine ) &! ( a[i] instanceof Gyro ) ) {
-                // print the multi-slot indicator before the item
-                abPlaceable Current = a[i];
-                int j = i;
-                int End;
-                if( Current.CanSplit() ) {
-                    int[] check = CurMech.GetLoadout().FindInstances( Current );
-                    End = check[LocationIndex.MECH_LOC_CT] + j;
-                } else {
-                    End = Current.NumCrits() + j;
-                }
-                if( End > a.length ) {
-                    End = a.length - 1;
-                }
-                for( ; j < End; j++ ) {
-                    if( j == i ) {
-                        // starting out
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x + 2, p[j].y - 3 );
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x, p[j].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else if( j == End - 1 ) {
-                        // end the line
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x + 2, p[j].y - 2 );
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else {
-                        // continue the line
-                        graphics.drawLine( p[j].x, p[j].y, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    }
-                }
-                i = j - 1;
-            } else {
-                // single slot item
-                if( ! a[i].IsCritable() ) {
-                    DrawNonCritable( graphics, GetPrintName( a[i] ), p[i].x, p[i].y );
-                } else {
-                    if( a[i].IsArmored() ) {
-                        graphics.drawOval( p[i].x, p[i].y - 5, 5, 5 );
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x + 7, p[i].y );
-                    } else if( a[i] instanceof Ammunition ) {
-                        graphics.drawString( FileCommon.FormatAmmoPrintName( (Ammunition) a[i], 1 ), p[i].x, p[i].y );
-                    } else {
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x, p[i].y );
-                    }
-                }
-            }
-        }
-
-        a = CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_LT );
-        p = points.GetCritLTPoints();
-        for( int i = 0; i < a.length && i < p.length; i++ ) {
-            if( a[i].NumCrits() > 1 && a[i].Contiguous() &! ( a[i] instanceof Engine ) &! ( a[i] instanceof Gyro ) ) {
-                // print the multi-slot indicator before the item
-                abPlaceable Current = a[i];
-                int j = i;
-                int End;
-                if( Current.CanSplit() ) {
-                    int[] check = CurMech.GetLoadout().FindInstances( Current );
-                    End = check[LocationIndex.MECH_LOC_LT] + j;
-                } else {
-                    End = Current.NumCrits() + j;
-                }
-                if( End > a.length ) {
-                    End = a.length - 1;
-                }
-                for( ; j < End; j++ ) {
-                    if( j == i ) {
-                        // starting out
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x + 2, p[j].y - 3 );
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x, p[j].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else if( j == End - 1 ) {
-                        // end the line
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x + 2, p[j].y - 2 );
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else {
-                        // continue the line
-                        graphics.drawLine( p[j].x, p[j].y, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    }
-                }
-                i = j - 1;
-            } else {
-                // single slot item
-                if( ! a[i].IsCritable() ) {
-                    DrawNonCritable( graphics,GetPrintName( a[i] ), p[i].x, p[i].y );
-                } else {
-                    if( a[i].IsArmored() ) {
-                        graphics.drawOval( p[i].x, p[i].y - 5, 5, 5 );
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x + 7, p[i].y );
-                    } else if( a[i] instanceof Ammunition ) {
-                        graphics.drawString( FileCommon.FormatAmmoPrintName( (Ammunition) a[i], 1 ), p[i].x, p[i].y );
-                    } else {
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x, p[i].y );
-                    }
-                }
-            }
-        }
-
-        a = CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_RT );
-        p = points.GetCritRTPoints();
-        for( int i = 0; i < a.length && i < p.length; i++ ) {
-            if( a[i].NumCrits() > 1 && a[i].Contiguous() &! ( a[i] instanceof Engine ) &! ( a[i] instanceof Gyro ) ) {
-                // print the multi-slot indicator before the item
-                abPlaceable Current = a[i];
-                int j = i;
-                int End;
-                if( Current.CanSplit() ) {
-                    int[] check = CurMech.GetLoadout().FindInstances( Current );
-                    End = check[LocationIndex.MECH_LOC_RT] + j;
-                } else {
-                    End = Current.NumCrits() + j;
-                }
-                if( End > a.length ) {
-                    End = a.length - 1;
-                }
-                for( ; j < End; j++ ) {
-                    if( j == i ) {
-                        // starting out
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x + 2, p[j].y - 3 );
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x, p[j].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else if( j == End - 1 ) {
-                        // end the line
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x + 2, p[j].y - 2 );
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else {
-                        // continue the line
-                        graphics.drawLine( p[j].x, p[j].y, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    }
-                }
-                i = j - 1;
-            } else {
-                // single slot item
-                if( ! a[i].IsCritable() ) {
-                    DrawNonCritable( graphics, GetPrintName( a[i] ), p[i].x, p[i].y );
-                } else {
-                    if( a[i].IsArmored() ) {
-                        graphics.drawOval( p[i].x, p[i].y - 5, 5, 5 );
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x + 7, p[i].y );
-                    } else if( a[i] instanceof Ammunition ) {
-                        graphics.drawString( FileCommon.FormatAmmoPrintName( (Ammunition) a[i], 1 ), p[i].x, p[i].y );
-                    } else {
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x, p[i].y );
-                    }
-                }
-            }
-        }
-
-        a = CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_LA );
-        p = points.GetCritLAPoints();
-        for( int i = 0; i < a.length && i < p.length; i++ ) {
-            if( a[i].NumCrits() > 1 && a[i].Contiguous() &! ( a[i] instanceof Engine ) &! ( a[i] instanceof Gyro ) ) {
-                // print the multi-slot indicator before the item
-                abPlaceable Current = a[i];
-                int j = i;
-                int End;
-                if( Current.CanSplit() ) {
-                    int[] check = CurMech.GetLoadout().FindInstances( Current );
-                    End = check[LocationIndex.MECH_LOC_LA] + j;
-                } else {
-                    End = Current.NumCrits() + j;
-                }
-                if( End > a.length ) {
-                    End = a.length - 1;
-                }
-                for( ; j < End; j++ ) {
-                    if( j == i ) {
-                        // starting out
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x + 2, p[j].y - 3 );
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x, p[j].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else if( j == End - 1 ) {
-                        // end the line
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x + 2, p[j].y - 2 );
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else {
-                        // continue the line
-                        graphics.drawLine( p[j].x, p[j].y, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    }
-                }
-                i = j - 1;
-            } else {
-                // single slot item
-                if( ! a[i].IsCritable() ) {
-                    DrawNonCritable( graphics, GetPrintName( a[i] ), p[i].x, p[i].y );
-                } else {
-                    if( a[i].IsArmored() ) {
-                        graphics.drawOval( p[i].x, p[i].y - 5, 5, 5 );
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x + 7, p[i].y );
-                    } else if( a[i] instanceof Ammunition ) {
-                        graphics.drawString( FileCommon.FormatAmmoPrintName( (Ammunition) a[i], 1 ), p[i].x, p[i].y );
-                    } else {
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x, p[i].y );
-                    }
-                }
-            }
-        }
-
-        a = CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_RA );
-        p = points.GetCritRAPoints();
-        for( int i = 0; i < a.length && i < p.length; i++ ) {
-            if( a[i].NumCrits() > 1 && a[i].Contiguous() &! ( a[i] instanceof Engine ) &! ( a[i] instanceof Gyro ) ) {
-                // print the multi-slot indicator before the item
-                abPlaceable Current = a[i];
-                int j = i;
-                int End;
-                if( Current.CanSplit() ) {
-                    int[] check = CurMech.GetLoadout().FindInstances( Current );
-                    End = check[LocationIndex.MECH_LOC_RA] + j;
-                } else {
-                    End = Current.NumCrits() + j;
-                }
-                if( End > a.length ) {
-                    End = a.length - 1;
-                }
-                for( ; j < End; j++ ) {
-                    if( j == i ) {
-                        // starting out
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x + 2, p[j].y - 3 );
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x, p[j].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else if( j == End - 1 ) {
-                        // end the line
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x + 2, p[j].y - 2 );
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else {
-                        // continue the line
-                        graphics.drawLine( p[j].x, p[j].y, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    }
-                }
-                i = j - 1;
-            } else {
-                // single slot item
-                if( ! a[i].IsCritable() ) {
-                    DrawNonCritable( graphics, GetPrintName( a[i] ), p[i].x, p[i].y );
-                } else {
-                    if( a[i].IsArmored() ) {
-                        graphics.drawOval( p[i].x, p[i].y - 5, 5, 5 );
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x + 7, p[i].y );
-                    } else if( a[i] instanceof Ammunition ) {
-                        graphics.drawString( FileCommon.FormatAmmoPrintName( (Ammunition) a[i], 1 ), p[i].x, p[i].y );
-                    } else {
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x, p[i].y );
-                    }
-                }
-            }
-        }
-
-        a = CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_LL );
-        p = points.GetCritLLPoints();
-        for( int i = 0; i < a.length && i < p.length; i++ ) {
-            if( a[i].NumCrits() > 1 && a[i].Contiguous() &! ( a[i] instanceof Engine ) &! ( a[i] instanceof Gyro ) ) {
-                // print the multi-slot indicator before the item
-                abPlaceable Current = a[i];
-                int j = i;
-                int End;
-                if( Current.CanSplit() ) {
-                    int[] check = CurMech.GetLoadout().FindInstances( Current );
-                    End = check[LocationIndex.MECH_LOC_LL] + j;
-                } else {
-                    End = Current.NumCrits() + j;
-                }
-                if( End > a.length ) {
-                    End = a.length - 1;
-                }
-                for( ; j < End; j++ ) {
-                    if( j == i ) {
-                        // starting out
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x + 2, p[j].y - 3 );
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x, p[j].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else if( j == End - 1 ) {
-                        // end the line
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x + 2, p[j].y - 2 );
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else {
-                        // continue the line
-                        graphics.drawLine( p[j].x, p[j].y, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    }
-                }
-                i = j - 1;
-            } else {
-                // single slot item
-                if( ! a[i].IsCritable() ) {
-                    DrawNonCritable( graphics, GetPrintName( a[i] ), p[i].x, p[i].y );
-                } else {
-                    if( a[i].IsArmored() ) {
-                        graphics.drawOval( p[i].x, p[i].y - 5, 5, 5 );
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x + 7, p[i].y );
-                    } else if( a[i] instanceof Ammunition ) {
-                        graphics.drawString( FileCommon.FormatAmmoPrintName( (Ammunition) a[i], 1 ), p[i].x, p[i].y );
-                    } else {
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x, p[i].y );
-                    }
-                }
-            }
-        }
-
-        a = CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_RL );
-        p = points.GetCritRLPoints();
-        for( int i = 0; i < a.length && i < p.length; i++ ) {
-            if( a[i].NumCrits() > 1 && a[i].Contiguous() &! ( a[i] instanceof Engine ) &! ( a[i] instanceof Gyro ) ) {
-                // print the multi-slot indicator before the item
-                abPlaceable Current = a[i];
-                int j = i;
-                int End;
-                if( Current.CanSplit() ) {
-                    int[] check = CurMech.GetLoadout().FindInstances( Current );
-                    End = check[LocationIndex.MECH_LOC_RL] + j;
-                } else {
-                    End = Current.NumCrits() + j;
-                }
-                if( End > a.length ) {
-                    End = a.length - 1;
-                }
-                for( ; j < End; j++ ) {
-                    if( j == i ) {
-                        // starting out
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x + 2, p[j].y - 3 );
-                        graphics.drawLine( p[j].x, p[j].y - 3, p[j].x, p[j].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else if( j == End - 1 ) {
-                        // end the line
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x + 2, p[j].y - 2 );
-                        graphics.drawLine( p[j].x, p[j].y - 2, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    } else {
-                        // continue the line
-                        graphics.drawLine( p[j].x, p[j].y, p[j].x, p[j-1].y );
-                        if( a[j].IsArmored() ) {
-                            graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
-                        } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
-                        }
-                    }
-                }
-                i = j - 1;
-            } else {
-                // single slot item
-                if( ! a[i].IsCritable() ) {
-                    DrawNonCritable( graphics, GetPrintName( a[i] ), p[i].x, p[i].y );
-                } else {
-                    if( a[i].IsArmored() ) {
-                        graphics.drawOval( p[i].x, p[i].y - 5, 5, 5 );
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x + 7, p[i].y );
-                    } else if( a[i] instanceof Ammunition ) {
-                        graphics.drawString( FileCommon.FormatAmmoPrintName( (Ammunition) a[i], 1 ), p[i].x, p[i].y );
-                    } else {
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x, p[i].y );
+                        graphics.drawString( GetPrintName( a[i] ), p[i].x + 3, p[i].y );
                     }
                 }
             }
         }
     }
 
+    private void DrawNonCritable( Graphics2D graphics, String Item, int X, int Y ) {
+        // save the old font
+        Font OldFont = graphics.getFont();
+        graphics.setFont( PrintConsts.NonCritFont );
+        if ( !TRO ) {
+            graphics.setColor( Grey );
+        }
+        graphics.drawString( Item, X, Y );
+        graphics.setFont( OldFont );
+        graphics.setColor( Black );
+    }
+
     private void DrawMechData( Graphics2D graphics ) {
         Point[] p = null;
 
-        p = points.GetHeatSinkPoints();
-        for( int i = 0; i < CurMech.GetHeatSinks().GetNumHS(); i++ ) {
-            graphics.drawOval( p[i].x, p[i].y, 5, 5 );
-        }
-
-        PlaceableInfo[] a = SortEquipmentByLocation();
+        //Vector<PlaceableInfo> a = SortEquipmentByLocation();
         p = points.GetWeaponChartPoints();
-        graphics.setFont( PrintConsts.SmallFont );
-        if (a.length >= 9) { graphics.setFont( PrintConsts.XtraSmallFont ); }
-        int offset = 0;
-        Vector<AmmoData> AmmoList = GetAmmo();
-        boolean PrintSpecials = false;
-        boolean isATM = false,
-                isMML = false,
-                doneATM = false,
-                doneMML = false;
-        for( int i = 0; i < a.length; i++ ) {
-            PlaceableInfo item = a[i];
-            graphics.drawString( item.Count + "", p[0].x, p[0].y + offset );
-            graphics.drawString( GetPrintName( item.Item ), p[1].x, p[1].y + offset );
-            graphics.drawString( FileCommon.EncodeLocation( item.Location, CurMech.IsQuad() ), p[2].x, p[2].y + offset );
-            if( item.Item instanceof Equipment ) {
-                graphics.drawString( ((Equipment) item.Item).GetHeat() + "", p[3].x, p[3].y + offset );
-            } else if( item.Item instanceof ifWeapon ) {
-                if( ((ifWeapon) item.Item).IsUltra() || ((ifWeapon) item.Item).IsRotary() ) {
-                    graphics.drawString( ((ifWeapon) item.Item).GetHeat() + "/s", p[3].x, p[3].y + offset );
-                } else {
-                    graphics.drawString( ((ifWeapon) item.Item).GetHeat() + "", p[3].x, p[3].y + offset );
-                }
-            } else {
-                graphics.drawString( "-", p[3].x, p[3].y + offset );
-            }
-            if( item.Item instanceof ifWeapon ) {
-                if( ((ifWeapon) item.Item).GetWeaponClass() == ifWeapon.W_MISSILE ) {
-                    if ( ((ifWeapon) item.Item).CritName().contains("ATM") ) isATM = true;
-                    if ( ((ifWeapon) item.Item).CritName().contains("MML") ) isMML = true;
-                    graphics.drawString( ((ifWeapon) item.Item).GetDamageShort() + "/m", p[4].x, p[4].y + offset );
-                    PrintSpecials = true;
-                } else {
-                    if( ((ifWeapon) item.Item).GetDamageShort() != ((ifWeapon) item.Item).GetDamageMedium() ||  ((ifWeapon) item.Item).GetDamageShort() != ((ifWeapon) item.Item).GetDamageLong() ||  ((ifWeapon) item.Item).GetDamageMedium() != ((ifWeapon) item.Item).GetDamageLong() ) {
-                        Font curFont = graphics.getFont();
-                        ifWeapon weap = ((ifWeapon) item.Item);
-                        String damage = weap.GetDamageShort() + "/" + weap.GetDamageMedium() + "/" + weap.GetDamageLong();
-                        if ( damage.length() >= 8 ) graphics.setFont( PrintConsts.ReallySmallFont );
-                        graphics.drawString( damage, p[4].x-8, p[4].y + offset );
-                        graphics.setFont(curFont);
-                        PrintSpecials = true;
-                    } else {
-                        if( ((ifWeapon) item.Item).GetSpecials().equals( "-" ) ) {
-                            graphics.drawString( ((ifWeapon) item.Item).GetDamageShort() + " [" + ((ifWeapon) item.Item).GetType() + "]", p[4].x, p[4].y + offset );
-                            PrintSpecials = false;
-                        } else {
-                            graphics.drawString( ((ifWeapon) item.Item).GetDamageShort() + "", p[4].x, p[4].y + offset );
-                            PrintSpecials = true;
-                        }
-                    }
-                }
-            } else {
-                if( item.Item instanceof Equipment ) {
-                    if( ((Equipment) item.Item).GetSpecials().equals( "-" ) ) {
-                        graphics.drawString( "[" + ((Equipment) item.Item).GetType() + "]", p[4].x, p[4].y + offset );
-                        PrintSpecials = false;
-                    } else {
-                        graphics.drawString( "-", p[4].x, p[4].y + offset );
-                        PrintSpecials = true;
-                    }
-                } else {
-                    graphics.drawString( "-", p[4].x, p[4].y + offset );
-                    PrintSpecials = true;
-                }
-            }
-            if( item.Item instanceof ifWeapon ) {
-                if( ((ifWeapon) item.Item).GetRangeMin() < 1 ) {
-                    graphics.drawString( "-", p[5].x, p[5].y + offset );
-                } else {
-                    graphics.drawString( (((ifWeapon) item.Item).GetRangeMin() * MiniConvRate ) + "", p[5].x, p[5].y + offset );
-                }
-            } else {
-                graphics.drawString( "-", p[5].x, p[5].y + offset );
-            }
-            if( item.Item instanceof ifWeapon ) {
-                graphics.drawString( (((ifWeapon) item.Item).GetRangeShort() * MiniConvRate ) + "", p[6].x, p[6].y + offset );
-            } else if( item.Item instanceof Equipment ) {
-                graphics.drawString( (((Equipment) item.Item).GetShortRange() * MiniConvRate ) + "", p[6].x, p[6].y + offset );
-            } else {
-                graphics.drawString( "-", p[6].x, p[6].y + offset );
-            }
-            if( item.Item instanceof ifWeapon ) {
-                graphics.drawString( (((ifWeapon) item.Item).GetRangeMedium() * MiniConvRate ) + "", p[7].x, p[7].y + offset );
-            } else if( item.Item instanceof Equipment ) {
-                graphics.drawString( (((Equipment) item.Item).GetMediumRange() * MiniConvRate ) + "", p[7].x, p[7].y + offset );
-            } else {
-                graphics.drawString( "-", p[7].x, p[7].y + offset );
-            }
-            if( item.Item instanceof ifWeapon ) {
-                graphics.drawString( (((ifWeapon) item.Item).GetRangeLong() * MiniConvRate ) + "", p[8].x, p[8].y + offset );
-            } else if( item.Item instanceof Equipment ) {
-                graphics.drawString( (((Equipment) item.Item).GetLongRange() * MiniConvRate ) + "", p[8].x, p[8].y + offset );
-            } else {
-                graphics.drawString( "-", p[8].x, p[8].y + offset );
-            }
+        graphics.setFont( PrintConsts.ReallySmallFont );
+        if (Items.size() > 10) { graphics.setFont( PrintConsts.XtraSmallFont ); }
+        int offset = 0,
+            xoffset = 0;
+        for ( PlaceableInfo item : Items ) {
+            xoffset = 0;
+            graphics.drawString( item.Count + "", p[0].x+1, p[0].y + offset );
+            graphics.drawString( item.name, p[1].x-3, p[1].y + offset );
+            graphics.drawString( item.locName, p[2].x, p[2].y + offset );
+            graphics.drawString( item.heat, p[3].x, p[3].y + offset );
+            if ( item.damage.length() > 3 ) xoffset = (int)Math.ceil(item.damage.length());
+            graphics.drawString( item.damage, p[4].x - xoffset, p[4].y + offset );
+            graphics.drawString( item.min, p[5].x, p[5].y + offset );
+            graphics.drawString( item.rShort, p[6].x, p[6].y + offset );
+            graphics.drawString( item.rMed, p[7].x, p[7].y + offset );
+            graphics.drawString( item.rLong, p[8].x, p[8].y + offset );
 
             offset += graphics.getFont().getSize();
 
-            //We want to output the damage/range data for the other ATM ammo types
-            if ( isATM && !doneATM ) {
-                //ER Ammo
-                if ( AmmoContains(AmmoList, "ER")) {
-                    graphics.drawString( "  ATM ER Ammo", p[1].x, p[1].y + offset );
-                    graphics.drawString( "1/m", p[4].x, p[4].y + offset );
-                    graphics.drawString( (4 * MiniConvRate ) + "", p[5].x, p[5].y + offset );
-                    graphics.drawString( (9 * MiniConvRate ) + "", p[6].x, p[6].y + offset );
-                    graphics.drawString( (18 * MiniConvRate ) + "", p[7].x, p[7].y + offset );
-                    graphics.drawString( (27 * MiniConvRate ) + "", p[8].x, p[8].y + offset );
-                    offset += graphics.getFont().getSize();
-                    doneATM = true;
+            // check to see now if we need to print our special codes or more of the name
+            if ( (item.specials.replace("-", "").length() > 0) || (item.name2.length() > 0) ) {
+                int lineoffset = 0;
+                if ( item.name2.length() > 0 ) {
+                    graphics.drawString( item.name2, p[1].x, p[1].y + offset );
+                    lineoffset = graphics.getFont().getSize();
                 }
-
-                //HE Ammo
-                if ( AmmoContains(AmmoList, "HE") ) {
-                    graphics.drawString( "  ATM HE Ammo", p[1].x, p[1].y + offset );
-                    graphics.drawString( "3/m", p[4].x, p[4].y + offset );
-                    graphics.drawString( "-", p[5].x, p[5].y + offset );
-                    graphics.drawString( (3 * MiniConvRate ) + "", p[6].x, p[6].y + offset );
-                    graphics.drawString( (6 * MiniConvRate ) + "", p[7].x, p[7].y + offset );
-                    graphics.drawString( (9 * MiniConvRate ) + "", p[8].x, p[8].y + offset );
-                    offset += graphics.getFont().getSize();
-                    doneATM = true;
+                if ( item.specials.replace("-", "").length() > 0 ) {
+                    xoffset = (int)Math.ceil(item.specials.length());
+                    graphics.drawString( item.specials, p[4].x - xoffset, p[4].y + offset );
+                    lineoffset = graphics.getFont().getSize();
                 }
-
-                isATM = false;
+                offset += lineoffset;
             }
 
-            if ( isMML && !doneMML ) {
-                //ER Ammo
-                if ( AmmoContains(AmmoList, "SRM")) {
-                    graphics.drawString( "  SRM Ammo", p[1].x, p[1].y + offset );
-                    graphics.drawString( "2/m", p[4].x, p[4].y + offset );
-                    graphics.drawString( "-", p[5].x, p[5].y + offset );
-                    graphics.drawString( (3 * MiniConvRate ) + "", p[6].x, p[6].y + offset );
-                    graphics.drawString( (6 * MiniConvRate ) + "", p[7].x, p[7].y + offset );
-                    graphics.drawString( (9 * MiniConvRate ) + "", p[8].x, p[8].y + offset );
-                    offset += graphics.getFont().getSize();
-                    doneMML = true;
-                }
-            }
+            offset += 2;
+        }
 
-            // check to see how if we need to print our special codes.
-            if( PrintSpecials ) {
-                String Codes = "";
-                if( item.Item instanceof ifWeapon ) {
-                    ifWeapon w = (ifWeapon) item.Item;
-                    Codes = ("[" + w.GetType() + ", " + w.GetSpecials() + "]").replace(", -", "");
-                } else if( item.Item instanceof Equipment ) {
-                    Equipment e = (Equipment) item.Item;
-                    Codes = ("[" + e.GetType() + ", " + e.GetSpecials() + "]").replace(", -", "");
-                }
-                graphics.drawString( Codes, p[1].x + 2, p[1].y + offset );
+        //Output the list of Ammunition
+        if ( !TRO ) {
+            if ( AmmoList.size() > 0 ) {
+                offset += 2;
+                graphics.drawString("Ammunition Type", p[0].x, p[0].y + offset);
+                graphics.drawString("Rounds", p[3].x, p[3].y + offset);
+                offset += 2;
+                graphics.drawLine(p[0].x, p[0].y + offset, p[8].x + 8, p[8].y + offset);
+                offset += graphics.getFont().getSize();
+            }
+            for ( int index=0; index < AmmoList.size(); index++ ) {
+                AmmoData CurAmmo = (AmmoData) AmmoList.get(index);
+                graphics.drawString( CurAmmo.Format(), p[0].x, p[0].y + offset);
+                graphics.drawString( CurAmmo.LotSize + "", p[3].x, p[3].y + offset);
                 offset += graphics.getFont().getSize();
             }
         }
 
-        //HARD CODED CHECK FOR TC!! SHOULD BE REPLACED SOMETIME IN THE FUTURE!!!
-        if (CurMech.GetLoadout().UsingTC()) {
-            TargetingComputer tc = CurMech.GetLoadout().GetTC();
-            graphics.drawString("1", p[0].x, p[0].y + offset);
-            graphics.drawString(tc.CritName(), p[1].x, p[1].y + offset);
-            offset += graphics.getFont().getSize();
-        }
-        offset += graphics.getFont().getSize();
-
-        //Output the list of Ammunition
-        if ( AmmoList.size() > 0 ) {
-            graphics.drawString("Ammunition Type", p[0].x, p[0].y + offset);
-            graphics.drawString("Rounds", p[3].x, p[3].y + offset);
-            offset += 2;
-            graphics.drawLine(p[0].x, p[0].y + offset, p[8].x + 8, p[8].y + offset);
-            offset += graphics.getFont().getSize();
-        }
-        for ( int index=0; index < AmmoList.size(); index++ ) {
-            AmmoData CurAmmo = (AmmoData) AmmoList.get(index);
-            graphics.drawString( CurAmmo.Format(), p[0].x, p[0].y + offset);
-            graphics.drawString( CurAmmo.LotSize + "", p[3].x, p[3].y + offset);
-            offset += graphics.getFont().getSize();
-        }
-
-        graphics.setFont( PrintConsts.BoldFont );
+        graphics.setFont( PrintConsts.DesignNameFont );
         p = points.GetDataChartPoints();
         graphics.drawString( CurMech.GetFullName(), p[PrintConsts.MECHNAME].x, p[PrintConsts.MECHNAME].y );
 
         // have to hack the movement to print the correct stuff here.
-        graphics.setFont( PrintConsts.PlainFont );
+        graphics.setFont( PrintConsts.Small8Font );
         if( CurMech.GetAdjustedWalkingMP( false, true ) != CurMech.GetWalkingMP() ) {
             graphics.drawString( ( CurMech.GetWalkingMP() * MiniConvRate ) + " (" + ( CurMech.GetAdjustedWalkingMP( false, true ) * MiniConvRate ) + ")", p[PrintConsts.WALKMP].x, p[PrintConsts.WALKMP].y );
         } else {
@@ -997,10 +433,11 @@ public class PrintMech implements Printable {
         //Cost
         graphics.setFont( PrintConsts.Small8Font );
         graphics.drawString( String.format( "%1$,.0f C-Bills", Math.floor( CurMech.GetTotalCost() + 0.5f ) ), p[PrintConsts.COST].x, p[PrintConsts.COST].y );
-        
+
+        //BV
         if ( !TRO ) {
             graphics.drawString( String.format( "%1$,.0f (Base: %2$,d)", BV, CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
-            graphics.drawString( "Weapon Heat (" + CurMech.GetWeaponHeat() + ")", p[PrintConsts.MAX_HEAT].x, p[PrintConsts.MAX_HEAT].y );
+            graphics.drawString( "Weapon Heat (" + CurMech.GetWeaponHeat() + ")", p[PrintConsts.MAX_HEAT].x-1, p[PrintConsts.MAX_HEAT].y );
             graphics.setFont( PrintConsts.SmallFont );
             graphics.drawString( "Armor Pts: " + CurMech.GetArmor().GetArmorValue(), p[PrintConsts.TOTAL_ARMOR].x, p[PrintConsts.TOTAL_ARMOR].y );
             graphics.setFont( PrintConsts.BoldFont );
@@ -1008,12 +445,13 @@ public class PrintMech implements Printable {
             graphics.drawString( String.format( "%1$,d", CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
         }
 
+        //Mechwarrior
         graphics.setFont( PrintConsts.PlainFont );
         if ( TRO ) {
             graphics.setFont( PrintConsts.BoldFont );
-            graphics.drawString( "____________________", p[PrintConsts.PILOT_NAME].x, p[PrintConsts.PILOT_NAME].y );
-            graphics.drawString( "___", p[PrintConsts.PILOT_GUN].x, p[PrintConsts.PILOT_GUN].y);
-            graphics.drawString( "___", p[PrintConsts.PILOT_PILOT].x-4, p[PrintConsts.PILOT_PILOT].y);
+            graphics.drawLine(p[PrintConsts.PILOT_NAME].x+1, p[PrintConsts.PILOT_NAME].y+1, p[PrintConsts.PILOT_NAME].x + 107, p[PrintConsts.PILOT_NAME].y+1);
+            graphics.drawLine(p[PrintConsts.PILOT_GUN].x, p[PrintConsts.PILOT_GUN].y+1, p[PrintConsts.PILOT_GUN].x + 14, p[PrintConsts.PILOT_GUN].y+1);
+            graphics.drawLine(p[PrintConsts.PILOT_PILOT].x-4, p[PrintConsts.PILOT_PILOT].y+1, p[PrintConsts.PILOT_PILOT].x + 10, p[PrintConsts.PILOT_PILOT].y+1);
         } else if( PrintPilot ) {
             graphics.drawString( PilotName, p[PrintConsts.PILOT_NAME].x, p[PrintConsts.PILOT_NAME].y );
             graphics.drawString( Gunnery + "", p[PrintConsts.PILOT_GUN].x, p[PrintConsts.PILOT_GUN].y );
@@ -1022,16 +460,13 @@ public class PrintMech implements Printable {
 
         // check boxes
         graphics.setFont( PrintConsts.PlainFont );
-        String temp = CurMech.GetHeatSinks().LookupName();
-        temp = temp.split( " " )[0];
-        graphics.drawString( temp, p[PrintConsts.HEATSINK_NUMBER].x, p[PrintConsts.HEATSINK_NUMBER].y + 11 );
-
+        String temp;
         temp = CommonTools.GetTechbaseString( CurMech.GetLoadout().GetTechBase() );
         graphics.drawString( temp, p[PrintConsts.TECH_IS].x, p[PrintConsts.TECH_IS].y );
 
         graphics.drawString( CurMech.GetYear() + "", p[PrintConsts.TECH_IS].x, p[PrintConsts.TECH_IS].y + 10 );
 
-        if ( !TRO ) {
+        if ( !CurMech.GetArmor().CritName().contains("Standard") ) {
             //Armor Type
             graphics.setFont( PrintConsts.SmallFont );
             if ( CurMech.IsQuad() ) { graphics.setFont( PrintConsts.XtraSmallFont ); }
@@ -1044,49 +479,83 @@ public class PrintMech implements Printable {
                 if ( CurMech.IsQuad() ) { graphics.setFont( PrintConsts.XtraSmallBoldFont ); }
             }
 
-            String[] parts = CurMech.GetArmor().CritName().trim().split(" ");
+            String[] parts = PrintConsts.wrapText(CurMech.GetArmor().CritName().trim(), 8, true); //CurMech.GetArmor().CritName().trim().split(" ");
             for (String part: parts) {
                 if ( !part.trim().isEmpty() ) {
-                    int xCoord = baseX - ((part.trim().length() / 2) * 3);
-                    graphics.drawString( part, xCoord, baseY );
-                    baseY += 10;
+                    //int xCoord = baseX - ((part.trim().length() / 2) * 3);
+                    graphics.drawString( part, baseX - part.trim().length(), baseY );
+                    baseY += graphics.getFont().getSize();
                 }
             }
             graphics.setFont( PrintConsts.PlainFont );
+        }
 
+        if ( !TRO ) {
             //Availability Codes
             graphics.drawString(CurMech.GetAvailability().GetBestCombinedCode(), p[PrintConsts.TECH_IS].x, p[PrintConsts.TECH_IS].y+20);
         }
 
         //heat sinks
+        Point startingPoint = new Point(507, 615),
+              currentPoint = (Point) startingPoint.clone();
+
+        int counter = 0,
+            ovalSize = 7,
+            spacer = 2;
+        if ( CurMech.GetHeatSinks().GetNumHS() > 10 && CurMech.GetHeatSinks().GetNumHS() <= 20 )
+            currentPoint.x -= 4;
+        else if ( CurMech.GetHeatSinks().GetNumHS() > 20 )
+            currentPoint.x -= 9;
+
+        for( int i = 0; i < CurMech.GetHeatSinks().GetNumHS(); i++ ) {
+            counter++;
+            graphics.drawOval( currentPoint.x, currentPoint.y, ovalSize, ovalSize );
+            currentPoint.y += ovalSize + spacer;
+            if ( counter >= 10 ) {
+                currentPoint.x += ovalSize + spacer;
+                currentPoint.y = startingPoint.y;
+                counter = 0;
+            }
+        }
+
         graphics.setFont( PrintConsts.PlainFont );
-        graphics.drawString( CurMech.GetHeatSinks().GetNumHS() + " (" + CurMech.GetHeatSinks().TotalDissipation() + ")", p[PrintConsts.HEATSINK_NUMBER].x, p[PrintConsts.HEATSINK_NUMBER].y );
-        //graphics.drawString( CurMech.GetHeatSinks().TotalDissipation() + "", p[PrintConsts.HEATSINK_DISSIPATION].x, p[PrintConsts.HEATSINK_DISSIPATION].y );
+        offset = 4;
+        String HS = CurMech.GetHeatSinks().GetNumHS() + "";
+        if ( CurMech.GetHeatSinks().TotalDissipation() > CurMech.GetHeatSinks().GetNumHS() ) {
+            HS += " (" + CurMech.GetHeatSinks().TotalDissipation() + ")";
+            offset = 0;
+        }
+
+        graphics.setFont(PrintConsts.SmallFont);
+        //HS Number
+        graphics.drawString( HS, p[PrintConsts.HEATSINK_NUMBER].x + offset, p[PrintConsts.HEATSINK_NUMBER].y );
+        //HS Type
+        graphics.drawString( CurMech.GetHeatSinks().LookupName().split( " " )[0], p[PrintConsts.HEATSINK_NUMBER].x+2, p[PrintConsts.HEATSINK_NUMBER].y + 8 );
 
         // internal information
-        graphics.setFont( PrintConsts.SmallFont );
+        graphics.setFont( PrintConsts.ReallySmallFont );
         p = points.GetInternalInfoPoints();
-        graphics.drawString( "[" + CurMech.GetIntStruc().GetCTPoints() + "]", p[LocationIndex.MECH_LOC_CT].x, p[LocationIndex.MECH_LOC_CT].y );
-        graphics.drawString( "[" + CurMech.GetIntStruc().GetSidePoints() + "]", p[LocationIndex.MECH_LOC_LT].x, p[LocationIndex.MECH_LOC_LT].y );
-        graphics.drawString( "[" + CurMech.GetIntStruc().GetSidePoints() + "]", p[LocationIndex.MECH_LOC_RT].x, p[LocationIndex.MECH_LOC_RT].y );
-        graphics.drawString( "[" + CurMech.GetIntStruc().GetArmPoints() + "]", p[LocationIndex.MECH_LOC_LA].x, p[LocationIndex.MECH_LOC_LA].y );
-        graphics.drawString( "[" + CurMech.GetIntStruc().GetArmPoints() + "]", p[LocationIndex.MECH_LOC_RA].x, p[LocationIndex.MECH_LOC_RA].y );
-        graphics.drawString( "[" + CurMech.GetIntStruc().GetLegPoints() + "]", p[LocationIndex.MECH_LOC_LL].x, p[LocationIndex.MECH_LOC_LL].y );
-        graphics.drawString( "[" + CurMech.GetIntStruc().GetLegPoints() + "]", p[LocationIndex.MECH_LOC_RL].x, p[LocationIndex.MECH_LOC_RL].y );
+        graphics.drawString( "(" + CurMech.GetIntStruc().GetCTPoints() + ")", p[LocationIndex.MECH_LOC_CT].x, p[LocationIndex.MECH_LOC_CT].y );
+        graphics.drawString( "(" + CurMech.GetIntStruc().GetSidePoints() + ")", p[LocationIndex.MECH_LOC_LT].x, p[LocationIndex.MECH_LOC_LT].y );
+        graphics.drawString( "(" + CurMech.GetIntStruc().GetSidePoints() + ")", p[LocationIndex.MECH_LOC_RT].x, p[LocationIndex.MECH_LOC_RT].y );
+        graphics.drawString( "(" + CurMech.GetIntStruc().GetArmPoints() + ")", p[LocationIndex.MECH_LOC_LA].x, p[LocationIndex.MECH_LOC_LA].y );
+        graphics.drawString( "(" + CurMech.GetIntStruc().GetArmPoints() + ")", p[LocationIndex.MECH_LOC_RA].x, p[LocationIndex.MECH_LOC_RA].y );
+        graphics.drawString( "(" + CurMech.GetIntStruc().GetLegPoints() + ")", p[LocationIndex.MECH_LOC_LL].x, p[LocationIndex.MECH_LOC_LL].y );
+        graphics.drawString( "(" + CurMech.GetIntStruc().GetLegPoints() + ")", p[LocationIndex.MECH_LOC_RL].x, p[LocationIndex.MECH_LOC_RL].y );
 
         // armor information
         p = points.GetArmorInfoPoints();
-        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_HD ) + "]", p[LocationIndex.MECH_LOC_HD].x, p[LocationIndex.MECH_LOC_HD].y );
-        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CT ) + "]", p[LocationIndex.MECH_LOC_CT].x, p[LocationIndex.MECH_LOC_CT].y );
-        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LT ) + "]", p[LocationIndex.MECH_LOC_LT].x, p[LocationIndex.MECH_LOC_LT].y );
-        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RT ) + "]", p[LocationIndex.MECH_LOC_RT].x, p[LocationIndex.MECH_LOC_RT].y );
-        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LA ) + "]", p[LocationIndex.MECH_LOC_LA].x, p[LocationIndex.MECH_LOC_LA].y );
-        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RA ) + "]", p[LocationIndex.MECH_LOC_RA].x, p[LocationIndex.MECH_LOC_RA].y );
-        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LL ) + "]", p[LocationIndex.MECH_LOC_LL].x, p[LocationIndex.MECH_LOC_LL].y );
-        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RL ) + "]", p[LocationIndex.MECH_LOC_RL].x, p[LocationIndex.MECH_LOC_RL].y );
-        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CTR ) + "]", p[LocationIndex.MECH_LOC_CTR].x, p[LocationIndex.MECH_LOC_CTR].y );
-        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LTR ) + "]", p[LocationIndex.MECH_LOC_LTR].x, p[LocationIndex.MECH_LOC_LTR].y );
-        graphics.drawString( "[" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RTR ) + "]", p[LocationIndex.MECH_LOC_RTR].x, p[LocationIndex.MECH_LOC_RTR].y );
+        graphics.drawString( "(" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_HD ) + ")", p[LocationIndex.MECH_LOC_HD].x, p[LocationIndex.MECH_LOC_HD].y );
+        graphics.drawString( "(" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CT ) + ")", p[LocationIndex.MECH_LOC_CT].x, p[LocationIndex.MECH_LOC_CT].y );
+        graphics.drawString( "(" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LT ) + ")", p[LocationIndex.MECH_LOC_LT].x, p[LocationIndex.MECH_LOC_LT].y );
+        graphics.drawString( "(" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RT ) + ")", p[LocationIndex.MECH_LOC_RT].x, p[LocationIndex.MECH_LOC_RT].y );
+        graphics.drawString( "(" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LA ) + ")", p[LocationIndex.MECH_LOC_LA].x, p[LocationIndex.MECH_LOC_LA].y );
+        graphics.drawString( "(" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RA ) + ")", p[LocationIndex.MECH_LOC_RA].x, p[LocationIndex.MECH_LOC_RA].y );
+        graphics.drawString( "(" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LL ) + ")", p[LocationIndex.MECH_LOC_LL].x, p[LocationIndex.MECH_LOC_LL].y );
+        graphics.drawString( "(" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RL ) + ")", p[LocationIndex.MECH_LOC_RL].x, p[LocationIndex.MECH_LOC_RL].y );
+        graphics.drawString( "(" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CTR ) + ")", p[LocationIndex.MECH_LOC_CTR].x, p[LocationIndex.MECH_LOC_CTR].y );
+        graphics.drawString( "(" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LTR ) + ")", p[LocationIndex.MECH_LOC_LTR].x, p[LocationIndex.MECH_LOC_LTR].y );
+        graphics.drawString( "(" + CurMech.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RTR ) + ")", p[LocationIndex.MECH_LOC_RTR].x, p[LocationIndex.MECH_LOC_RTR].y );
         if( CurMech.GetArmor().GetBAR() < 10 ) {
             graphics.setFont( PrintConsts.XtraSmallFont );
             graphics.drawString( "BAR:" + CurMech.GetArmor().GetBAR(), p[LocationIndex.MECH_LOC_HD].x, p[LocationIndex.MECH_LOC_HD].y + 7 );
@@ -1104,24 +573,16 @@ public class PrintMech implements Printable {
         }
     }
 
-    private void DrawNonCritable( Graphics2D graphics, String Item, int X, int Y ) {
-        // save the old font
-        Font OldFont = graphics.getFont();
-
-        // set the new font
-        graphics.setFont( PrintConsts.SmallFont );
-        graphics.setColor( Grey );
-        graphics.drawString( Item, X, Y );
-        graphics.setFont( OldFont );
-        graphics.setColor( Black );
-    }
-
     private void DrawImages( Graphics2D graphics ) {
         //PrintMech Image
+        Point start = points.GetMechImageLoc();
+        start.x -= 3;
+        start.y -= 6;
         if( getMechImage() != null ) {
-            Dimension d = media.reSize(getMechImage(), 145, 200);
-            Point offset = media.offsetImageBottom( new Dimension(145, 200), d);
-            graphics.drawImage( getMechImage(), points.GetMechImageLoc().x + offset.x, points.GetMechImageLoc().y + offset.y, d.width, d.height, null );
+            //graphics.drawRect(start.x, start.y, 160, 200);
+            Dimension d = media.reSize(getMechImage(), 160, 200);
+            Point offset = media.offsetImageCenter( new Dimension(160, 200), d);
+            graphics.drawImage( getMechImage(), start.x + offset.x, start.y + offset.y, d.width, d.height, null );
         }
 
         if ( LogoImage != null ) {
@@ -1180,8 +641,7 @@ public class PrintMech implements Printable {
     private void CheckShields( Graphics2D graphics ) {
         Image shieldImage;
         Point startingLocation = new Point(0,0);
-        for( int i = 0; i < Items.length; i++ ) {
-            PlaceableInfo item = Items[i];
+        for ( PlaceableInfo item : Items ) {
             if ( item.Item instanceof PhysicalWeapon ) {
                 if ( ((PhysicalWeapon) item.Item).GetPWClass() == PhysicalWeapon.PW_CLASS_SHIELD ) {
                     switch ( item.Location ) {
@@ -1217,32 +677,52 @@ public class PrintMech implements Printable {
         }
     }
 
-    private PlaceableInfo[] SortEquipmentByLocation() {
-        Vector v = CurMech.GetLoadout().GetNonCore();
-        Vector temp = new Vector();
-        abPlaceable[] a = new abPlaceable[v.size()];
-        for( int i = 0; i < v.size(); i++ ) {
-            if( ! ( v.get( i ) instanceof Ammunition ) ) {
-                a[i] = (abPlaceable) v.get( i );
+    private Vector<PlaceableInfo> SortEquipmentByLocation() {
+        Vector v = (Vector) CurMech.GetLoadout().GetNonCore().clone();
+                // add in MASC and the targeting computer if needed.
+        if( CurMech.GetPhysEnhance().IsMASC() ) v.add( CurMech.GetPhysEnhance() );
+        if( CurMech.UsingTC() ) v.add( CurMech.GetTC() );
+        if( CurMech.HasCommandConsole() ) v.add( CurMech.GetCommandConsole() );
+        if( CurMech.UsingPartialWing() ) v.add( CurMech.GetPartialWing() );
+        if( CurMech.GetLoadout().HasSupercharger() ) v.add( CurMech.GetLoadout().GetSupercharger() );
+        if( CurMech.IsQuad() ) {
+            if( CurMech.HasLegAES() ) {
+                v.add( CurMech.GetRAAES() );
+                v.add( CurMech.GetLAAES() );
+                v.add( CurMech.GetRLAES() );
+                v.add( CurMech.GetLLAES() );
+            }
+        } else {
+            if( CurMech.HasRAAES() ) v.add( CurMech.GetRAAES() );
+            if( CurMech.HasLAAES() ) v.add( CurMech.GetLAAES() );
+            if( CurMech.HasLegAES() ) {
+                v.add( CurMech.GetRLAES() );
+                v.add( CurMech.GetLLAES() );
+            }
+        }
+        Vector Equip = CurMech.SortLoadout(v);
+        Vector<abPlaceable> sorted = FileCommon.SortEquipmentForStats(CurMech, Equip, true, false);
+
+        abPlaceable[] a = new abPlaceable[sorted.size()];
+        for( int i = 0; i < sorted.size(); i++ ) {
+            if( ! ( sorted.get( i ) instanceof Ammunition ) ) {
+                a[i] = (abPlaceable) sorted.get( i );
             }
         }
 
         // now group them by location
         int count = 0;
-        abPlaceable b = null;
         PlaceableInfo p = null;
+        Vector<PlaceableInfo> temp = new Vector<PlaceableInfo>();
         for( int i = 0; i < a.length; i++ ) {
             if( a[i] != null ) {
-                p = new PlaceableInfo();
-                b = a[i];
-                p.Item = b;
-                p.Location = CurMech.GetLoadout().Find( b );
+                p = new PlaceableInfo(a[i], CurMech.GetLoadout().Find( a[i] ));
                 a[i] = null;
                 count ++;
                 // search for other matching weapons in the same location
                 for( int j = 0; j < a.length; j++ ) {
                     if( a[j] != null ) {
-                        if( a[j].CritName().equals( b.CritName() ) ) {
+                        if( a[j].CritName().equals( p.Item.CritName() ) ) {
                             if( CurMech.GetLoadout().Find( a[j] ) == p.Location ) {
                                 count++;
                                 a[j] = null;
@@ -1251,19 +731,58 @@ public class PrintMech implements Printable {
                     }
                 }
 
+                if ( p.name.equals("Targeting Computer") ||
+                     p.name.equals("AES") ) count = 1;
+
                 // set the weapon count and add it to the temp vector
-                p.Count = count;
+                p.Count = count + "";
                 temp.add( p );
                 count = 0;
+
+                // Parse the items and add extra line items as necessary
+                // ATM, MML, Artemis, TC, etc
+                PlaceableInfo factory = new PlaceableInfo();
+                if ( p.Item instanceof ifWeapon ) {
+                    if( ((ifWeapon) p.Item).GetWeaponClass() == ifWeapon.W_MISSILE ) {
+                        if ( ((ifWeapon) p.Item).CritName().contains("ATM") ) {
+                            Vector<PlaceableInfo> t = new Vector<PlaceableInfo>();
+                            if ( AmmoContains(AmmoList, "ER") )
+                                t.add(factory.ATMERAmmo(p));
+                            if ( AmmoContains(AmmoList, "HE") )
+                                t.add(factory.ATMHEAmmo(p));
+
+                            if ( t.size() > 0 ) p.specials = "-";
+                            if ( t.size() == 2 ) t.get(0).specials = "-";
+                            for ( PlaceableInfo am : t ) {
+                                temp.add(am);
+                            }
+                        } else if ( ((ifWeapon) p.Item).CritName().contains("MML") ) {
+                            p.Clean();
+                            temp.add(factory.MMLLRMAmmo(p));
+                            temp.add(factory.MMLSRMAmmo(p));
+                        } else if ( ((ifWeapon) p.Item).IsFCSCapable() ) {
+                            if ( CurMech.GetLoadout().UsingArtemisIV()) {
+                                temp.add(factory.ArtemisIV(p));
+                            } else if ( CurMech.GetLoadout().UsingArtemisV()) {
+                                temp.add(factory.ArtemisV(p));
+                            } else if ( CurMech.GetLoadout().UsingApollo() ) {
+                                temp.add(factory.Apollo(p));
+                            }
+                            p.specials = "-";
+                        }
+                    } else if ( ((ifWeapon) p.Item).GetWeaponClass() == ifWeapon.W_ENERGY ) {
+                        if ( ((RangedWeapon) p.Item).IsUsingCapacitor() ) {
+                            p.name.replace(" + PPC Capacitor", "");
+                            p.name2.replace(" + PPC Capacitor", "");
+                            temp.add( new PlaceableInfo( (abPlaceable)((RangedWeapon) p.Item).GetCapacitor(), p.Location ) );
+                        }
+                    }
+                }
             }
         }
+        if ( CurMech.HasBlueShield() ) temp.add(new PlaceableInfo( CurMech.GetBlueShield() ));
 
-        // produce an array from the vector
-        PlaceableInfo[] retval = new PlaceableInfo[temp.size()];
-        for( int i = 0; i < temp.size(); i++ ) {
-            retval[i] = (PlaceableInfo) temp.get( i );
-        }
-        return retval;
+        return temp;
     }
 
     private void GetRecordSheet( ImageTracker images ) {
@@ -1290,10 +809,10 @@ public class PrintMech implements Printable {
         if( a instanceof RangedWeapon && CurMech.GetLoadout().GetTechBase() == AvailableCode.TECH_BOTH ) {
             switch( ((RangedWeapon) a).GetTechBase() ) {
                 case AvailableCode.TECH_INNER_SPHERE:
-                    retval = "(IS) " + retval;
+                    retval = retval + " (IS)";
                     break;
                 case AvailableCode.TECH_CLAN:
-                    retval = "(CL) " + retval;
+                    retval = retval + " (C)";
                     break;
             }
         }
@@ -1302,8 +821,126 @@ public class PrintMech implements Printable {
 
     private class PlaceableInfo {
         public int Location,
-                   Count;
+                    NameLength = 25;
+        public String   Count = "",
+                        name = "",
+                        name2 = "",
+                        locName = "",
+                        heat = "--",
+                        min = "--",
+                        damage = "--",
+                        specials = "--",
+                        rShort = "--",
+                        rMed = "--",
+                        rLong = "--";
         public abPlaceable Item;
+
+        public PlaceableInfo() {
+        }
+
+        public PlaceableInfo( String Count, int Location, String LocationName, String Name, String Heat, String Damage, String Min, String Short, String Medium, String Long, String Specials) {
+            this.Count = Count;
+            this.Location = Location;
+            this.locName = LocationName;
+            this.name = Name;
+            this.heat = Heat;
+            this.damage = Damage;
+            this.min = Min;
+            this.rShort = Short;
+            this.rMed = Medium;
+            this.rLong = Long;
+            this.specials = Specials;
+        }
+
+        public PlaceableInfo( MultiSlotSystem item ) {
+            this.name = item.CritName();
+            this.damage = "[E]";
+        }
+
+        public PlaceableInfo( abPlaceable item, int Location ) {
+            this.Item = item;
+            this.name = GetPrintName(item).trim();
+                    //.replace("Medium Pulse", "Med. Pulse")
+                    //.replace("Beagle Active Probe", "Beagle Active Prb")
+                    //.replace("Guardian ECM Suite", "Guardian ECM")
+                    //.replace("Targeting Computer", "Targeting Comp.");
+            String[] names = PrintConsts.wrapText(this.name, NameLength, false);
+            if ( names.length > 1 ) {
+                name = names[0];
+                name2 = names[1];
+            }
+            this.Location = Location;
+            this.locName = FileCommon.EncodeLocation( Location, CurMech.IsQuad() );
+
+            if( item instanceof Equipment ) {
+                Equipment e = (Equipment) item;
+                this.heat = e.GetHeat() + "";
+                if( e.GetSpecials().equals( "-" ) ) 
+                    this.damage = "[" + e.GetType() + "]";
+                else
+                    this.specials = ("[" + e.GetType() + ", " + e.GetSpecials() + "]").replace(", -", "");
+            } else if( item instanceof ifWeapon ) {
+                ifWeapon weap = (ifWeapon) item;
+                this.heat = weap.GetHeat() + "";
+                if( weap.IsUltra() || weap.IsRotary() ) this.heat += "/s";
+                this.damage = weap.GetDamageShort() + "";
+                if( weap.GetWeaponClass() == ifWeapon.W_MISSILE ) this.damage += "/m";
+                if( weap.GetDamageShort() != weap.GetDamageMedium() ||
+                     weap.GetDamageShort() != weap.GetDamageLong() ||
+                     weap.GetDamageMedium() != weap.GetDamageLong() )
+                    this.damage = weap.GetDamageShort() + "/" + weap.GetDamageMedium() + "/" + weap.GetDamageLong();
+                if( weap.GetSpecials().equals( "-" ) ) 
+                    this.damage += " [" + weap.GetType() + "]";
+                else
+                    this.specials = ("[" + weap.GetType() + ", " + weap.GetSpecials() + "]").replace(", -", "");
+                if( weap.GetRangeMin() > 0 ) this.min = (weap.GetRangeMin() * MiniConvRate ) + "";
+                this.rShort = (weap.GetRangeShort() * MiniConvRate) + "";
+                this.rMed = (weap.GetRangeMedium() * MiniConvRate) + "";
+                this.rLong = (weap.GetRangeLong() * MiniConvRate) + "";
+            }
+        }
+
+        public void Clean() {
+            this.damage = this.specials;
+            this.min = "";
+            this.rShort = "";
+            this.rMed = "";
+            this.rLong = "";
+            this.specials = "-";
+        }
+
+        public PlaceableInfo ATMERAmmo( PlaceableInfo item ) {
+            return new PlaceableInfo("", 0, "", "ER", "", "1/m", (4 * MiniConvRate ) + "", (9 * MiniConvRate ) + "", (18 * MiniConvRate ) + "", (27 * MiniConvRate ) + "", item.specials);
+        }
+
+        public PlaceableInfo ATMHEAmmo( PlaceableInfo item ) {
+            return new PlaceableInfo("", 0, "", "HE", "", "3/m", "-", (3 * MiniConvRate ) + "", (6 * MiniConvRate ) + "", (9 * MiniConvRate ) + "", item.specials);
+        }
+
+        public PlaceableInfo MMLLRMAmmo( PlaceableInfo item ) {
+            return new PlaceableInfo("", 0, "", "LRM", "", "1/Msl.", (6 * MiniConvRate ) + "", (7 * MiniConvRate ) + "", (14 * MiniConvRate ) + "", (21 * MiniConvRate ) + "", "-");
+        }
+
+        public PlaceableInfo MMLSRMAmmo( PlaceableInfo item ) {
+            return new PlaceableInfo("", 0, "", "SRM", "", "2/Msl.", "--", (3 * MiniConvRate ) + "", (6 * MiniConvRate ) + "", (9 * MiniConvRate ) + "", "-");
+        }
+
+        public PlaceableInfo ArtemisIV( PlaceableInfo item ) {
+            return new PlaceableInfo("", 0, "", "w/Artemis IV FCS", "", item.specials, "", "", "", "", "-");
+        }
+
+        public PlaceableInfo ArtemisV( PlaceableInfo item ) {
+            return new PlaceableInfo("", 0, "", "w/Artemis V FCS", "", item.specials, "", "", "", "", "-");
+        }
+
+        public PlaceableInfo Apollo( PlaceableInfo item ) {
+            return new PlaceableInfo("", 0, "", "w/Apollo FCS", "", item.specials, "", "", "", "", "-");
+        }
+
+        public PlaceableInfo TargetingComputer() {
+            TargetingComputer tc = CurMech.GetTC();
+            return new PlaceableInfo("1", CurMech.GetLoadout().Find((abPlaceable) tc), FileCommon.EncodeLocation( CurMech.GetLoadout().Find((abPlaceable) tc), CurMech.IsQuad() ), "", tc.CritName(), "", "-", "-", "-", "-", "-");
+        }
     }
 
     private class AmmoData {
@@ -1323,7 +960,7 @@ public class PrintMech implements Printable {
         }
 
         public String Format() {
-            return Prefs.get( "AmmoNamePrintFormat", "@%P").replace("%P", CritName).replace("%F", LookupName).replace("%L", "");
+            return ("@%P").replace("%P", CritName).replace("%F", LookupName).replace("%L", "");
         }
     }
 }

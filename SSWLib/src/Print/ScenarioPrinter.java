@@ -21,7 +21,7 @@ public class ScenarioPrinter implements Printable {
     private Scenario scenario = null;
     private PageFormat format = null;
     private String Title = "Scenario Information";
-    private int characterWidth = 135,
+    private int characterWidth = 125,
                 characterHalfWidth = 68,
                 pageWidth = 0,
                 pageHalfWidth = 0;
@@ -46,7 +46,7 @@ public class ScenarioPrinter implements Printable {
         if( scenario == null ) { return Printable.NO_SUCH_PAGE; }
         Graphic = (Graphics2D) graphics;
         format = pageFormat;
-        pageWidth = (int) pageFormat.getImageableWidth();
+        pageWidth = (int) ( pageFormat.getImageableWidth() - ( pageFormat.getImageableX() * 2.0 ) );
         pageHalfWidth = pageWidth / 2;
         Reset();
         Graphic.translate( pageFormat.getImageableX(), pageFormat.getImageableY() );
@@ -63,8 +63,10 @@ public class ScenarioPrinter implements Printable {
         //currentLocation.y += 50;
 
         Graphic.setFont( PrintConsts.TitleFont);
-        Graphic.drawString(scenario.getName(), currentLocation.x, currentLocation.y);
-        currentLocation.y += Graphic.getFont().getSize();
+        for ( String t : PrintConsts.wrapText(scenario.getName(), 28, true) ) {
+            Graphic.drawString(t, currentLocation.x, currentLocation.y);
+            currentLocation.y += Graphic.getFont().getSize()+1;
+        }
 
         RenderTitle("SITUATION");
         RenderText( scenario.getSituation(), characterWidth );
