@@ -341,7 +341,12 @@ public class Unit implements ifSerializable {
     }
 
     public BattleForceStats getBFStats() {
-        if ( BFStats != null ) { return BFStats; }
+        if ( BFStats != null ) { 
+            BFStats.setWarrior(warrior.getName());
+            BFStats.setGunnery(warrior.getGunnery());
+            BFStats.setPiloting(warrior.getPiloting());
+            return BFStats;
+        }
 
         LoadMech();
         if ( m != null ) {
