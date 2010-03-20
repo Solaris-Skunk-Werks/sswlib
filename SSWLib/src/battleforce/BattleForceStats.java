@@ -236,6 +236,38 @@ public class BattleForceStats {
         return retval.replace("[", "").replace("]", "");
     }
 
+    public Vector<String> getFilteredAbilities() {
+        Vector<String> filtered = new Vector<String>();
+         for ( String ability : Abilities ) {
+            if ( !ability.contains("AC") && !ability.contains("SRM") && !ability.contains("LRM") ) {
+                filtered.add(ability);
+            }
+         }
+         return filtered;
+    }
+
+    public Vector<String[]> getDamageAbilities() {
+        Vector<String[]> list = new Vector<String[]>();
+        for ( String ability : Abilities ) {
+            if ( ability.contains("AC") || ability.contains("SRM") || ability.contains("LRM") ) {
+                String[] info = new String[5];
+                info[0] = ability.substring(0, 3).trim();
+                if (info[0].length() == 2) info[0] = "  " + info[0];
+                String[] data = ability.replace("AC ", "").replace("SRM ", "").replace("LRM ", "").split("/");
+                info[1] = data[0];
+                info[2] = data[1];
+                info[3] = data[2];
+                if ( data.length == 4 ) {
+                    info[4] = data[3];
+                } else {
+                    info[4] = "0";
+                }
+                list.add(info);
+            }
+        }
+        return list;
+    }
+
     public void addAbility(String s)
     {
         if ( !Abilities.contains(s) ) { Abilities.add(s); }
