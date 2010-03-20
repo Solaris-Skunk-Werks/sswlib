@@ -80,6 +80,11 @@ public class QSVerticalCardPrinter implements Printable {
         imageTracker = images;
         Background = imageTracker.getImage( PrintConsts.COLOR_VERT_QS_CARD );
         CardBack = imageTracker.getImage( PrintConsts.COLOR_VERT_QS_CARD_BACK );
+        BFIcons = new Image[]{ imageTracker.getImage( PrintConsts.BF_ICON_INDUSTRIAL ),
+                        imageTracker.getImage( PrintConsts.BF_ICON_LIGHT ),
+                        imageTracker.getImage( PrintConsts.BF_ICON_MEDIUM ),
+                        imageTracker.getImage( PrintConsts.BF_ICON_HEAVY ),
+                        imageTracker.getImage( PrintConsts.BF_ICON_ASSAULT ) };
     }
 
     public QSVerticalCardPrinter(ImageTracker images) {
@@ -106,6 +111,12 @@ public class QSVerticalCardPrinter implements Printable {
         SizeColor = OVColor;
         Shadow = Color.WHITE;
         DarkShadow = Color.WHITE;
+
+        BFIcons = new Image[]{ imageTracker.getImage( PrintConsts.BF_ICON_INDUSTRIAL_BW ),
+                        imageTracker.getImage( PrintConsts.BF_ICON_LIGHT_BW ),
+                        imageTracker.getImage( PrintConsts.BF_ICON_MEDIUM_BW ),
+                        imageTracker.getImage( PrintConsts.BF_ICON_HEAVY_BW ),
+                        imageTracker.getImage( PrintConsts.BF_ICON_ASSAULT_BW ) };
     }
 
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
@@ -138,11 +149,6 @@ public class QSVerticalCardPrinter implements Printable {
             x = 25;
             y += UnitImageHeight;
 
-            BFIcons = new Image[]{ imageTracker.getImage( PrintConsts.BF_ICON_INDUSTRIAL ),
-                                    imageTracker.getImage( PrintConsts.BF_ICON_LIGHT ), 
-                                    imageTracker.getImage( PrintConsts.BF_ICON_MEDIUM ), 
-                                    imageTracker.getImage( PrintConsts.BF_ICON_HEAVY ), 
-                                    imageTracker.getImage( PrintConsts.BF_ICON_ASSAULT ) };
 
             for ( BattleForceStats stats : getBattleforce().BattleForceStats ) {
                 printCardBack( stats );
@@ -166,7 +172,7 @@ public class QSVerticalCardPrinter implements Printable {
             p.y += graphic.getFont().getSize();
         }
 
-        graphic.drawImage( BFIcons[stats.getWeight()], x+112, y+40, 54, 29, null);
+        graphic.drawImage( BFIcons[stats.getWeight()], x+112, y+40, 54, 28, null);
 
         graphic.setFont(PrintConsts.SmallBoldFont);
         graphic.drawString("Notes:", x+20, y+82);

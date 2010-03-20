@@ -78,6 +78,11 @@ public class PrintConsts {
                                BF_ICON_HEAVY = "./Data/Printing/BF_ICON_Heavy.png",
                                BF_ICON_ASSAULT = "./Data/Printing/BF_ICON_Assault.png",
                                BF_ICON_INDUSTRIAL = "./Data/Printing/BF_ICON_Industrial.png",
+                               BF_ICON_LIGHT_BW = "./Data/Printing/BF_ICON_Light_bw.png",
+                               BF_ICON_MEDIUM_BW = "./Data/Printing/BF_ICON_Medium_bw.png",
+                               BF_ICON_HEAVY_BW = "./Data/Printing/BF_ICON_Heavy_bw.png",
+                               BF_ICON_ASSAULT_BW = "./Data/Printing/BF_ICON_Assault_bw.png",
+                               BF_ICON_INDUSTRIAL_BW = "./Data/Printing/BF_ICON_Industrial_bw.png",
                                PATTERNS = "./Data/Printing/patterns.zip";
 
     //public final static Font BaseFont = FontLoader.getFont("Eurosti.ttf").deriveFont(Font.PLAIN, 20);
