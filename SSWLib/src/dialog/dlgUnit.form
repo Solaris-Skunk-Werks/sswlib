@@ -972,8 +972,11 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="btnMechImage" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="btnMechImage" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnClearImage" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="lblMechImage" min="-2" pref="317" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="1">
@@ -982,7 +985,7 @@
                               <Component id="lblSSWImage" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="150" max="32767" attributes="0"/>
+                      <EmptySpace pref="156" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -990,9 +993,13 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="lblMechImage" alignment="0" min="-2" pref="309" max="-2" attributes="0"/>
-                          <Component id="btnMechImage" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="1">
+                              <Component id="btnMechImage" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="btnClearImage" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -1031,6 +1038,14 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="jLabel16"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnClearImage">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Clear Image"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearImageActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

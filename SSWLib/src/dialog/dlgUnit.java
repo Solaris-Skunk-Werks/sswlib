@@ -66,7 +66,7 @@ public class dlgUnit extends javax.swing.JDialog {
         imageTracker = imagetracker;
         initComponents();
 
-        warriors = new Warriors(Prefs.get("LastPSNFile", "/Data/Personnel/warriorlist.spn"));
+        warriors = new Warriors(Prefs.get("LastPSNFile", "/Data/Personnel/warriorlist.psn"));
         setupFrame();
     }
 
@@ -252,6 +252,7 @@ public class dlgUnit extends javax.swing.JDialog {
         lblMechImage = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         lblSSWImage = new javax.swing.JLabel();
+        btnClearImage = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -483,7 +484,7 @@ public class dlgUnit extends javax.swing.JDialog {
                     .addComponent(lblModel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chkC3Active)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -684,7 +685,7 @@ public class dlgUnit extends javax.swing.JDialog {
                         .addComponent(rdoPiloting)
                         .addGap(18, 18, 18)
                         .addComponent(btnFilter))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel10))
         );
@@ -734,7 +735,7 @@ public class dlgUnit extends javax.swing.JDialog {
                         .addComponent(lblRandomSkill)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnApply)))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -801,9 +802,9 @@ public class dlgUnit extends javax.swing.JDialog {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addComponent(btnSelectWarrior)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
                         .addComponent(btnLoadFile))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -850,6 +851,13 @@ public class dlgUnit extends javax.swing.JDialog {
 
         lblSSWImage.setText("jLabel16");
 
+        btnClearImage.setText("Clear Image");
+        btnClearImage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearImageActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
@@ -858,22 +866,27 @@ public class dlgUnit extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(btnMechImage)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnMechImage)
+                            .addComponent(btnClearImage))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblMechImage, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(jLabel14)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblSSWImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addContainerGap(156, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblMechImage, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnMechImage))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(btnMechImage)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnClearImage)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
@@ -1214,18 +1227,19 @@ public class dlgUnit extends javax.swing.JDialog {
     private void btnMechImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMechImageActionPerformed
         Media media = new Media();
         File imageFile = media.SelectImage(Prefs.get("LastMechImage", ""), "Select Mech Image");
-        try {
-            Prefs.put("LastMechImage", imageFile.getCanonicalPath());
-            unit.m.SetSSWImage(imageFile.getCanonicalPath());
-            setImage();
+        if ( imageFile != null ) {
+            try {
+                Prefs.put("LastMechImage", imageFile.getCanonicalPath());
+                unit.m.SetSSWImage(imageFile.getCanonicalPath());
+                setImage();
 
-            MechWriter writer = new MechWriter();
-            writer.setMech(unit.m);
-            writer.WriteXML(unit.Filename);
-        } catch (IOException ex) {
-            //do nothing
+                MechWriter writer = new MechWriter();
+                writer.setMech(unit.m);
+                writer.WriteXML(unit.Filename);
+            } catch (IOException ex) {
+                //do nothing
+            }
         }
-
     }//GEN-LAST:event_btnMechImageActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -1328,8 +1342,22 @@ public class dlgUnit extends javax.swing.JDialog {
         force.RefreshBV();
     }//GEN-LAST:event_chkC3ActiveActionPerformed
 
+    private void btnClearImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearImageActionPerformed
+        try {
+            unit.m.SetSSWImage("../Images/No_Image.png");
+            setImage();
+
+            MechWriter writer = new MechWriter();
+            writer.setMech(unit.m);
+            writer.WriteXML(unit.Filename);
+        } catch (IOException ex) {
+            //do nothing
+        }
+    }//GEN-LAST:event_btnClearImageActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApply;
+    private javax.swing.JButton btnClearImage;
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnFilter;
     private javax.swing.ButtonGroup btnGrpSkill;
