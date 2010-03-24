@@ -112,7 +112,7 @@ public class Group {
         bf.LogoPath = getLogo();
         for ( Unit u : getUnits() ) {
             u.LoadMech();
-            BattleForceStats stat = new BattleForceStats(u.m,u.getGroup(), u.getGunnery(),u.getPiloting());
+            BattleForceStats stat = new BattleForceStats(u.m, getName(), u.getGunnery(),u.getPiloting());
             stat.setWarrior(u.getMechwarrior());
             bf.BattleForceStats.add(stat);
             if ( bf.BattleForceStats.size() == SizeLimit ) {

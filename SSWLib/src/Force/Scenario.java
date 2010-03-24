@@ -180,15 +180,13 @@ public class Scenario implements ifSerializable {
         Vector<BattleForce> BattleForces = new Vector<BattleForce>();
         BattleForce bf = new BattleForce();
         for ( Force f : forces ) {
+            bf.ForceName = f.ForceName;
             f.sortForPrinting();
 
             for ( Group g : f.Groups ) {
                 for ( Unit u : g.getUnits() ) {
                     BattleForceStats stat = u.getBFStats();
-                    if ( stat.getImage().isEmpty() ) {
-                        u.LoadMech();
-                        stat.setImage(u.m.GetSSWImage());
-                    }
+                    stat.setUnit( g.getName() );
                     bf.BattleForceStats.add(stat);
                     
                     if ( bf.BattleForceStats.size() == SizeLimit ) {
@@ -201,6 +199,20 @@ public class Scenario implements ifSerializable {
         if ( bf.BattleForceStats.size() > 0 ) BattleForces.add(bf);
 
         return BattleForces;
+    }
+
+    public Vector<BattleForce> toBattleForceByGroup( int SizeLimit ) {
+        Vector<BattleForce> Forces = new Vector<BattleForce>();
+        for ( Force f : forces ) {
+            f.sortForPrinting();
+            for ( Group g : f.Groups ) {
+                Vector<BattleForce> groupForces = g.toBattleForce(SizeLimit);
+                for ( BattleForce bf : groupForces ) {
+                    Forces.add(bf);
+                }
+            }
+        }
+        return Forces;
     }
 
     public void SerializeXML(BufferedWriter file) throws IOException {

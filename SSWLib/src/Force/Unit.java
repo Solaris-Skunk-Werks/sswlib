@@ -341,7 +341,9 @@ public class Unit implements ifSerializable {
     }
 
     public BattleForceStats getBFStats() {
-        if ( BFStats != null ) { 
+        if ( BFStats != null ) {
+            BFStats.setName(this.Type);
+            BFStats.setModel(this.Model);
             BFStats.setWarrior(warrior.getName());
             BFStats.setGunnery(warrior.getGunnery());
             BFStats.setPiloting(warrior.getPiloting());
