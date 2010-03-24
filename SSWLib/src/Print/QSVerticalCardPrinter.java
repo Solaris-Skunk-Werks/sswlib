@@ -57,9 +57,11 @@ public class QSVerticalCardPrinter implements Printable {
 
     private boolean printMechs = true,
                     printLogo = true,
+                    printWarriorData = true,
                     useTerrainMod = false,
                     printCardBack = false;
 
+    private Point defaultPoint = new Point(0, 0);
     private int x = 0,
                 y = 0;
 
@@ -121,8 +123,10 @@ public class QSVerticalCardPrinter implements Printable {
 
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
         //if( RecordSheet == null) { return Printable.NO_SUCH_PAGE; }
-        x = 25;
-        y = 22;
+        defaultPoint.x = (int) pageFormat.getImageableX();
+        defaultPoint.y = (int) pageFormat.getImageableY();
+        x = defaultPoint.x;
+        y = defaultPoint.y;
         ((Graphics2D) graphics).translate( pageFormat.getImageableX(), pageFormat.getImageableY() );
         graphic = (Graphics2D) graphics;
         //setBlackAndWhite();
@@ -136,23 +140,23 @@ public class QSVerticalCardPrinter implements Printable {
         for ( BattleForceStats stats : getBattleforce().BattleForceStats ) {
             if ( elementCount == HorizontalLimit ) {
                 //if ( !printCardBack ) elementCount = 0;
-                x = 25;
-                y += UnitImageHeight;
+                x = defaultPoint.x;
+                y += UnitImageHeight+1;
             }
             elementCount += 1;
 
             printCardFront( stats );
-            x += UnitImageWidth + 2;
+            x += UnitImageWidth + 1;
         }
 
         if ( printCardBack ) {
-            x = 25;
-            y += UnitImageHeight;
+            x = defaultPoint.x;
+            y += UnitImageHeight+1;
 
 
             for ( BattleForceStats stats : getBattleforce().BattleForceStats ) {
                 printCardBack( stats );
-                x += UnitImageWidth + 2;
+                x += UnitImageWidth + 1;
             }
         }
 
@@ -165,10 +169,10 @@ public class QSVerticalCardPrinter implements Printable {
         graphic.drawImage( CardBack, x, y, UnitImageWidth, UnitImageHeight, null);
 
         //Unit Name
-        ShadowText( PrintConsts.SmallBoldFont, NameColor, DarkShadow, stats.getModel(), x+16, y+48);
+        PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, NameColor, DarkShadow, stats.getModel(), x+16, y+48);
         p.y = y + 58;
         for ( String line : PrintConsts.wrapText(stats.getName().toUpperCase(), 12, false) ) {
-            ShadowText( PrintConsts.BoldFont, NameColor, DarkShadow, line, x+16, p.y);
+            PrintConsts.ShadowText( graphic, PrintConsts.BoldFont, NameColor, DarkShadow, line, x+16, p.y);
             p.y += graphic.getFont().getSize();
         }
 
@@ -182,64 +186,73 @@ public class QSVerticalCardPrinter implements Printable {
         Point p = new Point(0,0);
 
         //Image
-        if ( !stats.getImage().isEmpty() && printMechs ) {
-            p.x = 16;
-            p.y = 43;
-            Image image = imageTracker.getImage(stats.getImage());
-            Dimension dim = media.reSize(image, 85d, 128d);
-            image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
-            Point offset = media.offsetImageCenter( new Dimension(85, 128), dim);
-            graphic.drawImage(image, x+p.x+offset.x, y+p.y+offset.y, dim.width, dim.height, null);
+        if ( printMechs ) {
+            if ( stats.getImage().replace("../Images/No_Image.png", "").isEmpty() )
+                stats.setImage( media.FindMatchingImage(stats.getName(), stats.getModel()));
+            if ( !stats.getImage().isEmpty() ) {
+                p.x = 16;
+                p.y = 43;
+                Image image = imageTracker.getImage(stats.getImage());
+                Dimension dim = media.reSize(image, 85d, 128d);
+                image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
+                Point offset = media.offsetImageCenter( new Dimension(85, 128), dim);
+                graphic.drawImage(image, x+p.x+offset.x, y+p.y+offset.y, dim.width, dim.height, null);
+            }
         }
 
         graphic.drawImage( Background, x, y, UnitImageWidth, UnitImageHeight, null);
 
         //Overheat (OV)
-        ShadowText( PrintConsts.OVFont, OVColor, Shadow, stats.getOverheat()+"", x+122, y+55);
+        PrintConsts.ShadowText( graphic, PrintConsts.OVFont, OVColor, Shadow, stats.getOverheat()+"", x+122, y+55);
 
         //PV
-        ShadowText( PrintConsts.BoldFont, PVColor, DarkShadow, stats.getPointValue()+"", x+128, y+14);
+        PrintConsts.ShadowText( graphic, PrintConsts.BoldFont, PVColor, DarkShadow, stats.getPointValue()+" POINTS", x+116, y+16);
 
         //Unit Name
-        ShadowText( PrintConsts.SmallBoldFont, NameColor, DarkShadow, stats.getModel(), x+4, y+10);
+        PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, NameColor, DarkShadow, stats.getModel(), x+6, y+12);
         p.y = y + 20;
         for ( String line : PrintConsts.wrapText(stats.getName().toUpperCase(), 12, false) ) {
-            ShadowText( PrintConsts.BoldFont, NameColor, DarkShadow, line, x+4, p.y);
+            PrintConsts.ShadowText( graphic, PrintConsts.BoldFont, NameColor, DarkShadow, line, x+6, p.y);
             p.y += graphic.getFont().getSize();
         }
 
-        //Pilot Name
-        ShadowText( PrintConsts.XtraSmallBoldFont, PilotColor, DarkShadow, stats.getWarrior(), x+4, p.y-4);
+        if ( printWarriorData ) {
+            //Pilot Name
+            PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, PilotColor, DarkShadow, stats.getWarrior(), x+6, p.y-4);
 
-        p.y = 208;
+            //Unit Name
+            PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, PilotColor, DarkShadow, (stats.getUnit() + " [" + battleforce.ForceName + "]").replace("[]", ""), x+6, p.y+1);
+
+            //Skill
+            PrintConsts.ShadowText( graphic, PrintConsts.OVFont, SkillColor, Shadow, stats.getSkill()+"", x+43, y+204);
+        }
+
+        p.y = 204;
 
         //Movement (MV)
-        p.x = x + 21;
-        if ( stats.getMovement(useTerrainMod).length() > 1 ) p.x -= stats.getMovement(useTerrainMod).length() * 2;
-        ShadowText( PrintConsts.OVFont, MoveColor, Shadow, stats.getMovement(useTerrainMod), p.x, y+p.y );
-
-        //Skill
-        ShadowText( PrintConsts.OVFont, SkillColor, Shadow, stats.getSkill()+"", x+42, y+p.y);
+        p.x = x + 24;
+        p.x -= stats.getMovement(useTerrainMod).length() * 2;
+        PrintConsts.ShadowText( graphic, PrintConsts.OVFont, MoveColor, Shadow, stats.getMovement(useTerrainMod), p.x, y+p.y );
 
         //Weight Class
-        ShadowText( PrintConsts.OVFont, SizeColor, Shadow, stats.getWeight()+"", x+62, y+p.y);
+        PrintConsts.ShadowText( graphic, PrintConsts.OVFont, SizeColor, Shadow, stats.getWeight()+"", x+62, y+p.y);
 
         int[] data = {78, 93, 114, 135, 154};
         p.y = 201;
 
         //Damage Values (S,M,L,E)
-        ShadowText( PrintConsts.SmallBoldFont, PVColor, Shadow, stats.getShort()+"", x+data[1], y+p.y);
-        ShadowText( PrintConsts.SmallBoldFont, PVColor, Shadow, stats.getMedium()+"", x+data[2], y+p.y);
-        ShadowText( PrintConsts.SmallBoldFont, PVColor, Shadow, stats.getLong()+"", x+data[3], y+p.y);
-        ShadowText( PrintConsts.SmallBoldFont, PVColor, Shadow, stats.getExtreme()+"", x+data[4], y+p.y);
+        PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, PVColor, Shadow, stats.getShort()+"", x+data[1], y+p.y);
+        PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, PVColor, Shadow, stats.getMedium()+"", x+data[2], y+p.y);
+        PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, PVColor, Shadow, stats.getLong()+"", x+data[3], y+p.y);
+        PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, PVColor, Shadow, stats.getExtreme()+"", x+data[4], y+p.y);
         p.y += graphic.getFont().getSize();
 
         for ( String[] ability : stats.getDamageAbilities() ) {
-            ShadowText( PrintConsts.XtraSmallBoldFont, PVColor, Shadow, ability[0]+"", x+data[0], y+p.y);
-            ShadowText( PrintConsts.XtraSmallBoldFont, PVColor, Shadow, ability[1]+"", x+data[1]+1, y+p.y);
-            ShadowText( PrintConsts.XtraSmallBoldFont, PVColor, Shadow, ability[2]+"", x+data[2]+1, y+p.y);
-            ShadowText( PrintConsts.XtraSmallBoldFont, PVColor, Shadow, ability[3]+"", x+data[3]+1, y+p.y);
-            ShadowText( PrintConsts.XtraSmallBoldFont, PVColor, Shadow, ability[4]+"", x+data[4]+1, y+p.y);
+            PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, PVColor, Shadow, ability[0]+"", x+data[0], y+p.y);
+            PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, PVColor, Shadow, ability[1]+"", x+data[1]+1, y+p.y);
+            PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, PVColor, Shadow, ability[2]+"", x+data[2]+1, y+p.y);
+            PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, PVColor, Shadow, ability[3]+"", x+data[3]+1, y+p.y);
+            PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, PVColor, Shadow, ability[4]+"", x+data[4]+1, y+p.y);
             p.y += graphic.getFont().getSize();
         }
 
@@ -248,7 +261,7 @@ public class QSVerticalCardPrinter implements Printable {
         int indexer = 0;
         for ( int a=0; a < stats.getArmor(); a++ ) {
             if ( indexer == 5 ) { p.setLocation(120, p.y+9); indexer = 0; }
-            FilledCircle( Color.BLACK, Color.WHITE, 8, x+p.x, y+p.y);
+            PrintConsts.FilledCircle( graphic, Color.BLACK, Color.WHITE, 8, x+p.x, y+p.y);
             indexer += 1;
             p.x += 9;
         }
@@ -258,7 +271,7 @@ public class QSVerticalCardPrinter implements Printable {
         p.setLocation(120, p.y+10);
         for ( int s=0; s < stats.getInternal(); s++ ) {
             if ( indexer == 5 ) { p.setLocation(120, p.y+9); indexer = 0; }
-            FilledCircle( Color.BLACK, Color.LIGHT_GRAY, 8, x+p.x, y+p.y);
+            PrintConsts.FilledCircle( graphic, Color.BLACK, Color.LIGHT_GRAY, 8, x+p.x, y+p.y);
             indexer += 1;
             p.x += 9;
         }
@@ -271,23 +284,6 @@ public class QSVerticalCardPrinter implements Printable {
             graphic.drawString(ability, x+p.x, y+p.y);
             p.y += graphic.getFont().getSize();
         }
-    }
-
-    public void ShadowText( Font font, Color foreColor, Color backColor, String Text, int X, int Y ) {
-        graphic.setFont(font);
-        graphic.setColor(backColor);
-        graphic.drawString(Text, X, Y+1);
-        graphic.setColor(foreColor);
-        graphic.drawString(Text, X, Y);
-        graphic.setColor(Color.BLACK);
-    }
-
-    public void FilledCircle( Color foreColor, Color backColor, int Size, int X, int Y ) {
-        graphic.setColor(backColor);
-        graphic.fillOval(X, Y, Size, Size);
-        graphic.setColor(foreColor);
-        graphic.drawOval(X, Y, Size, Size);
-        graphic.setColor(Color.BLACK);
     }
 
     public BattleForce getBattleforce() {
@@ -312,5 +308,9 @@ public class QSVerticalCardPrinter implements Printable {
 
     public void setTerrain(boolean useTerrainMod) {
         this.useTerrainMod = useTerrainMod;
+    }
+
+    public void setPrintWarriorData( boolean printData ) {
+        this.printWarriorData = printData;
     }
 }

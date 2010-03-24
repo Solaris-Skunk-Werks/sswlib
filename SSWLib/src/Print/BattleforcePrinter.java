@@ -40,6 +40,7 @@ import battleforce.BattleForce;
 import battleforce.BattleForceStats;
 import filehandlers.ImageTracker;
 import filehandlers.Media;
+import java.awt.Point;
 
 public class BattleforcePrinter implements Printable {
     private BattleForce battleforce;
@@ -120,6 +121,7 @@ public class BattleforcePrinter implements Printable {
     public void Render() {
         x = 20;
         y = 91;
+        Point p = new Point(x, y);
         int Groups = 1,
             PointTotal = 0;
         int y2 = 0;
@@ -136,49 +138,22 @@ public class BattleforcePrinter implements Printable {
             graphic.drawImage(icon, 300, 5, d.width, d.height, null);
         }
 
-
         //Print the Unit Name at the top of the sheet
         graphic.setFont( PrintConsts.TitleFont );
 
+        // Unit Name
         if ( getBattleforce().ForceName.isEmpty() ) { battleforce.ForceName = getBattleforce().Type; }
-        String title = getBattleforce().ForceName;
-        String[] pTitle = new String[]{"", "", "Record Sheet"};
-        int titleY = 23;
-
-        
-        if ( title.length() <= 20 ) {
-            pTitle[0] = title;
-            pTitle[1] = "Record Sheet";
-            pTitle[2] = "";
-            titleY = 30;
-        } else if ( title.length() > 20 && title.length() <= 40 ) {
-            pTitle[0] = title.substring(0, title.lastIndexOf(" ", 20) );
-            title = title.replace(pTitle[0], "").trim();
-            pTitle[1] = title;
-            titleY = 20;
-        } else {
-            pTitle[0] = title.substring(0, title.lastIndexOf(" ", 20) );
-            title = title.replace(pTitle[0], "").trim();
-            int nextIndex = 20;
-            if ( title.length() < nextIndex ) { nextIndex = title.length(); }
-            pTitle[1] = title.substring(0, title.lastIndexOf(" ", nextIndex) );
-            title = title.replace(pTitle[1], "").trim();
-            pTitle[2] = title;
-            titleY = 20;
+        p.y = 24;
+        for ( String line : PrintConsts.wrapText(getBattleforce().ForceName, 20, true) ) {
+            graphic.drawString(line, 356, p.y);
+            p.y += 13;
         }
 
-        for ( int t=0; t < pTitle.length; t++ ) {
-            if ( !pTitle[t].isEmpty() ) {
-                graphic.drawString(pTitle[t], 360, titleY);
-                titleY += 12;
-            }
-        }
-
+        int i = 0;
         //Output individual units
-        for ( int i=0; i < getBattleforce().BattleForceStats.size(); i++ ) {
+        for ( BattleForceStats stats : battleforce.BattleForceStats ) {
             groupChanged = false;
             graphic.setFont( PrintConsts.RegularFont );
-            BattleForceStats stats = (BattleForceStats) getBattleforce().BattleForceStats.get(i);
 
             if ( i == (Groups * UnitSize) ) {
                 //Output Group Totals for previous group
@@ -208,11 +183,15 @@ public class BattleforcePrinter implements Printable {
             graphic.drawString(stats.getPointValue() + " (" + stats.getBasePV() + ")", x + 180, y);
 
             //Image
-            if ( !stats.getImage().isEmpty() && printMechs ) {
-                Image image = imageTracker.getImage(stats.getImage());
-                Dimension d = media.reSize(image, 35d, 33d);
-                image.getScaledInstance(d.width, d.height, Image.SCALE_SMOOTH);
-                graphic.drawImage(image, x, y, d.width, d.height, null);
+            if ( printMechs ) {
+                if ( stats.getImage().replace("../Images/No_Image.png", "").isEmpty() )
+                    stats.setImage( media.FindMatchingImage(stats.getName(), stats.getModel()));
+                if ( !stats.getImage().isEmpty() ) {
+                    Image image = imageTracker.getImage(stats.getImage());
+                    Dimension d = media.reSize(image, 35d, 33d);
+                    image.getScaledInstance(d.width, d.height, Image.SCALE_SMOOTH);
+                    graphic.drawImage(image, x, y, d.width, d.height, null);
+                }
             }
 
             //Movement (MV)
@@ -271,6 +250,7 @@ public class BattleforcePrinter implements Printable {
 
             x = 20;
             y += 49;
+            i++;
         }
 
         graphic.setFont( PrintConsts.RegularFont );

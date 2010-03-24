@@ -28,7 +28,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package Print;
 
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -73,6 +75,10 @@ public class PrintConsts {
                                COLOR_VERT_QS_CARD_BACK = "./Data/Printing/VertQSCardBack.png",
                                BW_VERT_QS_CARD = "./Data/Printing/BWVertQSCard.png",
                                BW_VERT_QS_CARD_BACK = "./Data/Printing/BWVertQSCardBack.png",
+                               COLOR_HORIZ_QS_CARD = "./Data/Printing/HorizQSCard.png",
+                               COLOR_HORIZ_QS_CARD_BACK = "./Data/Printing/HorizQSCardBack.png",
+                               BW_HORIZ_QS_CARD = "./Data/Printing/BWHorizQSCard.png",
+                               BW_HORIZ_QS_CARD_BACK = "./Data/Printing/BWHorizQSCardBack.png",
                                BF_ICON_LIGHT = "./Data/Printing/BF_ICON_Light.png",
                                BF_ICON_MEDIUM = "./Data/Printing/BF_ICON_Medium.png",
                                BF_ICON_HEAVY = "./Data/Printing/BF_ICON_Heavy.png",
@@ -112,6 +118,23 @@ public class PrintConsts {
     public final static Font XtraSmallFont = BaseFont.deriveFont(Font.PLAIN, 6);
     public final static Font TinyFont = BaseFont.deriveFont(Font.PLAIN, 5);
     public final static Font SectionHeaderFont = BaseFont.deriveFont(Font.PLAIN, 11);
+
+    public static void ShadowText( Graphics2D graphic, Font font, Color foreColor, Color backColor, String Text, int X, int Y ) {
+        graphic.setFont(font);
+        graphic.setColor(backColor);
+        graphic.drawString(Text, X, Y+1);
+        graphic.setColor(foreColor);
+        graphic.drawString(Text, X, Y);
+        graphic.setColor(Color.BLACK);
+    }
+
+    public static void FilledCircle( Graphics2D graphic, Color foreColor, Color backColor, int Size, int X, int Y ) {
+        graphic.setColor(backColor);
+        graphic.fillOval(X, Y, Size, Size);
+        graphic.setColor(foreColor);
+        graphic.drawOval(X, Y, Size, Size);
+        graphic.setColor(Color.BLACK);
+    }
 
     public static String [] wrapText (String text, int len, boolean ignoreLineBreaks) {
         // return empty array for null text

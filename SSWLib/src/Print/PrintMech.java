@@ -58,8 +58,11 @@ public class PrintMech implements Printable {
                     PrintPilot = true,
                     UseA4Paper = false,
                     Canon = false,
-                    TRO = false;
+                    TRO = false,
+                    printMech = false,
+                    printLogo = false;
     private String PilotName = "",
+                    GroupName = "",
                     currentAmmoFormat = "";
     private int Piloting = 5,
                 Gunnery = 4,
@@ -80,7 +83,7 @@ public class PrintMech implements Printable {
     public PrintMech( Mech m, Image i, boolean adv, boolean A4, ImageTracker images) {
         CurMech = m;
         imageTracker = images;
-        MechImage = imageTracker.getImage(m.GetSSWImage());
+        if ( !m.GetSSWImage().equals("../Images/No_Image.png")  ) MechImage = imageTracker.getImage(m.GetSSWImage());
         Advanced = adv;
         BV = CommonTools.GetAdjustedBV(CurMech.GetCurrentBV(), Gunnery, Piloting);
         UseA4Paper = A4;
@@ -137,11 +140,25 @@ public class PrintMech implements Printable {
     }
 
     public void setMechImage(Image MechImage) {
-        if ( MechImage != null) { this.MechImage = MechImage; }
+        if ( MechImage != null) {
+            this.MechImage = MechImage;
+            this.printMech = true;
+        }
+    }
+
+    public void setPrintMech( Boolean PrintMech ) {
+        this.printMech = PrintMech;
     }
 
     public void setLogoImage(Image LogoImage) {
-        if ( LogoImage != null) { this.LogoImage = LogoImage; }
+        if ( LogoImage != null) {
+            this.LogoImage = LogoImage;
+            this.printLogo = true;
+        }
+    }
+
+    public void setPrintLogo( Boolean PrintLogo ) {
+        this.printLogo = PrintLogo;
     }
 
     public void setBV(double BV) {
@@ -239,11 +256,17 @@ public class PrintMech implements Printable {
         Point start = points.GetMechImageLoc();
         start.x -= 3;
         start.y -= 6;
-        if( getMechImage() != null ) {
-            //graphics.drawRect(start.x, start.y, 160, 200);
-            Dimension d = media.reSize(getMechImage(), 160, 200);
-            Point offset = media.offsetImageCenter( new Dimension(160, 200), d);
-            graphics.drawImage( getMechImage(), start.x + offset.x, start.y + offset.y, d.width, d.height, null );
+        if ( printMech ) {
+            if ( MechImage == null ) {
+                String imagePath = media.FindMatchingImage(CurMech.GetName(), CurMech.GetModel());
+                if ( !imagePath.isEmpty() ) MechImage = media.GetImage(imagePath);
+            }
+            if( MechImage != null ) {
+                //graphics.drawRect(start.x, start.y, 160, 200);
+                Dimension d = media.reSize(getMechImage(), 160, 200);
+                Point offset = media.offsetImageCenter( new Dimension(160, 200), d);
+                graphics.drawImage( getMechImage(), start.x + offset.x, start.y + offset.y, d.width, d.height, null );
+            }
         }
 
         if ( LogoImage != null ) {
@@ -453,7 +476,14 @@ public class PrintMech implements Printable {
             graphics.drawLine(p[PrintConsts.PILOT_GUN].x, p[PrintConsts.PILOT_GUN].y+1, p[PrintConsts.PILOT_GUN].x + 14, p[PrintConsts.PILOT_GUN].y+1);
             graphics.drawLine(p[PrintConsts.PILOT_PILOT].x-4, p[PrintConsts.PILOT_PILOT].y+1, p[PrintConsts.PILOT_PILOT].x + 10, p[PrintConsts.PILOT_PILOT].y+1);
         } else if( PrintPilot ) {
-            graphics.drawString( PilotName, p[PrintConsts.PILOT_NAME].x, p[PrintConsts.PILOT_NAME].y );
+            graphics.setFont( PrintConsts.SmallFont );
+            if ( !GroupName.isEmpty() ) {
+                graphics.drawString( PilotName, p[PrintConsts.PILOT_NAME].x, p[PrintConsts.PILOT_NAME].y-4 );
+                graphics.drawString( GroupName, p[PrintConsts.PILOT_NAME].x, p[PrintConsts.PILOT_NAME].y+3 );
+            } else {
+                graphics.drawString( PilotName, p[PrintConsts.PILOT_NAME].x, p[PrintConsts.PILOT_NAME].y );
+            }
+            graphics.setFont( PrintConsts.PlainFont );
             graphics.drawString( Gunnery + "", p[PrintConsts.PILOT_GUN].x, p[PrintConsts.PILOT_GUN].y );
             graphics.drawString( Piloting + "", p[PrintConsts.PILOT_PILOT].x, p[PrintConsts.PILOT_PILOT].y );
         }
@@ -817,6 +847,14 @@ public class PrintMech implements Printable {
             }
         }
         return retval;
+    }
+
+    public String getGroupName() {
+        return GroupName;
+    }
+
+    public void setGroupName(String GroupName) {
+        this.GroupName = GroupName;
     }
 
     private class PlaceableInfo {

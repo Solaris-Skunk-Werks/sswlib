@@ -91,7 +91,7 @@ public class ForceListPrinter implements Printable {
         Graphic.drawImage( Recordsheet, 0, 0, 306, 49, null);
         setFont(PrintConsts.BaseFont.deriveFont(Font.BOLD));
         currentY = 16;
-        for ( String line : PrintConsts.wrapText(Title, 28, false) ) {
+        for ( String line : PrintConsts.wrapText(Title, 25, false) ) {
             Graphic.drawString(line, 310, currentY);
             currentY += Graphic.getFont().getSize();
         }

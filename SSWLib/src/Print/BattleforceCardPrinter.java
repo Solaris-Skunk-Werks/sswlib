@@ -57,6 +57,7 @@ public class BattleforceCardPrinter implements Printable {
                 ElementLimit = 2;
     private boolean printMechs = true,
                     printLogo = true,
+                    printWarriorData = true,
                     useTerrainMod = false;
 
     private int x = 0,
@@ -155,15 +156,19 @@ public class BattleforceCardPrinter implements Printable {
             elementCount += 1;
 
             //Image
-            if ( !stats.getImage().isEmpty() && printMechs ) {
-                Image image = imageTracker.getImage(stats.getImage());
-                Dimension dim = media.reSize(image, 110d, 130d);
-                image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
-                Point offset = media.offsetImageBottom( new Dimension(110, 140), dim);
-                graphic.drawImage(image, x+10+offset.x, y+58+offset.y, dim.width, dim.height, null);
+            if ( printMechs ) {
+                if ( stats.getImage().replace("../Images/No_Image.png", "").isEmpty() )
+                    stats.setImage( media.FindMatchingImage(stats.getName(), stats.getModel()));
+                if ( !stats.getImage().isEmpty() ) {
+                    Image image = imageTracker.getImage(stats.getImage());
+                    Dimension dim = media.reSize(image, 110d, 130d);
+                    image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
+                    Point offset = media.offsetImageBottom( new Dimension(110, 140), dim);
+                    graphic.drawImage(image, x+10+offset.x, y+58+offset.y, dim.width, dim.height, null);
 
-                if ( icon != null && printLogo ) {
-                    graphic.drawImage(icon, x+105, y+58, d.width, d.height, null);
+                    if ( icon != null && printLogo ) {
+                        graphic.drawImage(icon, x+105, y+62, d.width, d.height, null);
+                    }
                 }
             }
 
@@ -173,9 +178,18 @@ public class BattleforceCardPrinter implements Printable {
             //Unit Name
             graphic.drawString( stats.getElement(), x+5, y+55);
 
-            //Pilot Name
-            graphic.setFont( PrintConsts.SmallFont );
-            graphic.drawString( stats.getWarrior(), x+5, y+62);
+            if ( printWarriorData ) {
+                //Pilot Name
+                graphic.setFont( PrintConsts.SmallFont );
+                graphic.drawString( stats.getWarrior(), x+5, y+62);
+
+                //Unit
+                //graphic.drawString( stats.getUnit(), x+5, y+68);
+
+                graphic.setFont( PrintConsts.PlainFont );
+                //Skill
+                graphic.drawString(stats.getSkill()+"", x+127, y+218);
+            }
 
             graphic.setFont( PrintConsts.PlainFont );
             //Movement (MV)
@@ -191,9 +205,6 @@ public class BattleforceCardPrinter implements Printable {
 
             //Weight Class
             graphic.drawString(stats.getWeight()+"", x+111, y+218);
-
-            //Skill
-            graphic.drawString(stats.getSkill()+"", x+127, y+218);
 
             //Overheat (OV)
             graphic.drawString(stats.getOverheat()+"", x+144, y+218);
@@ -268,5 +279,9 @@ public class BattleforceCardPrinter implements Printable {
 
     public void setTerrain(boolean useTerrainMod) {
         this.useTerrainMod = useTerrainMod;
+    }
+
+    public void setPrintWarriorData(boolean printData ) {
+        this.printWarriorData = printData;
     }
 }
