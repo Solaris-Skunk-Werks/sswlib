@@ -40,6 +40,7 @@ import javax.swing.JLabel;
 import common.ImageFilter;
 import common.ImagePreview;
 import java.awt.Point;
+import java.net.URL;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
@@ -123,12 +124,17 @@ public class Media {
     }
 
     public void setLogo( javax.swing.JLabel lblLogo, String url ) {
+        ImageIcon icon;
         if ( !url.isEmpty() ) {
             try {
-               ImageIcon icon = new ImageIcon(url);
-               setLogo( lblLogo, icon );
+                if ( url.startsWith("http") ) {
+                    icon = new ImageIcon( new URL(url) );
+                } else {
+                    icon = new ImageIcon(url);
+                }
+                setLogo(lblLogo, icon);
             } catch ( Exception e ) {
-
+                System.out.println(e.getMessage());
             }
         }
     }
