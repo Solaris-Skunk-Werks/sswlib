@@ -34,6 +34,8 @@ import common.*;
 import battleforce.BattleForce;
 import filehandlers.ImageTracker;
 
+import filehandlers.MechWriter;
+import filehandlers.Media;
 import java.awt.Cursor;
 import java.awt.print.PageFormat;
 import java.util.Vector;
@@ -67,7 +69,6 @@ public class dlgPrint extends javax.swing.JDialog {
         chkBFBacks.setSelected(bfbPrefs.getBoolean("BF_Backs", false));
         chkUseColor.setSelected(bfbPrefs.getBoolean("BF_Color", false));
 
-        if ( bfbPrefs.getInt(Constants.Format_BattleForceSheetChoice, 0) > 2 ) bfbPrefs.putInt(Constants.Format_BattleForceSheetChoice, 2);
         cmbBFSheetType.setSelectedIndex(bfbPrefs.getInt(Constants.Format_BattleForceSheetChoice, 0));
         cmbRSType.setSelectedIndex(bfbPrefs.getInt(Constants.Format_RecordsheetChoice, 0));
 
@@ -112,15 +113,16 @@ public class dlgPrint extends javax.swing.JDialog {
                 chkBFBacks.setEnabled(false);
                 chkUseColor.setEnabled(false);
                 break;
+            case 2:
+                chkBFOnePerPage.setSelected(true);
+                chkBFOnePerPage.setEnabled(false);
+                chkBFBacks.setEnabled(false);
+                chkUseColor.setEnabled(false);
+                break;
             default:
                 chkBFOnePerPage.setEnabled(false);
                 chkBFBacks.setEnabled(true);
                 chkUseColor.setEnabled(true);
-        }
-
-        if (cmbBFSheetType.getSelectedIndex() == 1) {
-            chkBFOnePerPage.setSelected(true);
-            chkBFOnePerPage.setEnabled(false);
         }
 
         String iconPath = "/images/Recordsheet_BG.png";
@@ -132,8 +134,11 @@ public class dlgPrint extends javax.swing.JDialog {
         if ( chkPrintBattleforce.isSelected() ) {
             iconPath = "/images/BattleForce_BG.png";
             switch ( cmbBFSheetType.getSelectedIndex() ) {
-                case 2:
+                case 3:
                     iconPath = "/images/BFVertColor_BG.png";
+                    break;
+                case 2:
+                    iconPath = "/images/BFCard_BG.png";
                     break;
                 case 1:
                     iconPath = "/images/QSCard_BG.png";
@@ -211,6 +216,20 @@ public class dlgPrint extends javax.swing.JDialog {
                     break;
 
                 case 2:
+                    Vector<BattleForce> forces = new Vector<BattleForce>();
+                    forces.addAll(scenario.getAttackerForce().toBattleForceByGroup( 6 ));
+                    if ( scenario.getDefenderForce().getUnits().size() > 0 ) { forces.addAll(scenario.getDefenderForce().toBattleForceByGroup( 6 )); }
+
+                    for ( BattleForce f : forces ) {
+                        BattleforceCardPrinter bf = new BattleforceCardPrinter(f, imageTracker);
+                        bf.setPrintLogo(chkLogo.isSelected());
+                        bf.setPrintMechs(chkImage.isSelected());
+                        if ( chkBFTerrainMV.isSelected() ) bf.setTerrain(true);
+                        printer.Append( BFBPrinter.Letter.toPage(), bf);
+                    }
+                    break;
+
+                case 3:
                     int MaxUnits = 8;
                     if ( chkBFBacks.isSelected() ) MaxUnits = 4;
                     for ( BattleForce f : scenario.toBattleForceBySize(MaxUnits) ) {
@@ -239,11 +258,10 @@ public class dlgPrint extends javax.swing.JDialog {
                         PrintMech pm = new PrintMech(u.m,u.getMechwarrior(), u.getGunnery(), u.getPiloting(), imageTracker);
                         pm.setCanon(chkCanon.isSelected());
                         pm.setCharts(chkTables.isSelected());
+                        pm.setPrintMech(chkImage.isSelected());
+                        pm.setPrintLogo(chkLogo.isSelected());
                         if ( chkUseHexConversion.isSelected() ) {
                             pm.SetMiniConversion(cmbHexConvFactor.getSelectedIndex());
-                        }
-                        if ( !chkImage.isSelected() ) {
-                            pm.setMechImage(null);
                         }
                         if ( chkLogo.isSelected() ) {
                             pm.setLogoImage(imageTracker.getImage(g.getLogo()));
@@ -306,10 +324,10 @@ public class dlgPrint extends javax.swing.JDialog {
         lblRecordsheetIcon1 = new javax.swing.JLabel();
         pnlHow = new javax.swing.JPanel();
         pnlGeneral = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         chkLogo = new javax.swing.JCheckBox();
         chkImage = new javax.swing.JCheckBox();
         btnImageMgr = new javax.swing.JButton();
+        btnClearImages = new javax.swing.JButton();
         pnlBattleForce = new javax.swing.JPanel();
         chkBFOnePerPage = new javax.swing.JCheckBox();
         cmbBFSheetType = new javax.swing.JComboBox();
@@ -402,7 +420,6 @@ public class dlgPrint extends javax.swing.JDialog {
         pnlWhatLayout.setHorizontalGroup(
             pnlWhatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlWhatLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
                 .addGroup(pnlWhatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(chkPrintForce)
                     .addGroup(pnlWhatLayout.createSequentialGroup()
@@ -432,7 +449,7 @@ public class dlgPrint extends javax.swing.JDialog {
                     .addGroup(pnlWhatLayout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(lblBattleForceIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         pnlWhatLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkPrintBattleforce, chkPrintFireChits, chkPrintForce, chkPrintRecordsheets, chkPrintScenario});
@@ -462,10 +479,6 @@ public class dlgPrint extends javax.swing.JDialog {
 
         pnlGeneral.setBorder(javax.swing.BorderFactory.createTitledBorder("General Options"));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 10));
-        jLabel1.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel1.setText("* Must be added to the file already");
-
         chkLogo.setSelected(true);
         chkLogo.setText("Print Unit Logo");
         chkLogo.addActionListener(new java.awt.event.ActionListener() {
@@ -483,12 +496,21 @@ public class dlgPrint extends javax.swing.JDialog {
         });
 
         btnImageMgr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/images-stack.png"))); // NOI18N
-        btnImageMgr.setIconTextGap(2);
-        btnImageMgr.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        btnImageMgr.setText("Manage Images");
+        btnImageMgr.setMargin(new java.awt.Insets(2, 2, 2, 2));
         btnImageMgr.setOpaque(false);
         btnImageMgr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnImageMgrActionPerformed(evt);
+            }
+        });
+
+        btnClearImages.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/eraser.png"))); // NOI18N
+        btnClearImages.setText("Clear Images");
+        btnClearImages.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btnClearImages.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearImagesActionPerformed(evt);
             }
         });
 
@@ -499,25 +521,26 @@ public class dlgPrint extends javax.swing.JDialog {
             .addGroup(pnlGeneralLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlGeneralLayout.createSequentialGroup()
-                        .addComponent(chkImage)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnImageMgr))
+                    .addComponent(chkImage)
                     .addComponent(chkLogo)
-                    .addComponent(jLabel1))
-                .addContainerGap(14, Short.MAX_VALUE))
+                    .addGroup(pnlGeneralLayout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnClearImages, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnImageMgr, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlGeneralLayout.setVerticalGroup(
             pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlGeneralLayout.createSequentialGroup()
-                .addGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(chkImage)
-                    .addComponent(btnImageMgr))
-                .addGap(1, 1, 1)
-                .addComponent(jLabel1)
+                .addComponent(chkImage)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnImageMgr)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnClearImages)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(chkLogo)
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         pnlBattleForce.setBorder(javax.swing.BorderFactory.createTitledBorder("BattleForce Options"));
@@ -529,7 +552,7 @@ public class dlgPrint extends javax.swing.JDialog {
             }
         });
 
-        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "*Strategic Ops", "*QuickStrike Cards", "Vertical Cards" }));
+        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "*Strategic Ops", "*QuickStrike Cards", "BattleForce Sheet", "Vertical Cards" }));
         cmbBFSheetType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 itemChanged(evt);
@@ -572,17 +595,17 @@ public class dlgPrint extends javax.swing.JDialog {
                     .addComponent(chkBFTerrainMV)
                     .addComponent(chkBFOnePerPage)
                     .addGroup(pnlBattleForceLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(cmbBFSheetType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel3))
-                .addContainerGap(16, Short.MAX_VALUE))
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbBFSheetType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         pnlBattleForceLayout.setVerticalGroup(
             pnlBattleForceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBattleForceLayout.createSequentialGroup()
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbBFSheetType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlBattleForceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(cmbBFSheetType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(chkBFOnePerPage)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -590,8 +613,7 @@ public class dlgPrint extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chkUseColor)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkBFBacks)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(chkBFBacks))
         );
 
         pnlRecordsheet.setBorder(javax.swing.BorderFactory.createTitledBorder("Recordsheet Options"));
@@ -691,7 +713,7 @@ public class dlgPrint extends javax.swing.JDialog {
                 .addComponent(chkUseHexConversion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(1, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pnlHowLayout = new javax.swing.GroupLayout(pnlHow);
@@ -703,17 +725,14 @@ public class dlgPrint extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlRecordsheet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlBattleForce, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(pnlBattleForce, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         pnlHowLayout.setVerticalGroup(
             pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlHowLayout.createSequentialGroup()
-                .addGroup(pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnlBattleForce, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(pnlRecordsheet, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(pnlGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnlRecordsheet, 0, 146, Short.MAX_VALUE)
+            .addComponent(pnlBattleForce, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         btnPrint.setText("Print");
@@ -763,14 +782,13 @@ public class dlgPrint extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(btnPreview)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(pnlWhat, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlHow, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)))
+                    .addComponent(pnlHow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnPreview)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 435, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblStatus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
+                    .addComponent(pnlWhat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -784,9 +802,8 @@ public class dlgPrint extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnPreview)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblStatus)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addComponent(lblStatus))
         );
 
         pack();
@@ -847,15 +864,38 @@ public class dlgPrint extends javax.swing.JDialog {
 }//GEN-LAST:event_chkBFTerrainMVitemChanged
 
     private void chkUseColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkUseColorActionPerformed
-        // TODO add your handling code here:
+        Verify();
 }//GEN-LAST:event_chkUseColorActionPerformed
 
     private void chkBFBacksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkBFBacksActionPerformed
-        // TODO add your handling code here:
+        Verify();
 }//GEN-LAST:event_chkBFBacksActionPerformed
+
+    private void btnClearImagesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearImagesActionPerformed
+        MechWriter writer = new MechWriter();
+
+        if ( Media.Options(this, "Are you sure you want to remove all pre-selected images from the units in this list?", "Confirm Image Removal") == Media.OK) {
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            for ( Group g : scenario.getGroups() ) {
+                for ( Unit u : g.getUnits() ) {
+                    try {
+                        u.LoadMech();
+                        u.m.SetSSWImage("../Images/No_Image.png");
+                        writer.setMech(u.m);
+                        writer.WriteXML(u.Filename);
+                    } catch ( Exception e ) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+            this.setCursor(Cursor.getDefaultCursor());
+            Media.Messager("Images have been removed from all units in the list.");
+        }
+}//GEN-LAST:event_btnClearImagesActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnClearImages;
     private javax.swing.JButton btnImageMgr;
     private javax.swing.JButton btnPreview;
     private javax.swing.JButton btnPrint;
@@ -876,7 +916,6 @@ public class dlgPrint extends javax.swing.JDialog {
     private javax.swing.JComboBox cmbBFSheetType;
     private javax.swing.JComboBox cmbHexConvFactor;
     private javax.swing.JComboBox cmbRSType;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;

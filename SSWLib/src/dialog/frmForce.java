@@ -129,7 +129,6 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         btnSave = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         btnPrintForce = new javax.swing.JButton();
-        btnPreview = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         btnExportMUL = new javax.swing.JButton();
         btnExportMTFs = new javax.swing.JButton();
@@ -168,7 +167,6 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         mnuSave = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JSeparator();
         mnuPrint = new javax.swing.JMenuItem();
-        mnuPreview = new javax.swing.JMenuItem();
         mnuExport = new javax.swing.JMenu();
         mnuExportMUL = new javax.swing.JMenuItem();
         mnuExportMTF = new javax.swing.JMenuItem();
@@ -226,7 +224,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         tlbActions.add(jSeparator2);
 
         btnPrintForce.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/printer.png"))); // NOI18N
-        btnPrintForce.setToolTipText("Print Force List");
+        btnPrintForce.setToolTipText("Preview/Print Forces");
         btnPrintForce.setFocusable(false);
         btnPrintForce.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnPrintForce.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -236,18 +234,6 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
             }
         });
         tlbActions.add(btnPrintForce);
-
-        btnPreview.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/projection-screen.png"))); // NOI18N
-        btnPreview.setToolTipText("Preview");
-        btnPreview.setFocusable(false);
-        btnPreview.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnPreview.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnPreview.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPreviewActionPerformed(evt);
-            }
-        });
-        tlbActions.add(btnPreview);
         tlbActions.add(jSeparator1);
 
         btnExportMUL.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/document--arrow.png"))); // NOI18N
@@ -570,14 +556,6 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         });
         mnuFile.add(mnuPrint);
 
-        mnuPreview.setText("Print Preview");
-        mnuPreview.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuPreviewActionPerformed(evt);
-            }
-        });
-        mnuFile.add(mnuPreview);
-
         jMenuBar1.add(mnuFile);
 
         mnuExport.setText("Export");
@@ -788,10 +766,18 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
     }//GEN-LAST:event_btnOpenActionPerformed
 
     private void btnPrintForceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintForceActionPerformed
+        PagePrinter printer = new PagePrinter();
+        printer.setJobName(force.ForceName);
         Scenario scenario = new Scenario(force);
-        dlgPrint print = new dlgPrint(this, true, scenario, imageTracker);
-        print.setLocationRelativeTo(this);
-        print.setVisible(true);
+
+        //Force List
+        ForceListPrinter sheet = new ForceListPrinter(imageTracker);
+        sheet.AddForce(force);
+        printer.Append( BFBPrinter.Letter.toPage(), sheet );
+
+        dlgPreview prv = new dlgPreview("Print Preview", this, printer, scenario, imageTracker);
+        prv.setLocationRelativeTo(this);
+        prv.setVisible(true);
     }//GEN-LAST:event_btnPrintForceActionPerformed
 
     private void btnExportMULActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportMULActionPerformed
@@ -899,21 +885,6 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         force.ForceName = txtForceName.getText();
     }//GEN-LAST:event_txtForceNameFocusLost
 
-    private void btnPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviewActionPerformed
-        PagePrinter printer = new PagePrinter();
-        printer.setJobName(force.ForceName);
-        Scenario scenario = new Scenario(force);
-
-        //Force List
-        ForceListPrinter sheet = new ForceListPrinter(imageTracker);
-        sheet.AddForce(force);
-        printer.Append( BFBPrinter.Letter.toPage(), sheet );
-
-        dlgPreview prv = new dlgPreview("Print Preview", this, printer, scenario, imageTracker);
-        prv.setLocationRelativeTo(this);
-        prv.setVisible(true);
-    }//GEN-LAST:event_btnPreviewActionPerformed
-
     private void txtForceNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtForceNameKeyReleased
         force.ForceName = txtForceName.getText();
     }//GEN-LAST:event_txtForceNameKeyReleased
@@ -1016,10 +987,6 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         btnPrintForceActionPerformed(evt);
     }//GEN-LAST:event_mnuPrintActionPerformed
 
-    private void mnuPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPreviewActionPerformed
-        btnPreviewActionPerformed(evt);
-    }//GEN-LAST:event_mnuPreviewActionPerformed
-
     private void mnuViewTWActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuViewTWActionPerformed
         cmbView.setSelectedIndex(0);
     }//GEN-LAST:event_mnuViewTWActionPerformed
@@ -1048,7 +1015,6 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
     private javax.swing.JButton btnExportMUL;
     private javax.swing.JButton btnImages;
     private javax.swing.JButton btnOpen;
-    private javax.swing.JButton btnPreview;
     private javax.swing.JButton btnPrintForce;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnRemoveUnit;
@@ -1083,7 +1049,6 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
     private javax.swing.JMenu mnuFile;
     private javax.swing.JMenuItem mnuOpen;
     private javax.swing.JMenu mnuOptions;
-    private javax.swing.JMenuItem mnuPreview;
     private javax.swing.JMenuItem mnuPrint;
     private javax.swing.JMenu mnuRun;
     private javax.swing.JMenuItem mnuRunBFB;
