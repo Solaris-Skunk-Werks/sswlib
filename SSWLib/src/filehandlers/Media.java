@@ -41,11 +41,16 @@ import common.ImageFilter;
 import common.ImagePreview;
 import java.awt.Point;
 import java.util.Vector;
+import java.util.prefs.Preferences;
+import javax.swing.JOptionPane;
 
 public class Media {
     MediaTracker Tracker = new MediaTracker(new JLabel());
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     JFileChooser fileChooser = new JFileChooser();
+
+    public static final int OK = JOptionPane.OK_OPTION,
+                            CANCEL = JOptionPane.CANCEL_OPTION;
 
     public Media() {
     }
@@ -91,6 +96,7 @@ public class Media {
     }
     public Image GetImage(String filename) {
         //System.out.println("Loading " + filename);
+        if ( filename.isEmpty() ) return null;
         Image retval = toolkit.getImage( filename );
         Tracker.addImage( retval, 0 );
         try {
@@ -169,6 +175,7 @@ public class Media {
     }
 
     public Dimension reSize(Image image, double MaxWidth, double MaxHeight ) {
+        if ( image == null ) return new Dimension(0,0);
         Dimension imageSize = new Dimension(image.getWidth(null), image.getHeight(null) );
 
         if ( imageSize.width > MaxWidth || imageSize.height > MaxHeight ) {
@@ -226,12 +233,69 @@ public class Media {
         return path;
     }
 
+    public String FindMatchingImage( String Name, String Model, String DirectoryPath ) {
+        Preferences Prefs = Preferences.userNodeForPackage("/ssw/gui/frmMain".getClass());
+        if ( DirectoryPath.isEmpty() ) DirectoryPath = Prefs.get("DefaultImagePath", "");
+        if ( DirectoryPath.isEmpty() ) return "";
+
+        //Create a list of the names to check first starting with the most accurate and working down
+        Name = Name.trim();
+        Model = Model.trim();
+        Vector<String> PossibleNames = new Vector<String>();
+        PossibleNames.add(Name + " " + Model);
+        PossibleNames.add(Model + " " + Name);
+        PossibleNames.add(Name);
+        PossibleNames.add(Name.replace(" ", ""));
+        if ( Name.contains("(") ) {
+            PossibleNames.add(Name.split("\\(")[1].replace("(", "").replace(")", "") + " (" + Name.split("\\(")[0].trim() + ") " + Model);
+            PossibleNames.add(Model + " " + Name.split("\\(")[1].replace("(", "").replace(")", "") + " (" + Name.split("\\(")[0].trim() + ")");
+            PossibleNames.add(Name.split("\\(")[1].replace("(", "").replace(")", "") + " (" + Name.split("\\(")[0].trim() + ")");
+            PossibleNames.add(Name.split("\\(")[0].trim());
+            PossibleNames.add(Name.split("\\(")[0].replace(" ", ""));
+            PossibleNames.add(Name.split("\\(")[1].replace("(", "").replace(")", ""));
+            PossibleNames.add(Name.split("\\(")[1].replace("(", "").replace(")", "").replace(" ", ""));
+        }
+
+        if ( DirectoryPath.endsWith(".jpg") || 
+             DirectoryPath.endsWith(".png") || 
+             DirectoryPath.endsWith(".gif") ||
+             DirectoryPath.endsWith(".ssw") ) DirectoryPath = DirectoryPath.substring(0, DirectoryPath.lastIndexOf("\\")+1);
+        if ( !DirectoryPath.endsWith("\\") ) DirectoryPath += "\\";
+
+        //DirectoryPath = DirectoryPath.substring(0, DirectoryPath.lastIndexOf(File.separator) + 1);
+        File d = new File(DirectoryPath);
+        if ( d.isDirectory() ) {
+            String[] fileList = d.list();
+            if( fileList.length == 0 ) { return ""; }
+
+            for ( String nameToCheck : PossibleNames ) {
+                for ( String f : fileList ) {
+                    if ( f.substring(0, f.lastIndexOf(".")).equals( nameToCheck ) ) return DirectoryPath + f;
+                }
+            }
+        }
+
+        return "";
+    }
+
+    public String FindMatchingImage( String Name, String Model ) {
+        return FindMatchingImage( Name, Model, "");
+    }
+
+    public String FindMatchingImage( String Name ) {
+        return FindMatchingImage( Name, "" );
+    }
+
     public static void Messager(String message) {
         javax.swing.JOptionPane.showMessageDialog(null, message);
     }
 
     public static void Messager(Component component, String message) {
         javax.swing.JOptionPane.showMessageDialog(component, message);
+    }
+
+    public static int Options(Component component, String Message, String Title) {
+        return javax.swing.JOptionPane.showOptionDialog(component, Message, Title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
     }
     
     private class ExtensionFilter extends javax.swing.filechooser.FileFilter {
@@ -251,5 +315,4 @@ public class Media {
             return "*." + Extension;
         }
     }
-
 }
