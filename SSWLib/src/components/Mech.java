@@ -1390,6 +1390,9 @@ public class Mech implements ifUnit, ifBattleforce {
             info += count + " " + name + ", ";
         }
 
+        if( UsingTC() ) {
+            info += GetTC().ChatName() + ", ";
+        }
         if( HasNullSig() ) {
             info += NullSig.ChatName() + ", ";
         }
