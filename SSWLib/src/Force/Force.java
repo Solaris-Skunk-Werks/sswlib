@@ -93,7 +93,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
         Load( ForceNode, Version);
     }
 
-    public void Load( Node ForceNode, int Version ) {
+    public void Load( Node ForceNode, int Version ) throws Exception {
         this.ForceName = ForceNode.getAttributes().getNamedItem("name").getTextContent().trim();
         this.LogoPath = ForceNode.getAttributes().getNamedItem("logo").getTextContent().trim();
         if ( ForceNode.getAttributes().getNamedItem("type") != null )
@@ -102,7 +102,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
         for (int i=0; i < ForceNode.getChildNodes().getLength(); i++) {
             Node n = ForceNode.getChildNodes().item(i);
             if (n.getNodeName().equals("group")) {
-                Groups.add( new Group(n, Version, this) );
+                    Groups.add( new Group(n, Version, this) );
             }
         }
 
@@ -143,7 +143,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
             }
             RefreshBV();
         } catch ( Exception e ) {
-            throw new Exception("Unable to load Force");
+            throw new Exception("Unable to load Force\n" + e.getMessage());
         }
     }
 

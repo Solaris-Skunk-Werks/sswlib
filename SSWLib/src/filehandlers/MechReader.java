@@ -149,8 +149,12 @@ public class MechReader {
 
         n = d.getElementsByTagName( "battleforce" );
         if ( n.getLength() > 0 ) {
-            Data.setBattleForceStats( new BattleForceStats(n.item(0)) );
-            Data.getBattleForceStats().setElement(Data.getFullName());
+            try {
+                Data.setBattleForceStats( new BattleForceStats(n.item(0)) );
+                Data.getBattleForceStats().setElement(Data.getFullName());
+            } catch ( Exception e ) {
+                System.out.println(e.getMessage());
+            }
         }
 
         n = d.getElementsByTagName( "battle_value" );
@@ -184,7 +188,11 @@ public class MechReader {
                     if (node.getNodeName().equals("cost")) {Config.setCost( Double.parseDouble( node.getTextContent() ) );}
                     if (node.getNodeName().equals("source")) {Config.setSource( node.getTextContent() );}
                     if (node.getNodeName().equals("info")) {Config.setInfo( node.getTextContent() );}
-                    if (node.getNodeName().equals("battleforce")) {Config.setBattleForceStats( new BattleForceStats( node ) );}
+                    try {
+                        if (node.getNodeName().equals("battleforce")) {Config.setBattleForceStats( new BattleForceStats( node ) );}
+                    } catch ( Exception e ) {
+                        System.out.println(e.getMessage());
+                    }
                 }
 
                 Data.Configurations.add(Config);

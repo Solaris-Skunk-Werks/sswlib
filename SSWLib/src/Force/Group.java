@@ -28,7 +28,7 @@ public class Group {
         this.Logo = force.LogoPath;
     }
 
-    public Group( Node node, int Version, Force force ) {
+    public Group( Node node, int Version, Force force ) throws Exception {
         this.force = force;
         this.Name = node.getAttributes().getNamedItem("name").getTextContent().trim();
         this.Type = force.getType();

@@ -106,25 +106,30 @@ public class BattleForceStats {
         setPiloting(Piloting);
     }
 
-    public BattleForceStats( Node n ) {
-        BasePV = Integer.parseInt(n.getAttributes().getNamedItem("pv").getTextContent());
-        PV = BasePV;
-        MV = n.getAttributes().getNamedItem("mv").getTextContent();
-        setTerrain();
-        Wt = Integer.parseInt(n.getAttributes().getNamedItem("wt").getTextContent());
-        S = Integer.parseInt(n.getAttributes().getNamedItem("s").getTextContent());
-        M = Integer.parseInt(n.getAttributes().getNamedItem("m").getTextContent());
-        L = Integer.parseInt(n.getAttributes().getNamedItem("l").getTextContent());
-        E = Integer.parseInt(n.getAttributes().getNamedItem("e").getTextContent());
-        OV = Integer.parseInt(n.getAttributes().getNamedItem("ov").getTextContent());
-        Armor = Integer.parseInt(n.getAttributes().getNamedItem("armor").getTextContent());
-        Internal = Integer.parseInt(n.getAttributes().getNamedItem("internal").getTextContent());
-        String abilities = n.getAttributes().getNamedItem("abilities").getTextContent();
-        if ( !abilities.isEmpty() && abilities.contains(",") ) {
-            String[] ability = abilities.split(",");
-            for ( String item : ability ) {
-                Abilities.add(item.trim());
+    public BattleForceStats( Node n ) throws Exception {
+        try {
+            BasePV = Integer.parseInt(n.getAttributes().getNamedItem("pv").getTextContent());
+            PV = BasePV;
+            MV = n.getAttributes().getNamedItem("mv").getTextContent();
+            setTerrain();
+            Wt = Integer.parseInt(n.getAttributes().getNamedItem("wt").getTextContent());
+            S = Integer.parseInt(n.getAttributes().getNamedItem("s").getTextContent());
+            M = Integer.parseInt(n.getAttributes().getNamedItem("m").getTextContent());
+            L = Integer.parseInt(n.getAttributes().getNamedItem("l").getTextContent());
+            E = Integer.parseInt(n.getAttributes().getNamedItem("e").getTextContent());
+            OV = Integer.parseInt(n.getAttributes().getNamedItem("ov").getTextContent());
+            Armor = Integer.parseInt(n.getAttributes().getNamedItem("armor").getTextContent());
+            Internal = Integer.parseInt(n.getAttributes().getNamedItem("internal").getTextContent());
+            String abilities = n.getAttributes().getNamedItem("abilities").getTextContent();
+            if ( !abilities.isEmpty() && abilities.contains(",") ) {
+                String[] ability = abilities.split(",");
+                for ( String item : ability ) {
+                    Abilities.add(item.trim());
+                }
             }
+        } catch ( Exception e ) {
+            System.out.println(e.getMessage());
+            throw e;
         }
     }
 

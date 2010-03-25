@@ -146,51 +146,61 @@ public class Unit implements ifSerializable {
         this.warrior.setQuirks(MechwarriorQuirks);
     }
 
-    public Unit( Node n, int Version ) {
-        this.Type = n.getAttributes().getNamedItem("type").getTextContent().trim();
-        this.Model = n.getAttributes().getNamedItem("model").getTextContent().trim();
-        TypeModel = Type + " " + Model;
-        this.Configuration = n.getAttributes().getNamedItem("config").getTextContent().trim();
-        this.Tonnage = Float.parseFloat(n.getAttributes().getNamedItem("tonnage").getTextContent().trim());
-        this.BaseBV = Float.parseFloat(n.getAttributes().getNamedItem("bv").getTextContent().trim());
-        this.UnitType = Integer.parseInt(n.getAttributes().getNamedItem("design").getTextContent().trim());
-        this.Filename = n.getAttributes().getNamedItem("file").getTextContent().trim();
-        this.UsingC3 = Boolean.parseBoolean(n.getAttributes().getNamedItem("c3status").getTextContent().trim());
+    public Unit(Node n, int Version) throws Exception {
+        try {
+            this.Type = n.getAttributes().getNamedItem("type").getTextContent().trim();
+            this.Model = n.getAttributes().getNamedItem("model").getTextContent().trim();
+            TypeModel = Type + " " + Model;
+            this.Configuration = n.getAttributes().getNamedItem("config").getTextContent().trim();
+            this.Tonnage = Float.parseFloat(n.getAttributes().getNamedItem("tonnage").getTextContent().trim());
+            this.BaseBV = Float.parseFloat(n.getAttributes().getNamedItem("bv").getTextContent().trim());
+            this.UnitType = Integer.parseInt(n.getAttributes().getNamedItem("design").getTextContent().trim());
+            this.Filename = n.getAttributes().getNamedItem("file").getTextContent().trim();
+            this.UsingC3 = Boolean.parseBoolean(n.getAttributes().getNamedItem("c3status").getTextContent().trim());
 
-        for (int i=0; i < n.getChildNodes().getLength(); i++) {
-            Node node = n.getChildNodes().item(i);
-            if ( node.getNodeName().equals("quirks") ) { this.UnitQuirks = node.getTextContent().trim(); }
-            if ( node.getNodeName().equals("warrior") ) {
-                try {
-                    this.warrior = new Warrior(node);
-                    this.Gunnery = warrior.getGunnery();
-                    this.Piloting = warrior.getPiloting();
-                    this.BFStats.setGunnery(Gunnery);
+            for (int i = 0; i < n.getChildNodes().getLength(); i++) {
+                Node node = n.getChildNodes().item(i);
+                if (node.getNodeName().equals("quirks")) {
+                    this.UnitQuirks = node.getTextContent().trim();
+                }
+                if (node.getNodeName().equals("warrior")) {
+                    try {
+                        this.warrior = new Warrior(node);
+                        this.Gunnery = warrior.getGunnery();
+                        this.Piloting = warrior.getPiloting();
+                        this.BFStats.setGunnery(Gunnery);
+                        this.BFStats.setPiloting(Piloting);
+                        this.MechwarriorQuirks = warrior.getQuirks();
+                        this.Mechwarrior = (warrior.getRank() + " " + warrior.getName()).trim();
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                        throw ex;
+                    }
+                }
+                if (node.getNodeName().equals("battleforce")) {
+                    this.BFStats = new BattleForceStats(node);
+                    this.BFStats.setElement(this.TypeModel);
                     this.BFStats.setPiloting(Piloting);
-                    this.MechwarriorQuirks = warrior.getQuirks();
-                    this.Mechwarrior = (warrior.getRank() + " " + warrior.getName()).trim();
-                } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                    this.BFStats.setGunnery(Gunnery);
+                    this.BFStats.setWarrior(warrior.getName());
+                    this.BFStats.setName(this.Type);
+                    this.BFStats.setModel(this.Model);
                 }
-            }
-            if ( node.getNodeName().equals("battleforce") ) {
-                this.BFStats = new BattleForceStats( node );
-                this.BFStats.setElement(this.TypeModel);
-                this.BFStats.setPiloting(Piloting);
-                this.BFStats.setGunnery(Gunnery);
-                this.BFStats.setWarrior(warrior.getName());
-                this.BFStats.setName(this.Type);
-                this.BFStats.setModel(this.Model);
-            }
-            if ( node.getNodeName().equals("info") ) {
-                this.Info = node.getTextContent().trim();
-                if ( Info.contains("C3") ) {
-                    C3Available = true;
-                    C3Type = Info.substring( Info.indexOf("C3"), Info.indexOf("C3")+4 ).trim();
+                if (node.getNodeName().equals("info")) {
+                    this.Info = node.getTextContent().trim();
+                    if (Info.contains("C3")) {
+                        C3Available = true;
+                        for ( String s : Info.split(" ") ) {
+                            if ( s.startsWith("C3") ) C3Type = s.trim();
+                        }
+                    }
                 }
+                this.Refresh();
             }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw e;
         }
-        this.Refresh();
     }
 
     public void Refresh() {
@@ -201,14 +211,6 @@ public class Unit implements ifSerializable {
         ModifierBV += CommonTools.GetModifierBV(SkillsBV, MiscMod);
         TotalBV += CommonTools.GetFullAdjustedBV(BaseBV, getGunnery(), getPiloting(), MiscMod);
         if (UsingC3) { C3BV += TotalBV * .05;}
-
-//        if ( BFStats.getPointValue() == 0 ) {
-//            LoadMech();
-//            if ( m != null ) {
-//                BFStats = new BattleForceStats(m);
-//                BFStats.setWarrior(warrior.getName());
-//            }
-//        }
     }
 
     public void UpdateByMech() {
@@ -218,9 +220,11 @@ public class Unit implements ifSerializable {
             Configuration = m.GetLoadout().GetName();
             BaseBV = m.GetCurrentBV();
             Info = m.GetChatInfo();
-            if ( Info.contains("C3") ) {
+            if (Info.contains("C3")) {
                 C3Available = true;
-                C3Type = Info.substring( Info.indexOf("C3"), Info.indexOf("C3")+4 ).trim();
+                for ( String s : Info.split(" ") ) {
+                    if ( s.startsWith("C3") ) C3Type = s.trim();
+                }
             }
             BFStats = new BattleForceStats(m);
         }
@@ -283,14 +287,6 @@ public class Unit implements ifSerializable {
         for ( Column c : Force.ScenarioClipboardColumns() ) {
             data += CommonTools.spaceRight(convertColumn(c), c.preferredWidth) + CommonTools.Tab;
         }
-//        data += CommonTools.spaceRight(this.TypeModel.trim(), 30) + CommonTools.Tab;
-//        data += String.format("%1$,.0f", Tonnage) + CommonTools.Tab;
-//        data += String.format("%1$,.0f", BaseBV) + "" + CommonTools.Tab;
-//        data += CommonTools.spaceRight(this.getMechwarrior(), 30) + CommonTools.Tab;
-//        data += CommonTools.spaceRight(this.Group, 30) + CommonTools.Tab;
-//        data += this.getGunnery() + "/" + this.getPiloting() + CommonTools.Tab;
-//        data += String.format("%1$,.0f", TotalBV) + "";
-
         return data;
     }
 
