@@ -4018,7 +4018,7 @@ public class Mech implements ifUnit, ifBattleforce {
         int mass = GetTonnage();
         if( mass < 40 ){
             return BFConstants.BF_SIZE_LIGHT;
-        }else if( mass < 70 ){
+        }else if( mass < 60 ){
             return BFConstants.BF_SIZE_MEDIUM;
         }else if ( mass < 80 ){
             return BFConstants.BF_SIZE_HEAVY;
