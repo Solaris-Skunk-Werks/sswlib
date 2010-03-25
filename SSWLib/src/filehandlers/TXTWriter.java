@@ -1104,6 +1104,7 @@ public class TXTWriter {
         s = s.replace( "      ", "" );
         s = s.replace( "    ", "" );
         s = s.replace( "<p style=\"margin-top: 0\">", "" );
+        s = s.replaceAll( "\t", "    " );
         s = s.replace( "</p>", "\n" );
         String[] newline = s.split( "\n" );
         String retval = "";

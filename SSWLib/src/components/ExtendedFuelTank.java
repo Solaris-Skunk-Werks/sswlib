@@ -41,6 +41,8 @@ public class ExtendedFuelTank extends Equipment {
         AC.SetCLCodes( 'C', 'X', 'C', 'C' );
         AC.SetCLDates( 0, 0, false, 1900, 0, 0, false, false );
         AC.SetCLFactions( "", "", "PS", "" );
+        AC.SetPIMAllowed( true );
+        AC.SetPBMAllowed( true );
     }
 
     public void SetOwner( Mech m ) {

@@ -50,7 +50,7 @@ public class TextPane extends JPanel {
     }
 
     public String GetText() {
-        return Text.getText().trim();
+        return Text.getText();
     }
 
     public void SetText( String s ) {

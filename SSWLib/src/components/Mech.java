@@ -2500,6 +2500,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if( CurLoadout.HasHDTurret() ) { result += CurLoadout.GetHDTurret().GetCost(); }
         if( CurLoadout.HasLTTurret() ) { result += CurLoadout.GetLTTurret().GetCost(); }
         if( CurLoadout.HasRTTurret() ) { result += CurLoadout.GetRTTurret().GetCost(); }
+        if( HasTracks) { result += Tracks.GetCost(); }
         if( CurLoadout.HasSupercharger() ) {
             result += CurLoadout.GetSupercharger().GetCost();
         }

@@ -656,6 +656,8 @@ public class FileCommon {
         retval = retval.replaceAll( "\n\r", ":br:" );
         retval = retval.replaceAll( "\n", ":br:" );
         retval = retval.replaceAll( "\r", ":br:" );
+        retval = retval.replaceAll( "\t", ":tab:" );
+        retval = retval.trim();
         return retval;
     }
 
@@ -666,6 +668,7 @@ public class FileCommon {
         retval = retval.replaceAll( "&apos;", "\'" );
         retval = retval.replaceAll( "&quot;", "\"" );
         retval = retval.replaceAll( ":br:", "\n" );
+        retval = retval.replaceAll( ":tab:", "\t" );
         return retval;
     }
 

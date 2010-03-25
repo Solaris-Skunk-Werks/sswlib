@@ -74,7 +74,9 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
                     InArray = false,
                     CanUseCaseless = false,
                     UsingCaseless = false,
-                    UsingFCS = false;
+                    UsingFCS = false,
+                    CanOS = false,
+                    CanIOS = false;
     private int Heat = 0,
                 DamSht = 0,
                 DamMed = 0,

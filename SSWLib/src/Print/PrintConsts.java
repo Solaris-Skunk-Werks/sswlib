@@ -96,6 +96,7 @@ public class PrintConsts {
     
     public final static Font BaseFont = FontLoader.getFont("EurostileLTStd.ttf").deriveFont(Font.PLAIN, 20);
     public final static Font BaseBoldFont = FontLoader.getFont("EurostileLTStd-Demi.ttf").deriveFont(Font.PLAIN, 20);
+    public final static Font BaseCritFont = FontLoader.getFont("LiberationSans-Regular.ttf").deriveFont(Font.PLAIN, 10);
 
     public final static Font DesignNameFont  = BaseBoldFont.deriveFont(Font.PLAIN, 10);
     public final static Font CritFont = BaseBoldFont.deriveFont(Font.PLAIN, 6);
