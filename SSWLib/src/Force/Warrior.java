@@ -27,9 +27,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package Force;
 
+import Force.Advantages.Enhancement;
 import common.CommonTools;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Vector;
 import org.w3c.dom.*;
 
 /**
@@ -48,6 +50,7 @@ public class Warrior {
     private int     Gunnery = 4,
                     Piloting = 5;
     private double  ManeiDomini = 1.0d;
+    private Vector<Enhancement> Enhancements = new Vector<Enhancement>();
 
     public Warrior() {
 
@@ -60,6 +63,9 @@ public class Warrior {
      *  <skills gunnery="" piloting="" mod="" />
      *  <quirks></quirks>
      *  <notes></notes>
+     *  <enhancements>
+     *      <enhancement></enhancement>
+     *  </enhancements>
      * </warrior>
      *
      * @param n XML Node to parse
@@ -88,6 +94,16 @@ public class Warrior {
 
             if (nodeName.equals("quirks")) {Quirks = n.getChildNodes().item(i).getTextContent().trim();}
             if (nodeName.equals("notes")) {Notes = n.getChildNodes().item(i).getTextContent().trim();}
+            if (nodeName.equals("enhancements")) {
+                Node e = n.getChildNodes().item(i);
+                Advantages a = new Advantages();
+                for (int j=0; j < e.getChildNodes().getLength(); j++) {
+                    if ( e.getChildNodes().item(j).getNodeName().equals("enhancement") ) {
+                        Enhancement adv = a.find(e.getChildNodes().item(j).getAttributes().getNamedItem("code").getTextContent() );
+                        if ( adv != null ) Enhancements.add(adv);
+                    }
+                }
+            }
         }
     }
 
@@ -98,6 +114,9 @@ public class Warrior {
      *  <skills gunnery="" piloting="" mod="" />
      *  <quirks></quirks>
      *  <notes></notes>
+     *  <enhancements>
+     *      <enhancement></enhancement>
+     *  </enhancements>
      * </warrior>
      *
      * @param file The filestream to write into
@@ -114,6 +133,16 @@ public class Warrior {
         file.newLine();
         file.write(CommonTools.Tabs(6) + "<notes>" + this.Notes + "</notes>");
         file.newLine();
+        if ( Enhancements.size() > 0 ) {
+            file.write(CommonTools.Tabs(6) + "<enhancements>");
+            file.newLine();
+            for ( Enhancement e : Enhancements ) {
+                file.write(CommonTools.Tabs(7) + e.SerializeXML());
+                file.newLine();
+            }
+            file.write(CommonTools.Tabs(6) + "</enhancements>");
+            file.newLine();
+        }
         file.write(CommonTools.Tabs(5) + "</warrior>");
         file.newLine();
     }
@@ -125,7 +154,17 @@ public class Warrior {
      * @throws java.io.IOException
      */
     public void SerializeMUL(BufferedWriter file) throws IOException {
-        file.write(CommonTools.Tabs(2) + "<pilot name=\"" + this.Name + "\" gunnery=\"" + this.Gunnery + "\" piloting=\"" + this.Piloting + "\" />");
+        String data = "";
+        data = "<pilot name=\"" + this.Name + "\" gunnery=\"" + this.Gunnery + "\" piloting=\"" + this.Piloting + "\" ";
+        if ( Enhancements.size() > 0 ) {
+            data += "advantages=\" ";
+            for ( Enhancement e : Enhancements ) {
+                data += e.MMName + "::";
+            }
+            if ( data.endsWith("::") ) data = data.substring(0, data.length()-2);
+        }
+        data += " />";
+        file.write(CommonTools.Tabs(2) + data);
         file.newLine();
     }
 
@@ -271,5 +310,16 @@ public class Warrior {
         return this.Gunnery + "/" + this.Piloting;
     }
 
+    public void addEnhancement( Enhancement e ) {
+        Enhancements.add(e);
+    }
+
+    public void addEnhancements( Vector<Enhancement> e ) {
+        Enhancements.addAll(e);
+    }
+
+    public Vector<Enhancement> getEnhancements() {
+        return Enhancements;
+    }
 
 }

@@ -27,6 +27,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package Force;
 
+import IO.RUSReader;
+import filehandlers.Media;
+import java.io.FileNotFoundException;
 import java.util.Random;
 import java.util.Vector;
 import javax.swing.DefaultListModel;
@@ -72,6 +75,16 @@ public class RUS {
 
     public RUS() {
 
+    }
+
+    public void LoadFile( String filePath ) {
+        RUSReader read = new RUSReader();
+        try {
+            read.Load(filePath, this);
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            Media.Messager("Unable to load RUS file\n" + ex.getMessage());
+        }
     }
 
     public DefaultListModel getDisplay() {
