@@ -61,7 +61,9 @@ class Preview extends JComponent {
             paintPaper(g, format);
             printable.print(g, format, 0);
         } catch (PrinterException e) {
+            System.out.println(e.getMessage());
         } catch (IndexOutOfBoundsException e) {
+            System.out.println(e.getMessage());
         }
     }
 
