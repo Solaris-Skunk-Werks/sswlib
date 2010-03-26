@@ -116,6 +116,7 @@ public class Mech implements ifUnit, ifBattleforce {
     private AvailableCode FHESAC = new AvailableCode( AvailableCode.TECH_BOTH );
     private Hashtable Lookup = new Hashtable();
     private AvailableCode OmniAvailable = new AvailableCode( AvailableCode.TECH_BOTH );
+    private BattleForceData BFData;
     private Preferences Prefs;
 
     // Constructors
@@ -4108,91 +4109,91 @@ public class Mech implements ifUnit, ifBattleforce {
         return e.GetBFStructure(t);
     }
 
-    public int [] GetBFDamage( BattleForceStats bfs ) {
-        int [] retval = {0,0,0,0,0};
+    public int[] GetBFDamage( BattleForceStats bfs ) {
+        int[] retval = {0,0,0,0,0};
 
         // Loop through all weapons in non-core
         // and convert all weapon dmg
         Vector nc = GetLoadout().GetNonCore();
-        BattleForceData Data = new BattleForceData();
+        BFData = new BattleForceData();
 
         for ( int i = 0; i < nc.size(); i++ ) {
             if ( nc.get(i) instanceof ifWeapon ) {
                 double [] temp = BattleForceTools.GetDamage((ifWeapon)nc.get(i), (ifBattleforce)this);
 
-                Data.AddBase(temp);
+                BFData.AddBase(temp);
         
                 if ( BattleForceTools.isBFAutocannon((ifWeapon)nc.get(i)) )
                 {
-                    Data.AC.AddBase(temp);
+                    BFData.AC.AddBase(temp);
                 }
                 else if ( BattleForceTools.isBFLRM((ifWeapon)nc.get(i)) )
                 {
-                    Data.LRM.AddBase(temp);
+                    BFData.LRM.AddBase(temp);
                 }
                 else if ( BattleForceTools.isBFSRM((ifWeapon)nc.get(i)) )
                 {
-                    Data.SRM.AddBase(temp);
+                    BFData.SRM.AddBase(temp);
                 }
                 else if ( BattleForceTools.isBFMML((ifWeapon)nc.get(i)) )
                 {
-                    Data.SRM.AddBase(new double[]{temp[BFConstants.BF_SHORT], temp[BFConstants.BF_MEDIUM]/2.0, 0.0, 0.0, temp[BFConstants.BF_OV]});
-                    Data.LRM.AddBase(new double[]{0.0, temp[BFConstants.BF_MEDIUM]/2.0, temp[BFConstants.BF_LONG], 0.0, temp[BFConstants.BF_OV]} );
+                    BFData.SRM.AddBase(new double[]{temp[BFConstants.BF_SHORT], temp[BFConstants.BF_MEDIUM]/2.0, 0.0, 0.0, temp[BFConstants.BF_OV]});
+                    BFData.LRM.AddBase(new double[]{0.0, temp[BFConstants.BF_MEDIUM]/2.0, temp[BFConstants.BF_LONG], 0.0, temp[BFConstants.BF_OV]} );
                 }
                 if ( BattleForceTools.isBFIF((ifWeapon)nc.get(i)) )
                 {
-                    Data.IF.AddBase(temp);
+                    BFData.IF.AddBase(temp);
                 }
                 if ( BattleForceTools.isBFFLK((ifWeapon)nc.get(i)) )
                 {
-                    Data.FLK.AddBase(temp);
+                    BFData.FLK.AddBase(temp);
                 }
             }
         }
         
         // Add in heat for movement
         if ( GetAdjustedJumpingMP(false) > 2 ) {
-            Data.AddHeat(GetAdjustedJumpingMP(false));
+            BFData.AddHeat(GetAdjustedJumpingMP(false));
         } else {
-            Data.AddHeat(2);
+            BFData.AddHeat(2);
         }
 
         // Subtract 4 because Joel says so...
         // and besides, Joel is awesome and we should trust him
-        Data.AddHeat(-4);
+        BFData.AddHeat(-4);
 
         // Also include Stealth heat, which is ALWAYS on in BF
         if ( GetArmor().IsStealth() ) {
-            Data.AddHeat(10);
+            BFData.AddHeat(10);
         }
 
-        Data.SetHeat(this.GetHeatSinks().TotalDissipation());
-        Data.CheckSpecials();
+        BFData.SetHeat(this.GetHeatSinks().TotalDissipation());
+        BFData.CheckSpecials();
         
         // Convert all damage to BF scale
-        retval[BFConstants.BF_SHORT] = Data.AdjBase.getBFShort(); //(int) Math.ceil(dmgShort / 10);
-        retval[BFConstants.BF_MEDIUM] = Data.AdjBase.getBFMedium(); //(int) Math.ceil(dmgMedium / 10);
-        retval[BFConstants.BF_LONG] = Data.AdjBase.getBFLong(); //(int) Math.ceil(dmgLong / 10);
+        retval[BFConstants.BF_SHORT] = BFData.AdjBase.getBFShort(); //(int) Math.ceil(dmgShort / 10);
+        retval[BFConstants.BF_MEDIUM] = BFData.AdjBase.getBFMedium(); //(int) Math.ceil(dmgMedium / 10);
+        retval[BFConstants.BF_LONG] = BFData.AdjBase.getBFLong(); //(int) Math.ceil(dmgLong / 10);
         retval[BFConstants.BF_EXTREME] = 0;   // Mechs dont have extreme range ever
 
         // Add Special Abilities to BattleForceStats if applicable
-        if ( Data.AC.CheckSpecial() ) bfs.addAbility("AC " + Data.AC.GetAbility() );
-        if ( Data.SRM.CheckSpecial() ) bfs.addAbility("SRM " + Data.SRM.GetAbility() );
-        if ( Data.LRM.CheckSpecial() ) bfs.addAbility("LRM " + Data.LRM.GetAbility() );
-        if ( Data.IF.getBFLong() > 0 )  bfs.addAbility("IF " + Data.IF.getBFLong() );
-        if ( Data.FLK.getBaseMedium() > 5 ) bfs.addAbility("FLK " + Data.FLK.GetAbility() );
+        if ( BFData.AC.CheckSpecial() ) bfs.addAbility("AC " + BFData.AC.GetAbility() );
+        if ( BFData.SRM.CheckSpecial() ) bfs.addAbility("SRM " + BFData.SRM.GetAbility() );
+        if ( BFData.LRM.CheckSpecial() ) bfs.addAbility("LRM " + BFData.LRM.GetAbility() );
+        if ( BFData.IF.getBFLong() > 0 )  bfs.addAbility("IF " + BFData.IF.getBFLong() );
+        if ( BFData.FLK.getBaseMedium() > 5 ) bfs.addAbility("FLK " + BFData.FLK.GetAbility() );
 
         // Determine OverHeat
-        if ( Data.BaseMaxMedium() != 0 )
+        if ( BFData.BaseMaxMedium() != 0 )
         {
-            int DmgMedium = retval[BFConstants.BF_MEDIUM] + Data.SRM.getBFMedium() + Data.LRM.getBFMedium() + Data.AC.getBFMedium();
-            retval[BFConstants.BF_OV] = Data.BaseMaxMedium() - DmgMedium;
-            //System.out.println( Data.BaseMaxMedium() + " - " + DmgMedium + " = " + (Data.BaseMaxMedium()-DmgMedium));
+            int DmgMedium = retval[BFConstants.BF_MEDIUM] + BFData.SRM.getBFMedium() + BFData.LRM.getBFMedium() + BFData.AC.getBFMedium();
+            retval[BFConstants.BF_OV] = BFData.BaseMaxMedium() - DmgMedium;
+            //System.out.println( BFData.BaseMaxMedium() + " - " + DmgMedium + " = " + (BFData.BaseMaxMedium()-DmgMedium));
         }
         else
         {
-            int DmgShort = retval[BFConstants.BF_SHORT] + Data.SRM.getBFShort() + Data.LRM.getBFShort() + Data.AC.getBFShort();
-            retval[BFConstants.BF_OV] = Data.BaseMaxShort() - DmgShort;
+            int DmgShort = retval[BFConstants.BF_SHORT] + BFData.SRM.getBFShort() + BFData.LRM.getBFShort() + BFData.AC.getBFShort();
+            retval[BFConstants.BF_OV] = BFData.BaseMaxShort() - DmgShort;
         }
 
         // Maximum OV value is 4, minimum is 0
@@ -4201,7 +4202,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if (retval[BFConstants.BF_OV] < 0)
             retval[BFConstants.BF_OV] = 0;
 
-        //System.out.println(Data.toString());
+        //System.out.println(BFData.toString());
         
         // Return final values
         return retval;
@@ -4362,6 +4363,10 @@ public class Mech implements ifUnit, ifBattleforce {
         String retval = "Weapon\t\t\tShort\tMedium\tLong\n\r";
         //TODO Add in conversion steps if possible
         return retval;
+    }
+
+    public BattleForceData getBFData() {
+        return BFData;
     }
 
     public ifVisitor Lookup( String s ) {
