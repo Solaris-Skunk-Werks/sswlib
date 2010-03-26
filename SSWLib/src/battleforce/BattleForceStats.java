@@ -49,6 +49,7 @@ public class BattleForceStats {
     private boolean isTerrainModified = false;
     private Vector<String> Abilities = new Vector<String>();
     private Vector<String> AltMunitions = new Vector<String>();
+    private BattleForceData BFData = new BattleForceData();
 
     private int S = 0,
                 M = 0,
@@ -97,6 +98,7 @@ public class BattleForceStats {
         }
 
         Image = m.GetSSWImage();
+        BFData = m.getBFData();
     }
 
     public BattleForceStats( Mech m, String Unit, int Gunnery, int Piloting ) {
@@ -425,5 +427,9 @@ public class BattleForceStats {
             TerrainMV += "/";
         }
         TerrainMV = TerrainMV.substring(0, TerrainMV.length()-1);
+    }
+
+    public String getBFConversionData(){
+        return BFData.toString();
     }
 }

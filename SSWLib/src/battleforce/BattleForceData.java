@@ -91,7 +91,7 @@ public class BattleForceData {
         data += "SRM\n" + SRM.toString();
         data += "IF\n" + IF.toString();
         data += "FLK\n" + FLK.toString();
-        data += "Heat: " + TotalHeatDissipation + " < " + TotalHeatGenerated;
+        data += "Heat: Dissipation (" + TotalHeatDissipation + ") < Max (" + TotalHeatGenerated + ") [Max-4]";
         data += "\nAdjusted\n" + AdjBase.toString();
         return data;
     }
@@ -130,7 +130,8 @@ public class BattleForceData {
         private int TotalHeatGenerated = 0;
         private int TotalHeatDissipation = 0;
         private boolean hasOverheat = false,
-                        isSpecial = false;
+                        isSpecial = false,
+                        SpecialDamage = false;
 
         public DataSet() {
             this(false);
@@ -148,6 +149,8 @@ public class BattleForceData {
             } else {
                 if ( baseMedium > 9.0 ) retval = true;
             }
+            SpecialDamage = retval;
+            BattleForceValues();
             return retval;
         }
 
@@ -192,7 +195,7 @@ public class BattleForceData {
         }
 
         public int BattleForceValue( double base ) {
-            if ( base > 9.0 )
+            if ( base > 9.0 || SpecialDamage )
                 if ( isSpecial )
                     return (int) Math.round(base / 10);
                 else
@@ -218,8 +221,9 @@ public class BattleForceData {
         public String toString() {
             String data = "";
             data += " Base: " + baseShort + "/" + baseMedium + "/" + baseLong + "/" + baseExtreme + "\n";
-            data += " Heat: " + heatShort + "/" + heatMedium + "/" + heatLong + "/" + heatExtreme + "\n";
+            if ( hasOverheat) data += " Heat: " + heatShort + "/" + heatMedium + "/" + heatLong + "/" + heatExtreme + "\n";
             data += "   BF: " + BFShort + "/" + BFMedium + "/" + BFLong + "/" + BFExtreme + "\n";
+            data += " Separate Damage: " + SpecialDamage + "\n";
             return data;
         }
 
