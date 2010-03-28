@@ -58,7 +58,8 @@ public class QSHorizontalCardPrinter implements Printable {
                     printLogo = true,
                     printWarriorData = true,
                     useTerrainMod = false,
-                    printCardBack = false;
+                    printCardBack = false,
+                    isBlackandWhite = false;
 
     private Point defaultPoint = new Point(0, 0);
 
@@ -79,7 +80,12 @@ public class QSHorizontalCardPrinter implements Printable {
         battleforce = f;
         imageTracker = images;
         Background = images.getImage( PrintConsts.COLOR_HORIZ_QS_CARD );
-        CardBack = imageTracker.getImage( PrintConsts.COLOR_VERT_QS_CARD_BACK );
+        CardBack = imageTracker.getImage( PrintConsts.COLOR_HORIZ_QS_CARD_BACK );
+        BFIcons = new Image[]{ imageTracker.getImage( PrintConsts.BF_ICON_INDUSTRIAL ),
+                        imageTracker.getImage( PrintConsts.BF_ICON_LIGHT ),
+                        imageTracker.getImage( PrintConsts.BF_ICON_MEDIUM ),
+                        imageTracker.getImage( PrintConsts.BF_ICON_HEAVY ),
+                        imageTracker.getImage( PrintConsts.BF_ICON_ASSAULT ) };
     }
 
     public QSHorizontalCardPrinter(ImageTracker images) {
@@ -91,6 +97,7 @@ public class QSHorizontalCardPrinter implements Printable {
     }
 
     public void setBlackAndWhite() {
+        isBlackandWhite = true;
         Background = imageTracker.getImage( PrintConsts.BW_HORIZ_QS_CARD );
         CardBack =imageTracker.getImage( PrintConsts.BW_HORIZ_QS_CARD_BACK );
         OVColor = Color.BLACK;
@@ -136,7 +143,7 @@ public class QSHorizontalCardPrinter implements Printable {
                 y += UnitImageHeight + 1;
             }
 
-            graphic.drawImage( Background, x, y, UnitImageWidth, UnitImageHeight, null);
+            if ( isBlackandWhite ) graphic.drawImage( Background, x, y, UnitImageWidth, UnitImageHeight, null);
 
             elementCount += 1;
 
@@ -145,24 +152,31 @@ public class QSHorizontalCardPrinter implements Printable {
                 if ( stats.getImage().replace("../Images/No_Image.png", "").isEmpty() )
                     stats.setImage( media.FindMatchingImage(stats.getName(), stats.getModel()));
                 if ( !stats.getImage().isEmpty() ) {
-                    p.x = 147;
-                    p.y = 26;
-                    Image image = imageTracker.getImage(stats.getImage());
-                    Dimension dim = media.reSize(image, 100d, 130d);
-                    image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
-                    Point offset = media.offsetImageCenter( new Dimension(100, 130), dim);
+                    Dimension space = new Dimension(0, 0);
+                    if ( isBlackandWhite ) {
+                        space.setSize(100, 130);
+                        p.setLocation(147, 26);
+                    } else {
+                        space.setSize(78, 98);
+                        p.setLocation(158, 45);
+                    }
 
-//                    graphic.setColor(Color.WHITE);
-//                    graphic.fillRect(x+p.x, y+p.y, 100, 130);
-//                    graphic.setColor(Color.BLACK);
+                    Image image = imageTracker.getImage(stats.getImage());
+                    Dimension dim = media.reSize(image, space.width, space.height);
+                    image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
+                    Point offset = media.offsetImageCenter( space, dim );
+
                     graphic.drawImage(image, x+p.x+offset.x, y+p.y+offset.y , dim.width, dim.height, null);
-                    //graphic.drawRect(x+p.x, y+p.y, 100, 130);
+
+                    //graphic.drawRect(x+p.x, y+p.y, space.width, space.height);
 
                     if ( icon != null && printLogo ) {
                         graphic.drawImage(icon, x+UnitImageWidth-d.width-5, y+25, d.width, d.height, null);
                     }
                 }
             }
+            
+            if ( !isBlackandWhite ) graphic.drawImage( Background, x, y, UnitImageWidth, UnitImageHeight, null);
 
             //PV
             PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, PVColor, DarkShadow, stats.getPointValue()+" POINTS", x+206, y+15);
@@ -183,16 +197,16 @@ public class QSHorizontalCardPrinter implements Printable {
                 PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, NameColor, DarkShadow, (stats.getUnit() + " [" + battleforce.ForceName + "]").replace("[]", ""), x+10, y+p.y+1 );
             
                 //Skill
-                PrintConsts.ShadowText( graphic, PrintConsts.PlainFont, SkillColor, Shadow, stats.getSkill()+"", x+129, y+50);
+                PrintConsts.ShadowText( graphic, PrintConsts.Small8Font, SkillColor, Shadow, stats.getSkill()+"", x+128, y+49);
             }
 
-            p.setLocation(37, 50);
+            p.setLocation(37, 49);
             //Weight Class
-            PrintConsts.ShadowText( graphic, PrintConsts.PlainFont, SizeColor, Shadow, stats.getWeight()+"", x+p.x, y+p.y);
+            PrintConsts.ShadowText( graphic, PrintConsts.Small8Font, SizeColor, Shadow, stats.getWeight()+"", x+p.x, y+p.y);
 
             //Movement (MV)
             p.x = 84;
-            PrintConsts.ShadowText( graphic, PrintConsts.PlainFont, MoveColor, Shadow, stats.getMovement(useTerrainMod), x+p.x, y+p.y);
+            PrintConsts.ShadowText( graphic, PrintConsts.Small8Font, MoveColor, Shadow, stats.getMovement(useTerrainMod), x+p.x, y+p.y);
 
             int[] data = {0, 28, 63, 94, 124};
             p.y = 77;
@@ -232,11 +246,36 @@ public class QSHorizontalCardPrinter implements Printable {
             }
 
             x += UnitImageWidth + 1;
+
+            if ( printCardBack ) {
+                printCardBack( stats );
+                elementCount++;
+            }
         }
 
         graphic.setFont( PrintConsts.RegularFont );
         //Output Group Totals for previous group
         //graphic.drawString(PointTotal + "", x+460, y-UnitImageHeight+27);
+    }
+
+
+    private void printCardBack( BattleForceStats stats ) {
+        Point p = new Point(0,0);
+
+        graphic.drawImage( CardBack, x, y, UnitImageWidth, UnitImageHeight, null);
+
+        //Unit Name
+        PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, NameColor, DarkShadow, stats.getModel(), x+10, y+12);
+        p.setLocation(10, 22);
+        for ( String line : PrintConsts.wrapText(stats.getName().toUpperCase(), 12, false) ) {
+            PrintConsts.ShadowText( graphic, PrintConsts.BoldFont, NameColor, DarkShadow, line, x+p.x, y+p.y);
+            p.y += graphic.getFont().getSize();
+        }
+
+        graphic.drawImage( BFIcons[stats.getWeight()], x+122, y+8, 54, 28, null);
+
+        graphic.setFont(PrintConsts.SmallBoldFont);
+        graphic.drawString("Notes:", x+24, y+54);
     }
 
     public BattleForce getBattleforce() {

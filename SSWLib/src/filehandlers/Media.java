@@ -277,7 +277,7 @@ public class Media {
             for ( String nameToCheck : PossibleNames ) {
                 for ( String f : fileList ) {
                     if ( !f.isEmpty() && f.contains(".") )
-                        if ( f.substring(0, f.lastIndexOf(".")).equals( nameToCheck ) )
+                        if ( f.substring(0, f.lastIndexOf(".")).toLowerCase().equals( nameToCheck.toLowerCase() ) )
                             return DirectoryPath + f;
                 }
             }

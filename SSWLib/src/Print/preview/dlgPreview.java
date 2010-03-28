@@ -208,7 +208,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         printer.Clear();
 
         if ( chkImage.isSelected() ) {
-            if ( sswPrefs.get("DefaultImagePath", "").isEmpty() ) {
+            if ( sswPrefs.get("DefaultImagePath", "").trim().isEmpty() ) {
                 if ( Media.Options(this, "You must set a default image path for images to be found, would you like to do that now?", "Image Lookup Warning") == Media.OK ) {
                     String dir = media.GetDirectorySelection(this);
                     sswPrefs.put("DefaultImagePath", dir);
@@ -274,6 +274,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                     for ( BattleForce f : scenario.toBattleForceBySize(MaxUnits) ) {
                         QSHorizontalCardPrinter hqs = new QSHorizontalCardPrinter(f, imageTracker);
                         if ( !chkUseColor.isSelected() ) hqs.setBlackAndWhite();
+                        hqs.setCardBack(chkBFBacks.isSelected());
                         hqs.setPrintLogo(chkLogo.isSelected());
                         hqs.setPrintMechs(chkImage.isSelected());
                         hqs.setPrintWarriorData(chkPrintGroup.isSelected());
