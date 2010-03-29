@@ -40,7 +40,6 @@ import battleforce.BattleForce;
 import battleforce.BattleForceStats;
 import filehandlers.ImageTracker;
 import filehandlers.Media;
-import java.awt.Font;
 import java.awt.Point;
 
 public class QSVerticalCardPrinter implements Printable {
@@ -65,7 +64,7 @@ public class QSVerticalCardPrinter implements Printable {
     private int x = 0,
                 y = 0;
 
-    private Color   Shadow = Color.DARK_GRAY,
+    private Color   Shadow = Color.BLACK, //Color.DARK_GRAY,
                     DarkShadow = Color.BLACK,
                     OVColor = new Color(204, 0, 0),
                     PVColor = Color.WHITE,
@@ -203,25 +202,35 @@ public class QSVerticalCardPrinter implements Printable {
         graphic.drawImage( Background, x, y, UnitImageWidth, UnitImageHeight, null);
 
         //Overheat (OV)
-        PrintConsts.ShadowText( graphic, PrintConsts.OVFont, OVColor, Shadow, stats.getOverheat()+"", x+122, y+55);
+        PrintConsts.ShadowText( graphic, PrintConsts.OVFont, OVColor, Shadow, stats.getOverheat()+"", x+122, (double) y+53.5);
 
         //PV
         PrintConsts.ShadowText( graphic, PrintConsts.BoldFont, PVColor, DarkShadow, stats.getPointValue()+" POINTS", x+116, y+16);
 
         //Unit Name
-        PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, NameColor, DarkShadow, stats.getModel(), x+6, y+12);
-        p.y = y + 20;
-        for ( String line : PrintConsts.wrapText(stats.getName().toUpperCase(), 12, false) ) {
-            PrintConsts.ShadowText( graphic, PrintConsts.BoldFont, NameColor, DarkShadow, line, x+6, p.y);
-            p.y += graphic.getFont().getSize();
+        PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, NameColor, DarkShadow, stats.getModel(), x+5, y+10);
+        p.y = y + 18;
+        for ( String line : PrintConsts.wrapText(stats.getName().toUpperCase(), 14, false) ) {
+            PrintConsts.ShadowText( graphic, PrintConsts.BoldFont, NameColor, DarkShadow, line, x+5, p.y);
+            p.y += graphic.getFont().getSize()-2;
         }
 
         if ( printWarriorData ) {
+            p.setLocation(x+5, y+32);
             //Pilot Name
-            PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, PilotColor, DarkShadow, stats.getWarrior(), x+6, p.y-4);
+            String Info = "Pilot [Unit, Force]";
+            if ( !stats.getWarrior().isEmpty() ) Info = Info.replace("Pilot", stats.getWarrior());
+            if ( !stats.getUnit().isEmpty() ) Info = Info.replace("Unit", stats.getUnit());
+            if ( !battleforce.ForceName.isEmpty() ) Info = Info.replace("Force", battleforce.ForceName);
+            Info = Info.replace("Pilot", "").replace("Unit", "").replace("Force", "").replace("[, ]", "").trim();
+            if ( Info.trim().startsWith("[, ") )
+                Info = Info.replace("[, ", "").replace("]", "").trim();
+            else
+                Info = Info.replace("[, ", "[").replace(", ]", "]").trim();
+            PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, PilotColor, DarkShadow, Info, p.x, p.getY());
 
             //Unit Name
-            PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, PilotColor, DarkShadow, (stats.getUnit() + " [" + battleforce.ForceName + "]").replace("[]", ""), x+6, p.y+1);
+            //PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, PilotColor, DarkShadow, (stats.getUnit() + " [" + battleforce.ForceName + "]").replace("[]", ""), x+6, p.y+1);
 
             //Skill
             PrintConsts.ShadowText( graphic, PrintConsts.OVFont, SkillColor, Shadow, stats.getSkill()+"", x+43, y+204);
@@ -232,6 +241,7 @@ public class QSVerticalCardPrinter implements Printable {
         //Movement (MV)
         p.x = x + 24;
         p.x -= stats.getMovement(useTerrainMod).length() * 2;
+        if ( stats.getMovement(useTerrainMod).length() > 3 ) p.x -= 4;
         PrintConsts.ShadowText( graphic, PrintConsts.OVFont, MoveColor, Shadow, stats.getMovement(useTerrainMod), p.x, y+p.y );
 
         //Weight Class

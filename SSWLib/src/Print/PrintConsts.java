@@ -121,11 +121,15 @@ public class PrintConsts {
     public final static Font SectionHeaderFont = BaseFont.deriveFont(Font.PLAIN, 11);
 
     public static void ShadowText( Graphics2D graphic, Font font, Color foreColor, Color backColor, String Text, int X, int Y ) {
+        ShadowText( graphic, font, foreColor, backColor, Text, (double) X, (double) Y);
+    }
+
+    public static void ShadowText( Graphics2D graphic, Font font, Color foreColor, Color backColor, String Text, double X, double Y ) {
         graphic.setFont(font);
         graphic.setColor(backColor);
-        graphic.drawString(Text, X, Y+1);
+        graphic.drawString(Text, (float) (X+.5), (float) (Y+.5) );
         graphic.setColor(foreColor);
-        graphic.drawString(Text, X, Y);
+        graphic.drawString(Text, (float) X, (float) Y);
         graphic.setColor(Color.BLACK);
     }
 

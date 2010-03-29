@@ -192,6 +192,7 @@ public class Scenario implements ifSerializable {
                     if ( bf.BattleForceStats.size() == SizeLimit ) {
                         BattleForces.add(bf);
                         bf = new BattleForce();
+                        bf.ForceName = f.ForceName;
                     }
                 }
             }

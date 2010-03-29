@@ -66,7 +66,7 @@ public class QSHorizontalCardPrinter implements Printable {
     private int x = 0,
                 y = 0;
 
-    private Color   Shadow = Color.DARK_GRAY,
+    private Color   Shadow = Color.BLACK, //Color.DARK_GRAY,
                     DarkShadow = Color.BLACK,
                     OVColor = new Color(204, 0, 0),
                     PVColor = Color.WHITE,
@@ -179,43 +179,52 @@ public class QSHorizontalCardPrinter implements Printable {
             if ( !isBlackandWhite ) graphic.drawImage( Background, x, y, UnitImageWidth, UnitImageHeight, null);
 
             //PV
-            PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, PVColor, DarkShadow, stats.getPointValue()+" POINTS", x+206, y+15);
+            PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, PVColor, DarkShadow, stats.getPointValue()+" POINTS", x+206, y+14.50);
 
             //Unit Name
-            PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, NameColor, DarkShadow, stats.getModel(), x+10, y+12 );
-            p.setLocation(10, 22);
-            for ( String line : PrintConsts.wrapText(stats.getName().toUpperCase(), 12, false) ) {
+            PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, NameColor, DarkShadow, stats.getModel(), x+5, y+12 );
+            p.setLocation(5, 21);
+            for ( String line : PrintConsts.wrapText(stats.getName().toUpperCase(), 24, false) ) {
                 PrintConsts.ShadowText( graphic, PrintConsts.OVFont, NameColor, DarkShadow, line, x+p.x, y+p.y);
                 p.y += graphic.getFont().getSize();
             }
 
             if ( printWarriorData ) {
+                String Info = "Pilot [Unit, Force]";
+                if ( !stats.getWarrior().isEmpty() ) Info = Info.replace("Pilot", stats.getWarrior());
+                if ( !stats.getUnit().isEmpty() ) Info = Info.replace("Unit", stats.getUnit());
+                if ( !battleforce.ForceName.isEmpty() ) Info = Info.replace("Force", battleforce.ForceName);
+                Info = Info.replace("Pilot", "").replace("Unit", "").replace("Force", "").replace("[, ]", "").trim();
+                if ( Info.trim().startsWith("[, ") )
+                    Info = Info.replace("[, ", "").replace("]", "").trim();
+                else
+                    Info = Info.replace("[, ", "[").replace(", ]", "]").trim();
                 //Pilot Name
-                PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, NameColor, DarkShadow, stats.getWarrior(), x+10, y+p.y-5 );
+                PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, NameColor, DarkShadow, Info, x+5, y+p.y-5 );
 
                 //Unit Name
-                PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, NameColor, DarkShadow, (stats.getUnit() + " [" + battleforce.ForceName + "]").replace("[]", ""), x+10, y+p.y+1 );
+                //PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallBoldFont, NameColor, DarkShadow, (stats.getUnit() + " [" + battleforce.ForceName + "]").replace("[]", ""), x+10, y+p.y+1 );
             
                 //Skill
-                PrintConsts.ShadowText( graphic, PrintConsts.Small8Font, SkillColor, Shadow, stats.getSkill()+"", x+128, y+49);
+                PrintConsts.ShadowText( graphic, PrintConsts.Small8Font, SkillColor, Shadow, stats.getSkill()+"", x+128.0, (double) y+49.50);
             }
 
-            p.setLocation(37, 49);
+            p.setLocation(37, 49.50);
             //Weight Class
-            PrintConsts.ShadowText( graphic, PrintConsts.Small8Font, SizeColor, Shadow, stats.getWeight()+"", x+p.x, y+p.y);
+            PrintConsts.ShadowText( graphic, PrintConsts.Small8Font, SizeColor, Shadow, stats.getWeight()+"", x+p.x, (double) y+p.getY());
 
             //Movement (MV)
-            p.x = 84;
-            PrintConsts.ShadowText( graphic, PrintConsts.Small8Font, MoveColor, Shadow, stats.getMovement(useTerrainMod), x+p.x, y+p.y);
+            p.setLocation(84.0, 49.50);
+            PrintConsts.ShadowText( graphic, PrintConsts.Small8Font, MoveColor, Shadow, stats.getMovement(useTerrainMod), x+p.x, (double) y+p.getY());
 
             int[] data = {0, 28, 63, 94, 124};
-            p.y = 77;
+            p.setLocation(p.x, 76.5);
 
             //Damage Values (S,M,L,E)
-            PrintConsts.ShadowText( graphic, PrintConsts.PlainFont, PVColor, Shadow, stats.getShort()+"", x+data[1], y+p.y);
-            PrintConsts.ShadowText( graphic, PrintConsts.PlainFont, PVColor, Shadow, stats.getMedium()+"", x+data[2], y+p.y);
-            PrintConsts.ShadowText( graphic, PrintConsts.PlainFont, PVColor, Shadow, stats.getLong()+"", x+data[3], y+p.y);
-            PrintConsts.ShadowText( graphic, PrintConsts.PlainFont, PVColor, Shadow, stats.getExtreme()+"", x+data[4], y+p.y);
+            PrintConsts.ShadowText( graphic, PrintConsts.PlainFont, PVColor, Shadow, stats.getShort()+"", x+data[1], (double) y+p.getY());
+            PrintConsts.ShadowText( graphic, PrintConsts.PlainFont, PVColor, Shadow, stats.getMedium()+"", x+data[2], (double) y+p.getY());
+            PrintConsts.ShadowText( graphic, PrintConsts.PlainFont, PVColor, Shadow, stats.getLong()+"", x+data[3], (double) y+p.getY());
+            PrintConsts.ShadowText( graphic, PrintConsts.PlainFont, PVColor, Shadow, stats.getExtreme()+"", x+data[4], (double) y+p.getY());
 
             //Overheat (OV)
             PrintConsts.ShadowText( graphic, PrintConsts.PlainFont, OVColor, Shadow, stats.getOverheat()+"", x+27, y+93);
@@ -235,14 +244,14 @@ public class QSHorizontalCardPrinter implements Printable {
             }
 
             //Abilities
-            p.setLocation(51, 135);
+            p.setLocation(51, 136);
             graphic.setFont( PrintConsts.Small8Font );
             String[] Abilities = PrintConsts.wrapText(stats.getAbilitiesString(), 20, true);
             if ( Abilities.length > 2 ) {Abilities[1] += Abilities[2]; Abilities[2] = "";}
             for ( String ability : Abilities ) {
                 graphic.drawString(ability, x+p.x, y+p.y);
-                p.x = 17;
-                p.y += graphic.getFont().getSize()+1;
+                p.x = 16;
+                p.y += graphic.getFont().getSize();
             }
 
             x += UnitImageWidth + 1;

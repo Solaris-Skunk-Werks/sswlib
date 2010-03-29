@@ -118,6 +118,9 @@ public class Group {
             if ( bf.BattleForceStats.size() == SizeLimit ) {
                 bforces.add(bf);
                 bf = new BattleForce();
+                bf.ForceName = force.ForceName;
+                bf.Type = Type;
+                bf.LogoPath = Logo;
             }
         }
         if ( bf.BattleForceStats.size() > 0 ) {
