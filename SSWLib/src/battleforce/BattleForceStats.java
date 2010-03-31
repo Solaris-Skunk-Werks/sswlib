@@ -42,6 +42,7 @@ public class BattleForceStats {
                     MV = "",
                     TerrainMV = "",
                     Unit = "",
+                    ForceName = "",
                     Image = "",
                     Warrior = "";
     private double[] Mods = {2.63, 2.24, 1.82, 1.38, 1.00, 0.86, 0.77, 0.68};
@@ -198,10 +199,10 @@ public class BattleForceStats {
                     "abilities=\"" + getAbilitiesString() + "\" />");
     }
 
-    public String SerializeCSV() {
+    public String SerializeCSV( boolean IncludeElementName ) {
         String data = "";
 
-        data += CSVFormat(getElement());
+        if ( IncludeElementName ) data += CSVFormat(getElement());
         data += CSVFormat(PV);
         data += CSVFormat(Wt);
         data += CSVFormat(MV);
@@ -431,5 +432,13 @@ public class BattleForceStats {
 
     public String getBFConversionData(){
         return BFData.toString();
+    }
+
+    public String getForceName() {
+        return ForceName;
+    }
+
+    public void setForceName(String ForceName) {
+        this.ForceName = ForceName;
     }
 }
