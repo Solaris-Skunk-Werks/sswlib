@@ -58,6 +58,12 @@ public class MechWriter {
         FR.write( "<?xml version=\"1.0\" encoding =\"UTF-8\"?>" );
         FR.newLine();
 
+        WriteXML(FR);
+
+        FR.close();
+    }
+
+    public void WriteXML( BufferedWriter FR ) throws IOException {
         // start parsing the mech
         FR.write( "<mech name=\"" + FileCommon.EncodeFluff( CurMech.GetName() ) + "\" model=\"" + FileCommon.EncodeFluff( CurMech.GetModel() ) + "\" tons=\"" + CurMech.GetTonnage() + "\" omnimech=\"" + GetBoolean( CurMech.IsOmnimech() ) + "\" solaris7id=\"" + CurMech.GetSolaris7ID() + "\" solaris7imageid=\"" + CurMech.GetSolaris7ImageID() + "\" sswimage=\"" + CurMech.GetSSWImage() + "\">" );
         FR.newLine();
@@ -481,7 +487,6 @@ public class MechWriter {
 
         FR.write( "</mech>" );
         FR.newLine();
-        FR.close();
     }
 
     public Mech getMech() {
