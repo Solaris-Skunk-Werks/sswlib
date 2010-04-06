@@ -237,9 +237,9 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
 
         if ( chkPrintBattleforce.isSelected() ) {
             int MaxUnits = 8;
-            imageTracker.preLoadBattleForceImages();
             switch ( cmbBFSheetType.getSelectedIndex() ) {
                 case 0:
+                    imageTracker.preLoadBattleForceImages();
                     if ( chkBFOnePerPage.isSelected() ) {
                         Vector<BattleForce> forcelist = new Vector<BattleForce>();
                         forcelist.addAll(scenario.getAttackerForce().toBattleForceByGroup( 12 ));
@@ -273,17 +273,18 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                     if ( chkBFBacks.isSelected() ) MaxUnits = 4;
                     for ( BattleForce f : scenario.toBattleForceBySize(MaxUnits) ) {
                         QSHorizontalCardPrinter hqs = new QSHorizontalCardPrinter(f, imageTracker);
-                        if ( !chkUseColor.isSelected() ) hqs.setBlackAndWhite();
                         hqs.setCardBack(chkBFBacks.isSelected());
                         hqs.setPrintLogo(chkLogo.isSelected());
                         hqs.setPrintMechs(chkImage.isSelected());
                         hqs.setPrintWarriorData(chkPrintGroup.isSelected());
+                        if ( !chkUseColor.isSelected() ) hqs.setBlackAndWhite();
                         if ( chkBFTerrainMV.isSelected() ) hqs.setTerrain(true);
                         printer.Append( BFBPrinter.FullLetter.toPage(), hqs);
                     }
                     break;
 
                 case 2:
+                    imageTracker.preLoadBattleForceImages();
                     for ( BattleForce f : scenario.toBattleForceByGroup( 6 ) ) {
                         BattleforceCardPrinter bf = new BattleforceCardPrinter(f, imageTracker);
                         bf.setPrintLogo(chkLogo.isSelected());
@@ -298,11 +299,11 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                     if ( chkBFBacks.isSelected() ) MaxUnits = 4;
                     for ( BattleForce f : scenario.toBattleForceBySize(MaxUnits) ) {
                         QSVerticalCardPrinter qs = new QSVerticalCardPrinter(f, imageTracker);
-                        if ( !chkUseColor.isSelected() ) qs.setBlackAndWhite();
                         qs.setCardBack(chkBFBacks.isSelected());
                         qs.setPrintLogo(chkLogo.isSelected());
                         qs.setPrintMechs(chkImage.isSelected());
                         qs.setPrintWarriorData(chkPrintGroup.isSelected());
+                        if ( !chkUseColor.isSelected() ) qs.setBlackAndWhite();
                         if ( chkBFTerrainMV.isSelected() ) qs.setTerrain(true);
                         PageFormat letter = BFBPrinter.FullLetter.toPage();
                         letter.setOrientation(PageFormat.LANDSCAPE);
