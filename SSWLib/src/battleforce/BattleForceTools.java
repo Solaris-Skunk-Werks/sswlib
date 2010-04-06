@@ -113,6 +113,13 @@ public class BattleForceTools {
                 retval[BFConstants.BF_SHORT] *= 2;
                 retval[BFConstants.BF_MEDIUM] *= 1.5;
             }
+
+            if ( isBFATM(w))
+            {
+                retval[BFConstants.BF_SHORT] = common.CommonTools.GetAverageClusterHits(w,0) * 3;
+                retval[BFConstants.BF_MEDIUM] = common.CommonTools.GetAverageClusterHits(w,0) * 2;
+                retval[BFConstants.BF_LONG] = common.CommonTools.GetAverageClusterHits(w,0);
+            }
         }
         else
         {
@@ -233,6 +240,14 @@ public class BattleForceTools {
     public static boolean isBFMML(ifWeapon w)
     {
         if (((abPlaceable)w).CritName().contains("MML"))
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean isBFATM(ifWeapon w)
+    {
+        if (((abPlaceable)w).CritName().contains("ATM"))
             return true;
         else
             return false;

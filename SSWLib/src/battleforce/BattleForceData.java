@@ -195,7 +195,7 @@ public class BattleForceData {
         }
 
         public int BattleForceValue( double base ) {
-            if ( base > 9.0 || SpecialDamage )
+            if ( base > 9.0 || SpecialDamage || !isSpecial )
                 if ( isSpecial )
                     return (int) Math.round(base / 10);
                 else
