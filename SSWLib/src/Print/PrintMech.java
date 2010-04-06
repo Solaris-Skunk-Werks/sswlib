@@ -280,23 +280,27 @@ public class PrintMech implements Printable {
 
     private void DrawCriticals( Graphics2D graphics ) {
         graphics.setFont( PrintConsts.CritFont );
-        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_HD ), points.GetCritHDPoints() );
-        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_CT ), points.GetCritCTPoints() );
-        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_RT ), points.GetCritRTPoints() );
-        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_LT ), points.GetCritLTPoints() );
-        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_RA ), points.GetCritRAPoints() );
-        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_LA ), points.GetCritLAPoints() );
-        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_RL ), points.GetCritRLPoints() );
-        DrawLocationCrits( graphics, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_LL ), points.GetCritLLPoints() );
+        DrawLocationCrits( graphics, LocationIndex.MECH_LOC_HD, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_HD ), points.GetCritHDPoints() );
+        DrawLocationCrits( graphics, LocationIndex.MECH_LOC_CT, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_CT ), points.GetCritCTPoints() );
+        DrawLocationCrits( graphics, LocationIndex.MECH_LOC_RT, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_RT ), points.GetCritRTPoints() );
+        DrawLocationCrits( graphics, LocationIndex.MECH_LOC_LT, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_LT ), points.GetCritLTPoints() );
+        DrawLocationCrits( graphics, LocationIndex.MECH_LOC_RA, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_RA ), points.GetCritRAPoints() );
+        DrawLocationCrits( graphics, LocationIndex.MECH_LOC_LA, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_LA ), points.GetCritLAPoints() );
+        DrawLocationCrits( graphics, LocationIndex.MECH_LOC_RL, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_RL ), points.GetCritRLPoints() );
+        DrawLocationCrits( graphics, LocationIndex.MECH_LOC_LL, CurMech.GetLoadout().GetCrits( LocationIndex.MECH_LOC_LL ), points.GetCritLLPoints() );
     }
 
-    private void DrawLocationCrits( Graphics2D graphics, abPlaceable[] a, Point[] p ) {
+    private void DrawLocationCrits( Graphics2D graphics, int Location, abPlaceable[] a, Point[] p ) {
         for( int i = 0; i < a.length && i < p.length; i++ ) {
             if( a[i].NumCrits() > 1 && a[i].Contiguous() &! ( a[i] instanceof Engine ) &! ( a[i] instanceof Gyro ) ) {
                 // print the multi-slot indicator before the item
                 abPlaceable Current = a[i];
                 int j = i;
                 int End = Current.NumCrits() + j;
+                if( Current.CanSplit() ) {
+                    int[] check = CurMech.GetLoadout().FindInstances( Current );
+                    End = check[Location] + j;
+                }
                 if( End > a.length ) {
                     End = a.length - 1;
                 }
