@@ -81,11 +81,6 @@ public class QSHorizontalCardPrinter implements Printable {
         imageTracker = images;
         Background = images.getImage( PrintConsts.COLOR_HORIZ_QS_CARD );
         CardBack = imageTracker.getImage( PrintConsts.COLOR_HORIZ_QS_CARD_BACK );
-        BFIcons = new Image[]{ imageTracker.getImage( PrintConsts.BF_ICON_INDUSTRIAL ),
-                        imageTracker.getImage( PrintConsts.BF_ICON_LIGHT ),
-                        imageTracker.getImage( PrintConsts.BF_ICON_MEDIUM ),
-                        imageTracker.getImage( PrintConsts.BF_ICON_HEAVY ),
-                        imageTracker.getImage( PrintConsts.BF_ICON_ASSAULT ) };
     }
 
     public QSHorizontalCardPrinter(ImageTracker images) {
@@ -94,6 +89,12 @@ public class QSHorizontalCardPrinter implements Printable {
 
     public void setCardBack( boolean Value ) {
         printCardBack = Value;
+        if ( Value )
+            BFIcons = new Image[]{ imageTracker.getImage( PrintConsts.BF_ICON_INDUSTRIAL ),
+                                    imageTracker.getImage( PrintConsts.BF_ICON_LIGHT ),
+                                    imageTracker.getImage( PrintConsts.BF_ICON_MEDIUM ),
+                                    imageTracker.getImage( PrintConsts.BF_ICON_HEAVY ),
+                                    imageTracker.getImage( PrintConsts.BF_ICON_ASSAULT ) };
     }
 
     public void setBlackAndWhite() {
@@ -110,11 +111,12 @@ public class QSHorizontalCardPrinter implements Printable {
         Shadow = Color.WHITE;
         DarkShadow = Color.WHITE;
 
-        BFIcons = new Image[]{ imageTracker.getImage( PrintConsts.BF_ICON_INDUSTRIAL_BW ),
-                        imageTracker.getImage( PrintConsts.BF_ICON_LIGHT_BW ),
-                        imageTracker.getImage( PrintConsts.BF_ICON_MEDIUM_BW ),
-                        imageTracker.getImage( PrintConsts.BF_ICON_HEAVY_BW ),
-                        imageTracker.getImage( PrintConsts.BF_ICON_ASSAULT_BW ) };
+        if ( printCardBack )
+            BFIcons = new Image[]{ imageTracker.getImage( PrintConsts.BF_ICON_INDUSTRIAL_BW ),
+                                    imageTracker.getImage( PrintConsts.BF_ICON_LIGHT_BW ),
+                                    imageTracker.getImage( PrintConsts.BF_ICON_MEDIUM_BW ),
+                                    imageTracker.getImage( PrintConsts.BF_ICON_HEAVY_BW ),
+                                    imageTracker.getImage( PrintConsts.BF_ICON_ASSAULT_BW ) };
     }
 
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
@@ -193,7 +195,7 @@ public class QSHorizontalCardPrinter implements Printable {
                 String Info = "Pilot [Unit, Force]";
                 if ( !stats.getWarrior().isEmpty() ) Info = Info.replace("Pilot", stats.getWarrior());
                 if ( !stats.getUnit().isEmpty() ) Info = Info.replace("Unit", stats.getUnit());
-                if ( !battleforce.ForceName.isEmpty() ) Info = Info.replace("Force", battleforce.ForceName);
+                if ( !stats.getForceName().isEmpty() ) Info = Info.replace("Force", stats.getForceName());
                 Info = Info.replace("Pilot", "").replace("Unit", "").replace("Force", "").replace("[, ]", "").trim();
                 if ( Info.trim().startsWith("[, ") )
                     Info = Info.replace("[, ", "").replace("]", "").trim();
