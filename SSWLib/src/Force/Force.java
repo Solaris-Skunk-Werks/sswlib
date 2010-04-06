@@ -52,6 +52,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
     private String Type = BattleForce.InnerSphere;
     private Image Logo = null;
     public float TotalBaseBV = 0.0f,
+                 TotalBasePV = 0.0f,
                  TotalModifier = 0.0f,
                  TotalTonnage = 0.0f,
                  TotalC3BV = 0.0f,
@@ -59,6 +60,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
                  TotalModifierBV = 0.0f,
                  TotalAdjustedBV = 0.0f,
                  TotalForceBV = 0.0f,
+                 TotalForcePV = 0.0f,
                  UnevenForceMod = 0.0f,
                  TotalForceBVAdjusted = 0.0f;
     public int  NumC3 = 0,
@@ -150,6 +152,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
     public void RefreshBV() {
         NumC3 = 0;
         TotalBaseBV = 0.0f;
+        TotalBasePV = 0.0f;
         TotalModifier = 0.0f;
         TotalTonnage = 0.0f;
         TotalC3BV = 0.0f;
@@ -157,6 +160,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
         TotalModifierBV = 0.0f;
         TotalAdjustedBV = 0.0f;
         TotalForceBV = 0.0f;
+        TotalForcePV = 0.0f;
         for ( Unit u : getUnits() ) {
             TotalBaseBV += u.BaseBV;
             TotalModifier += u.MiscMod;
@@ -167,6 +171,9 @@ public class Force extends AbstractTableModel implements ifSerializable {
             if (u.UsingC3) {
                 NumC3++;
             }
+
+            TotalBasePV += u.getBFStats().getBasePV();
+            TotalForcePV += u.getBFStats().getPointValue();
         }
 
         if (NumC3 > 0){
