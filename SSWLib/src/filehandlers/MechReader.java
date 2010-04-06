@@ -201,6 +201,19 @@ public class MechReader {
         return Data;
     }
 
+    public Mech ReadMech( Node n ) throws Exception {
+        Messages = "";
+        Mech m = new Mech();
+        data = new DataFactory(m);
+        Document d = db.newDocument();
+        Node newNode = d.importNode(n, true);
+        d.appendChild(newNode);
+
+        BuildMech(m, d, data);
+        
+        return m;
+    }
+
     private Mech BuildMech( Mech m, Document d, DataFactory f ) throws Exception {
         Messages = "";
         if( f == null ) {
@@ -210,6 +223,7 @@ public class MechReader {
         }
 
         NodeList n = d.getElementsByTagName( "mech" );
+
         NamedNodeMap map = n.item( 0 ).getAttributes();
         LocationIndex l;
         Vector isLoc = new Vector();
