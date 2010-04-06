@@ -35,6 +35,9 @@ import filehandlers.MechReader;
 import Print.ForceListPrinter;
 
 import Print.PrintConsts;
+import filehandlers.FileCommon;
+import filehandlers.MechWriter;
+import filehandlers.Media;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import list.view.Column;
@@ -121,8 +124,8 @@ public class Unit implements ifSerializable {
 
             if ( !nodeName.equals("#text") ) {
                 //Previous File structure
-                if (nodeName.equals("type")) {Type = n.getChildNodes().item(i).getTextContent().trim();}
-                if (nodeName.equals("model")) {Model = n.getChildNodes().item(i).getTextContent().trim();}
+                if (nodeName.equals("type")) {Type = FileCommon.DecodeFluff(n.getChildNodes().item(i).getTextContent().trim());}
+                if (nodeName.equals("model")) {Model = FileCommon.DecodeFluff(n.getChildNodes().item(i).getTextContent().trim());}
                 if (nodeName.equals("config")) {Configuration = n.getChildNodes().item(i).getTextContent().trim();}
                 if (nodeName.equals("tonnage")) {Tonnage = Float.parseFloat(n.getChildNodes().item(i).getTextContent());}
                 if (nodeName.equals("basebv")) {BaseBV = Float.parseFloat(n.getChildNodes().item(i).getTextContent());}
@@ -148,10 +151,11 @@ public class Unit implements ifSerializable {
 
     public Unit(Node n, int Version) throws Exception {
         try {
-            this.Type = n.getAttributes().getNamedItem("type").getTextContent().trim();
-            this.Model = n.getAttributes().getNamedItem("model").getTextContent().trim();
+            this.Type = FileCommon.DecodeFluff(n.getAttributes().getNamedItem("type").getTextContent().trim());
+            this.Model = FileCommon.DecodeFluff(n.getAttributes().getNamedItem("model").getTextContent().trim());
             TypeModel = Type + " " + Model;
             this.Configuration = n.getAttributes().getNamedItem("config").getTextContent().trim();
+            if ( !Configuration.isEmpty() ) isOmni = true;
             this.Tonnage = Float.parseFloat(n.getAttributes().getNamedItem("tonnage").getTextContent().trim());
             this.BaseBV = Float.parseFloat(n.getAttributes().getNamedItem("bv").getTextContent().trim());
             this.UnitType = Integer.parseInt(n.getAttributes().getNamedItem("design").getTextContent().trim());
@@ -193,6 +197,17 @@ public class Unit implements ifSerializable {
                         for ( String s : Info.split(" ") ) {
                             if ( s.startsWith("C3") ) C3Type = s.trim();
                         }
+                    }
+                }
+
+                if ( node.getNodeName().equals("mech")) {
+                    try {
+                        MechReader mread = new MechReader();
+                        m = mread.ReadMech(node);
+                        if ( !Configuration.isEmpty() ) m.SetCurLoadout(Configuration);
+                        BFStats = new BattleForceStats(m);
+                    } catch (Exception e) {
+                        Media.Messager("Error loading Mech " + e.getMessage());
                     }
                 }
                 this.Refresh();
@@ -250,7 +265,9 @@ public class Unit implements ifSerializable {
     }
 
     public void SerializeXML(BufferedWriter file) throws IOException {
-        file.write(CommonTools.Tabs(4) + "<unit type=\"" + this.Type + "\" model=\"" + this.Model + "\" config=\"" + this.Configuration + "\" tonnage=\"" + this.Tonnage + "\" bv=\"" + this.BaseBV + "\" design=\"" + this.UnitType + "\" file=\"" + this.Filename + "\" c3status=\"" + this.UsingC3 + "\">");
+        LoadMech();
+        MechWriter mwrite = new MechWriter(m);
+        file.write(CommonTools.Tabs(4) + "<unit type=\"" + FileCommon.EncodeFluff(this.Type) + "\" model=\"" + FileCommon.EncodeFluff(this.Model) + "\" config=\"" + this.Configuration + "\" tonnage=\"" + this.Tonnage + "\" bv=\"" + this.BaseBV + "\" design=\"" + this.UnitType + "\" file=\"" + this.Filename + "\" c3status=\"" + this.UsingC3 + "\">");
         file.newLine();
         BFStats.SerializeXML(file, 5);
         file.newLine();
@@ -259,6 +276,7 @@ public class Unit implements ifSerializable {
         file.write(CommonTools.Tabs(5) + "<quirks>" + this.UnitQuirks + "</quirks>");
         file.newLine();
         warrior.SerializeXML(file);
+        mwrite.WriteXML(file);
         file.write(CommonTools.Tabs(4) + "</unit>");
         file.newLine();
     }
