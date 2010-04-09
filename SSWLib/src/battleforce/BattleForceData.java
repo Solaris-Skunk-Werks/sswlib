@@ -1,5 +1,7 @@
 package battleforce;
 
+import java.util.Vector;
+
 public class BattleForceData {
     public DataSet  Base = new DataSet(false);
     public DataSet  AdjBase = new DataSet(false);
@@ -10,6 +12,7 @@ public class BattleForceData {
     public DataSet  FLK = new DataSet(true);
     private int TotalHeatGenerated = 0;
     private int TotalHeatDissipation = 0;
+    private Vector<String> Notes = new Vector<String>();
 
     public BattleForceData() {
 
@@ -82,9 +85,17 @@ public class BattleForceData {
         this.TotalHeatGenerated += Heat;
     }
 
+    public void AddNote( String note ) {
+        Notes.add(note);
+    }
+
     @Override
     public String toString() {
         String data = "";
+        for ( String note : Notes ) {
+            data += note + "\n";
+        }
+        data += "\n";
         data += "Base\n" + Base.toString();
         data += "AC\n" + AC.toString();
         data += "LRM\n" + LRM.toString();

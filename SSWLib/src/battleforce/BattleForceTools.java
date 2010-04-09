@@ -83,26 +83,22 @@ public class BattleForceTools {
         if ( w.IsCluster() )
         {
             int dmgModifier = 1;
-            int shortMod = 0;   // Used for HAGs
-            int longMod = 0;    // ...
             if ( ((abPlaceable)w).CritName().contains("LB") || ((abPlaceable)w).CritName().equals("Silver Bullet Gauss") )
                 dmgModifier = w.GetDamageMedium();
             if ( ((abPlaceable)w).CritName().contains("HAG") )
             {
                 dmgModifier = w.GetDamageMedium();
-                  shortMod = +2;
-                longMod = -2;
             }
 
             if ( w.GetRangeLong() > 0 ) {
                 if ( w instanceof RangedWeapon )
-                    retval[BFConstants.BF_SHORT] = w.GetDamageShort() * common.CommonTools.GetAverageClusterHits(w,shortMod) / dmgModifier;
+                    retval[BFConstants.BF_SHORT] = w.GetDamageShort() * common.CommonTools.GetAverageClusterHits(w,w.ClusterModShort()) / dmgModifier;
             }
             if ( w.GetRangeLong() > 3 ) {
-                retval[BFConstants.BF_MEDIUM] = w.GetDamageMedium() * common.CommonTools.GetAverageClusterHits(w,0) / dmgModifier;
+                retval[BFConstants.BF_MEDIUM] = w.GetDamageMedium() * common.CommonTools.GetAverageClusterHits(w,w.ClusterModMedium()) / dmgModifier;
             }
             if ( w.GetRangeLong() > 15 ) {
-                retval[BFConstants.BF_LONG] = w.GetDamageLong() * common.CommonTools.GetAverageClusterHits(w,longMod) / dmgModifier;
+                retval[BFConstants.BF_LONG] = w.GetDamageLong() * common.CommonTools.GetAverageClusterHits(w,w.ClusterModLong()) / dmgModifier;
             }
             if ( w.GetRangeLong() > 24 ) {
                 retval[BFConstants.BF_EXTREME] = w.GetDamageLong() * common.CommonTools.GetAverageClusterHits(w,0) / dmgModifier;
@@ -142,12 +138,24 @@ public class BattleForceTools {
             }
         }
 
+        if ( w.CritName().contains("Plasma Cannon") ) {
+            retval[BFConstants.BF_SHORT] = 10.0;
+            retval[BFConstants.BF_MEDIUM] = 10.0;
+            retval[BFConstants.BF_LONG] = 10.0;
+            retval[BFConstants.BF_EXTREME] = 0.0;
+        }
+
+        //Adjust for variable damage weapons that do not reach long range
+        // added 4/7/10 per conversation with nckestrel
+        if ( isBFVariable(w) && w.GetRangeLong() <= 15 ) {
+            retval[BFConstants.BF_MEDIUM] = ((w.GetDamageMedium() + w.GetDamageLong()) / 2);
+        }
 
         // Adjust for minimum range
         int minrange = w.GetRangeMin();
         if( minrange > 6 ) { minrange = 6; }
         {
-            if (!isBFMML(w))
+            if (!isBFMML(w) && !isBFATM(w) )
                 retval[BFConstants.BF_SHORT] *= BattleForceTools.BFMinRangeModifiers[minrange];
         }
 
@@ -248,6 +256,16 @@ public class BattleForceTools {
     public static boolean isBFATM(ifWeapon w)
     {
         if (((abPlaceable)w).CritName().contains("ATM"))
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean isBFVariable(ifWeapon w)
+    {
+        if(  w.GetDamageShort() != w.GetDamageMedium() ||
+             w.GetDamageShort() != w.GetDamageLong() ||
+             w.GetDamageMedium() != w.GetDamageLong() )
             return true;
         else
             return false;

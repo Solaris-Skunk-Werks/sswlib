@@ -4148,6 +4148,7 @@ public class Mech implements ifUnit, ifBattleforce {
                 {
                     BFData.FLK.AddBase(temp);
                 }
+                BFData.AddNote(nc.get(i).toString() + " :: " + temp[BFConstants.BF_SHORT] + "/" + temp[BFConstants.BF_MEDIUM] + "/" + temp[BFConstants.BF_LONG] + "/" + temp[BFConstants.BF_EXTREME] + " [" + temp[BFConstants.BF_OV] + "]" );
             }
         }
         
@@ -4203,7 +4204,7 @@ public class Mech implements ifUnit, ifBattleforce {
             retval[BFConstants.BF_OV] = 0;
 
         //System.out.println(BFData.toString());
-        
+
         // Return final values
         return retval;
     }
