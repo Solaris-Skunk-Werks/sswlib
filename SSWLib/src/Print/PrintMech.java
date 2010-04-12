@@ -219,7 +219,7 @@ public class PrintMech implements Printable {
     }
     
     private void PreparePrint( Graphics2D graphics ) {
-        Items = SortEquipmentByLocation();
+        Items = PrintConsts.SortEquipmentByLocation( CurMech, MiniConvRate );
         ap = new PIPPrinter(graphics, CurMech, Canon, imageTracker);
         this.BV = CommonTools.GetAdjustedBV(CurMech.GetCurrentBV(), Gunnery, Piloting);
 
@@ -311,9 +311,9 @@ public class PrintMech implements Printable {
                         graphics.drawLine( p[j].x, p[j].y - 3, p[j].x, p[j].y );
                         if( a[j].IsArmored() ) {
                             graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
+                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech ), p[j].x + 10, p[j].y );
                         } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
+                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech ), p[j].x + 3, p[j].y );
                         }
                     } else if( j == End - 1 ) {
                         // end the line
@@ -321,18 +321,18 @@ public class PrintMech implements Printable {
                         graphics.drawLine( p[j].x, p[j].y - 2, p[j].x, p[j-1].y );
                         if( a[j].IsArmored() ) {
                             graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
+                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech ), p[j].x + 10, p[j].y );
                         } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
+                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech ), p[j].x + 3, p[j].y );
                         }
                     } else {
                         // continue the line
                         graphics.drawLine( p[j].x, p[j].y, p[j].x, p[j-1].y );
                         if( a[j].IsArmored() ) {
                             graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 10, p[j].y );
+                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech ), p[j].x + 10, p[j].y );
                         } else {
-                            graphics.drawString( GetPrintName( a[j] ), p[j].x + 3, p[j].y );
+                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech ), p[j].x + 3, p[j].y );
                         }
                     }
                 }
@@ -340,15 +340,15 @@ public class PrintMech implements Printable {
             } else {
                 // single slot item
                 if( ! a[i].IsCritable() ) {
-                    DrawNonCritable( graphics, GetPrintName( a[i] ), p[i].x + 3, p[i].y );
+                    DrawNonCritable( graphics, PrintConsts.GetPrintName( a[i], CurMech ), p[i].x + 3, p[i].y );
                 } else {
                     if( a[i].IsArmored() ) {
                         graphics.drawOval( p[i].x, p[i].y - 5, 5, 5 );
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x + 7, p[i].y );
+                        graphics.drawString( PrintConsts.GetPrintName( a[i], CurMech ), p[i].x + 7, p[i].y );
                     } else if( a[i] instanceof Ammunition ) {
                         graphics.drawString( FileCommon.FormatAmmoPrintName( (Ammunition) a[i], 1, TRO ), p[i].x + 3, p[i].y );
                     } else {
-                        graphics.drawString( GetPrintName( a[i] ), p[i].x + 3, p[i].y );
+                        graphics.drawString( PrintConsts.GetPrintName( a[i], CurMech ), p[i].x + 3, p[i].y );
                     }
                 }
             }
@@ -711,114 +711,6 @@ public class PrintMech implements Printable {
         }
     }
 
-    private Vector<PlaceableInfo> SortEquipmentByLocation() {
-        Vector v = (Vector) CurMech.GetLoadout().GetNonCore().clone();
-                // add in MASC and the targeting computer if needed.
-        if( CurMech.GetPhysEnhance().IsMASC() ) v.add( CurMech.GetPhysEnhance() );
-        if( CurMech.UsingTC() ) v.add( CurMech.GetTC() );
-        if( CurMech.HasCommandConsole() ) v.add( CurMech.GetCommandConsole() );
-        if( CurMech.UsingPartialWing() ) v.add( CurMech.GetPartialWing() );
-        if( CurMech.GetLoadout().HasSupercharger() ) v.add( CurMech.GetLoadout().GetSupercharger() );
-        if( CurMech.IsQuad() ) {
-            if( CurMech.HasLegAES() ) {
-                v.add( CurMech.GetRAAES() );
-                v.add( CurMech.GetLAAES() );
-                v.add( CurMech.GetRLAES() );
-                v.add( CurMech.GetLLAES() );
-            }
-        } else {
-            if( CurMech.HasRAAES() ) v.add( CurMech.GetRAAES() );
-            if( CurMech.HasLAAES() ) v.add( CurMech.GetLAAES() );
-            if( CurMech.HasLegAES() ) {
-                v.add( CurMech.GetRLAES() );
-                v.add( CurMech.GetLLAES() );
-            }
-        }
-        Vector Equip = CurMech.SortLoadout(v);
-        Vector<abPlaceable> sorted = FileCommon.SortEquipmentForStats(CurMech, Equip, true, false);
-
-        abPlaceable[] a = new abPlaceable[sorted.size()];
-        for( int i = 0; i < sorted.size(); i++ ) {
-            if( ! ( sorted.get( i ) instanceof Ammunition ) ) {
-                a[i] = (abPlaceable) sorted.get( i );
-            }
-        }
-
-        // now group them by location
-        int count = 0;
-        PlaceableInfo p = null;
-        Vector<PlaceableInfo> temp = new Vector<PlaceableInfo>();
-        for( int i = 0; i < a.length; i++ ) {
-            if( a[i] != null ) {
-                p = new PlaceableInfo(a[i], CurMech.GetLoadout().Find( a[i] ));
-                a[i] = null;
-                count ++;
-                // search for other matching weapons in the same location
-                for( int j = 0; j < a.length; j++ ) {
-                    if( a[j] != null ) {
-                        if( a[j].CritName().equals( p.Item.CritName() ) ) {
-                            if( CurMech.GetLoadout().Find( a[j] ) == p.Location ) {
-                                count++;
-                                a[j] = null;
-                            }
-                        }
-                    }
-                }
-
-                if ( p.name.equals("Targeting Computer") ||
-                     p.name.equals("AES") ) count = 1;
-
-                // set the weapon count and add it to the temp vector
-                p.Count = count + "";
-                temp.add( p );
-                count = 0;
-
-                // Parse the items and add extra line items as necessary
-                // ATM, MML, Artemis, TC, etc
-                PlaceableInfo factory = new PlaceableInfo();
-                if ( p.Item instanceof ifWeapon ) {
-                    if( ((ifWeapon) p.Item).GetWeaponClass() == ifWeapon.W_MISSILE ) {
-                        if ( ((ifWeapon) p.Item).CritName().contains("ATM") ) {
-                            Vector<PlaceableInfo> t = new Vector<PlaceableInfo>();
-                            if ( AmmoContains(AmmoList, "ER") )
-                                t.add(factory.ATMERAmmo(p));
-                            if ( AmmoContains(AmmoList, "HE") )
-                                t.add(factory.ATMHEAmmo(p));
-
-                            if ( t.size() > 0 ) p.specials = "-";
-                            if ( t.size() == 2 ) t.get(0).specials = "-";
-                            for ( PlaceableInfo am : t ) {
-                                temp.add(am);
-                            }
-                        } else if ( ((ifWeapon) p.Item).CritName().contains("MML") ) {
-                            p.Clean();
-                            temp.add(factory.MMLLRMAmmo(p));
-                            temp.add(factory.MMLSRMAmmo(p));
-                        } else if ( ((ifWeapon) p.Item).IsFCSCapable() ) {
-                            if ( CurMech.GetLoadout().UsingArtemisIV()) {
-                                temp.add(factory.ArtemisIV(p));
-                            } else if ( CurMech.GetLoadout().UsingArtemisV()) {
-                                temp.add(factory.ArtemisV(p));
-                            } else if ( CurMech.GetLoadout().UsingApollo() ) {
-                                temp.add(factory.Apollo(p));
-                            }
-                            p.specials = "-";
-                        }
-                    } else if ( ((ifWeapon) p.Item).GetWeaponClass() == ifWeapon.W_ENERGY ) {
-                        if ( ((RangedWeapon) p.Item).IsUsingCapacitor() ) {
-                            p.name.replace(" + PPC Capacitor", "");
-                            p.name2.replace(" + PPC Capacitor", "");
-                            temp.add( new PlaceableInfo( (abPlaceable)((RangedWeapon) p.Item).GetCapacitor(), p.Location ) );
-                        }
-                    }
-                }
-            }
-        }
-        if ( CurMech.HasBlueShield() ) temp.add(new PlaceableInfo( CurMech.GetBlueShield() ));
-
-        return temp;
-    }
-
     private void GetRecordSheet( ImageTracker images ) {
         // loads the correct record sheet and points based on the information given
         RecordSheet = images.getImage( PrintConsts.RS_TW_BP );
@@ -836,22 +728,6 @@ public class PrintMech implements Printable {
         }
     }
 
-    private String GetPrintName( abPlaceable a ) {
-        // returns a modified PrintName, useful for special situations such as
-        // mixed-tech mechs.
-        String retval = a.CritName();
-        if( a instanceof RangedWeapon && CurMech.GetLoadout().GetTechBase() == AvailableCode.TECH_BOTH ) {
-            switch( ((RangedWeapon) a).GetTechBase() ) {
-                case AvailableCode.TECH_INNER_SPHERE:
-                    retval = retval + " (IS)";
-                    break;
-                case AvailableCode.TECH_CLAN:
-                    retval = retval + " (C)";
-                    break;
-            }
-        }
-        return retval;
-    }
 
     public String getGroupName() {
         return GroupName;
@@ -859,130 +735,6 @@ public class PrintMech implements Printable {
 
     public void setGroupName(String GroupName) {
         this.GroupName = GroupName;
-    }
-
-    private class PlaceableInfo {
-        public int Location,
-                    NameLength = 25;
-        public String   Count = "",
-                        name = "",
-                        name2 = "",
-                        locName = "",
-                        heat = "--",
-                        min = "--",
-                        damage = "--",
-                        specials = "--",
-                        rShort = "--",
-                        rMed = "--",
-                        rLong = "--";
-        public abPlaceable Item;
-
-        public PlaceableInfo() {
-        }
-
-        public PlaceableInfo( String Count, int Location, String LocationName, String Name, String Heat, String Damage, String Min, String Short, String Medium, String Long, String Specials) {
-            this.Count = Count;
-            this.Location = Location;
-            this.locName = LocationName;
-            this.name = Name;
-            this.heat = Heat;
-            this.damage = Damage;
-            this.min = Min;
-            this.rShort = Short;
-            this.rMed = Medium;
-            this.rLong = Long;
-            this.specials = Specials;
-        }
-
-        public PlaceableInfo( MultiSlotSystem item ) {
-            this.name = item.CritName();
-            this.damage = "[E]";
-        }
-
-        public PlaceableInfo( abPlaceable item, int Location ) {
-            this.Item = item;
-            this.name = GetPrintName(item).trim();
-                    //.replace("Medium Pulse", "Med. Pulse")
-                    //.replace("Beagle Active Probe", "Beagle Active Prb")
-                    //.replace("Guardian ECM Suite", "Guardian ECM")
-                    //.replace("Targeting Computer", "Targeting Comp.");
-            String[] names = PrintConsts.wrapText(this.name, NameLength, false);
-            if ( names.length > 1 ) {
-                name = names[0];
-                name2 = names[1];
-            }
-            this.Location = Location;
-            this.locName = FileCommon.EncodeLocation( Location, CurMech.IsQuad() );
-
-            if( item instanceof Equipment ) {
-                Equipment e = (Equipment) item;
-                this.heat = e.GetHeat() + "";
-                if( e.GetSpecials().equals( "-" ) ) 
-                    this.damage = "[" + e.GetType() + "]";
-                else
-                    this.specials = ("[" + e.GetType() + ", " + e.GetSpecials() + "]").replace(", -", "");
-            } else if( item instanceof ifWeapon ) {
-                ifWeapon weap = (ifWeapon) item;
-                this.heat = weap.GetHeat() + "";
-                if( weap.IsUltra() || weap.IsRotary() ) this.heat += "/s";
-                this.damage = weap.GetDamageShort() + "";
-                if( weap.GetWeaponClass() == ifWeapon.W_MISSILE ) this.damage += "/m";
-                if( weap.GetDamageShort() != weap.GetDamageMedium() ||
-                     weap.GetDamageShort() != weap.GetDamageLong() ||
-                     weap.GetDamageMedium() != weap.GetDamageLong() )
-                    this.damage = weap.GetDamageShort() + "/" + weap.GetDamageMedium() + "/" + weap.GetDamageLong();
-                if( weap.GetSpecials().equals( "-" ) ) 
-                    this.damage += " [" + weap.GetType() + "]";
-                else
-                    this.specials = ("[" + weap.GetType() + ", " + weap.GetSpecials() + "]").replace(", -", "");
-                if( weap.GetRangeMin() > 0 ) this.min = (weap.GetRangeMin() * MiniConvRate ) + "";
-                this.rShort = (weap.GetRangeShort() * MiniConvRate) + "";
-                this.rMed = (weap.GetRangeMedium() * MiniConvRate) + "";
-                this.rLong = (weap.GetRangeLong() * MiniConvRate) + "";
-            }
-        }
-
-        public void Clean() {
-            this.damage = this.specials;
-            this.min = "";
-            this.rShort = "";
-            this.rMed = "";
-            this.rLong = "";
-            this.specials = "-";
-        }
-
-        public PlaceableInfo ATMERAmmo( PlaceableInfo item ) {
-            return new PlaceableInfo("", 0, "", "ER", "", "1/m", (4 * MiniConvRate ) + "", (9 * MiniConvRate ) + "", (18 * MiniConvRate ) + "", (27 * MiniConvRate ) + "", item.specials);
-        }
-
-        public PlaceableInfo ATMHEAmmo( PlaceableInfo item ) {
-            return new PlaceableInfo("", 0, "", "HE", "", "3/m", "-", (3 * MiniConvRate ) + "", (6 * MiniConvRate ) + "", (9 * MiniConvRate ) + "", item.specials);
-        }
-
-        public PlaceableInfo MMLLRMAmmo( PlaceableInfo item ) {
-            return new PlaceableInfo("", 0, "", "LRM", "", "1/Msl.", (6 * MiniConvRate ) + "", (7 * MiniConvRate ) + "", (14 * MiniConvRate ) + "", (21 * MiniConvRate ) + "", "-");
-        }
-
-        public PlaceableInfo MMLSRMAmmo( PlaceableInfo item ) {
-            return new PlaceableInfo("", 0, "", "SRM", "", "2/Msl.", "--", (3 * MiniConvRate ) + "", (6 * MiniConvRate ) + "", (9 * MiniConvRate ) + "", "-");
-        }
-
-        public PlaceableInfo ArtemisIV( PlaceableInfo item ) {
-            return new PlaceableInfo("", 0, "", "w/Artemis IV FCS", "", item.specials, "", "", "", "", "-");
-        }
-
-        public PlaceableInfo ArtemisV( PlaceableInfo item ) {
-            return new PlaceableInfo("", 0, "", "w/Artemis V FCS", "", item.specials, "", "", "", "", "-");
-        }
-
-        public PlaceableInfo Apollo( PlaceableInfo item ) {
-            return new PlaceableInfo("", 0, "", "w/Apollo FCS", "", item.specials, "", "", "", "", "-");
-        }
-
-        public PlaceableInfo TargetingComputer() {
-            TargetingComputer tc = CurMech.GetTC();
-            return new PlaceableInfo("1", CurMech.GetLoadout().Find((abPlaceable) tc), FileCommon.EncodeLocation( CurMech.GetLoadout().Find((abPlaceable) tc), CurMech.IsQuad() ), "", tc.CritName(), "", "-", "-", "-", "-", "-");
-        }
     }
 
     private class AmmoData {

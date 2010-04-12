@@ -139,6 +139,10 @@ public class Media {
         }
     }
 
+    public void setLogo( javax.swing.JLabel lblLogo, Image image ) {
+        setLogo(lblLogo,  new ImageIcon(image));
+    }
+
     public void setLogo( javax.swing.JLabel lblLogo, ImageIcon icon ) {
         if( icon == null ) { return; }
 
@@ -243,6 +247,7 @@ public class Media {
 
     public String FindMatchingImage( String Name, String Model, String DirectoryPath ) {
         Preferences Prefs = Preferences.userNodeForPackage("/ssw/gui/frmMain".getClass());
+        //System.out.println("Checking Image @" + Prefs.get("DefaultImagePath", ""));
         if ( DirectoryPath.isEmpty() ) DirectoryPath = Prefs.get("DefaultImagePath", "");
         if ( DirectoryPath.isEmpty() ) return "";
 
