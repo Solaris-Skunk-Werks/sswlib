@@ -4377,6 +4377,13 @@ public class QuadLoadout implements ifMechLoadout {
                 throw new Exception( p.CritName() + " may not be mounted as it requires a fusion engine." );
             }
         }
+        if( p instanceof Talons ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if( NonCore.get( i ) instanceof Talons ) {
+                    throw new Exception( "A 'Mech cannot mount two sets of talons." );
+                }
+            }
+        }
         if( p instanceof ExtendedFuelTank ) {
             if( ! Owner.GetEngine().IsICE() &! Owner.GetEngine().isFuelCell() ) {
                 throw new Exception( p.CritName() + " may not be mounted on this 'Mech because the engine is incompatible." );

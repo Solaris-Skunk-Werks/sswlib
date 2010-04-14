@@ -213,7 +213,11 @@ public class Equipment extends abPlaceable {
     }
 
     public String LookupName() {
-        return LookupName;
+        if( Rear ) {
+            return "(R) " + LookupName;
+        } else {
+            return LookupName;
+        }
     }
 
     public String ChatName() {

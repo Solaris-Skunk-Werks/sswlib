@@ -71,7 +71,7 @@ public class ExtendedFuelTank extends Equipment {
 
     @Override
     public String MegaMekName( boolean UseRear ) {
-        return "ExtendedIMFuelTank";
+        return "Extended Fuel Tank";
     }
 
     @Override

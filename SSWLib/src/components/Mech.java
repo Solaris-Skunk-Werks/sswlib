@@ -84,6 +84,7 @@ public class Mech implements ifUnit, ifBattleforce {
                     HasLegAES = false,
                     HasFHES = false,
                     HasPartialWing = false,
+                    HasJumpBooster = false,
                     FractionalAccounting = false,
                     Changed = false;
     private Engine CurEngine = new Engine( this );
@@ -96,6 +97,7 @@ public class Mech implements ifUnit, ifBattleforce {
     private Cockpit CurCockpit = new Cockpit( this );
     private PhysicalEnhancement CurPhysEnhance = new PhysicalEnhancement( this );
     private MechArmor CurArmor = new MechArmor( this );
+    private MechanicalJumpBooster JumpBooster = new MechanicalJumpBooster( this );
     private MultiSlotSystem NullSig,
                             VoidSig,
                             Chameleon,
@@ -1344,6 +1346,9 @@ public class Mech implements ifUnit, ifBattleforce {
         if( CurLoadout.GetJumpJets().GetNumJJ() != this.GetAdjustedJumpingMP( false ) ) {
             info += "[" + GetAdjustedJumpingMP( false ) + "]";
         }
+        if( HasJumpBooster ) {
+            info += "/" + JumpBooster.ChatName();
+        }
         if( CurPhysEnhance.IsMASC() || CurPhysEnhance.IsTSM() ) {
             info += " " + CurPhysEnhance.ChatName();
         }
@@ -1597,6 +1602,21 @@ public class Mech implements ifUnit, ifBattleforce {
         return JJMult;
     }
 
+    public int GetJumpBoosterMP() {
+        return JumpBooster.GetMP();
+    }
+
+    public int GetAdjustedBoosterMP( boolean BV ) {
+        // Large Shields restrict jumping ability but do affect BV movement modifiers
+        if ( ! BV && ! GetTotalModifiers( BV, true ).CanJump() ) {
+            return 0;
+        } else {
+            int retval = JumpBooster.GetMP();
+            retval += GetTotalModifiers( BV, true ).JumpingAdder();
+            return retval;
+        }
+    }
+
     public double GetCurrentTons() {
         // returns the current total tonnage of the mech
         double result = 0.0;
@@ -1633,6 +1653,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if( HasNullSig ) { result += NullSig.GetTonnage(); }
         if( HasChameleon ) { result += Chameleon.GetTonnage(); }
         if( HasPartialWing ) { result += Wing.GetTonnage(); }
+        if( HasJumpBooster ) { result += JumpBooster.GetTonnage(); }
         if( CurLoadout.HasSupercharger() ) { result += CurLoadout.GetSupercharger().GetTonnage(); }
         if( HasEnviroSealing ) { result += EnviroSealing.GetTonnage(); }
         if( HasEjectionSeat ) { result += EjectionSeat.GetTonnage(); }
@@ -1691,6 +1712,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if( HasNullSig ) { result += NullSig.GetTonnage(); }
         if( HasChameleon ) { result += Chameleon.GetTonnage(); }
         if( HasPartialWing ) { result += Wing.GetTonnage(); }
+        if( HasJumpBooster ) { result += JumpBooster.GetTonnage(); }
         if( CurLoadout.HasSupercharger() ) { result += CurLoadout.GetSupercharger().GetTonnage(); }
         if( HasEnviroSealing ) { result += EnviroSealing.GetTonnage(); }
         if( HasEjectionSeat ) { result += EjectionSeat.GetTonnage(); }
@@ -1914,6 +1936,7 @@ public class Mech implements ifUnit, ifBattleforce {
             result += BlueShield.GetDefensiveBV();
             result += VoidSig.GetDefensiveBV();
             result += Wing.GetDefensiveBV();
+            result += JumpBooster.GetDefensiveBV();
             result += EnviroSealing.GetDefensiveBV();
             result += Tracks.GetDefensiveBV();
             result += CurLoadout.GetActuators().GetDefensiveBV();
@@ -2166,7 +2189,14 @@ public class Mech implements ifUnit, ifBattleforce {
         double jump = 0.0;
         if( GetJumpJets().GetNumJJ() > 0 ) {
             JumpMP = GetAdjustedJumpingMP( true ) - 1;
-                jump = DefensiveFactor[JumpMP] + 0.1;
+            jump = DefensiveFactor[JumpMP] + 0.1;
+        }
+        if( UsingJumpBooster() ) {
+            int boostMP = GetJumpBoosterMP();
+            if( boostMP > JumpMP ) {
+                JumpMP = boostMP;
+                jump = Mech.DefensiveFactor[JumpMP] + 0.1f;
+            }
         }
 
         double retval = 0.0;
@@ -2412,7 +2442,17 @@ public class Mech implements ifUnit, ifBattleforce {
 
     public double GetOffensiveFactor() {
         double result = 0.0;
-        result += GetAdjustedRunningMP( true, true ) + ( Math.floor( GetAdjustedJumpingMP( true ) * 0.5 + 0.5 )  ) - 5.0;
+        if( UsingJumpBooster() ) {
+            int boost = GetAdjustedBoosterMP( true );
+            int jump = GetAdjustedJumpingMP( true );
+            if( jump >= boost ) {
+                result += (double) (GetAdjustedRunningMP(true, true) + (Math.floor(GetAdjustedJumpingMP(true) * 0.5f + 0.5f)) - 5.0f);
+            } else {
+                result += (double) (GetAdjustedRunningMP(true, true) + (Math.floor(GetAdjustedBoosterMP(true) * 0.5f + 0.5f)) - 5.0f);
+            }
+        } else {
+            result += (double) (GetAdjustedRunningMP(true, true) + (Math.floor(GetAdjustedJumpingMP(true) * 0.5f + 0.5f)) - 5.0f);
+        }
         result = result * 0.1 + 1.0;
         result = (double) Math.pow( result, 1.2 ) ;
 
@@ -2486,6 +2526,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if( HasBlueShield() ) { result += BlueShield.GetCost(); }
         if( HasEnviroSealing() ) { result += EnviroSealing.GetCost(); }
         if( HasPartialWing ) { result += Wing.GetCost(); }
+        if( HasJumpBooster ) { result += JumpBooster.GetCost(); }
         if( Quad ) {
             if( HasLegAES ) { result += RLAES.GetCost() * 4.0; }
         } else {
@@ -3133,6 +3174,7 @@ public class Mech implements ifUnit, ifBattleforce {
 
     public void SetPartialWing( boolean b ) throws Exception {
         if( Omnimech ) { return; }
+        if( HasJumpBooster ) { throw new Exception( "Partial Wing is incompatible with Mechanical Jump Boosters." ); }
         if( b ) {
             if( ! Wing.Place( MainLoadout ) ) {
                 throw new Exception( "There is no available room for the Partial Wing!\nIt will not be allocated." );
@@ -3145,6 +3187,7 @@ public class Mech implements ifUnit, ifBattleforce {
 
     public void SetPartialWing( boolean b, LocationIndex[] lpw ) throws Exception {
         if( Omnimech ) { return; }
+        if( HasJumpBooster ) { throw new Exception( "Partial Wing is incompatible with Mechanical Jump Boosters." ); }
         if( b ) {
             if( ! Wing.Place( MainLoadout, lpw ) ) {
                 throw new Exception( "There is no available room for the Partial Wing!\nIt will not be allocated." );
@@ -3161,6 +3204,28 @@ public class Mech implements ifUnit, ifBattleforce {
 
     public PartialWing GetPartialWing() {
         return Wing;
+    }
+
+    public void SetJumpBooster( boolean b ) throws Exception {
+        if( Omnimech ) { return; }
+        if( HasPartialWing ) { throw new Exception( "Mechanical Jump Booster is incompatible with Partial Wing." ); }
+        if( b ) {
+            if( ! JumpBooster.Place( MainLoadout ) ) {
+                throw new Exception( "There is no available room for the Jump Boosters!\nThey will not be allocated." );
+            }
+        } else {
+            JumpBooster.Remove( MainLoadout );
+            JumpBooster.SetBoostMP( 0 );
+        }
+        HasJumpBooster = b;
+    }
+
+    public boolean UsingJumpBooster() {
+        return HasJumpBooster;
+    }
+
+    public MechanicalJumpBooster GetJumpBooster() {
+        return JumpBooster;
     }
 
     public void SetLAAES( boolean set, int index ) throws Exception {

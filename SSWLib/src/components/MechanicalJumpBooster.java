@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008~2009, Justin R. Bengtson (poopshotgun@yahoo.com)
+Copyright (c) 2010, Justin R. Bengtson (poopshotgun@yahoo.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -28,60 +28,60 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
-public class Talons extends PhysicalWeapon {
+public class MechanicalJumpBooster extends abPlaceable {
 
-    private AvailableCode AC = new AvailableCode( AvailableCode.TECH_CLAN );
-    private int Placed = 0;
+    private Mech Owner;
+    private int MP = 0;
+    private static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
 
-    public Talons ( Mech m ) {
-        AC.SetCLCodes( 'E', 'X', 'X', 'F' );
-        AC.SetCLDates( 0, 0, false, 3072, 0, 0, false, false );
-        AC.SetCLFactions( "", "", "CJF", "" );
+    public MechanicalJumpBooster( Mech m ) {
+        Owner = m;
+        AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+        AC.SetISCodes( 'E', 'X', 'X', 'F' );
+        AC.SetISDates( 3055, 3060, true, 3060, 0, 0, false, false );
+        AC.SetISFactions( "FS", "FS", "", "" );
         AC.SetPBMAllowed( true );
         AC.SetPIMAllowed( true );
-        AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
-        SetBattleForceAbilities( new String[]{ "MEL" } );
-        Owner = m;
-    }
-
-    @Override
-    public int GetPWClass () {
-        return PhysicalWeapon.PW_CLASS_TALON;
-    }
-    
-    @Override
-    public boolean RequiresLowerArm() {
-        return false;
     }
 
     @Override
     public String ActualName() {
-        return "Talons";
+        return "'Mech Mechanical Jump Booster";
     }
 
     @Override
     public String LookupName() {
-        return "Talons";
+        return "Jump Booster";
     }
 
     @Override
     public String CritName() {
-        return "Talons";
+        return "Jump Booster";
     }
 
     @Override
     public String ChatName() {
-        return "Talons";
+        return "JBst(" + GetMP() + ")";
     }
 
     @Override
-    public String MegaMekName( boolean UseRear ) {
-        return "Talons";
+    public String MegaMekName(boolean UseRear) {
+        return "";
     }
 
     @Override
     public String BookReference() {
         return "Tactical Operations";
+    }
+
+    public int GetMP() {
+        return MP;
+    }
+
+    public void SetBoostMP( int i ) {
+        if( i < 0 ) { i = 0; }
+        if( i > 20 ) { i = 20; }
+        MP = i;
     }
 
     @Override
@@ -96,71 +96,43 @@ public class Talons extends PhysicalWeapon {
 
     @Override
     public double GetTonnage() {
-        double result = 0.0;
-        if( Owner.UsingFractionalAccounting() ) {
-            result = Math.ceil( Owner.GetTonnage() * 0.0666 * 1000 ) * 0.001;
-        } else {
-            result = (int) Math.ceil( Owner.GetTonnage() * 0.0666 );
-        }
-
+        double retval = Math.ceil( MP * Owner.GetTonnage() * 0.1 ) * 0.5;
         if( IsArmored() ) {
-            return result + ( NumCrits() * 0.5 );
-        } else {
-            return result;
-        }
-    }
-
-    @Override
-    public double GetCost() {
-        if( IsArmored() ) {
-            return ( Owner.GetTonnage() * 300.0 + ( NumCrits() * 150000.0 ) );
-        } else {
-            return Owner.GetTonnage() * 300.0;
-        }
-    }
-
-    @Override
-    public double GetOffensiveBV() {
-        return GetDamageShort();
-    }
-
-    @Override
-    public AvailableCode GetAvailability() {
-        AvailableCode retval = AC.Clone();
-        if( IsArmored() ) {
-            retval.Combine( ArmoredAC );
+            if( Owner.IsQuad() ) {
+                retval += 4.0;
+            } else {
+                retval += 2.0;
+            }
         }
         return retval;
     }
 
     @Override
-    public String GetType() {
-        return "PA";
+    public double GetCost() {
+        return 150.0 * Owner.GetTonnage() * ( MP * MP );
     }
 
     @Override
-    public String GetSpecials() {
-        return "PB";
+    public double GetOffensiveBV() {
+        return 0.0;
     }
 
     @Override
-    public int GetDamageShort() {
-        return (int) Math.ceil( Owner.GetTonnage() * 0.2 * 1.5 );
+    public double GetCurOffensiveBV(boolean UseRear, boolean UseTC, boolean UseAES) {
+        return 0.0;
     }
 
     @Override
-    public int GetDamageMedium() {
-        return (int) Math.ceil( Owner.GetTonnage() * 0.2 * 1.5 );
-    }
-
-    @Override
-    public int GetDamageLong() {
-        return (int) Math.ceil( Owner.GetTonnage() * 0.2 * 1.5 );
-    }
-
-    @Override
-    public int GetTechBase() {
-        return AC.GetTechBase();
+    public double GetDefensiveBV() {
+        if( IsArmored() ) {
+            if( Owner.IsQuad() ) {
+                return 40.0;
+            } else {
+                return 20.0;
+            }
+        } else {
+            return 0.0;
+        }
     }
 
     @Override
@@ -207,7 +179,6 @@ public class Talons extends PhysicalWeapon {
     public boolean Place( ifMechLoadout l ) {
         try {
             if( l.IsQuad() ) {
-                l.AddToQueue( this );
                 l.AddToLA( this, 4 );
                 l.AddToLA( this, 5 );
                 l.AddToRA( this, 4 );
@@ -217,7 +188,6 @@ public class Talons extends PhysicalWeapon {
                 l.AddToRL( this, 4 );
                 l.AddToRL( this, 5 );
             } else {
-                l.AddToQueue( this );
                 l.AddToLL( this, 4 );
                 l.AddToLL( this, 5 );
                 l.AddToRL( this, 4 );
@@ -230,31 +200,7 @@ public class Talons extends PhysicalWeapon {
     }
 
     @Override
-    public int NumPlaced() {
-        return Placed;
-    }
-
-    @Override
-    public void IncrementPlaced() {
-        Placed++;
-    }
-
-    @Override
-    public void DecrementPlaced() {
-        Placed--;
-    }
-
-    @Override
-    public void ResetPlaced() {
-        Placed = 0;
-    }
-
-    @Override
-    public String toString() {
-        if( NumCrits() > Placed ) {
-            return "Talons (" + ( NumCrits() - Placed ) + ")";
-        } else {
-            return "Talons";
-        }
+    public AvailableCode GetAvailability() {
+        return AC;
     }
 }

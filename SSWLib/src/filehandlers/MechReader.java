@@ -733,8 +733,12 @@ public class MechReader {
                             m.GetLoadout().AddTo( p, l.Location, l.Index );
                         }
                     } else {
-                        m.GetLoadout().AddToQueue( p );
-                        m.GetLoadout().AddTo( p, l.Location, l.Index );
+                        if( p instanceof Talons ) {
+                            p.Place( m.GetLoadout() );
+                        } else {
+                            m.GetLoadout().AddToQueue( p );
+                            m.GetLoadout().AddTo( p, l.Location, l.Index );
+                        }
                         if( turreted ) {
                             if( l.Location == LocationIndex.MECH_LOC_HD ) {
                                 if( p instanceof RangedWeapon ) {
@@ -832,6 +836,11 @@ public class MechReader {
                     lpw[1] = l;
                 }
                 m.SetPartialWing( true, lpw );
+            } else if( n.item( i ).getNodeName().equals( "jumpbooster" ) ) {
+                map = n.item( i ).getAttributes();
+                int mp = Integer.parseInt( map.getNamedItem( "mp" ).getTextContent() );
+                m.SetJumpBooster( true );
+                m.GetJumpBooster().SetBoostMP( mp );
             } else if( n.item( i ).getNodeName().equals( "arm_aes" ) ) {
                 map = n.item( i ).getAttributes();
                 String Loc = map.getNamedItem( "location" ).getTextContent();
@@ -1457,8 +1466,14 @@ public class MechReader {
                                     m.GetLoadout().AddTo( p, l.Location, l.Index );
                                 }
                             } else {
-                                m.GetLoadout().AddToQueue( p );
-                                m.GetLoadout().AddTo( p, l.Location, l.Index );
+                                if( p instanceof Talons ) {
+                                    if( ! p.Place( m.GetLoadout() ) ) {
+                                        throw new Exception( "Talons cannot be added to the 'Mech because there is no available space." );
+                                    }
+                                } else {
+                                    m.GetLoadout().AddToQueue( p );
+                                    m.GetLoadout().AddTo( p, l.Location, l.Index );
+                                }
                                 if( turreted ) {
                                     if( l.Location == LocationIndex.MECH_LOC_HD ) {
                                         if( p instanceof RangedWeapon ) {

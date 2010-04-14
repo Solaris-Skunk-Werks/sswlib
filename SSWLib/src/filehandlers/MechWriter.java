@@ -338,6 +338,11 @@ public class MechWriter {
             FR.write( tab + tab + "<partialwing lsstart=\"" + ls.Index + "\" rsstart=\"" + rs.Index + "\" />" );
             FR.newLine();
         }
+        if( CurMech.UsingJumpBooster() ) {
+            // only in the base loadout so far.  We'll find out otherwise later
+            FR.write( tab + tab + "<jumpbooster mp=\"" + CurMech.GetJumpBoosterMP() + "\" />" );
+            FR.newLine();
+        }
         if( CurMech.HasLegAES() ) {
             FR.write( tab + tab + "<leg_aes>" );
             FR.newLine();
