@@ -643,14 +643,14 @@ public class PrintMech implements Printable {
     private Vector<AmmoData> GetAmmo() {
         //Output the list of Ammunition
         Vector all = CurMech.GetLoadout().GetNonCore();
-        Vector<AmmoData> AmmoList = new Vector<AmmoData>();
+        Vector<AmmoData> AmmoLister = new Vector<AmmoData>();
         for ( int index=0; index < all.size(); index++ ) {
             if(  all.get( index ) instanceof Ammunition ) {
                 AmmoData CurAmmo = new AmmoData((Ammunition) all.get(index));
 
                 boolean found = false;
-                for ( int internal=0; internal < AmmoList.size(); internal++ ) {
-                    AmmoData existAmmo = (AmmoData) AmmoList.get(internal);
+                for ( int internal=0; internal < AmmoLister.size(); internal++ ) {
+                    AmmoData existAmmo = (AmmoData) AmmoLister.get(internal);
                     if ( CurAmmo.ActualName.equals( existAmmo.ActualName ) ) {
                         existAmmo.LotSize += CurAmmo.LotSize;
                         found = true;
@@ -658,11 +658,11 @@ public class PrintMech implements Printable {
                     }
                 }
                 if ( !found ) {
-                    AmmoList.add(CurAmmo);
+                    AmmoLister.add(CurAmmo);
                 }
             }
         }
-        return AmmoList;
+        return AmmoLister;
     }
 
     private boolean AmmoContains( Vector<AmmoData> AmmoList, String CheckExpr ) {
