@@ -38,7 +38,7 @@ public class tbChatInformation extends abView {
         Columns.add(new Column( 0, "Type/Model", "Name", false, 125, String.class, true, SortOrder.ASCENDING ));
         Columns.add(new Column( 1, "Information", "ChatInfo", false, 325, String.class, true, SortOrder.ASCENDING ));
         Columns.add(new Column( 2, "BV", "BV", false, 20, Integer.class, true, SortOrder.ASCENDING ));
-        Columns.add(new Column( 3, "Cost", "Cost", false, 30, Double.class, true, SortOrder.ASCENDING ));
+        Columns.add(new Column( 3, "Cost", "Cost", false, 20, Integer.class, true, SortOrder.ASCENDING ));
         Columns.add(new Column( 4, "Level", "Level", 40 ));
         Columns.add(new Column( 5, "Era", "Era", 20 ));
         Columns.add(new Column( 6, "Tech", "Tech", 20 ));
@@ -58,7 +58,7 @@ public class tbChatInformation extends abView {
             case 2:
                 return (int) m.getBV();
             case 3:
-                return (int) m.getCost();
+                return String.format( "%1$,d",(int) m.getCost());
             case 4:
                 return m.getLevel();
             case 5:

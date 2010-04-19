@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package list.view;
 
+import java.text.DecimalFormat;
 import javax.swing.SortOrder;
 import list.MechList;
 import list.MechListData;
@@ -38,7 +39,7 @@ public class tbTotalWarfareView extends abView {
         Columns.add(new Column( 0, "Tons", "Tonnage", false, 20, Integer.class, true, SortOrder.ASCENDING ));
         Columns.add(new Column( 1, "Type/Model", "Name", false, 150, String.class, true, SortOrder.ASCENDING ));
         Columns.add(new Column( 2, "BV", "BV", false, 20, Integer.class, true, SortOrder.ASCENDING ));
-        Columns.add(new Column( 3, "Cost", "Cost", 60, Double.class ));
+        Columns.add(new Column( 3, "Cost", "Cost", 20, Integer.class ));
         Columns.add(new Column( 4, "Level", "Level", 80 ));
         Columns.add(new Column( 5, "Era", "Era", 100 ));
         Columns.add(new Column( 6, "Tech", "Tech", 50 ));
@@ -60,7 +61,7 @@ public class tbTotalWarfareView extends abView {
             case 2:
                 return (int) m.getBV();
             case 3:
-                return m.getCost();
+                return String.format( "%1$,d",(int) m.getCost());
             case 4:
                 return m.getLevel();
             case 5:
