@@ -51,7 +51,7 @@ public abstract class abUnitData implements ifUnitData {
             Year = 2750,
             BV = 0,
             MinMP = 1;
-    double Cost = 0;
+    double Cost = 0.0d;
     boolean Omni = false;
     String filename = "";
     public Vector Configurations = new Vector();
@@ -178,6 +178,10 @@ public abstract class abUnitData implements ifUnitData {
         this.Cost = Cost;
     }
 
+    public String getFinalCost() {
+        return Long.toString(Math.round(Cost));
+    }
+
     public boolean isOmni() {
         return Omni;
     }
@@ -240,6 +244,7 @@ public abstract class abUnitData implements ifUnitData {
     }
     
     public BattleForceStats getBattleForceStats() {
+        if ( bfstat.getName().isEmpty() ) bfstat.setName(this.TypeModel);
         return bfstat;
     }
 }
