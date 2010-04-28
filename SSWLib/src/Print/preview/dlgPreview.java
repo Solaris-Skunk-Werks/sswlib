@@ -327,7 +327,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                         pm.setPrintMech(chkImage.isSelected());
                         pm.setPrintLogo(chkLogo.isSelected());
                         if ( chkPrintGroup.isSelected() ) pm.setGroupName( g.getName() + " [" + g.getForce().ForceName + "]" );
-                        if ( chkUseHexConversion.isSelected() ) pm.SetMiniConversion(cmbHexConvFactor.getSelectedIndex());
+                        if ( chkUseHexConversion.isSelected() ) pm.SetMiniConversion(cmbHexConvFactor.getSelectedIndex()+1);
                         if ( chkLogo.isSelected() ) pm.setLogoImage(imageTracker.getImage(g.getLogo()));
                         if ( cmbRSType.getSelectedIndex() == 1 ) pm.setTRO(true);
                         printer.Append( BFBPrinter.Letter.toPage(), pm);

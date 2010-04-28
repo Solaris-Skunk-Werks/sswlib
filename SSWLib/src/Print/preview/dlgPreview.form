@@ -111,7 +111,7 @@
                           <Component id="chkPrintRecordsheets" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="chkPrintScenario" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="44" max="32767" attributes="0"/>
+                      <EmptySpace pref="48" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -196,7 +196,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="21" pref="21" max="21" attributes="0"/>
                           <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="70" max="-2" attributes="0"/>
+                          <EmptySpace pref="74" max="-2" attributes="0"/>
                       </Group>
                       <Group type="103" alignment="1" groupAlignment="0" attributes="0">
                           <Component id="chkTables" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -360,7 +360,7 @@
                           <Component id="chkImage" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="chkPrintGroup" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="38" max="32767" attributes="0"/>
+                      <EmptySpace pref="42" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
