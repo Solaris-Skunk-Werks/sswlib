@@ -260,13 +260,18 @@ public class Media {
         PossibleNames.add(Name);
         PossibleNames.add(Name.replace(" ", ""));
         if ( Name.contains("(") ) {
-            PossibleNames.add(Name.split("\\(")[1].replace("(", "").replace(")", "") + " (" + Name.split("\\(")[0].trim() + ") " + Model);
-            PossibleNames.add(Model + " " + Name.split("\\(")[1].replace("(", "").replace(")", "") + " (" + Name.split("\\(")[0].trim() + ")");
-            PossibleNames.add(Name.split("\\(")[1].replace("(", "").replace(")", "") + " (" + Name.split("\\(")[0].trim() + ")");
-            PossibleNames.add(Name.split("\\(")[0].trim());
-            PossibleNames.add(Name.split("\\(")[0].replace(" ", ""));
-            PossibleNames.add(Name.split("\\(")[1].replace("(", "").replace(")", ""));
-            PossibleNames.add(Name.split("\\(")[1].replace("(", "").replace(")", "").replace(" ", ""));
+            String First = "", Second = "";
+            First = Name.split("\\(")[0].trim();
+            Second = Name.split("\\(")[1].replace("(", "").replace(")", "");
+            PossibleNames.add(Second + " (" + First + ") " + Model);
+            PossibleNames.add(Model + " " + Second + " (" + First + ")");
+            PossibleNames.add(First + " " + Model);
+            PossibleNames.add(Second + " " + Model);
+            PossibleNames.add(Second + " (" + First + ")");
+            PossibleNames.add(First);
+            PossibleNames.add(First.replace(" ", ""));
+            PossibleNames.add(Second);
+            PossibleNames.add(Second.replace(" ", ""));
         }
 
         if ( DirectoryPath.endsWith(".jpg") || 
@@ -282,12 +287,12 @@ public class Media {
             if( fileList.length == 0 ) { return ""; }
 
             for ( String nameToCheck : PossibleNames ) {
-                //System.out.println(nameToCheck.trim());
+                System.out.println(nameToCheck.trim());
                 for ( String f : fileList ) {
                     if ( !f.isEmpty() && f.contains(".") )
                         if ( f.substring(0, f.lastIndexOf(".")).toLowerCase().equals( nameToCheck.trim().toLowerCase() ) ) {
-                            //System.out.println("FOUND: " + f);
-                            return DirectoryPath + f;
+                            System.out.println("FOUND: " + f);
+                            //return DirectoryPath + f;
                         }
                 }
             }
