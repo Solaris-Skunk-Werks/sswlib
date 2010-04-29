@@ -1155,9 +1155,22 @@ public class SupportVehicle {
 	}
         
 	public double getEngineTonnage() {
+            this.setEngineTonnage();
 		double tonnage = this.Tonnage;
 		return tonnage;
 	}
+
+        private void setEngineTonnage() {
+            int motiveFactor = cruiseSpeed * cruiseSpeed + 4;
+            double engineMultiplier = 0;
+            if (this.techRating.equals("A")) { engineMultiplier = this.engine.getMultipliers().get(0); }
+            if (this.techRating.equals("B")) { engineMultiplier = this.engine.getMultipliers().get(1); }
+            if (this.techRating.equals("C")) { engineMultiplier = this.engine.getMultipliers().get(2); }
+            if (this.techRating.equals("D")) { engineMultiplier = this.engine.getMultipliers().get(3); }
+            if (this.techRating.equals("E")) { engineMultiplier = this.engine.getMultipliers().get(4); }
+            if (this.techRating.equals("F")) { engineMultiplier = this.engine.getMultipliers().get(5); }
+            this.Tonnage = motiveFactor * engineMultiplier * this.baseEngineValue;
+        }
 	
 	// Methods - Other
 	public void Visit( ifVisitor v ) throws Exception {
