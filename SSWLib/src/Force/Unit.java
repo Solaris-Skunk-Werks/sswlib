@@ -61,8 +61,9 @@ public class Unit implements ifSerializable {
                  Tonnage = 20.0f,
                  SkillsBV = 0.0f,
                  ModifierBV = 0.0f,
-                 C3BV = 0.0f,
-                 TotalBV = 0.0f;
+                 C3BV = 0.0f;
+    private float ForceC3BV = 0.0f;
+    public float TotalBV = 0.0f;
     private int Piloting = 5;
     private int Gunnery = 4;
     public int UnitType = CommonTools.BattleMech;
@@ -222,10 +223,11 @@ public class Unit implements ifSerializable {
         SkillsBV = 0;
         ModifierBV = 0;
         TotalBV = 0;
-        SkillsBV += CommonTools.GetSkillBV(BaseBV, getGunnery(), getPiloting());
-        ModifierBV += CommonTools.GetModifierBV(SkillsBV, MiscMod);
-        TotalBV += CommonTools.GetFullAdjustedBV(BaseBV, getGunnery(), getPiloting(), MiscMod);
-        if (UsingC3) { C3BV += TotalBV * .05;}
+        //C3BV = 0;
+        //if (UsingC3) { C3BV += BaseBV * .05;}
+        SkillsBV = CommonTools.GetSkillBV((BaseBV + ForceC3BV), getGunnery(), getPiloting());
+        ModifierBV = CommonTools.GetModifierBV(SkillsBV, MiscMod);
+        TotalBV = CommonTools.GetFullAdjustedBV((BaseBV + ForceC3BV), getGunnery(), getPiloting(), MiscMod);
     }
 
     public void UpdateByMech() {
@@ -443,5 +445,13 @@ public class Unit implements ifSerializable {
             val += " (" + C3Type + ")";
         }
         return val;
+    }
+
+    public float getForceC3BV() {
+        return ForceC3BV;
+    }
+
+    public void setForceC3BV(float ForceC3BV) {
+        this.ForceC3BV = ForceC3BV;
     }
 }
