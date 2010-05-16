@@ -89,6 +89,14 @@ public class dlgUnit extends javax.swing.JDialog {
         skills = new Skills(unit.BaseBV);
         setSkills();
 
+        String BVBreakdown = "";
+        BVBreakdown += "Base:   " + unit.BaseBV + "\n";
+        BVBreakdown += "Skills: " + unit.SkillsBV + "\n";
+        BVBreakdown += "Mods:   " + unit.ModifierBV + "\n";
+        BVBreakdown += "C3:     " + unit.getForceC3BV() + "\n";
+        BVBreakdown += "Total:  " + unit.TotalBV + "\n";
+        txtBVBreakdown.setText(BVBreakdown);
+
         unit.LoadMech();
         if ( unit.m != null ) {
             if ( unit.m.IsOmnimech() ) {
@@ -286,6 +294,9 @@ public class dlgUnit extends javax.swing.JDialog {
         lblBFSA = new javax.swing.JLabel();
         jLabel37 = new javax.swing.JLabel();
         lblBFPoints = new javax.swing.JLabel();
+        jPanel11 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        txtBVBreakdown = new javax.swing.JTextPane();
         pnlFile = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         lblFilename = new javax.swing.JLabel();
@@ -496,7 +507,7 @@ public class dlgUnit extends javax.swing.JDialog {
                     .addComponent(lblModel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chkC3Active)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -698,7 +709,7 @@ public class dlgUnit extends javax.swing.JDialog {
                         .addComponent(rdoPiloting)
                         .addGap(18, 18, 18)
                         .addComponent(btnFilter))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel10))
         );
@@ -748,7 +759,7 @@ public class dlgUnit extends javax.swing.JDialog {
                         .addComponent(lblRandomSkill)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnApply)))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -815,9 +826,9 @@ public class dlgUnit extends javax.swing.JDialog {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addComponent(btnSelectWarrior)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
                         .addComponent(btnLoadFile))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -1110,6 +1121,27 @@ public class dlgUnit extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("BattleForce", jPanel10);
 
+        jScrollPane5.setViewportView(txtBVBreakdown);
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Battle Value Breakdown", jPanel11);
+
         jLabel1.setText("File:");
 
         lblFilename.setText("k:\\location");
@@ -1176,6 +1208,7 @@ public class dlgUnit extends javax.swing.JDialog {
 
     private void txtModActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtModActionPerformed
         unit.MiscMod = Float.parseFloat(txtMod.getText());
+        unit.warrior.setManeiDomini(unit.MiscMod);
         unit.Refresh();
         setBV();
     }//GEN-LAST:event_txtModActionPerformed
@@ -1420,6 +1453,7 @@ public class dlgUnit extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -1432,6 +1466,7 @@ public class dlgUnit extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar2;
@@ -1468,6 +1503,7 @@ public class dlgUnit extends javax.swing.JDialog {
     private javax.swing.JTextPane tpnBattleMechQuirks;
     private javax.swing.JTextPane tpnMechwarriorQuirks;
     private javax.swing.JTextPane tpnTRO;
+    private javax.swing.JTextPane txtBVBreakdown;
     private javax.swing.JTextField txtBVLimit;
     private javax.swing.JTextField txtMechwarrior;
     private javax.swing.JTextField txtMod;
