@@ -724,7 +724,7 @@ public class CommonTools {
     }
 
     public static float GetFullAdjustedBV( float BV, int Gunnery, int Piloting, float Modifier ) {
-        return BV * BVMods[Gunnery][Piloting] * Modifier;
+        return (BV * BVMods[Gunnery][Piloting]) * Modifier;
     }
 
     public static float GetForceSizeMultiplier( int Force1Size, int Force2Size ) {
