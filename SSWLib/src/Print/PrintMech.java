@@ -60,7 +60,8 @@ public class PrintMech implements Printable {
                     Canon = false,
                     TRO = false,
                     printMech = false,
-                    printLogo = false;
+                    printLogo = false,
+                    makeAmmoGeneric = false;
     private String PilotName = "",
                     GroupName = "",
                     currentAmmoFormat = "";
@@ -346,7 +347,7 @@ public class PrintMech implements Printable {
                         graphics.drawOval( p[i].x, p[i].y - 5, 5, 5 );
                         graphics.drawString( PrintConsts.GetPrintName( a[i], CurMech ), p[i].x + 7, p[i].y );
                     } else if( a[i] instanceof Ammunition ) {
-                        graphics.drawString( FileCommon.FormatAmmoPrintName( (Ammunition) a[i], 1, TRO ), p[i].x + 3, p[i].y );
+                        graphics.drawString( FileCommon.FormatAmmoPrintName( (Ammunition) a[i], 1, TRO, makeAmmoGeneric ), p[i].x + 3, p[i].y );
                     } else {
                         graphics.drawString( PrintConsts.GetPrintName( a[i], CurMech ), p[i].x + 3, p[i].y );
                     }
@@ -647,11 +648,11 @@ public class PrintMech implements Printable {
         for ( int index=0; index < all.size(); index++ ) {
             if(  all.get( index ) instanceof Ammunition ) {
                 AmmoData CurAmmo = new AmmoData((Ammunition) all.get(index));
-
+                CurAmmo.makeGeneric = makeAmmoGeneric;
                 boolean found = false;
                 for ( int internal=0; internal < AmmoLister.size(); internal++ ) {
                     AmmoData existAmmo = (AmmoData) AmmoLister.get(internal);
-                    if ( CurAmmo.ActualName.equals( existAmmo.ActualName ) ) {
+                    if ( CurAmmo.Name().equals( existAmmo.Name() ) ) {
                         existAmmo.LotSize += CurAmmo.LotSize;
                         found = true;
                         break;
@@ -737,12 +738,19 @@ public class PrintMech implements Printable {
         this.GroupName = GroupName;
     }
 
+    public void setAmmoGeneric( boolean action ) {
+        makeAmmoGeneric = action;
+        AmmoList = GetAmmo();
+    }
+
     private class AmmoData {
         public String ActualName,
                       ChatName,
+                      GenericName,
                       CritName,
                       LookupName;
         public int LotSize;
+        public boolean makeGeneric = false;
 
         public AmmoData( Ammunition ammo ) {
             this.ActualName = ammo.ActualName();
@@ -750,11 +758,22 @@ public class PrintMech implements Printable {
             this.CritName = ammo.CritName().replace("@", "").trim();
             this.LookupName = ammo.LookupName();
 
+            this.GenericName = ammo.CritName().replace("@", "").replace("(Slug)", "").replace("(Cluster)", "");
             this.LotSize = ammo.GetLotSize();
         }
 
+        public String Name() {
+            if ( !makeGeneric )
+                return ActualName;
+            else
+                return GenericName;
+        }
+
         public String Format() {
-            return ("@%P").replace("%P", CritName).replace("%F", LookupName).replace("%L", "");
+            if ( !makeGeneric )
+                return ("@%P").replace("%P", CritName).replace("%F", LookupName).replace("%L", "");
+            else
+                return ("@%P").replace("%P", GenericName).replace("%F", GenericName).replace("%L", "");
         }
     }
 }

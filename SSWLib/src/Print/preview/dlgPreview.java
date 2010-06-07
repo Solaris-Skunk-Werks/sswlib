@@ -95,6 +95,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         chkCanon.setSelected(sswPrefs.getBoolean(Constants.Format_CanonPattern, false));
         chkTables.setSelected(sswPrefs.getBoolean(Constants.Format_Tables, false));
         chkUseHexConversion.setSelected(sswPrefs.getBoolean(Constants.Format_ConvertTerrain, false));
+        chkGenericAmmo.setSelected(sswPrefs.getBoolean("GenericAmmo", false));
         cmbHexConvFactor.setSelectedItem(sswPrefs.getInt(Constants.Format_TerrainModifier, 1));
 
         chkPrintForce.setSelected(bfbPrefs.getBoolean(Constants.Print_ForceList, true));
@@ -148,6 +149,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         cmbRSType.setEnabled(chkPrintRecordsheets.isSelected());
         chkTables.setEnabled(chkPrintRecordsheets.isSelected());
         chkCanon.setEnabled(chkPrintRecordsheets.isSelected());
+        chkGenericAmmo.setEnabled(chkPrintRecordsheets.isSelected());
 
         chkImage.setEnabled(chkPrintRecordsheets.isSelected() || chkPrintBattleforce.isSelected());
         chkLogo.setEnabled(chkPrintRecordsheets.isSelected() || chkPrintBattleforce.isSelected() || chkPrintForce.isSelected());
@@ -326,6 +328,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                         pm.setCharts(chkTables.isSelected());
                         pm.setPrintMech(chkImage.isSelected());
                         pm.setPrintLogo(chkLogo.isSelected());
+                        pm.setAmmoGeneric(chkGenericAmmo.isSelected());
                         if ( chkPrintGroup.isSelected() ) pm.setGroupName( g.getName() + " [" + g.getForce().ForceName + "]" );
                         if ( chkUseHexConversion.isSelected() ) pm.SetMiniConversion(cmbHexConvFactor.getSelectedIndex()+1);
                         if ( chkLogo.isSelected() ) pm.setLogoImage(imageTracker.getImage(g.getLogo()));
@@ -343,6 +346,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         sswPrefs.putBoolean(Constants.Format_CanonPattern, chkCanon.isSelected());
         sswPrefs.putBoolean(Constants.Format_Tables, chkTables.isSelected());
         sswPrefs.putBoolean(Constants.Format_ConvertTerrain, chkUseHexConversion.isSelected());
+        sswPrefs.putBoolean("GenericAmmo", chkGenericAmmo.isSelected());
         sswPrefs.putInt(Constants.Format_TerrainModifier, cmbHexConvFactor.getSelectedIndex());
 
         bfbPrefs.putBoolean(Constants.Print_ForceList, chkPrintForce.isSelected());
@@ -385,6 +389,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         lblOneHex = new javax.swing.JLabel();
         cmbRSType = new javax.swing.JComboBox();
         jLabel4 = new javax.swing.JLabel();
+        chkGenericAmmo = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         chkLogo = new javax.swing.JCheckBox();
         chkImage = new javax.swing.JCheckBox();
@@ -476,7 +481,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                     .addComponent(chkPrintBattleforce)
                     .addComponent(chkPrintRecordsheets)
                     .addComponent(chkPrintScenario))
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         pnlPrintOptionsLayout.setVerticalGroup(
             pnlPrintOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -537,26 +542,20 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(cmbHexConvFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(2, 2, 2)
-                        .addComponent(lblInches))
-                    .addComponent(lblOneHex))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lblOneHex)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbHexConvFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(lblInches)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(lblOneHex)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cmbHexConvFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(lblInches)))
-                .addGap(1, 1, 1))
+            .addComponent(lblOneHex)
+            .addComponent(cmbHexConvFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addComponent(lblInches))
         );
 
         cmbRSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Total Warfare", "Recordsheet", "Tactical Operations" }));
@@ -568,23 +567,35 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
 
         jLabel4.setText("Sheet Type:");
 
+        chkGenericAmmo.setText("Use Generic Ammo");
+        chkGenericAmmo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkGenericAmmoitemChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlHowLayout = new javax.swing.GroupLayout(pnlHow);
         pnlHow.setLayout(pnlHowLayout);
         pnlHowLayout.setHorizontalGroup(
             pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel4)
             .addGroup(pnlHowLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cmbRSType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pnlHowLayout.createSequentialGroup()
-                    .addGap(21, 21, 21)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chkTables)
-                    .addComponent(chkUseHexConversion)
-                    .addComponent(chkCanon)))
-            .addComponent(jLabel4)
+                .addGroup(pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlHowLayout.createSequentialGroup()
+                        .addComponent(chkGenericAmmo)
+                        .addContainerGap())
+                    .addGroup(pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(pnlHowLayout.createSequentialGroup()
+                            .addGroup(pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(chkUseHexConversion)
+                                .addGroup(pnlHowLayout.createSequentialGroup()
+                                    .addGap(11, 11, 11)
+                                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addContainerGap())
+                        .addComponent(chkTables)
+                        .addComponent(chkCanon)
+                        .addComponent(cmbRSType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         pnlHowLayout.setVerticalGroup(
             pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -597,9 +608,11 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chkCanon)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chkGenericAmmo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1, Short.MAX_VALUE)
                 .addComponent(chkUseHexConversion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("General Options"));
@@ -639,7 +652,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                     .addComponent(chkLogo)
                     .addComponent(chkImage)
                     .addComponent(chkPrintGroup))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -736,11 +749,12 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlHow, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlPrintOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnlHow, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(pnlPrintOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(10, 10, 10))
         );
         jPanel1Layout.setVerticalGroup(
@@ -751,7 +765,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addComponent(pnlHow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -887,15 +901,15 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spnPreview, javax.swing.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)
-                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)))
+                    .addComponent(spnPreview, javax.swing.GroupLayout.DEFAULT_SIZE, 589, Short.MAX_VALUE)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 589, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spnPreview, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE))
+                .addComponent(spnPreview, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1))
@@ -1001,6 +1015,10 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         PrinterSetup();
     }//GEN-LAST:event_formWindowOpened
 
+    private void chkGenericAmmoitemChanged(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkGenericAmmoitemChanged
+        Verify();
+}//GEN-LAST:event_chkGenericAmmoitemChanged
+
     private void WaitCursor() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
@@ -1026,6 +1044,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JCheckBox chkBFOnePerPage;
     private javax.swing.JCheckBox chkBFTerrainMV;
     private javax.swing.JCheckBox chkCanon;
+    private javax.swing.JCheckBox chkGenericAmmo;
     private javax.swing.JCheckBox chkImage;
     private javax.swing.JCheckBox chkLogo;
     private javax.swing.JCheckBox chkPrintBattleforce;

@@ -717,6 +717,10 @@ public class FileCommon {
     }
 
     public static String FormatAmmoPrintName( Ammunition a, int tons, boolean RSFormat ) {
+        return FormatAmmoPrintName( a, tons, RSFormat, false );
+    }
+
+    public static String FormatAmmoPrintName( Ammunition a, int tons, boolean RSFormat, boolean GenericName ) {
         // this routine returns a user-defined ammunition name based on a user-
         // defined ammunition filter.
         String retval = "";
@@ -726,10 +730,20 @@ public class FileCommon {
         } else {
             retval = "Ammo (%P) %L";
         }
-        retval = retval.replace( "%F", a.LookupName().replace( "@ ", "" ) );
-        retval = retval.replace( "%P", a.CritName().replace( "@ ", "" ).replace("(", "").replace(")", "").replace("-", " ") );
-        retval = retval.replace( "%F", a.LookupName().replace( "@", "" ) );
-        retval = retval.replace( "%P", a.CritName().replace( "@", "" ) );
+
+        if ( GenericName ) {
+            retval = retval.replace( "%F", a.LookupName().replace( "@ ", "" ) );
+            retval = retval.replace( "%P", a.CritName().replace( "@ ", "" ).replace("(", "").replace(")", "").replace("-", " ")
+                        .replace(" Slug", "")
+                        .replace(" Cluster", "") );
+            retval = retval.replace( "%F", a.LookupName().replace( "@", "" ) );
+            retval = retval.replace( "%P", a.CritName().replace( "@", "" ) );
+        } else {
+            retval = retval.replace( "%F", a.LookupName().replace( "@ ", "" ) );
+            retval = retval.replace( "%P", a.CritName().replace( "@ ", "" ).replace("(", "").replace(")", "").replace("-", " ") );
+            retval = retval.replace( "%F", a.LookupName().replace( "@", "" ) );
+            retval = retval.replace( "%P", a.CritName().replace( "@", "" ) );
+        }
         if( tons > 1 ) {
             retval = retval.replace( "%L", "" + ( a.GetLotSize() * tons ) );
         } else {
