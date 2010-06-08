@@ -101,9 +101,6 @@ public class ArtemisVFCS extends abPlaceable implements ifMissileGuidance {
     }
 
     public double GetDefensiveBV() {
-        if( IsArmored() ) {
-            return 10.0;
-        }
         return 0.0;
     }
 
@@ -155,5 +152,13 @@ public class ArtemisVFCS extends abPlaceable implements ifMissileGuidance {
 
     public double GetBVMultiplier() {
         return 1.3;
+    }
+
+    @Override
+    public void ArmorComponent( boolean armor ) {
+        Armored = armor;
+        if( Owner.IsArmored() != armor ) {
+            Owner.ArmorComponent( armor );
+        }
     }
 }

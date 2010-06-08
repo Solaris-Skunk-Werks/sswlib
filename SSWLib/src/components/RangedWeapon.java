@@ -282,9 +282,9 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
 
     public String CritName() {
         String retval = CritName;
-        //if( UsingCapacitor ) {
-        //    retval += " + PPC Capacitor";
-        //}
+        if( UsingCapacitor ) {
+            retval += " + PPC Capacitor";
+        }
         if( UsingInsulator ) {
             retval += " (Insulated)";
         }
@@ -470,8 +470,12 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
         if( UsingCapacitor ) {
             retval += Capacitor.GetDefensiveBV();
         }
+        int crits = NumCrits();
+        if( UsingCapacitor ) { crits += Capacitor.NumCrits(); }
+        if( UsingInsulator ) { crits += Insulator.NumCrits(); }
+        if( UsingFCS ) { crits += ((abPlaceable) FCS).NumCrits(); }
         if( IsArmored() ) {
-            retval += (( GetOffensiveBV() + retval ) * 0.05 * NumCrits() );
+            retval += (( GetOffensiveBV() + retval ) * 0.05 * crits );
         }
         return retval;
     }
@@ -713,6 +717,21 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
     @Override
     public boolean CanArmor() {
         return true;
+    }
+
+    @Override
+    public void ArmorComponent( boolean armor ) {
+        // armor or unarmor the component
+        Armored = armor;
+        if( UsingCapacitor ) {
+            Capacitor.ArmorComponent( armor );
+        }
+        if( UsingInsulator ) {
+            Insulator.ArmorComponent( armor );
+        }
+        if( UsingFCS ) {
+            ((abPlaceable) FCS).ArmorComponent( armor );
+        }
     }
 
     public boolean CanUseCapacitor() {

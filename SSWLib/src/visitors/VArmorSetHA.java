@@ -46,10 +46,10 @@ public class VArmorSetHA implements ifVisitor {
         CurMech = m;
         ifMechLoadout l = CurMech.GetLoadout();
         MechArmor a = CurMech.GetArmor();
-        a.ResetPatchworkConfigs();
 
         // remove the old armor, if needed
         l.Remove( a );
+        a.ResetPatchworkConfigs();
 
         // set the armor type
         a.SetHardened();

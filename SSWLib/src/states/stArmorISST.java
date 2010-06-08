@@ -36,7 +36,7 @@ import components.ifMechLoadout;
 
 public class stArmorISST implements ifArmor, ifState {
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
-    private final MechModifier MechMod = new MechModifier( 0, 0, 0, 0.0f, 0, 0, 10, 0.2f, 0.0f, 0.0f, 0.0f, true, false );
+    private final static MechModifier MechMod = new MechModifier( 0, 0, 0, 0.0f, 0, 0, 10, 0.2f, 0.0f, 0.0f, 0.0f, true, false );
 
     public stArmorISST() {
         AC.SetISCodes( 'E', 'X', 'X', 'E' );

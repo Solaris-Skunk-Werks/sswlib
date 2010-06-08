@@ -30,7 +30,7 @@ package components;
 
 public abstract class abPlaceable {
     // An abstract class for items that can be placed inside a loadout.
-    private boolean Locked = false,  Armored = false;
+    protected boolean Locked = false,  Armored = false;
     private Exclusion Exclusions = null;
     public final static AvailableCode ArmoredAC = new AvailableCode( AvailableCode.TECH_BOTH );
     private MechModifier Modifier = null;

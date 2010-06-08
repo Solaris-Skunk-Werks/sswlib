@@ -118,10 +118,15 @@ public class LaserInsulator extends abPlaceable {
 
     @Override
     public double GetDefensiveBV() {
-        if( IsArmored() ) {
-            return 5.0;
-        }
         return 0.0;
+    }
+
+    @Override
+    public void ArmorComponent( boolean armor ) {
+        Armored = armor;
+        if( Owner.IsArmored() != armor ) {
+            Owner.ArmorComponent( armor );
+        }
     }
 
     @Override
