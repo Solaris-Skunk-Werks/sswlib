@@ -106,6 +106,10 @@ public class JumpJetFactory {
         BaseLoadoutNumJJ = j;
     }
 
+    public ifState GetCurrentState() {
+        return (ifState) CurConfig;
+    }
+
     public String LookupName() {
         return ((ifState) CurConfig).LookupName();
     }

@@ -31,6 +31,7 @@ package components;
 import java.util.Enumeration;
 import common.Constants;
 import battleforce.*;
+import common.CommonTools;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.prefs.Preferences;
@@ -601,6 +602,117 @@ public class Mech implements ifUnit, ifBattleforce {
     }
 
     public void SetMixed() {
+        SetTechBase( AvailableCode.TECH_BOTH );
+
+        // clear out any MechModifiers in the chassis and loadout
+        MechMods.clear();
+        CurLoadout.GetMechMods().clear();
+
+        // although nothing should technically be illegal, we'll do it anyway.
+        CurLoadout.FlushIllegal();
+
+        // check each component in turn before reseting to a default
+        if( ! CommonTools.IsAllowed( CurGyro.GetAvailability(), this ) ) {
+            CurGyro.SetStandard();
+            CurGyro.Place( CurLoadout );
+        }
+
+        if( ! CommonTools.IsAllowed( CurEngine.GetAvailability(), this ) ) {
+            CurEngine.SetFUEngine();
+            CurEngine.Place( CurLoadout );
+        }
+
+        if( ! CommonTools.IsAllowed( CurIntStruc.GetAvailability(), this ) ) {
+            // switch the internal structure
+            if( IsQuad() ) {
+                if( IndustrialMech ) {
+                    CurIntStruc.SetIMQD();
+                } else {
+                    CurIntStruc.SetMSQD();
+                }
+            } else {
+                if( IndustrialMech ) {
+                    CurIntStruc.SetIMBP();
+                } else {
+                    CurIntStruc.SetMSBP();
+                }
+            }
+            CurIntStruc.Place( CurLoadout );
+        }
+
+        if( ! CommonTools.IsAllowed( CurCockpit.GetAvailability(), this ) ) {
+            if( IndustrialMech ) {
+                CurCockpit.SetIndustrialCockpit();
+            } else {
+                CurCockpit.SetStandardCockpit();
+            }
+            CurCockpit.Place( CurLoadout );
+        }
+
+        if( ! CommonTools.IsAllowed( CurPhysEnhance.GetAvailability(), this ) ) {
+            CurPhysEnhance.SetNone();
+            CurPhysEnhance.Place( CurLoadout );
+        }
+
+        if( ! CommonTools.IsAllowed( GetHeatSinks().GetAvailability(), this ) ) {
+            GetHeatSinks().SetSingle();
+            GetHeatSinks().ReCalculate();
+        }
+
+        if( ! CommonTools.IsAllowed( GetJumpJets().GetAvailability(), this ) ) {
+            GetJumpJets().SetNormal();
+            GetJumpJets().ReCalculate();
+        }
+
+        if( ! CommonTools.IsAllowed( CurArmor.GetAvailability(), this ) ) {
+            CurArmor.SetStandard();
+            CurArmor.Recalculate();
+        }
+
+        // replace everything iun the loadout
+        UseTC( false, false );
+        try {
+            // replace fixed-slot equipment
+            if(HasBlueShield){
+                SetBlueShield(false);
+                SetBlueShield(true);
+            }
+            if(HasChameleon){
+                SetChameleon(false);
+                SetChameleon(true);
+            }
+            if(HasEjectionSeat){
+                SetEjectionSeat(false);
+                SetEjectionSeat(true);
+            }
+            if(HasEnviroSealing){
+                SetEnviroSealing(false);
+                SetEnviroSealing(true);
+            }
+            if(HasNullSig){
+                SetNullSig(false);
+                SetNullSig(true);
+            }
+            if(HasTracks){
+                SetTracks(false);
+                SetTracks(true);
+            }
+            if(HasVoidSig){
+                SetVoidSig(false);
+                SetVoidSig(true);
+            }
+            if(HasPartialWing) {
+                SetPartialWing( false );
+                SetPartialWing( true );
+            }
+        } catch( Exception e ) {
+            e.printStackTrace();
+        }
+
+        SetChanged( true );
+    }
+
+/*    public void SetMixed() {
         // performs all the neccesary actions to switch this to Mixed Tech
         // set the tech base
         SetTechBase( AvailableCode.TECH_BOTH );
@@ -702,7 +814,7 @@ public class Mech implements ifUnit, ifBattleforce {
         }
 
         SetChanged( true );
-    }
+    }*/
 
     public int GetTechbase() {
         return CurLoadout.GetTechBase();

@@ -82,6 +82,10 @@ public class Cockpit extends abPlaceable {
         CurConfig = TorsoCockpit;
     }
 
+    public ifState GetCurrentState() {
+        return (ifState) CurConfig;
+    }
+
     public double GetTonnage() {
         if( IsArmored() ) {
             return CurConfig.GetTonnage() + 1.0;
