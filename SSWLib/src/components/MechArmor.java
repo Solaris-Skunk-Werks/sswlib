@@ -60,15 +60,15 @@ public class MechArmor  extends abPlaceable {
                     CLLR = new stArmorCLLR(),
                     CLRE = new stArmorCLRE(),
                     Patchwork = new stArmorPatchwork();
-    private ifArmor Config = Industrial,
-                    HDConfig = Industrial,
-                    CTConfig = Industrial,
-                    LTConfig = Industrial,
-                    RTConfig = Industrial,
-                    LAConfig = Industrial,
-                    RAConfig = Industrial,
-                    LLConfig = Industrial,
-                    RLConfig = Industrial;
+    private ifArmor Config = Standard,
+                    HDConfig = Standard,
+                    CTConfig = Standard,
+                    LTConfig = Standard,
+                    RTConfig = Standard,
+                    LAConfig = Standard,
+                    RAConfig = Standard,
+                    LLConfig = Standard,
+                    RLConfig = Standard;
 
     public MechArmor( Mech m ) {
         Owner = m;
@@ -79,16 +79,32 @@ public class MechArmor  extends abPlaceable {
         return (ifState) Config;
     }
 
+    public AvailableCode GetStandardAC() {
+        return Standard.GetAvailability();
+    }
+
     public void ResetPatchworkConfigs() {
-        Config = Industrial;
-        HDConfig = Industrial;
-        CTConfig = Industrial;
-        LTConfig = Industrial;
-        RTConfig = Industrial;
-        LAConfig = Industrial;
-        RAConfig = Industrial;
-        LLConfig = Industrial;
-        RLConfig = Industrial;
+        if( CommonTools.IsAllowed( Standard.GetAvailability(), Owner ) ) {
+            Config = Standard;
+            HDConfig = Standard;
+            CTConfig = Standard;
+            LTConfig = Standard;
+            RTConfig = Standard;
+            LAConfig = Standard;
+            RAConfig = Standard;
+            LLConfig = Standard;
+            RLConfig = Standard;
+        } else {
+            Config = Industrial;
+            HDConfig = Industrial;
+            CTConfig = Industrial;
+            LTConfig = Industrial;
+            RTConfig = Industrial;
+            LAConfig = Industrial;
+            RAConfig = Industrial;
+            LLConfig = Industrial;
+            RLConfig = Industrial;
+        }
     }
 
     public void SetPatchwork() {
@@ -1659,6 +1675,7 @@ public class MechArmor  extends abPlaceable {
         return Config.CritName();
     }
 
+    @Override
     public String CritName( int Loc ) {
         switch( Loc ) {
             case LocationIndex.MECH_LOC_HD:

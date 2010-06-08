@@ -118,19 +118,23 @@ public class MGArray extends abPlaceable implements ifWeapon {
 
     // the name to be used when exporting to MegaMek
     public String MegaMekName( boolean UseRear ) {
-        if( Clan ) {
-            if( Rear ) {
-                return "CLMGA" + " (R)";
-            } else {
-                return "CLMGA";
-            }
+        String retval;
+        if( MGType.ActualName().contains( "Light" ) ) {
+            retval = "LMGA";
+        } else if( MGType.ActualName().contains( "Heavy" ) ) {
+            retval = "HMGA";
         } else {
-            if( Rear ) {
-                return "ISMGA" + " (R)";
-            } else {
-                return "ISMGA";
-            }
+            retval = "MGA";
         }
+        if( Clan ) {
+            retval = "CL" + retval;
+        } else {
+            retval = "IS" + retval;
+        }
+        if( Rear ) {
+            retval += " (R)";
+        }
+        return retval;
     }
 
     // reference for the book that the equipment comes from

@@ -128,6 +128,7 @@ public class ExtendedFuelTank extends Equipment {
         return true;
     }
 
+    @Override
     public AvailableCode GetAvailability() {
         return AC;
     }

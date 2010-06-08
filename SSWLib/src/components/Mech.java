@@ -194,7 +194,7 @@ public class Mech implements ifUnit, ifBattleforce {
         AC.SetPBMAllowed( true );
         AC.SetPIMAllowed( true );
         AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
-        BlueShield = new MultiSlotSystem( this, "Blue Shield PFD", "Blue Shield PFD", "Blue Shield Project", "BlueShieldPFD", 3.0, false, true, 1000000.0, false, AC );
+        BlueShield = new MultiSlotSystem( this, "Blue Shield PFD", "Blue Shield PFD", "Blue Shield Project", "Blue Shield Particle Field Damper", 3.0, false, true, 1000000.0, false, AC );
         BlueShield.AddMechModifier( new MechModifier( 0, 0, 0, 0.0, 0, 0, 0, 0.0, 0.0, 0.2, 0.2, true, false ) );
         BlueShield.SetBookReference( "Tactical Operations" );
         BlueShield.SetChatName( "BluShld" );

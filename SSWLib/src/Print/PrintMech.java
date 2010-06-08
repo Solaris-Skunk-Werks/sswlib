@@ -312,9 +312,9 @@ public class PrintMech implements Printable {
                         graphics.drawLine( p[j].x, p[j].y - 3, p[j].x, p[j].y );
                         if( a[j].IsArmored() ) {
                             graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech ), p[j].x + 10, p[j].y );
+                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech, Location ), p[j].x + 10, p[j].y );
                         } else {
-                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech ), p[j].x + 3, p[j].y );
+                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech, Location ), p[j].x + 3, p[j].y );
                         }
                     } else if( j == End - 1 ) {
                         // end the line
@@ -322,18 +322,18 @@ public class PrintMech implements Printable {
                         graphics.drawLine( p[j].x, p[j].y - 2, p[j].x, p[j-1].y );
                         if( a[j].IsArmored() ) {
                             graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech ), p[j].x + 10, p[j].y );
+                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech, Location ), p[j].x + 10, p[j].y );
                         } else {
-                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech ), p[j].x + 3, p[j].y );
+                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech, Location ), p[j].x + 3, p[j].y );
                         }
                     } else {
                         // continue the line
                         graphics.drawLine( p[j].x, p[j].y, p[j].x, p[j-1].y );
                         if( a[j].IsArmored() ) {
                             graphics.drawOval( p[j].x + 3, p[j].y - 5, 5, 5 );
-                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech ), p[j].x + 10, p[j].y );
+                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech, Location ), p[j].x + 10, p[j].y );
                         } else {
-                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech ), p[j].x + 3, p[j].y );
+                            graphics.drawString( PrintConsts.GetPrintName( a[j], CurMech, Location ), p[j].x + 3, p[j].y );
                         }
                     }
                 }
@@ -341,15 +341,15 @@ public class PrintMech implements Printable {
             } else {
                 // single slot item
                 if( ! a[i].IsCritable() ) {
-                    DrawNonCritable( graphics, PrintConsts.GetPrintName( a[i], CurMech ), p[i].x + 3, p[i].y );
+                    DrawNonCritable( graphics, PrintConsts.GetPrintName( a[i], CurMech, Location ), p[i].x + 3, p[i].y );
                 } else {
                     if( a[i].IsArmored() ) {
                         graphics.drawOval( p[i].x, p[i].y - 5, 5, 5 );
-                        graphics.drawString( PrintConsts.GetPrintName( a[i], CurMech ), p[i].x + 7, p[i].y );
+                        graphics.drawString( PrintConsts.GetPrintName( a[i], CurMech, Location ), p[i].x + 7, p[i].y );
                     } else if( a[i] instanceof Ammunition ) {
                         graphics.drawString( FileCommon.FormatAmmoPrintName( (Ammunition) a[i], 1, TRO, makeAmmoGeneric ), p[i].x + 3, p[i].y );
                     } else {
-                        graphics.drawString( PrintConsts.GetPrintName( a[i], CurMech ), p[i].x + 3, p[i].y );
+                        graphics.drawString( PrintConsts.GetPrintName( a[i], CurMech, Location ), p[i].x + 3, p[i].y );
                     }
                 }
             }

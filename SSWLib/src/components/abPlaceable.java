@@ -289,6 +289,11 @@ public abstract class abPlaceable {
     // the crit name is how the item appears in the loadout when allocated.
     public abstract String CritName();
 
+    // support for patchwork armor.
+    public String CritName( int Loc ) {
+        return CritName();
+    }
+
     // the name to be used when expoerting this equipment to a chat line.
     public abstract String ChatName();
 

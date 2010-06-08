@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package visitors;
 
+import common.CommonTools;
 import components.*;
 import java.util.Vector;
 
@@ -71,14 +72,25 @@ public class VArmorSetPatchwork implements ifVisitor {
 
         // place the armor
         if( Types == null ) {
-            a.SetIndustrial( LocationIndex.MECH_LOC_HD );
-            a.SetIndustrial( LocationIndex.MECH_LOC_CT );
-            a.SetIndustrial( LocationIndex.MECH_LOC_LT );
-            a.SetIndustrial( LocationIndex.MECH_LOC_RT );
-            a.SetIndustrial( LocationIndex.MECH_LOC_LA );
-            a.SetIndustrial( LocationIndex.MECH_LOC_RA );
-            a.SetIndustrial( LocationIndex.MECH_LOC_LL );
-            a.SetIndustrial( LocationIndex.MECH_LOC_RL );
+            if( CommonTools.IsAllowed( a.GetStandardAC(), m ) ) {
+                a.SetStandard( LocationIndex.MECH_LOC_HD );
+                a.SetStandard( LocationIndex.MECH_LOC_CT );
+                a.SetStandard( LocationIndex.MECH_LOC_LT );
+                a.SetStandard( LocationIndex.MECH_LOC_RT );
+                a.SetStandard( LocationIndex.MECH_LOC_LA );
+                a.SetStandard( LocationIndex.MECH_LOC_RA );
+                a.SetStandard( LocationIndex.MECH_LOC_LL );
+                a.SetStandard( LocationIndex.MECH_LOC_RL );
+            } else {
+                a.SetIndustrial( LocationIndex.MECH_LOC_HD );
+                a.SetIndustrial( LocationIndex.MECH_LOC_CT );
+                a.SetIndustrial( LocationIndex.MECH_LOC_LT );
+                a.SetIndustrial( LocationIndex.MECH_LOC_RT );
+                a.SetIndustrial( LocationIndex.MECH_LOC_LA );
+                a.SetIndustrial( LocationIndex.MECH_LOC_RA );
+                a.SetIndustrial( LocationIndex.MECH_LOC_LL );
+                a.SetIndustrial( LocationIndex.MECH_LOC_RL );
+            }
         } else {
             if( Locs == null ) {
                 SetType( a, Types[LocationIndex.MECH_LOC_HD], LocationIndex.MECH_LOC_HD );

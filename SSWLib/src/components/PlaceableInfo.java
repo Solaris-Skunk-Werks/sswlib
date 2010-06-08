@@ -81,7 +81,7 @@ public class PlaceableInfo {
             this.CurMech = m;
             this.MiniConvRate = MiniConvRate;
             this.Item = item;
-            this.name = PrintConsts.GetPrintName(item, CurMech).trim();
+            this.name = PrintConsts.GetPrintName( item, CurMech, Location ).trim();
                     //.replace("Medium Pulse", "Med. Pulse")
                     //.replace("Beagle Active Probe", "Beagle Active Prb")
                     //.replace("Guardian ECM Suite", "Guardian ECM")

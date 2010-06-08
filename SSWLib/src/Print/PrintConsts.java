@@ -224,10 +224,10 @@ public class PrintConsts {
             "Catalyst Game Labs and the Catalyst Game Labs logo are trademarks of InMediaRes Productions, LLC. Permission to photocopy for personal use."};
     }
     
-    public static String GetPrintName( abPlaceable a, Mech CurMech ) {
+    public static String GetPrintName( abPlaceable a, Mech CurMech, int Loc ) {
         // returns a modified PrintName, useful for special situations such as
         // mixed-tech mechs.
-        String retval = a.CritName();
+        String retval = a.CritName( Loc );
         if( a instanceof RangedWeapon && CurMech.GetLoadout().GetTechBase() == AvailableCode.TECH_BOTH ) {
             switch( ((RangedWeapon) a).GetTechBase() ) {
                 case AvailableCode.TECH_INNER_SPHERE:
