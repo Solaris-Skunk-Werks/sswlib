@@ -287,9 +287,9 @@ public class Mech implements ifUnit, ifBattleforce {
             JJMult = 2.0;
         }
         if ( IndustrialMech == false ) {
-            MechMult = 1.0 + ( Tonnage * 0.01f );
+            MechMult = 1.0 + ( Tonnage * 0.01 );
         } else {
-            MechMult = 1.0 + ( Tonnage * 0.0025f );
+            MechMult = 1.0 + ( Tonnage * 0.0025 );
         }
     }
 
@@ -2043,15 +2043,34 @@ public class Mech implements ifUnit, ifBattleforce {
         if( CurLoadout.GetRulesLevel() >= AvailableCode.RULES_EXPERIMENTAL && CurLoadout.GetEra() >= AvailableCode.ERA_CLAN_INVASION ) {
             result += CurEngine.GetDefensiveBV();
             result += CurCockpit.GetDefensiveBV();
-            result += NullSig.GetDefensiveBV();
-            result += Chameleon.GetDefensiveBV();
-            result += BlueShield.GetDefensiveBV();
-            result += VoidSig.GetDefensiveBV();
-            result += Wing.GetDefensiveBV();
-            result += JumpBooster.GetDefensiveBV();
-            result += EnviroSealing.GetDefensiveBV();
-            result += Tracks.GetDefensiveBV();
             result += CurLoadout.GetActuators().GetDefensiveBV();
+            if( HasNullSig() ) {
+                result += NullSig.GetDefensiveBV();
+            }
+            if( HasChameleon() ) {
+                result += Chameleon.GetDefensiveBV();
+            }
+            if( HasBlueShield() ) {
+                result += BlueShield.GetDefensiveBV();
+            }
+            if( HasVoidSig() ) {
+                result += VoidSig.GetDefensiveBV();
+            }
+            if( UsingPartialWing() ) {
+                result += Wing.GetDefensiveBV();
+            }
+            if( UsingJumpBooster() ) {
+                result += JumpBooster.GetDefensiveBV();
+            }
+            if( HasEnviroSealing() ) {
+                result += EnviroSealing.GetDefensiveBV();
+            }
+            if( HasTracks() ) {
+                result += Tracks.GetDefensiveBV();
+            }
+            if( CurLoadout.HasSupercharger() ) {
+                result += CurLoadout.GetSupercharger().GetDefensiveBV();
+            }
         }
         return result;
     }
@@ -2664,16 +2683,12 @@ public class Mech implements ifUnit, ifBattleforce {
 
     public double GetTotalCost() {
         // final cost calculations
-        double base = ( GetEquipCost() + GetChassisCost() ) * GetCostMult();
-        if( base - (int) base > 0.998 ) { base = (int) base; }
-        return base + GetAmmoCosts();
+        return ( GetEquipCost() + GetChassisCost() ) * GetCostMult();
     }
 
     public double GetDryCost() {
         // returns the total cost of the mech without ammunition
-        double base = ( GetEquipCost() + GetChassisCost() ) * GetCostMult();
-        if( base - (int) base > 0.998 ) { base = (int) base; }
-        return base;
+        return ( GetEquipCost() + GetChassisCost() ) * GetCostMult();
     }
 
     public double GetCostMult() {
