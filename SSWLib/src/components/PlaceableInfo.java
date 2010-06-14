@@ -33,7 +33,7 @@ import java.util.Vector;
 
 public class PlaceableInfo {
         public int Location,
-                    NameLength = 25;
+                    NameLength = 20;
         public String   Count = "",
                         name = "",
                         name2 = "",
