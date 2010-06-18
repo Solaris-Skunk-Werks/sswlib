@@ -32,7 +32,7 @@ public class Talons extends PhysicalWeapon {
 
     private AvailableCode AC = new AvailableCode( AvailableCode.TECH_CLAN );
     private int Placed = 0;
-    private int Crits = 1;
+    private int Crits = 2;
 
     public Talons ( Mech m ) {
         AC.SetCLCodes( 'E', 'X', 'X', 'F' );
@@ -218,19 +218,19 @@ public class Talons extends PhysicalWeapon {
             if( l.IsQuad() ) {
                 l.AddToQueue( this );
                 l.AddToLA( this, 4 );
-                l.AddToLA( this, 5 );
+                //l.AddToLA( this, 5 );
                 l.AddToRA( this, 4 );
-                l.AddToRA( this, 5 );
+                //l.AddToRA( this, 5 );
                 l.AddToLL( this, 4 );
-                l.AddToLL( this, 5 );
+                //l.AddToLL( this, 5 );
                 l.AddToRL( this, 4 );
-                l.AddToRL( this, 5 );
+                //l.AddToRL( this, 5 );
             } else {
                 l.AddToQueue( this );
                 l.AddToLL( this, 4 );
-                l.AddToLL( this, 5 );
+                //l.AddToLL( this, 5 );
                 l.AddToRL( this, 4 );
-                l.AddToRL( this, 5 );
+                //l.AddToRL( this, 5 );
             }
         } catch( Exception e ) {
             return false;

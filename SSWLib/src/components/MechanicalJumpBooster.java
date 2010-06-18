@@ -33,7 +33,7 @@ public class MechanicalJumpBooster extends abPlaceable {
     private Mech Owner;
     private int MP = 0;
     private static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
-    private int Crits = 1;
+    private int Crits = 2;
 
     public MechanicalJumpBooster( Mech m ) {
         Owner = m;
@@ -185,18 +185,18 @@ public class MechanicalJumpBooster extends abPlaceable {
         try {
             if( l.IsQuad() ) {
                 l.AddToLA( this, 4 );
-                l.AddToLA( this, 5 );
+                //l.AddToLA( this, 5 );
                 l.AddToRA( this, 4 );
-                l.AddToRA( this, 5 );
+                //l.AddToRA( this, 5 );
                 l.AddToLL( this, 4 );
-                l.AddToLL( this, 5 );
+                //l.AddToLL( this, 5 );
                 l.AddToRL( this, 4 );
-                l.AddToRL( this, 5 );
+                //l.AddToRL( this, 5 );
             } else {
                 l.AddToLL( this, 4 );
-                l.AddToLL( this, 5 );
+                //l.AddToLL( this, 5 );
                 l.AddToRL( this, 4 );
-                l.AddToRL( this, 5 );
+                //l.AddToRL( this, 5 );
             }
         } catch( Exception e ) {
             return false;
