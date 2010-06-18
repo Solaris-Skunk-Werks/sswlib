@@ -33,6 +33,7 @@ public class MechanicalJumpBooster extends abPlaceable {
     private Mech Owner;
     private int MP = 0;
     private static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
+    private int Crits = 1;
 
     public MechanicalJumpBooster( Mech m ) {
         Owner = m;
@@ -86,7 +87,11 @@ public class MechanicalJumpBooster extends abPlaceable {
 
     @Override
     public int NumCrits() {
-        return 1;
+        return Crits;
+    }
+
+    public void SetCrits( int crits ) {
+        Crits = crits;
     }
 
     @Override

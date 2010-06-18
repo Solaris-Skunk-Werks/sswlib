@@ -32,6 +32,7 @@ public class Talons extends PhysicalWeapon {
 
     private AvailableCode AC = new AvailableCode( AvailableCode.TECH_CLAN );
     private int Placed = 0;
+    private int Crits = 1;
 
     public Talons ( Mech m ) {
         AC.SetCLCodes( 'E', 'X', 'X', 'F' );
@@ -86,7 +87,11 @@ public class Talons extends PhysicalWeapon {
 
     @Override
     public int NumCrits() {
-        return 1;
+        return Crits;
+    }
+    
+    public void SetCrits( int crits ) {
+        Crits = crits;
     }
 
     @Override
