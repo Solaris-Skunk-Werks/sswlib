@@ -292,7 +292,7 @@ public class Media {
                     if ( !f.isEmpty() && f.contains(".") )
                         if ( f.substring(0, f.lastIndexOf(".")).toLowerCase().equals( nameToCheck.trim().toLowerCase() ) ) {
                             System.out.println("FOUND: " + f);
-                            //return DirectoryPath + f;
+                            return DirectoryPath + f;
                         }
                 }
             }
