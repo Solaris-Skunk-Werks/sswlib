@@ -151,8 +151,8 @@ public class QSHorizontalCardPrinter implements Printable {
 
             //Image
             if ( printMechs ) {
-                if ( stats.getImage().replace("../Images/No_Image.png", "").isEmpty() )
-                    stats.setImage( media.FindMatchingImage(stats.getName(), stats.getModel()));
+                //if ( stats.getImage().replace("../Images/No_Image.png", "").isEmpty() )
+                stats.setImage( media.FindMatchingImage(stats.getName(), stats.getModel()));
                 if ( !stats.getImage().isEmpty() ) {
                     Dimension space = new Dimension(0, 0);
                     if ( isBlackandWhite ) {
