@@ -380,7 +380,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
 
         p.WriteLine();
 
-        //Outut Totals
+        //Output Totals
         p.setFont(PrintConsts.ItalicFont);
         p.WriteStr(Units.size() + " Units", 120);
         p.WriteStr("", 140);
@@ -392,10 +392,12 @@ public class Force extends AbstractTableModel implements ifSerializable {
         p.WriteStr("", 30);
         p.setFont(PrintConsts.BoldFont);
         p.WriteStr(String.format("%1$,.0f", TotalForceBV), 20);
-        if ( TotalForceBV != TotalForceBVAdjusted ) {
-            p.WriteStr(String.format(" (%1$,.0f)", TotalForceBVAdjusted), 0);
-        }
         p.NewLine();
+        if ( TotalForceBV != TotalForceBVAdjusted ) {
+            p.currentX = 510;
+            p.setFont(PrintConsts.ItalicFont);
+            p.WriteStr(String.format("%1$,.0f", TotalForceBVAdjusted), 0);
+        }
         p.setFont(PrintConsts.PlainFont);
     }
 
