@@ -445,11 +445,26 @@ public class PrintMech implements Printable {
         } else {
             graphics.drawString( CurMech.GetRunningMP( MiniConvRate ) + "", p[PrintConsts.RUNMP].x, p[PrintConsts.RUNMP].y );
         }
-        if( CurMech.GetAdjustedJumpingMP( false ) != CurMech.GetJumpJets().GetNumJJ() ) {
-            graphics.drawString( ( CurMech.GetJumpJets().GetNumJJ() * MiniConvRate ) + " (" + ( CurMech.GetAdjustedJumpingMP( false ) * MiniConvRate ) + ")", p[PrintConsts.JUMPMP].x, p[PrintConsts.JUMPMP].y );
-        } else {
-            graphics.drawString( ( CurMech.GetJumpJets().GetNumJJ() * MiniConvRate ) + "", p[PrintConsts.JUMPMP].x, p[PrintConsts.JUMPMP].y );
+
+        //Jumping Movement!
+        String JumpMP = "";
+        if ( CurMech.GetJumpJets().GetNumJJ() > 0 ) 
+            JumpMP += (CurMech.GetJumpJets().GetNumJJ() * MiniConvRate) + "";
+
+        if ( CurMech.GetAdjustedJumpingMP( false ) != CurMech.GetJumpJets().GetNumJJ() )
+            JumpMP += " (" + ( CurMech.GetAdjustedJumpingMP( false ) * MiniConvRate ) + ")";
+
+        if ( CurMech.GetJumpBoosterMP() > 0 )
+        {
+            if ( JumpMP.trim().length() > 0 ) JumpMP += " / ";
+            JumpMP += CurMech.GetJumpBoosterMP() * MiniConvRate;
         }
+
+        if ( CurMech.GetAdjustedBoosterMP(false) != CurMech.GetJumpBoosterMP() )
+            JumpMP += " (" + (CurMech.GetAdjustedBoosterMP(false) * MiniConvRate ) + ")";
+
+        graphics.drawString( JumpMP, p[PrintConsts.JUMPMP].x, p[PrintConsts.JUMPMP].y );
+        
         // end hacking of movement.
 
         //Tonnage
