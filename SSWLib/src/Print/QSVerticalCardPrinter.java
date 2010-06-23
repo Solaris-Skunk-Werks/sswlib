@@ -188,7 +188,8 @@ public class QSVerticalCardPrinter implements Printable {
 
         //Image
         if ( printMechs ) {
-            stats.setImage( media.FindMatchingImage(stats.getName(), stats.getModel()));
+            stats.setImage(media.DetermineMatchingImage(stats.getName(), stats.getModel(), stats.getImage()));
+            //stats.setImage( media.FindMatchingImage(stats.getName(), stats.getModel()));
             if ( !stats.getImage().isEmpty() ) {
                 p.x = 16;
                 p.y = 43;

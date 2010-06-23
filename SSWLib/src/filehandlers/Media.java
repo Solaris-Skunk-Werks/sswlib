@@ -309,6 +309,16 @@ public class Media {
         return FindMatchingImage( Name, "" );
     }
 
+    public String DetermineMatchingImage( String Name, String Model, String CurrentImage ) {
+        if ( !CurrentImage.isEmpty() )
+        {
+            Image img = GetImage(CurrentImage);
+            if ( img.getHeight(null) > 0 )
+                return CurrentImage;
+        }
+        return FindMatchingImage(Name, Model, "");
+    }
+
     public static void Messager(String message) {
         javax.swing.JOptionPane.showMessageDialog(null, message);
     }

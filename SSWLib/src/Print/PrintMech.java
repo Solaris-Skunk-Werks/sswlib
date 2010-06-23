@@ -258,10 +258,7 @@ public class PrintMech implements Printable {
         start.x -= 3;
         start.y -= 6;
         if ( printMech ) {
-            if ( (MechImage == null) || (MechImage.getHeight(null) <= 0) ) {
-                String imagePath = media.FindMatchingImage(CurMech.GetName(), CurMech.GetModel());
-                if ( !imagePath.isEmpty() ) MechImage = media.GetImage(imagePath);
-            }
+            MechImage = media.GetImage(media.DetermineMatchingImage(CurMech.GetName(), CurMech.GetModel(), CurMech.GetSSWImage()));
             if( MechImage != null ) {
                 //graphics.drawRect(start.x, start.y, 160, 200);
                 Dimension d = media.reSize(getMechImage(), 160, 200);
