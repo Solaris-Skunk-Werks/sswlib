@@ -309,6 +309,57 @@ public class FileCommon {
         }
     }
 
+    public static String HasCase( Mech m, int Location ) {
+        //CASE II
+        if( m.GetCASEIITonnage() != 0.0f ) {
+            switch (Location) {
+                case LocationIndex.MECH_LOC_HD:
+                    if ( m.GetLoadout().HasHDCASEII() ) return "CASE II";
+                    break;
+                case LocationIndex.MECH_LOC_CT:
+                    if ( m.GetLoadout().HasCTCASEII() ) return "CASE II";
+                    break;
+                case LocationIndex.MECH_LOC_LA:
+                    if ( m.GetLoadout().HasLACASEII() ) return "CASE II";
+                    break;
+                case LocationIndex.MECH_LOC_LL:
+                    if ( m.GetLoadout().HasLLCASEII() ) return "CASE II";
+                    break;
+                case LocationIndex.MECH_LOC_LT:
+                    if ( m.GetLoadout().HasLTCASEII() ) return "CASE II";
+                    break;
+                case LocationIndex.MECH_LOC_RA:
+                    if ( m.GetLoadout().HasRACASEII() ) return "CASE II";
+                    break;
+                case LocationIndex.MECH_LOC_RL:
+                    if ( m.GetLoadout().HasRLCASEII() ) return "CASE II";
+                    break;
+                case LocationIndex.MECH_LOC_RT:
+                    if ( m.GetLoadout().HasRTCASEII() ) return "CASE II";
+                    break;
+            }
+        }
+
+        //Checks regular CASE
+        if (  m.GetLoadout().GetTechBase() >= AvailableCode.TECH_CLAN && m.GetLoadout().IsUsingClanCASE() ) {
+            int[] check = m.GetLoadout().FindExplosiveInstances();
+            if ( check[Location] > 0 ) return "CASE";
+        } else {
+            switch (Location) {
+                case LocationIndex.MECH_LOC_CT:
+                    if ( m.HasCTCase() ) return "CASE";
+                    break;
+                case LocationIndex.MECH_LOC_LT:
+                    if ( m.HasLTCase() ) return "CASE";
+                    break;
+                case LocationIndex.MECH_LOC_RT:
+                    if ( m.HasRTCase() ) return "CASE";
+                    break;
+            }
+        }
+        return "";
+    }
+
     public static String GetCaseLocations( Mech m ) {
         String retval = "";
         if( m.GetLoadout().GetTechBase() >= AvailableCode.TECH_CLAN && m.GetLoadout().IsUsingClanCASE() ) {
