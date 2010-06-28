@@ -27,7 +27,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package Print;
 
-import common.CommonTools;
 import Force.*;
 
 import filehandlers.ImageTracker;
@@ -40,6 +39,7 @@ import java.util.Vector;
 public class PrintDeclaration implements Printable {
     public Graphics2D Graphic;
     private Vector<Force> forces = new Vector<Force>();
+    private Vector<FireChit> units = new Vector<FireChit>();
     private PageFormat format = null;
     private ImageTracker imageTracker;
     private String[] Types = new String[]{"  Primary", "Secondary", "Secondary"};
@@ -57,12 +57,39 @@ public class PrintDeclaration implements Printable {
         this.forces = forces;
     }
 
+    public int UnitCount() {
+        return units.size();
+    }
+
+    public boolean IsFull() {
+        if ( units.size() >= 24 ) return true;
+        return false;
+    }
+
+    public boolean IsEmpty() {
+        if ( units.size() == 0 ) return true;
+        return false;
+    }
+
+    public void AddUnit( Group g, Unit u ) {
+        units.add(new FireChit(g, u));
+    }
+
     public void AddForces( Vector<Force> forces ) {
-        this.forces = forces;
+        for (Force f : forces)
+        {
+            AddForce(f);
+        }
+        //this.forces = forces;
     }
 
     public void AddForce( Force force ) {
-        this.forces.add(force);
+        for ( Group g : force.Groups ) {
+            for ( Unit u : g.getUnits() ) {
+                units.add(new FireChit(g, u));
+            }
+        }
+        //this.forces.add(force);
     }
 
     public void clearForces() {
@@ -70,7 +97,7 @@ public class PrintDeclaration implements Printable {
     }
 
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-        if( forces.size() == 0 ) { return Printable.NO_SUCH_PAGE; }
+        if( units.size() == 0 ) { return Printable.NO_SUCH_PAGE; }
         Graphic = (Graphics2D) graphics;
         format = pageFormat;
         Reset();
@@ -81,34 +108,44 @@ public class PrintDeclaration implements Printable {
 
     private void PreparePrint() {
         Reset();
-        for ( Force force : forces ) {
-            for ( Group group : force.Groups ) {
-                Image logo = imageTracker.getImage(group.getLogo());
-                for ( Unit unit : group.getUnits() ) {
-                    for (int k=0; k<Types.length; k++) {
-                        int shift = 5;
-                        Graphic.setFont(PrintConsts.SmallFont);
-                        if ( logo != null ) {
-                            Graphic.drawImage(logo, currentX+1, currentY-10, 25, 25, null);
-                            shift = 30;
-                        }
-                        Graphic.drawString(unit.TypeModel, currentX+shift, currentY);
-                        Graphic.drawString((unit.getGroup() + " (" + unit.getMechwarrior() + ")").replace("()", ""), currentX+shift, currentY+10);
-                        Graphic.drawRect(currentX, currentY-12, 175, 30);
-                        Graphic.setFont(PrintConsts.BoldFont);
-                        Graphic.drawString(Types[k], currentX+125, currentY+3);
-
-                        currentX += 175;
-                    }
-                    currentX = (int) format.getImageableX();
-                    currentY += 30;
+        for ( FireChit c : units )
+        {
+            Image logo = imageTracker.getImage(c.LogoPath);
+             for (int k=0; k<Types.length; k++) {
+                int shift = 5;
+                Graphic.setFont(PrintConsts.SmallFont);
+                if ( logo != null ) {
+                    Graphic.drawImage(logo, currentX+1, currentY-10, 25, 25, null);
+                    shift = 30;
                 }
+                Graphic.drawString(c.unit.TypeModel, currentX+shift, currentY);
+                Graphic.drawString((c.GroupName + " (" + c.unit.getMechwarrior() + ")").replace("()", ""), currentX+shift, currentY+10);
+                Graphic.drawRect(currentX, currentY-12, 175, 30);
+                Graphic.setFont(PrintConsts.BoldFont);
+                Graphic.drawString(Types[k], currentX+120, currentY+10);
+
+                currentX += 175;
             }
+            currentX = (int) format.getImageableX();
+            currentY += 30;
         }
     }
 
     public void Reset() {
         currentX = (int) format.getImageableX();
         currentY = (int) format.getImageableY();
+    }
+
+    public static class FireChit
+    {
+        public String LogoPath = "",
+                        GroupName = "";
+        public Unit unit;
+
+        public FireChit(Group g, Unit u) {
+            LogoPath = g.getLogo();
+            GroupName = g.getName();
+            unit = u;
+        }
     }
 }
