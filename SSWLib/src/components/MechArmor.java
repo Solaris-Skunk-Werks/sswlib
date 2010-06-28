@@ -1677,6 +1677,7 @@ public class MechArmor  extends abPlaceable {
 
     @Override
     public String CritName( int Loc ) {
+        if ( Config != Patchwork ) return Config.CritName();
         switch( Loc ) {
             case LocationIndex.MECH_LOC_HD:
                 return HDConfig.CritName();
