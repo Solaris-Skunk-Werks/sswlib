@@ -233,8 +233,20 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
 
         if ( chkPrintFireChits.isSelected() ) {
             PrintDeclaration fire = new PrintDeclaration(imageTracker);
-            fire.AddForces(scenario.getForces());
-            printer.Append( BFBPrinter.Letter.toPage(), fire );
+            for ( Force f : scenario.getForces() )
+            {
+                for ( Group g : f.Groups ) {
+                    for ( Unit u : g.getUnits() )
+                    {
+                        if (fire.IsFull()) {
+                            printer.Append( BFBPrinter.Letter.toPage(), fire );
+                            fire = new PrintDeclaration(imageTracker);
+                        }
+                        fire.AddUnit(g, u);
+                    }
+                }
+            }
+            if ( !fire.IsEmpty()) printer.Append( BFBPrinter.Letter.toPage(), fire );
         }
 
         if ( chkPrintBattleforce.isSelected() ) {
