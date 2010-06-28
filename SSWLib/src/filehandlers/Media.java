@@ -287,11 +287,11 @@ public class Media {
             if( fileList.length == 0 ) { return ""; }
 
             for ( String nameToCheck : PossibleNames ) {
-                System.out.println(nameToCheck.trim());
+                //System.out.println(nameToCheck.trim());
                 for ( String f : fileList ) {
                     if ( !f.isEmpty() && f.contains(".") )
                         if ( f.substring(0, f.lastIndexOf(".")).toLowerCase().equals( nameToCheck.trim().toLowerCase() ) ) {
-                            System.out.println("FOUND: " + f);
+                            //System.out.println("FOUND: " + f);
                             return DirectoryPath + f;
                         }
                 }
