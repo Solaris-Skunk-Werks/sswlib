@@ -360,7 +360,7 @@ public class PrintMech implements Printable {
         Font OldFont = graphics.getFont();
         graphics.setFont( PrintConsts.NonCritFont );
         if ( !TRO ) {
-            graphics.setColor( Grey );
+            graphics.setColor( Color.DARK_GRAY );
         }
         graphics.drawString( Item, X, Y );
         graphics.setFont( OldFont );
