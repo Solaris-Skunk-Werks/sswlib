@@ -89,7 +89,7 @@ public class Unit implements ifSerializable {
         this.BFStats = m.getBattleForceStats();
         if ( Info.contains("C3") ) {
             C3Available = true;
-            for ( String Item : Info.split(",") ) {
+            for ( String Item : Info.split(" ") ) {
                 if ( Item.contains("C3") ) C3Type = Item.trim();
             }
         }
@@ -453,5 +453,6 @@ public class Unit implements ifSerializable {
 
     public void setForceC3BV(float ForceC3BV) {
         this.ForceC3BV = ForceC3BV;
+        this.Refresh();
     }
 }
