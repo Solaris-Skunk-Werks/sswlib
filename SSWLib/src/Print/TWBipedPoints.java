@@ -192,14 +192,18 @@ public class TWBipedPoints implements ifPrintPoints {
         new Point( 164, 535 ),
         new Point( 164, 544 ),
         new Point( 164, 552 ),
-        new Point( 164, 561 ) };
+        new Point( 164, 561 ),
+        new Point( 230, 451 ) //CASE Location
+    };
     private final static Point[] HDCritPoints = {
         new Point( 164, 391 ),
         new Point( 164, 400 ),
         new Point( 164, 408 ),
         new Point( 164, 417 ),
         new Point( 164, 425 ),
-        new Point( 164, 434 ) };
+        new Point( 164, 434 ),
+        new Point( 189, 381 ) //CASE Location
+    };
     private final static Point[] LTCritPoints = {
         new Point( 45, 540 ),
         new Point( 45, 549 ),
@@ -213,7 +217,9 @@ public class TWBipedPoints implements ifPrintPoints {
         new Point( 45, 614 ),
         new Point( 45, 622 ),
         new Point( 45, 631 ),
-        new Point( 45, 639 ) };
+        new Point( 45, 639 ),
+        new Point( 96, 530 ) //CASE Location
+    };
     private final static Point[] LACritPoints = {
         new Point( 45, 400 ),
         new Point( 45, 409 ),
@@ -227,14 +233,18 @@ public class TWBipedPoints implements ifPrintPoints {
         new Point( 45, 474 ),
         new Point( 45, 482 ),
         new Point( 45, 490 ),
-        new Point( 45, 499 ) };
+        new Point( 45, 499 ),
+        new Point( 90, 390 ) //CASE location
+    };
     private final static Point[] LLCritPoints = {
         new Point( 45, 682 ),
         new Point( 45, 690 ),
         new Point( 45, 699 ),
         new Point( 45, 707 ),
         new Point( 45, 716 ),
-        new Point( 45, 724 ) };
+        new Point( 45, 724 ),
+        new Point( 85, 671 ) //CASE location
+    };
     private final static Point[] RTCritPoints = {
         new Point( 284, 540 ),
         new Point( 284, 549 ),
@@ -248,7 +258,9 @@ public class TWBipedPoints implements ifPrintPoints {
         new Point( 284, 614 ),
         new Point( 284, 622 ),
         new Point( 284, 631 ),
-        new Point( 284, 639 ) };
+        new Point( 284, 639 ),
+        new Point( 342, 530 ) //CASE Location
+    };
     private final static Point[] RACritPoints = {
         new Point( 284, 400 ),
         new Point( 284, 409 ),
@@ -261,14 +273,18 @@ public class TWBipedPoints implements ifPrintPoints {
         new Point( 284, 474 ),
         new Point( 284, 482 ),
         new Point( 284, 490 ),
-        new Point( 284, 499 ) };
+        new Point( 284, 499 ),
+        new Point( 336, 390 ) //CASE Location
+    };
     private final static Point[] RLCritPoints = {
         new Point( 284, 682 ),
         new Point( 284, 690 ),
         new Point( 284, 699 ),
         new Point( 284, 707 ),
         new Point( 284, 716 ),
-        new Point( 284, 724 ) };
+        new Point( 284, 724 ),
+        new Point( 332, 671 ) //CASE Location
+    };
     private final static Point[] HDInternalPoints = {
         new Point( 456, 390 ), new Point( 453, 396 ), new Point( 459, 396 ) };
     private final static Point[] CTInternalPoints = {
