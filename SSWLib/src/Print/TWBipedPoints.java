@@ -218,7 +218,7 @@ public class TWBipedPoints implements ifPrintPoints {
         new Point( 45, 622 ),
         new Point( 45, 631 ),
         new Point( 45, 639 ),
-        new Point( 96, 530 ) //CASE Location
+        new Point( 98, 530 ) //CASE Location
     };
     private final static Point[] LACritPoints = {
         new Point( 45, 400 ),
@@ -259,7 +259,7 @@ public class TWBipedPoints implements ifPrintPoints {
         new Point( 284, 622 ),
         new Point( 284, 631 ),
         new Point( 284, 639 ),
-        new Point( 342, 530 ) //CASE Location
+        new Point( 344, 530 ) //CASE Location
     };
     private final static Point[] RACritPoints = {
         new Point( 284, 400 ),
