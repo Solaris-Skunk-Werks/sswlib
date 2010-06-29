@@ -289,6 +289,8 @@ public class PrintMech implements Printable {
     }
 
     private void DrawLocationCrits( Graphics2D graphics, int Location, abPlaceable[] a, Point[] p ) {
+        String Case = FileCommon.HasCase(CurMech, Location);
+        if (!Case.isEmpty()) DrawNonCritable( graphics, "("+Case+")", p[p.length-1].x, p[p.length-1].y );
         for( int i = 0; i < a.length && i < p.length; i++ ) {
             if( a[i].NumCrits() > 1 && a[i].Contiguous() &! ( a[i] instanceof Engine ) &! ( a[i] instanceof Gyro ) ) {
                 // print the multi-slot indicator before the item
