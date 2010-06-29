@@ -173,15 +173,13 @@ public class Force extends AbstractTableModel implements ifSerializable {
         if (TotalC3BV > 0) TotalC3BV *= .05;
 
         for ( Unit u : getUnits() ) {
+            u.setForceC3BV(TotalC3BV);
             TotalBaseBV += u.BaseBV;
             TotalModifier += u.MiscMod;
             TotalTonnage += u.Tonnage;
             TotalSkillBV += u.SkillsBV;
             TotalModifierBV += u.ModifierBV;
             TotalAdjustedBV += u.TotalBV;
-            if (u.UsingC3) {
-                u.setForceC3BV(TotalC3BV);
-            }
 
             TotalBasePV += u.getBFStats().getBasePV();
             TotalForcePV += u.getBFStats().getPointValue();
