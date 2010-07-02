@@ -30,6 +30,7 @@ package components;
 
 import battleforce.BattleForceStats;
 import battleforce.ifBattleforce;
+import common.CommonTools;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.prefs.Preferences;
@@ -66,14 +67,16 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
                    Solaris7ID = "0",
                    Solaris7ImageID = "0",
                    SSWImage = "";
-    private int HeatSinks = 10,
+    private int HeatSinks = 0,
                 Tonnage = 20,
                 CruiseMP;
     private double JJMult;
     private boolean Omni = false,
                     HasEnviroSealing = false,
                     FractionalAccounting = false,
-                    Changed = false;
+                    Changed = false,
+                    HasTurret1 = false,
+                    HasTurret2 = false;
     private static ifCombatVehicle Wheeled = new stCVWheeled(),
                                  Tracked = new stCVTracked(),
                                  Hover = new stCVHover(),
@@ -89,10 +92,37 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
                         CurLoadout;
     private CVArmor CurArmor = new CVArmor( this );
     private Hashtable Lookup = new Hashtable();
-    private AvailableCode OmniAvailable = new AvailableCode( AvailableCode.TECH_BOTH );
+    private static AvailableCode OmniAC = new AvailableCode( AvailableCode.TECH_BOTH ),
+                                 DualTurretAC = new AvailableCode( AvailableCode.TECH_BOTH ),
+                                 ChinTurretAC = new AvailableCode( AvailableCode.TECH_BOTH ),
+                                 SponsoonAC = new AvailableCode( AvailableCode.TECH_BOTH );
     private Preferences Prefs;
 
     public CombatVehicle() {
+        OmniAC.SetCodes( 'E', 'X', 'X', 'E', 'E', 'X', 'E', 'E' );
+        OmniAC.SetFactions( "", "", "", "", "", "", "", "" );
+        OmniAC.SetISDates( 0, 0, false, 3052, 0, 0, false, false );
+        OmniAC.SetCLDates( 0, 0, false, 2854, 0, 0, false, false );
+        OmniAC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+
+        DualTurretAC.SetCodes( 'B', 'F', 'X', 'F', 'B', 'X', 'E', 'E' );
+        DualTurretAC.SetFactions( "", "", "PS", "", "", "", "PS", "" );
+        DualTurretAC.SetISDates( 0, 0, false, 1950, 0, 0, false, false );
+        DualTurretAC.SetCLDates( 0, 0, false, 1950, 0, 0, false, false );
+        DualTurretAC.SetRulesLevels( AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+
+        ChinTurretAC.SetCodes( 'B', 'F', 'F', 'F', 'B', 'X', 'E', 'E' );
+        ChinTurretAC.SetFactions( "", "", "PS", "", "", "", "PS", "" );
+        ChinTurretAC.SetISDates( 0, 0, false, 1950, 0, 0, false, false );
+        ChinTurretAC.SetCLDates( 0, 0, false, 1950, 0, 0, false, false );
+        ChinTurretAC.SetRulesLevels( AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+
+        SponsoonAC.SetCodes( 'B', 'F', 'X', 'F', 'B', 'X', 'E', 'E' );
+        SponsoonAC.SetFactions( "", "", "PS", "", "", "", "PS", "" );
+        SponsoonAC.SetISDates( 0, 0, false, 1950, 0, 0, false, false );
+        SponsoonAC.SetCLDates( 0, 0, false, 1950, 0, 0, false, false );
+        SponsoonAC.SetRulesLevels( AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+
         HeatSinks = CurEngine.FreeHeatSinks();
     }
 
@@ -146,12 +176,8 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         SetChanged(true);
     }
 
-    public boolean CanUseJump() {
-        return CurConfig.CanUseJumpMP();
-    }
-
-    public boolean CanBeTrailer() {
-        return CurConfig.CanBeTrailer();
+    public String GetMotiveLookupName() {
+        return CurConfig.GetMotiveLookupName();
     }
 
     public int GetMaxTonnage() {
@@ -160,6 +186,69 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
     public int GetTonnage() {
         return Tonnage;
+    }
+
+    public boolean CanUseJump() {
+        return CurConfig.CanUseJumpMP();
+    }
+
+    public boolean CanBeTrailer() {
+        return CurConfig.CanBeTrailer();
+    }
+
+    public boolean CanBeDuneBuggy() {
+        return CurConfig.CanBeDuneBuggy();
+    }
+
+    public int GetSuspensionFactor( int Tonnage ) {
+        return CurConfig.GetSuspensionFactor( Tonnage );
+    }
+
+    public float GetMinEngineWeight( int Tonnage ) {
+        return CurConfig.GetMinEngineWeight( Tonnage );
+    }
+
+    public float GetLiftEquipmentCostMultiplier() {
+        return CurConfig.GetLiftEquipmentCostMultiplier();
+    }
+
+    public boolean RequiresLiftEquipment() {
+        return CurConfig.RequiresLiftEquipment();
+    }
+
+    public boolean IsVTOL() {
+        return CurConfig.IsVTOL();
+    }
+
+    public boolean CanUseTurret() {
+        if( IsVTOL() && CommonTools.IsAllowed( ChinTurretAC, this ) ) { return true; }
+        return CurConfig.CanUseTurret();
+    }
+
+    public boolean CanUseDualTurret() {
+        if( CommonTools.IsAllowed( DualTurretAC, this ) ) { return true; }
+        return false;
+    }
+
+    public boolean CanUseSponsoon() {
+        if( CommonTools.IsAllowed( SponsoonAC, this ) ) { return true; }
+        return false;
+    }
+
+    public boolean CanUseFlotationHull() {
+        return CurConfig.CanUseFlotationHull();
+    }
+
+    public boolean CanUseArmoredMotiveSystem() {
+        return CurConfig.CanUseArmoredMotiveSystem();
+    }
+
+    public boolean CanUseAmphibious() {
+        return CurConfig.CanUseAmphibious();
+    }
+
+    public boolean CanUseMinesweeper() {
+        return CurConfig.CanUseMinesweeper();
     }
 
     public CVArmor GetArmor() {
@@ -246,6 +335,14 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         return 0.0;
     }
 
+    public boolean UsingTurret1() {
+        return HasTurret1;
+    }
+
+    public boolean UsingTurret2() {
+        return HasTurret2;
+    }
+
     //Battleforce Specific Methods
     public int GetBFSize() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -316,6 +413,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public boolean HasFHES() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return false;
     }
 }

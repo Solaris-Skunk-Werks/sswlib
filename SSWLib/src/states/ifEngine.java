@@ -47,6 +47,8 @@ public interface ifEngine {
     public int GetCTCrits();
     public int GetSideTorsoCrits();
     public int NumCTBlocks();
+    public int NumCVSpaces();
+    public int LargeCVSpaces();
     public boolean CanSupportRating( int rate, Mech m );
     public double GetCost( int MechTonnage, int Rating );
     public double GetBVMult();

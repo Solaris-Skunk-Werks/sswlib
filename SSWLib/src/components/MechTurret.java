@@ -146,6 +146,10 @@ public class MechTurret extends abPlaceable implements ifTurret {
         return 1;
     }
 
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     private double GetSize() {
         double retval = 0.0;
         for( int i = 0; i < weapons.size(); i++ ) {

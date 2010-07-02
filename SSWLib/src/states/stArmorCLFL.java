@@ -101,8 +101,16 @@ public class stArmorCLFL implements ifArmor, ifState {
         return 12;
     }
 
+    public int NumCVSpaces() {
+        return 1;
+    }
+
     public int PatchworkCrits() {
         return 2;
+    }
+
+    public int PatchworkSpaces() {
+        return 1;
     }
 
     public double GetAVMult() {

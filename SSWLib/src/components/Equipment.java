@@ -41,6 +41,7 @@ public class Equipment extends abPlaceable {
                    Specials = "",
                    Manufacturer = "";
     private int Crits = 0,
+                CVSpace = 0,
                 LotSize = 0,
                 AmmoIndex = 0,
                 ShtRange = 0,
@@ -63,6 +64,11 @@ public class Equipment extends abPlaceable {
                     alloc_torsos = true,
                     alloc_arms = true,
                     alloc_legs = true,
+                    alloc_front = true,
+                    alloc_sides = true,
+                    alloc_rear = true,
+                    alloc_turret = true,
+                    alloc_body = true,
                     CanSplit = false,
                     Rear = false,
                     CanMountRear = false,
@@ -94,6 +100,7 @@ public class Equipment extends abPlaceable {
         AC = e.AC.Clone();
         MegaMekName = e.MegaMekName;
         Crits = e.Crits;
+        CVSpace = e.CVSpace;
         Tonnage = e.Tonnage;
         Cost = e.Cost;
         OffBV = e.OffBV;
@@ -111,6 +118,11 @@ public class Equipment extends abPlaceable {
         alloc_torsos = e.alloc_torsos;
         alloc_arms = e.alloc_arms;
         alloc_legs = e.alloc_legs;
+        alloc_front = e.alloc_front;
+        alloc_sides = e.alloc_sides;
+        alloc_rear = e.alloc_rear;
+        alloc_turret = e.alloc_turret;
+        alloc_body = e.alloc_body;
         CanSplit = e.CanSplit;
         CanMountRear = e.CanMountRear;
         Explosive = e.Explosive;
@@ -184,6 +196,14 @@ public class Equipment extends abPlaceable {
         MaxAllowed = max;
     }
 
+    public void SetCVAllocs( boolean front, boolean sides, boolean rear, boolean turret, boolean body ) {
+        alloc_front = front;
+        alloc_sides = sides;
+        alloc_rear = rear;
+        alloc_turret = turret;
+        alloc_body = body;
+    }
+
     public void SetMountableRear( boolean b ) {
         CanMountRear = b;
     }
@@ -242,6 +262,10 @@ public class Equipment extends abPlaceable {
             return (int) Math.ceil( Tonnage / TonsPerCrit );
         }
         return Crits;
+    }
+
+    public int NumCVSpaces() {
+        return CVSpace;
     }
 
     @Override
@@ -345,6 +369,26 @@ public class Equipment extends abPlaceable {
     @Override
     public boolean CanSplit() {
         return CanSplit;
+    }
+
+    @Override
+    public boolean CanAllocCVFront() {
+        return alloc_front;
+    }
+
+    @Override
+    public boolean CanAllocCVRear() {
+        return alloc_sides;
+    }
+
+    @Override
+    public boolean CanAllocCVSide() {
+        return alloc_rear;
+    }
+
+    @Override
+    public boolean CanAllocCVTurret() {
+        return alloc_turret;
     }
 
     public int GetTechBase() {

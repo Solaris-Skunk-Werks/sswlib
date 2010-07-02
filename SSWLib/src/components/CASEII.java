@@ -101,6 +101,11 @@ public class CASEII extends abPlaceable {
         return 1;
     }
 
+    @Override
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     public double GetTonnage() {
         if( Clan ) {
             return 0.5;

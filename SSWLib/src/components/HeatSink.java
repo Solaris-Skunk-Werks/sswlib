@@ -89,6 +89,10 @@ public class HeatSink extends abPlaceable {
         return Crits;
     }
 
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     public int NumHeatSinks() {
         // provided for Compact heat sinks
         return NumHS;

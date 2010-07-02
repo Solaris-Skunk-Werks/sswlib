@@ -78,6 +78,10 @@ public class EmptyItem extends abPlaceable {
         return 1;
     }
 
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     @Override
     public boolean CanArmor() {
         // empty items can never be armored

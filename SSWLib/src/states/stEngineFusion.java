@@ -33,7 +33,6 @@ import components.AvailableCode;
 import components.Engine;
 import components.Mech;
 import components.MechModifier;
-import components.ifUnit;
 
 public class stEngineFusion implements ifEngine, ifState {
     // An Inner Sphere Fusion Engine
@@ -89,6 +88,14 @@ public class stEngineFusion implements ifEngine, ifState {
         return 2;
     }
     
+    public int NumCVSpaces() {
+        return 0;
+    }
+
+    public int LargeCVSpaces() {
+        return 1;
+    }
+
     public boolean CanSupportRating( int rate, Mech m ) {
         if( CommonTools.IsAllowed( LARGE_AC, m ) ) {
             if( rate < 5 || rate > 500 || rate % 5 != 0 ) {

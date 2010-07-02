@@ -453,6 +453,8 @@ public class QuadLoadout implements ifMechLoadout {
             abPlaceable p = (abPlaceable) NonCore.get( i );
             if( ! p.LocationLocked() ) {
                 Remove( (abPlaceable) NonCore.get( i ) );
+            } else if( p instanceof Talons ) {
+                Remove( (abPlaceable) NonCore.get( i ) );
             }
         }
 

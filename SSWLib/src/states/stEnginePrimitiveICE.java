@@ -76,6 +76,14 @@ public class stEnginePrimitiveICE implements ifEngine, ifState {
         return 2;
     }
 
+    public int NumCVSpaces() {
+        return 0;
+    }
+
+    public int LargeCVSpaces() {
+        return 1;
+    }
+
     public boolean CanSupportRating( int rate, Mech m ) {
         rate = (int) ( Math.floor( ( ( rate * 1.2f ) + 4.5f ) / 5 ) * 5 );
         if( rate < 5 || rate > 400 || rate % 5 != 0 ) {

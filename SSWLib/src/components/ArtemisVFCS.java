@@ -84,6 +84,11 @@ public class ArtemisVFCS extends abPlaceable implements ifMissileGuidance {
         return 2;
     }
 
+    @Override
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     public double GetTonnage() {
         if( IsArmored() ) {
             return 2.5;

@@ -92,6 +92,11 @@ public class AESSystem extends abPlaceable {
     }
 
     @Override
+    public int NumCVSpaces() {
+        return 0;
+    }
+
+    @Override
     public double GetTonnage() {
         double retval = 0.0;
         if( Owner.UsingFractionalAccounting() ) {

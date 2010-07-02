@@ -99,6 +99,10 @@ public class Gyro extends abPlaceable {
         return CurConfig.GetCrits();
     }
     
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     public String ActualName() {
         return CurConfig.ActualName();
     }

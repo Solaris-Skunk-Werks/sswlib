@@ -156,6 +156,10 @@ public class VehicularGrenadeLauncher extends abPlaceable implements ifWeapon {
         return 1;
     }
 
+    public int NumCVSpaces() {
+        return 1;
+    }
+
     public double GetTonnage() {
         return 0.5;
     }

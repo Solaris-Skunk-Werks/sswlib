@@ -71,4 +71,28 @@ public class stCVVTOL implements ifCombatVehicle {
     public boolean CanUseTurret() {
         return false;
     }
+
+    public boolean IsVTOL() {
+        return true;
+    }
+
+    public boolean CanBeDuneBuggy() {
+        return false;
+    }
+
+    public boolean CanUseFlotationHull() {
+        return true;
+    }
+
+    public boolean CanUseArmoredMotiveSystem() {
+        return false;
+    }
+
+    public boolean CanUseAmphibious() {
+        return false;
+    }
+
+    public boolean CanUseMinesweeper() {
+        return false;
+    }
 }

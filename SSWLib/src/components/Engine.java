@@ -58,7 +58,13 @@ public class Engine extends abPlaceable {
     public Engine( ifUnit u ) {
         // Set it to a 20 rated standard fusion to start.
         EngineRating = 20;
-        CurConfig = FUEngine;
+        if( u.GetUnitType() == AvailableCode.UNIT_BATTLEMECH || u.GetUnitType() == AvailableCode.UNIT_INDUSTRIALMECH ) {
+            CurConfig = FUEngine;
+        } else if( u.GetUnitType() == AvailableCode.UNIT_COMBATVEHICLE ) {
+            CurConfig = ICEngine;
+        } else {
+            CurConfig = FUEngine;
+        }
         Owner = u;
     }
 
@@ -148,7 +154,16 @@ public class Engine extends abPlaceable {
         if( IsArmored() ) {
             return CurConfig.GetTonnage( EngineRating, Owner.UsingFractionalAccounting() ) + ReportCrits() * 0.5;
         } else {
-            return CurConfig.GetTonnage( EngineRating, Owner.UsingFractionalAccounting() );
+            if( Owner.GetUnitType() == AvailableCode.UNIT_COMBATVEHICLE && IsFusion() ) {
+                double retval = CurConfig.GetTonnage( EngineRating, Owner.UsingFractionalAccounting() );
+                if( Owner.UsingFractionalAccounting() ) {
+                    return retval * 1.5;
+                } else {
+                    return ((int) Math.ceil( retval * 3.0 )) * 0.5;
+                }
+            } else {
+                return CurConfig.GetTonnage( EngineRating, Owner.UsingFractionalAccounting() );
+            }
         }
     }
 
@@ -175,6 +190,14 @@ public class Engine extends abPlaceable {
             return GetCTCrits();
         } else {
             return GetSideTorsoCrits();
+        }
+    }
+
+    public int NumCVSpaces() {
+        if( EngineRating > 400 ) {
+            return CurConfig.LargeCVSpaces();
+        } else {
+            return CurConfig.NumCVSpaces();
         }
     }
 

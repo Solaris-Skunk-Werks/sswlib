@@ -101,7 +101,15 @@ public class stArmorCLLR implements ifArmor, ifState {
         return 5;
     }
 
+    public int NumCVSpaces() {
+        return 1;
+    }
+
     public int PatchworkCrits() {
+        return 1;
+    }
+
+    public int PatchworkSpaces() {
         return 1;
     }
 

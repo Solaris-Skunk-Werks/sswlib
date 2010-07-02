@@ -85,6 +85,11 @@ public class Actuator extends abPlaceable {
         return 1;
     }
 
+    @Override
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     public double GetTonnage() {
         if( IsArmored() ) {
             return 0.5;

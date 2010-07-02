@@ -78,6 +78,10 @@ public class Supercharger extends abPlaceable {
         return 1;
     }
 
+    public int NumCVSpaces() {
+        return 1;
+    }
+
     @Override
     public double GetTonnage() {
         double retval = 0.0;

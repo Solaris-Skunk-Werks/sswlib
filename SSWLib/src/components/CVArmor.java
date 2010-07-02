@@ -29,22 +29,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package components;
 
 import common.CommonTools;
-import java.text.DecimalFormat;
 import states.*;
 
 public class CVArmor extends abPlaceable {
     // the armor of the mech
-    public final static int DEFAULT_CTR_ARMOR_PERCENT = 25,
-                            DEFAULT_STR_ARMOR_PERCENT = 25,
+    public final static int DEFAULT_FRONT_ARMOR_PERCENT = 25,
+                            DEFAULT_TURRET_ARMOR_PERCENT = 25,
                             ARMOR_PRIORITY_FRONT = 0,
                             ARMOR_PRIORITY_TURRET = 1,
-                            ARMOR_PRIORITY_REAR = 2;
+                            ARMOR_PRIORITY_EVEN = 2;
 
     // Declares
     private CombatVehicle Owner;
-    private int Placed = 0;
-    private int[] ArmorPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    private int[] MaxArmor = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    private int[] ArmorPoints = { 0, 0, 0, 0, 0, 0, 0 };
     private ifArmor Industrial = new stArmorIN(),
                     Standard = new stArmorMS(),
                     ISFF = new stArmorISFF(),
@@ -59,16 +56,49 @@ public class CVArmor extends abPlaceable {
                     CLFF = new stArmorCLFF(),
                     CLFL = new stArmorCLFL(),
                     CLLR = new stArmorCLLR(),
-                    CLRE = new stArmorCLRE();
-    private ifArmor Config = Standard;
+                    CLRE = new stArmorCLRE(),
+                    Patchwork = new stArmorPatchwork();
+    private ifArmor Config = Standard,
+                    FrontConfig = Standard,
+                    LeftConfig = Standard,
+                    RightConfig = Standard,
+                    RearConfig = Standard,
+                    Turret1Config = Standard,
+                    RotorConfig = Standard,
+                    Turret2Config = Standard;
 
     public CVArmor( CombatVehicle c ) {
         Owner = c;
-        SetMaxArmor();
     }
 
     public ifState GetCurrentState() {
         return (ifState) Config;
+    }
+
+    public void ResetPatchworkConfigs() {
+        if( CommonTools.IsAllowed( Standard.GetAvailability(), Owner ) ) {
+            Config = Standard;
+            FrontConfig = Standard;
+            LeftConfig = Standard;
+            RightConfig = Standard;
+            RearConfig = Standard;
+            Turret1Config = Standard;
+            RotorConfig = Standard;
+            Turret2Config = Standard;
+        } else {
+            Config = Industrial;
+            FrontConfig = Industrial;
+            LeftConfig = Industrial;
+            RightConfig = Industrial;
+            RearConfig = Industrial;
+            Turret1Config = Industrial;
+            RotorConfig = Industrial;
+            Turret2Config = Industrial;
+        }
+    }
+
+    public void SetPatchwork() {
+        Config = Patchwork;
     }
 
     public void SetIndustrial() {
@@ -76,9 +106,61 @@ public class CVArmor extends abPlaceable {
         Config = Industrial;
     }
 
+    public void SetIndustrial( int Loc ) throws Exception {
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = Industrial;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = Industrial;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = Industrial;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = Industrial;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = Industrial;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = Industrial;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = Industrial;
+                return;
+        }
+    }
+
     public void SetStandard() {
         // set the armor to Inner Sphere Military Standard
         Config = Standard;
+    }
+
+    public void SetStandard( int Loc ) throws Exception {
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = Standard;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = Standard;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = Standard;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = Standard;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = Standard;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = Standard;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = Standard;
+                return;
+        }
     }
 
     public void SetISFF() {
@@ -86,9 +168,63 @@ public class CVArmor extends abPlaceable {
         Config = ISFF;
     }
 
+    public void SetISFF( int Loc ) throws Exception {
+        CheckPatchworkSpace( ISFF, Loc );
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = ISFF;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = ISFF;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = ISFF;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = ISFF;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = ISFF;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = ISFF;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = ISFF;
+                return;
+        }
+    }
+
     public void SetISST() {
         // set the armor to Inner Sphere Stealth
         Config = ISST;
+    }
+
+    public void SetISST( int Loc ) throws Exception {
+        CheckPatchworkSpace( ISST, Loc );
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = ISST;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = ISST;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = ISST;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = ISST;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = ISST;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = ISST;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = ISST;
+                return;
+        }
     }
 
     public void SetISLF() {
@@ -96,9 +232,63 @@ public class CVArmor extends abPlaceable {
         Config = ISLF;
     }
 
+    public void SetISLF( int Loc ) throws Exception {
+        CheckPatchworkSpace( ISLF, Loc );
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = ISLF;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = ISLF;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = ISLF;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = ISLF;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = ISLF;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = ISLF;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = ISLF;
+                return;
+        }
+    }
+
     public void SetISHF() {
         // set the armor to Inner Sphere Heavy Ferro-Fibrous
         Config = ISHF;
+    }
+
+    public void SetISHF( int Loc ) throws Exception {
+        CheckPatchworkSpace( ISHF, Loc );
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = ISHF;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = ISHF;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = ISHF;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = ISHF;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = ISHF;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = ISHF;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = ISHF;
+                return;
+        }
     }
 
     public void SetHardened() {
@@ -106,9 +296,62 @@ public class CVArmor extends abPlaceable {
         Config = Hardened;
     }
 
+    public void SetHardened( int Loc ) throws Exception {
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = Hardened;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = Hardened;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = Hardened;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = Hardened;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = Hardened;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = Hardened;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = Hardened;
+                return;
+        }
+    }
+
     public void SetISLR() {
         // set the armor to Inner Sphere Laser-Reflective
         Config = ISLR;
+    }
+
+    public void SetISLR( int Loc ) throws Exception {
+        CheckPatchworkSpace( ISLR, Loc );
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = ISLR;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = ISLR;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = ISLR;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = ISLR;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = ISLR;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = ISLR;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = ISLR;
+                return;
+        }
     }
 
     public void SetISRE() {
@@ -116,12 +359,91 @@ public class CVArmor extends abPlaceable {
         Config = ISRE;
     }
 
+    public void SetISRE( int Loc ) throws Exception {
+        CheckPatchworkSpace( ISRE, Loc );
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = ISRE;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = ISRE;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = ISRE;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = ISRE;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = ISRE;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = ISRE;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = ISRE;
+                return;
+        }
+    }
+
     public void SetCommercial() {
         Config = Commercial;
     }
 
+    public void SetCommercial( int Loc ) throws Exception {
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = Commercial;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = Commercial;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = Commercial;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = Commercial;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = Commercial;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = Commercial;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = Commercial;
+                return;
+        }
+    }
+
     public void SetPrimitive() {
         Config = PBM;
+    }
+
+    public void SetPrimitive( int Loc ) throws Exception {
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = PBM;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = PBM;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = PBM;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = PBM;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = PBM;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = PBM;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = PBM;
+                return;
+        }
     }
 
     public void SetCLFF() {
@@ -129,9 +451,63 @@ public class CVArmor extends abPlaceable {
         Config = CLFF;
     }
 
+    public void SetCLFF( int Loc ) throws Exception {
+        CheckPatchworkSpace( CLFF, Loc );
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = CLFF;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = CLFF;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = CLFF;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = CLFF;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = CLFF;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = CLFF;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = CLFF;
+                return;
+        }
+    }
+
     public void SetCLFL() {
         // set the armor to Clan Ferro-Lamellor
         Config = CLFL;
+    }
+
+    public void SetCLFL( int Loc ) throws Exception {
+        CheckPatchworkSpace( CLFL, Loc );
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = CLFL;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = CLFL;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = CLFL;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = CLFL;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = CLFL;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = CLFL;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = CLFL;
+                return;
+        }
     }
 
     public void SetCLLR() {
@@ -139,23 +515,86 @@ public class CVArmor extends abPlaceable {
         Config = CLLR;
     }
 
+    public void SetCLLR( int Loc ) throws Exception {
+        CheckPatchworkSpace( CLLR, Loc );
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = CLLR;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = CLLR;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = CLLR;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = CLLR;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = CLLR;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = CLLR;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = CLLR;
+                return;
+        }
+    }
+
     public void SetCLRE() {
         // set the armor to Inner Sphere Reactive
         Config = CLRE;
     }
 
+    public void SetCLRE( int Loc ) throws Exception {
+        CheckPatchworkSpace( CLRE, Loc );
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = CLRE;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = CLRE;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = CLRE;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = CLRE;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = CLRE;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = CLRE;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = CLRE;
+                return;
+        }
+    }
+
+    private void CheckPatchworkSpace( ifArmor test, int loc ) throws Exception {
+        if( test.PatchworkSpaces() > Owner.GetLoadout().FreeItems() ) {
+            throw new Exception( "Cannot change " + LocationIndex.CVLocs[loc] + " armor to " + test.CritName() + "\nbecause there is not enough space." );
+        }
+    }
+
     public void Recalculate() {
-        // recalculates the armor if mech tonnage or motive type changes
-        SetMaxArmor();
-
         // now that we've set the maximums, make sure we're not exceeding them
-
+        if( GetArmorValue() > GetMaxArmor() ) { RebalanceArmor(); }
         Owner.SetChanged( true );
     }
 
-    public void SetMaxArmor() {
-        // this sets the maximum array when tonnage changes.
-        return;
+    public void RebalanceArmor() {
+        // never a need to decrement the rotor.
+        DecrementArmor( LocationIndex.CV_LOC_FRONT );
+        DecrementArmor( LocationIndex.CV_LOC_LEFT );
+        DecrementArmor( LocationIndex.CV_LOC_RIGHT );
+        DecrementArmor( LocationIndex.CV_LOC_REAR );
+        DecrementArmor( LocationIndex.CV_LOC_TURRET1 );
+        DecrementArmor( LocationIndex.CV_LOC_TURRET2 );
+        if( GetArmorValue() > GetMaxArmor() ) { RebalanceArmor(); }
     }
 
     public void IncrementArmor( int Loc ) {
@@ -165,9 +604,8 @@ public class CVArmor extends abPlaceable {
 
     private void IncrementSingle( int Loc ) {
         // Make sure we're not exceeding the max
-        if( ArmorPoints[Loc] < MaxArmor[Loc] ) {
-            ArmorPoints[Loc]++;
-        }
+        if( GetArmorValue() >= GetMaxArmor() ) { return; }
+        ArmorPoints[Loc]++;
         Owner.SetChanged( true );
     }
 
@@ -189,8 +627,9 @@ public class CVArmor extends abPlaceable {
 
     private void SetSingle( int Loc, int av ) {
         // make sure we're within bounds
-        if( av > MaxArmor[Loc] ) {
-            ArmorPoints[Loc] = MaxArmor[Loc];
+        if( GetArmorValue() + av >= GetMaxArmor() ) {
+            av = GetMaxArmor() - GetArmorValue();
+            ArmorPoints[Loc] = av;
         } else if( av < 0 ) {
             ArmorPoints[Loc] = 0;
         } else {
@@ -203,28 +642,20 @@ public class CVArmor extends abPlaceable {
         return ArmorPoints[Loc];
     }
 
-    public int GetLocationMax( int Loc ) {
-        return MaxArmor[Loc];
-    }
-
     public int GetMaxArmor() {
         // returns the maximum amount of armor allowed.\
-        return (int) (Owner.GetTonnage() * 3.5) + 40;
+        return (int) ( Owner.GetTonnage() * 3.5 ) + 40;
     }
 
     public int GetArmorValue() {
         int result = 0;
-        result += ArmorPoints[0];
-        result += ArmorPoints[1];
-        result += ArmorPoints[2];
-        result += ArmorPoints[3];
-        result += ArmorPoints[4];
-        result += ArmorPoints[5];
-        result += ArmorPoints[6];
-        result += ArmorPoints[7];
-        result += ArmorPoints[8];
-        result += ArmorPoints[9];
-        result += ArmorPoints[10];
+        result += ArmorPoints[LocationIndex.CV_LOC_FRONT];
+        result += ArmorPoints[LocationIndex.CV_LOC_LEFT];
+        result += ArmorPoints[LocationIndex.CV_LOC_RIGHT];
+        result += ArmorPoints[LocationIndex.CV_LOC_REAR];
+        result += ArmorPoints[LocationIndex.CV_LOC_TURRET1];
+        result += ArmorPoints[LocationIndex.CV_LOC_ROTOR];
+        result += ArmorPoints[LocationIndex.CV_LOC_TURRET2];
         return result;
     }
 
@@ -268,8 +699,13 @@ public class CVArmor extends abPlaceable {
             return false;
     }
 
+    public boolean IsPatchwork() {
+        if( Config == Patchwork ) { return true; }
+        return false;
+    }
+
     public boolean RequiresExtraRules() {
-        if (IsHardened() || IsReactive() || IsReflective() || IsStealth() ) {
+        if ( IsHardened() || IsReactive() || IsReflective() || IsStealth() ) {
             return true;
         } else {
             return false;
@@ -330,18 +766,22 @@ public class CVArmor extends abPlaceable {
     }
 
     @Override
-    public int NumPlaced() {
-        return Placed;
+    public int NumCVSpaces() {
+        if( IsPatchwork() ) {
+            return PatchworkSpaces();
+        }
+        return Config.NumCVSpaces();
     }
 
-    @Override
-    public void IncrementPlaced() {
-        Placed++;
-    }
-
-    @Override
-    public void DecrementPlaced() {
-        Placed--;
+    public int PatchworkSpaces() {
+        int retval = FrontConfig.PatchworkSpaces();
+        retval += LeftConfig.PatchworkSpaces();
+        retval += RightConfig.PatchworkSpaces();
+        retval += RearConfig.PatchworkSpaces();
+        retval += Turret1Config.PatchworkSpaces();
+        retval += RotorConfig.PatchworkSpaces();
+        retval += Turret2Config.PatchworkSpaces();
+        return retval;
     }
 
     @Override
@@ -409,7 +849,7 @@ public class CVArmor extends abPlaceable {
     public ifState[] GetStates() {
         ifState[] retval = { (ifState) Industrial, (ifState) Commercial, (ifState) PBM, (ifState) Standard, (ifState) ISFF, (ifState) CLFF,
             (ifState) ISLF, (ifState) ISHF, (ifState) ISST, (ifState) Hardened, (ifState) ISLR, (ifState) CLLR, (ifState) ISRE, (ifState) CLRE,
-             (ifState) CLFL };
+             (ifState) CLFL, (ifState) Patchwork };
         return retval;
     }
 
@@ -439,9 +879,7 @@ public class CVArmor extends abPlaceable {
     }
 
     @Override
-    public void ResetPlaced() {
-        Placed = 0;
-    }
+    public void ResetPlaced() { return; }
 
     @Override
     public boolean Contiguous() {
@@ -480,17 +918,6 @@ public class CVArmor extends abPlaceable {
 
     @Override
     public String toString() {
-        if( Config.NumCrits() > 0 ) {
-            if( Config.NumCrits() > Placed ) {
-                if( Config.IsStealth() ) {
-                    return Config.CritName();
-                } else {
-                    return Config.CritName() + " (" + ( Config.NumCrits() - Placed ) + ")";
-                }
-            } else {
-                return Config.CritName();
-            }
-        }
         return Config.CritName();
     }
 }

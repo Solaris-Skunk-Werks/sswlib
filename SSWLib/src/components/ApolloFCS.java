@@ -84,6 +84,11 @@ public class ApolloFCS extends abPlaceable implements ifMissileGuidance {
         return 1;
     }
 
+    @Override
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     public double GetTonnage() {
         if( IsArmored() ) {
             return 1.5;

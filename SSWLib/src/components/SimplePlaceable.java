@@ -92,6 +92,10 @@ public class SimplePlaceable extends abPlaceable {
         return Crits;
     }
 
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     public void SetTonnage( double tons ) {
         Tonnage = tons;
     }

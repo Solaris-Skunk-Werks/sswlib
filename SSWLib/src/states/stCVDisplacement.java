@@ -28,8 +28,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
-import states.ifCombatVehicle;
-
 public class stCVDisplacement implements ifCombatVehicle {
     // Naval Displacement Hull state
     public int GetSuspensionFactor( int Tonnage ) {
@@ -65,6 +63,30 @@ public class stCVDisplacement implements ifCombatVehicle {
     }
 
     public boolean CanUseTurret() {
+        return true;
+    }
+
+    public boolean IsVTOL() {
+        return false;
+    }
+
+    public boolean CanBeDuneBuggy() {
+        return false;
+    }
+
+    public boolean CanUseFlotationHull() {
+        return false;
+    }
+
+    public boolean CanUseArmoredMotiveSystem() {
+        return true;
+    }
+
+    public boolean CanUseAmphibious() {
+        return false;
+    }
+
+    public boolean CanUseMinesweeper() {
         return true;
     }
 }

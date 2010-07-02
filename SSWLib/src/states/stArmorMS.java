@@ -90,7 +90,15 @@ public class stArmorMS implements ifArmor, ifState {
         return 0;
     }
 
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     public int PatchworkCrits() {
+        return 0;
+    }
+
+    public int PatchworkSpaces() {
         return 0;
     }
 

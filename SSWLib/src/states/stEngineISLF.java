@@ -33,7 +33,6 @@ import components.AvailableCode;
 import components.Engine;
 import components.Mech;
 import components.MechModifier;
-import components.ifUnit;
 
 public class stEngineISLF implements ifEngine, ifState {
     // An Inner Sphere Light Fusion Engine
@@ -90,6 +89,14 @@ public class stEngineISLF implements ifEngine, ifState {
         return 2;
     }
     
+    public int NumCVSpaces() {
+        return 1;
+    }
+
+    public int LargeCVSpaces() {
+        return 2;
+    }
+
     public boolean CanSupportRating( int rate, Mech m ) {
         if( CommonTools.IsAllowed( LARGE_AC, m ) ) {
             if( rate < 5 || rate > 500 || rate % 5 != 0 ) {

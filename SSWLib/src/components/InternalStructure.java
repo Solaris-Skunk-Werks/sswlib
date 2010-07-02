@@ -179,6 +179,10 @@ public class InternalStructure extends abPlaceable {
         return Config.GetCrits();
     }
     
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     public String ActualName() {
         return Config.ActualName();
     }

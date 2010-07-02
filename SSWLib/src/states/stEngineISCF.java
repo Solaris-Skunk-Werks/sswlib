@@ -77,6 +77,14 @@ public class stEngineISCF implements ifEngine, ifState {
         return 1;
     }
     
+    public int NumCVSpaces() {
+        return 0;
+    }
+
+    public int LargeCVSpaces() {
+        return 0;
+    }
+
     public boolean CanSupportRating( int rate, Mech m ) {
         if( rate < 5 || rate > 400 || rate % 5 != 0 ) {
             return false;

@@ -90,6 +90,10 @@ public class MechanicalJumpBooster extends abPlaceable {
         return Crits;
     }
 
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     public void SetCrits( int crits ) {
         Crits = crits;
     }

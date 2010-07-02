@@ -90,6 +90,10 @@ public class ModularArmor extends abPlaceable {
         return 1;
     }
 
+    public int NumCVSpaces() {
+        return 1;
+    }
+
     @Override
     public double GetTonnage() {
         if( IsArmored() ) {

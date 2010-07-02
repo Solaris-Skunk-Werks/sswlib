@@ -374,6 +374,10 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
         return (int) Math.ceil( Owner.GetTonnage() * CritMult ) + CritAdd;
     }
 
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     @Override
     public double GetTonnage() {
         double result = 0.0;

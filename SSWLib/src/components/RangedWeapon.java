@@ -54,6 +54,11 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
                     Alloc_Torso = true,
                     Alloc_Arms = true,
                     Alloc_Legs = true,
+                    alloc_front = true,
+                    alloc_sides = true,
+                    alloc_rear = true,
+                    alloc_turret = true,
+                    alloc_body = true,
                     CanSplit = false,
                     OmniRestrict = false,
                     LocationLinked = false,
@@ -90,6 +95,7 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
                 ToHitLong = 0,
                 AmmoLotSize = 0,
                 NumCrits = 0,
+                CVSpace = 0,
                 AmmoIndex = 0,
                 ClusterSize = 1,
                 ClusterGroup = 1,
@@ -126,6 +132,7 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
         WeaponClass = r.WeaponClass;
         Tonnage = r.Tonnage;
         NumCrits = r.NumCrits;
+        CVSpace = r.CVSpace;
         Cost = r.Cost;
         OffBV = r.OffBV;
         DefBV = r.DefBV;
@@ -155,6 +162,11 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
         Alloc_Torso = r.Alloc_Torso;
         Alloc_Arms = r.Alloc_Arms;
         Alloc_Legs = r.Alloc_Legs;
+        alloc_front = r.alloc_front;
+        alloc_sides = r.alloc_sides;
+        alloc_rear = r.alloc_rear;
+        alloc_turret = r.alloc_turret;
+        alloc_body = r.alloc_body;
         CanSplit = r.CanSplit;
         OmniRestrict = r.OmniRestrict;
         RequiresFusion = r.RequiresFusion;
@@ -233,6 +245,14 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
         Alloc_Legs = legs;
         CanSplit = split;
         OmniRestrict = omniarm;
+    }
+
+    public void SetCVAllocs( boolean front, boolean sides, boolean rear, boolean turret, boolean body ) {
+        alloc_front = front;
+        alloc_sides = sides;
+        alloc_rear = rear;
+        alloc_turret = turret;
+        alloc_body = body;
     }
 
     public void SetRequirements( boolean fus, boolean nuc, boolean needspa ) {
@@ -381,6 +401,10 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
     @Override
     public int NumCrits() {
         return NumCrits;
+    }
+
+    public int NumCVSpaces() {
+        return CVSpace;
     }
 
     @Override
@@ -703,6 +727,26 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
     @Override
     public boolean CanAllocLegs() {
         return Alloc_Legs;
+    }
+
+    @Override
+    public boolean CanAllocCVFront() {
+        return alloc_front;
+    }
+
+    @Override
+    public boolean CanAllocCVRear() {
+        return alloc_sides;
+    }
+
+    @Override
+    public boolean CanAllocCVSide() {
+        return alloc_rear;
+    }
+
+    @Override
+    public boolean CanAllocCVTurret() {
+        return alloc_turret;
     }
 
     @Override

@@ -85,4 +85,28 @@ public class stCVHydrofoil implements ifCombatVehicle {
     public boolean CanUseTurret() {
         return true;
     }
+
+    public boolean IsVTOL() {
+        return false;
+    }
+
+    public boolean CanBeDuneBuggy() {
+        return false;
+    }
+
+    public boolean CanUseFlotationHull() {
+        return false;
+    }
+
+    public boolean CanUseArmoredMotiveSystem() {
+        return true;
+    }
+
+    public boolean CanUseAmphibious() {
+        return false;
+    }
+
+    public boolean CanUseMinesweeper() {
+        return true;
+    }
 }

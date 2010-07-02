@@ -280,6 +280,11 @@ public class Cockpit extends abPlaceable {
         return 1;
     }
 
+    public int NumCVSpaces() {
+        // combat vehicles do not have cockpits
+        return 0;
+    }
+
     public double GetCost() {
         double retval = CurConfig.GetCost( Owner.GetTonnage(), Owner.GetYear() );
 

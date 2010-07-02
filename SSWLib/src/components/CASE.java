@@ -80,6 +80,11 @@ public class CASE extends abPlaceable {
         return 1;
     }
 
+    @Override
+    public int NumCVSpaces() {
+        return 1;
+    }
+
     public double GetTonnage() {
         return 0.5;
     }

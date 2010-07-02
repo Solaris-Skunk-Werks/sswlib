@@ -77,6 +77,10 @@ public class JumpJet extends abPlaceable {
         return Crits;
     }
 
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     public double GetTonnage() {
         // Heat sinks are calculated from the HeatSinkFactory, not from the
         // individual heat sink

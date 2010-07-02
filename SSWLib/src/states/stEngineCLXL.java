@@ -33,7 +33,6 @@ import components.AvailableCode;
 import components.Engine;
 import components.Mech;
 import components.MechModifier;
-import components.ifUnit;
 
 public class stEngineCLXL implements ifEngine, ifState {
     // A Clan XL Fusion Engine
@@ -87,6 +86,14 @@ public class stEngineCLXL implements ifEngine, ifState {
     }
 
     public int NumCTBlocks() {
+        return 2;
+    }
+
+    public int NumCVSpaces() {
+        return 1;
+    }
+
+    public int LargeCVSpaces() {
         return 2;
     }
 

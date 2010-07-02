@@ -101,7 +101,15 @@ public class stArmorCLFF implements ifArmor, ifState {
         return 7;
     }
 
+    public int NumCVSpaces() {
+        return 1;
+    }
+
     public int PatchworkCrits() {
+        return 1;
+    }
+
+    public int PatchworkSpaces() {
         return 1;
     }
 

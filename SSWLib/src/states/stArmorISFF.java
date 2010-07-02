@@ -101,8 +101,16 @@ public class stArmorISFF implements ifArmor, ifState {
         return 14;
     }
 
+    public int NumCVSpaces() {
+        return 2;
+    }
+
     public int PatchworkCrits() {
         return 2;
+    }
+
+    public int PatchworkSpaces() {
+        return 1;
     }
 
     public double GetAVMult() {

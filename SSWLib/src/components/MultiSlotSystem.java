@@ -100,6 +100,10 @@ public class MultiSlotSystem extends abPlaceable {
         return 1;
     }
 
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     public int ReportCrits() {
         if( ExcludeCT ) {
             if( ExcludeHD ) {

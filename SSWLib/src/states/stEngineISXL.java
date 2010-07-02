@@ -33,7 +33,6 @@ import components.AvailableCode;
 import components.Engine;
 import components.Mech;
 import components.MechModifier;
-import components.ifUnit;
 
 public class stEngineISXL implements ifEngine, ifState {
     // An Inner Sphere XL Fusion Engine
@@ -88,6 +87,14 @@ public class stEngineISXL implements ifEngine, ifState {
     
     public int NumCTBlocks() {
         return 2;
+    }
+
+    public int NumCVSpaces() {
+        return 2;
+    }
+
+    public int LargeCVSpaces() {
+        return 3;
     }
 
     public boolean CanSupportRating( int rate, Mech m ) {

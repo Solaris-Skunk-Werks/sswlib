@@ -100,6 +100,10 @@ public class PhysicalEnhancement extends abPlaceable {
         return CurConfig.GetCrits( Owner.GetTonnage() );
     }
     
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     public String ActualName() {
         return CurConfig.ActualName();
     }

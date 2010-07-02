@@ -30,13 +30,19 @@ package states;
 
 public interface ifCombatVehicle {
     // combat vehicle states.  these are for the differnet chassis types.
+    public String GetMotiveLookupName();
     public int GetSuspensionFactor( int Tonnage );
     public int GetMaxTonnage();
     public float GetMinEngineWeight( int Tonnage );
-    public boolean RequiresLiftEquipment();
     public float GetLiftEquipmentCostMultiplier();
+    public boolean RequiresLiftEquipment();
+    public boolean IsVTOL();
     public boolean CanBeTrailer();
-    public String GetMotiveLookupName();
+    public boolean CanBeDuneBuggy();
     public boolean CanUseJumpMP();
     public boolean CanUseTurret();
+    public boolean CanUseFlotationHull();
+    public boolean CanUseArmoredMotiveSystem();
+    public boolean CanUseAmphibious();
+    public boolean CanUseMinesweeper();
 }

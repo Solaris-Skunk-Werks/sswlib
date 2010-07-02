@@ -101,8 +101,16 @@ public class stArmorISLR implements ifArmor, ifState {
         return 10;
     }
 
+    public int NumCVSpaces() {
+        return 1;
+    }
+
     public int PatchworkCrits() {
         return 2;
+    }
+
+    public int PatchworkSpaces() {
+        return 1;
     }
 
     public double GetAVMult() {

@@ -1776,6 +1776,10 @@ public class MechArmor  extends abPlaceable {
         return Config.NumCrits();
     }
 
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     @Override
     public int NumPlaced() {
         return Placed;

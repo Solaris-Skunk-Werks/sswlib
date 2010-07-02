@@ -73,6 +73,10 @@ public class PartialWing extends abPlaceable {
         return 3;
     }
 
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     @Override
     public double GetTonnage() {
         double result = Math.ceil( Owner.GetTonnage() * 0.1 ) * 0.5;

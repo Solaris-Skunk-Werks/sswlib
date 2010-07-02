@@ -88,6 +88,10 @@ public class LaserInsulator extends abPlaceable {
          return 1;
     }
 
+    public int NumCVSpaces() {
+        return 0;
+    }
+
     @Override
     public double GetTonnage() {
         if( IsArmored() ) {

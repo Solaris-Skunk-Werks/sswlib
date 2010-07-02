@@ -95,6 +95,10 @@ public class TargetingComputer extends abPlaceable {
         return GetSize();
     }
 
+    public int NumCVSpaces() {
+        return 1;
+    }
+
     @Override
     public double GetTonnage() {
         double retval = GetSize();

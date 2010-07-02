@@ -51,13 +51,14 @@ public class LocationIndex {
                             CV_LOC_LEFT = 1,
                             CV_LOC_RIGHT = 2,
                             CV_LOC_REAR = 3,
-                            CV_LOC_BODY = 4,
-                            CV_LOC_TURRET1 = 5,
-                            CV_LOC_TURRET2 = 6;
+                            CV_LOC_TURRET1 = 4,
+                            CV_LOC_ROTOR = 5,
+                            CV_LOC_TURRET2 = 6,
+                            CV_LOC_BODY = 7;
     public final static String[] MechLocs = { "Head", "Center Torso", "Left Torso",
         "Right Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg" },
                                  CVLocs = { "Front", "Left", "Right", "Rear",
-        "Body", "Turret", "Second Turret" };
+        "Turret", "Rotor", "Rear Turret", "Body" };
 
     public LocationIndex() {}
 

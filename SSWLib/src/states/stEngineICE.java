@@ -33,7 +33,6 @@ import components.AvailableCode;
 import components.Engine;
 import components.Mech;
 import components.MechModifier;
-import components.ifUnit;
 
 public class stEngineICE implements ifEngine, ifState {
     // An Inner Sphere I.C.E. Engine
@@ -87,6 +86,14 @@ public class stEngineICE implements ifEngine, ifState {
     
     public int NumCTBlocks() {
         return 2;
+    }
+
+    public int NumCVSpaces() {
+        return 0;
+    }
+
+    public int LargeCVSpaces() {
+        return 1;
     }
 
     public boolean CanSupportRating( int rate, Mech m ) {

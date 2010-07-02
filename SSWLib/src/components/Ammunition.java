@@ -185,6 +185,12 @@ public class Ammunition extends abPlaceable {
         return 1;
     }
 
+    @Override
+    public int NumCVSpaces() {
+        // this returns 0 because ammo is handled by the CV much differently
+        return 0;
+    }
+
     public double GetTonnage() {
         // Only certain types of ammo comes in less or more than one ton lots
         // but we'll have to set this regardless

@@ -245,6 +245,26 @@ public abstract class abPlaceable {
         return true;
     }
 
+    public boolean CanAllocCVFront() {
+        return true;
+    }
+
+    public boolean CanAllocCVRear() {
+        return true;
+    }
+
+    public boolean CanAllocCVSide() {
+        return true;
+    }
+
+    public boolean CanAllocCVTurret() {
+        return true;
+    }
+
+    public boolean CanAllocCVBody() {
+        return true;
+    }
+
     // This method determines whether the item can be split between adjacent
     // locations.  The CanAlloc methods will determine where the item can be
     // split to.
@@ -305,6 +325,8 @@ public abstract class abPlaceable {
 
     // returns the number of crits this item takes in the Loadout.
     public abstract int NumCrits();
+
+    public abstract int NumCVSpaces();
 
     // returns the mass of the component
     public abstract double GetTonnage();
