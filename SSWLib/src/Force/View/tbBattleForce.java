@@ -79,13 +79,13 @@ public class tbBattleForce extends abTable {
             case 3:
                 return u.getBFStats().getMovement();
             case 4:
-                return u.getBFStats().getShort();
+                return u.getBFStats().getCombinedShort();
             case 5:
-                return u.getBFStats().getMedium();
+                return u.getBFStats().getCombinedMedium();
             case 6:
-                return u.getBFStats().getLong();
+                return u.getBFStats().getCombinedLong();
             case 7:
-                return u.getBFStats().getExtreme();
+                return u.getBFStats().getCombinedExtreme();
             case 8:
                 return u.getBFStats().getWeight();
             case 9:

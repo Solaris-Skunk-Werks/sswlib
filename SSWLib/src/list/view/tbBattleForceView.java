@@ -63,13 +63,13 @@ public class tbBattleForceView extends abView {
             case 1:
                 return m.getBattleForceStats().getMovement();
             case 2:
-                return m.getBattleForceStats().getShort();
+                return m.getBattleForceStats().getCombinedShort();
             case 3:
-                return m.getBattleForceStats().getMedium();
+                return m.getBattleForceStats().getCombinedMedium();
             case 4:
-                return m.getBattleForceStats().getLong();
+                return m.getBattleForceStats().getCombinedLong();
             case 5:
-                return m.getBattleForceStats().getExtreme();
+                return m.getBattleForceStats().getCombinedExtreme();
             case 6:
                 return m.getBattleForceStats().getWeight();
             case 7:

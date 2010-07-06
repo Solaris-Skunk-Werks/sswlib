@@ -301,16 +301,52 @@ public class BattleForceStats {
         return S;
     }
 
+    public int getCombinedShort() {
+        int Val = S;
+
+        for ( String[] damages : getDamageAbilities() )
+            Val += Integer.parseInt(damages[1]);
+
+        return Val;
+    }
+
     public int getMedium() {
         return M;
+    }
+
+    public int getCombinedMedium() {
+        int Val = M;
+
+        for ( String[] damages : getDamageAbilities() )
+            Val += Integer.parseInt(damages[2]);
+
+        return Val;
     }
 
     public int getLong() {
         return L;
     }
 
+    public int getCombinedLong() {
+        int Val = L;
+
+        for ( String[] damages : getDamageAbilities() )
+            Val += Integer.parseInt(damages[3]);
+
+        return Val;
+    }
+
     public int getExtreme() {
         return E;
+    }
+
+    public int getCombinedExtreme() {
+        int Val = E;
+
+        for ( String[] damages : getDamageAbilities() )
+            Val += Integer.parseInt(damages[4]);
+
+        return Val;
     }
 
     public int getWeight() {
