@@ -260,15 +260,15 @@ public class PrintMech implements Printable {
         if ( printMech ) {
             MechImage = media.GetImage(media.DetermineMatchingImage(CurMech.GetName(), CurMech.GetModel(), CurMech.GetSSWImage()));
             if( MechImage != null ) {
-                //graphics.drawRect(start.x, start.y, 160, 200);
-                Dimension d = media.reSize(getMechImage(), 160, 200);
-                Point offset = media.offsetImageCenter( new Dimension(160, 200), d);
+                //graphics.drawRect(start.x, start.y, 150, 210);
+                Dimension d = media.reSize(getMechImage(), 150, 210);
+                Point offset = media.offsetImageCenter( new Dimension(150, 210), d);
                 graphics.drawImage( getMechImage(), start.x + offset.x, start.y + offset.y, d.width, d.height, null );
             }
         }
 
         if ( LogoImage != null ) {
-            graphics.drawImage( LogoImage, points.GetLogoImageLoc().x, points.GetLogoImageLoc().y, 50, 50, null );
+            graphics.drawImage( LogoImage, points.GetMechImageLoc().x-3, points.GetMechImageLoc().y-6, 50, 50, null );
         }
     }
 
@@ -494,7 +494,7 @@ public class PrintMech implements Printable {
                 graphics.drawString( String.format( "%1$,d", CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
             else
                 graphics.drawString( String.format( "%1$,.0f (Base: %2$,d)", BV, CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
-            graphics.drawString( "Weapon Heat (" + CurMech.GetWeaponHeat() + ")", p[PrintConsts.MAX_HEAT].x-1, p[PrintConsts.MAX_HEAT].y );
+            graphics.drawString( "Weapon Heat (" + CurMech.GetWeaponHeat(false, false, true, false) + ")", p[PrintConsts.MAX_HEAT].x-1, p[PrintConsts.MAX_HEAT].y );
             graphics.setFont( PrintConsts.SmallFont );
             graphics.drawString( "Armor Pts: " + CurMech.GetArmor().GetArmorValue(), p[PrintConsts.TOTAL_ARMOR].x, p[PrintConsts.TOTAL_ARMOR].y );
             graphics.setFont( PrintConsts.BoldFont );
