@@ -367,13 +367,23 @@ public class PrintMech implements Printable {
         graphics.setColor( Black );
     }
 
+    private int TotalItemLines() {
+        int TotItems = Items.size();
+        for ( PlaceableInfo item : Items ) {
+            if ( item.name2.length() > 0 ) { TotItems += 1;}
+            if ( item.specials.replace("-", "").length() > 0 ) { TotItems += 1;}
+        }
+        return TotItems;
+    }
+
     private void DrawMechData( Graphics2D graphics ) {
         Point[] p = null;
 
         //Vector<PlaceableInfo> a = SortEquipmentByLocation();
         p = points.GetWeaponChartPoints();
         graphics.setFont( PrintConsts.ReallySmallFont );
-        if (Items.size() > 10) { graphics.setFont( PrintConsts.XtraSmallFont ); }
+        if (TotalItemLines() > 15) { graphics.setFont( PrintConsts.TinyFont ); }
+        if (TotalItemLines() >= 20) { graphics.setFont( PrintConsts.CrazyTinyFont); }
         int offset = 0,
             xoffset = 0;
         for ( PlaceableInfo item : Items ) {
@@ -410,7 +420,7 @@ public class PrintMech implements Printable {
         }
 
         //Output the list of Ammunition
-        if ( !TRO ) {
+        if ( !TRO && Items.size() <= 10 ) {
             if ( AmmoList.size() > 0 ) {
                 offset += 2;
                 graphics.drawString("Ammunition Type", p[0].x, p[0].y + offset);
@@ -465,6 +475,8 @@ public class PrintMech implements Printable {
         if ( CurMech.GetAdjustedBoosterMP(false) != CurMech.GetJumpBoosterMP() )
             JumpMP += " (" + (CurMech.GetAdjustedBoosterMP(false) * MiniConvRate ) + ")";
 
+        if (JumpMP.isEmpty()) JumpMP = "0";
+
         graphics.drawString( JumpMP, p[PrintConsts.JUMPMP].x, p[PrintConsts.JUMPMP].y );
         
         // end hacking of movement.
@@ -473,12 +485,15 @@ public class PrintMech implements Printable {
         graphics.drawString( CurMech.GetTonnage() + "", p[PrintConsts.TONNAGE].x, p[PrintConsts.TONNAGE].y );
 
         //Cost
-        graphics.setFont( PrintConsts.Small8Font );
+        graphics.setFont( PrintConsts.SmallFont );
         graphics.drawString( String.format( "%1$,.0f C-Bills", Math.floor( CurMech.GetTotalCost() + 0.5f ) ), p[PrintConsts.COST].x, p[PrintConsts.COST].y );
 
         //BV
         if ( !TRO ) {
-            graphics.drawString( String.format( "%1$,.0f (Base: %2$,d)", BV, CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
+            if ( Gunnery == 4 && Piloting == 5 )
+                graphics.drawString( String.format( "%1$,d", CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
+            else
+                graphics.drawString( String.format( "%1$,.0f (Base: %2$,d)", BV, CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
             graphics.drawString( "Weapon Heat (" + CurMech.GetWeaponHeat() + ")", p[PrintConsts.MAX_HEAT].x-1, p[PrintConsts.MAX_HEAT].y );
             graphics.setFont( PrintConsts.SmallFont );
             graphics.drawString( "Armor Pts: " + CurMech.GetArmor().GetArmorValue(), p[PrintConsts.TOTAL_ARMOR].x, p[PrintConsts.TOTAL_ARMOR].y );
