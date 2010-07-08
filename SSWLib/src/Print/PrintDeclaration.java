@@ -34,6 +34,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.print.*;
+import java.io.PrintWriter;
 import java.util.Vector;
 
 public class PrintDeclaration implements Printable {
@@ -44,6 +45,8 @@ public class PrintDeclaration implements Printable {
     private ImageTracker imageTracker;
     private String[] Types = new String[]{"  Primary", "Secondary", "Secondary"};
     private String Title = "Fire Declaration Markers";
+    private boolean PrintUnitWarrior = true,
+                    PrintUnitLogo = true;
 
     public int currentX = 0;
     public int currentY = 0;
@@ -55,6 +58,20 @@ public class PrintDeclaration implements Printable {
     public PrintDeclaration( Vector<Force> forces, ImageTracker imageTracker ) {
         this(imageTracker);
         this.forces = forces;
+    }
+
+    public PrintDeclaration( ImageTracker imageTracker, boolean PrintWarrior, boolean PrintLogo ) {
+        this(imageTracker);
+        this.PrintUnitWarrior = PrintWarrior;
+        this.PrintUnitLogo = PrintLogo;
+    }
+
+    public void printUnitWarrior( boolean value ) {
+        PrintUnitWarrior = value;
+    }
+
+    public void printUnitLogo( boolean value ) {
+        PrintUnitLogo = value;
     }
 
     public int UnitCount() {
@@ -108,18 +125,21 @@ public class PrintDeclaration implements Printable {
 
     private void PreparePrint() {
         Reset();
+        int shift = 0;
         for ( FireChit c : units )
         {
             Image logo = imageTracker.getImage(c.LogoPath);
-             for (int k=0; k<Types.length; k++) {
-                int shift = 5;
-                Graphic.setFont(PrintConsts.SmallFont);
-                if ( logo != null ) {
-                    Graphic.drawImage(logo, currentX+1, currentY-10, 25, 25, null);
-                    shift = 30;
+            for (int k=0; k<Types.length; k++) {
+                shift = 5;
+                if ( PrintUnitLogo ) {
+                    if ( logo != null && logo.getWidth(null) > 0 ) {
+                        Graphic.drawImage(logo, currentX+1, currentY-10, 25, 25, null);
+                        shift = 30;
+                    }
                 }
+                Graphic.setFont(PrintConsts.SmallFont);
                 Graphic.drawString(c.unit.TypeModel, currentX+shift, currentY);
-                Graphic.drawString((c.GroupName + " (" + c.unit.getMechwarrior() + ")").replace("()", ""), currentX+shift, currentY+10);
+                if ( PrintUnitWarrior ) Graphic.drawString((c.GroupName + " (" + c.unit.getMechwarrior() + ")").replace("()", ""), currentX+shift, currentY+10);
                 Graphic.drawRect(currentX, currentY-12, 175, 30);
                 Graphic.setFont(PrintConsts.BoldFont);
                 Graphic.drawString(Types[k], currentX+120, currentY+10);
