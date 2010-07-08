@@ -152,8 +152,8 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         chkGenericAmmo.setEnabled(chkPrintRecordsheets.isSelected());
 
         chkImage.setEnabled(chkPrintRecordsheets.isSelected() || chkPrintBattleforce.isSelected());
-        chkLogo.setEnabled(chkPrintRecordsheets.isSelected() || chkPrintBattleforce.isSelected() || chkPrintForce.isSelected());
-        chkPrintGroup.setEnabled(chkPrintRecordsheets.isSelected() || chkPrintBattleforce.isSelected());
+        chkLogo.setEnabled(chkPrintRecordsheets.isSelected() || chkPrintBattleforce.isSelected() || chkPrintForce.isSelected() || chkPrintFireChits.isSelected());
+        chkPrintGroup.setEnabled(chkPrintRecordsheets.isSelected() || chkPrintBattleforce.isSelected() || chkPrintFireChits.isSelected());
 
         cmbBFSheetType.setEnabled(chkPrintBattleforce.isSelected());
         chkBFOnePerPage.setEnabled(chkPrintBattleforce.isSelected());
@@ -232,7 +232,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         }
 
         if ( chkPrintFireChits.isSelected() ) {
-            PrintDeclaration fire = new PrintDeclaration(imageTracker);
+            PrintDeclaration fire = new PrintDeclaration(imageTracker, chkPrintGroup.isSelected(), chkLogo.isSelected());
             for ( Force f : scenario.getForces() )
             {
                 for ( Group g : f.Groups ) {
@@ -240,7 +240,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                     {
                         if (fire.IsFull()) {
                             printer.Append( BFBPrinter.Letter.toPage(), fire );
-                            fire = new PrintDeclaration(imageTracker);
+                            fire = new PrintDeclaration(imageTracker, chkPrintGroup.isSelected(), chkLogo.isSelected());
                         }
                         fire.AddUnit(g, u);
                     }
