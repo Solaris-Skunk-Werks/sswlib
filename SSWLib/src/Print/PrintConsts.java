@@ -126,6 +126,7 @@ public class PrintConsts {
     public final static Font XtraSmallBoldFont = BaseBoldFont.deriveFont(Font.PLAIN, 6);
     public final static Font XtraSmallFont = BaseFont.deriveFont(Font.PLAIN, 6);
     public final static Font TinyFont = BaseFont.deriveFont(Font.PLAIN, 5);
+    public final static Font CrazyTinyFont = BaseFont.deriveFont(Font.PLAIN, 4);
     public final static Font SectionHeaderFont = BaseFont.deriveFont(Font.PLAIN, 11);
 
     public static void ShadowText( Graphics2D graphic, Font font, Color foreColor, Color backColor, String Text, int X, int Y ) {
@@ -242,6 +243,8 @@ public class PrintConsts {
     }
 
     public static Vector<PlaceableInfo> SortEquipmentByLocation( Mech CurMech, int MiniConvRate ) {
+        boolean HasAmmoData = false;
+
         Vector v = (Vector) CurMech.GetLoadout().GetNonCore().clone();
                 // add in MASC and the targeting computer if needed.
         if( CurMech.GetPhysEnhance().IsMASC() ) v.add( CurMech.GetPhysEnhance() );
@@ -310,8 +313,11 @@ public class PrintConsts {
                     if( ((ifWeapon) p.Item).GetWeaponClass() == ifWeapon.W_MISSILE ) {
                         if ( ((ifWeapon) p.Item).CritName().contains("ATM") ) {
                             Vector<PlaceableInfo> t = new Vector<PlaceableInfo>();
-                            t.add(factory.ATMERAmmo(p));
-                            t.add(factory.ATMHEAmmo(p));
+                            if ( !HasAmmoData ) {
+                                t.add(factory.ATMERAmmo(p));
+                                t.add(factory.ATMHEAmmo(p));
+                                HasAmmoData = true;
+                            }
 
                             if ( t.size() > 0 ) p.specials = "-";
                             if ( t.size() == 2 ) t.get(0).specials = "-";
@@ -320,8 +326,11 @@ public class PrintConsts {
                             }
                         } else if ( ((ifWeapon) p.Item).CritName().contains("MML") ) {
                             p.Clean();
-                            temp.add(factory.MMLLRMAmmo(p));
-                            temp.add(factory.MMLSRMAmmo(p));
+                            if ( !HasAmmoData ) {
+                                temp.add(factory.MMLLRMAmmo(p));
+                                temp.add(factory.MMLSRMAmmo(p));
+                                HasAmmoData = true;
+                            }
                         } else if ( ((ifWeapon) p.Item).IsFCSCapable() ) {
                             if ( CurMech.GetLoadout().UsingArtemisIV()) {
                                 temp.add(factory.ArtemisIV(p));
