@@ -1858,6 +1858,38 @@ public class Mech implements ifUnit, ifBattleforce {
         return result;
     }
 
+    public int GetJumpingHeat() {
+        int walk = CurEngine.MaxMovementHeat();
+        int jump = 0;
+        int minjumpheat = 3 * CurEngine.JumpingHeatMultiplier();
+        double heatperjj = 0.0;
+
+        if( GetJumpJets().IsImproved() ) {
+            heatperjj = 0.5 * CurEngine.JumpingHeatMultiplier();
+        } else {
+            heatperjj = 1.0 * CurEngine.JumpingHeatMultiplier();
+        }
+
+        if( GetJumpJets().GetNumJJ() > 0 ) {
+            jump = (int) ( GetJumpJets().GetNumJJ() * heatperjj + 0.51f );
+            if( jump < minjumpheat ) { jump = minjumpheat; }
+        }
+
+        if( Prefs.getBoolean( "HeatExcludeJumpMP", false ) ) {
+            if( Prefs.getBoolean( "HeatExcludeAllMP", false ) ) {
+                walk = CurEngine.MinimumHeat();
+                jump = 0;
+            } else {
+                jump = 0;
+            }
+        }
+
+        if( jump > walk ) {
+            return jump;
+        } else {
+            return 0;
+        }
+    }
     public int GetMovementHeat() {
         int walk = CurEngine.MaxMovementHeat();
         int jump = 0;
