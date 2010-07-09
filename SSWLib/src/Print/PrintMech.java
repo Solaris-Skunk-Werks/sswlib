@@ -381,11 +381,21 @@ public class PrintMech implements Printable {
 
         //Vector<PlaceableInfo> a = SortEquipmentByLocation();
         p = points.GetWeaponChartPoints();
+
+        //Range TH Modifiers
+        if ( !TRO ) {
+            graphics.setFont( PrintConsts.CrazyTinyFont);
+            graphics.drawString("+0", p[6].x, p[6].y-15);
+            graphics.drawString("+2", p[7].x, p[7].y-15);
+            graphics.drawString("+4", p[8].x, p[8].y-15);
+        }
+
         graphics.setFont( PrintConsts.ReallySmallFont );
         if (TotalItemLines() > 15) { graphics.setFont( PrintConsts.TinyFont ); }
         if (TotalItemLines() >= 20) { graphics.setFont( PrintConsts.CrazyTinyFont); }
         int offset = 0,
             xoffset = 0;
+
         for ( PlaceableInfo item : Items ) {
             xoffset = 0;
             graphics.drawString( item.Count + "", p[0].x+1, p[0].y + offset );
@@ -441,6 +451,14 @@ public class PrintMech implements Printable {
         p = points.GetDataChartPoints();
         graphics.drawString( CurMech.GetFullName(), p[PrintConsts.MECHNAME].x, p[PrintConsts.MECHNAME].y );
 
+        //Movement Heat
+        if ( !TRO ) {
+            graphics.setFont(PrintConsts.CrazyTinyFont);
+            graphics.drawString("1", p[PrintConsts.WALKMP].x-14, p[PrintConsts.WALKMP].y+1);
+            graphics.drawString("2", p[PrintConsts.RUNMP].x-14, p[PrintConsts.RUNMP].y+1);
+            graphics.drawString("" + CurMech.GetJumpingHeat(), p[PrintConsts.JUMPMP].x-12, p[PrintConsts.JUMPMP].y+1);
+        }
+
         // have to hack the movement to print the correct stuff here.
         graphics.setFont( PrintConsts.Small8Font );
         if( CurMech.GetAdjustedWalkingMP( false, true ) != CurMech.GetWalkingMP() ) {
@@ -494,7 +512,9 @@ public class PrintMech implements Printable {
                 graphics.drawString( String.format( "%1$,d", CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
             else
                 graphics.drawString( String.format( "%1$,.0f (Base: %2$,d)", BV, CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
-            graphics.drawString( "Weapon Heat (" + CurMech.GetWeaponHeat(false, false, true, false) + ")", p[PrintConsts.MAX_HEAT].x-1, p[PrintConsts.MAX_HEAT].y );
+            graphics.drawString( "Weapon Heat (" + CurMech.GetWeaponHeat(false, false, true, false) + ")", p[PrintConsts.MAX_HEAT].x-1, p[PrintConsts.MAX_HEAT].y-7 );
+            graphics.drawString( "Dissipation (" + CurMech.GetHeatSinks().TotalDissipation() + ")", p[PrintConsts.MAX_HEAT].x-1, p[PrintConsts.MAX_HEAT].y+1 );
+            //graphics.drawString( "Weapon Heat (" + CurMech.GetWeaponHeat(false, false, true, false) + ")", p[PrintConsts.MAX_HEAT].x-1, p[PrintConsts.MAX_HEAT].y );
             graphics.setFont( PrintConsts.SmallFont );
             graphics.drawString( "Armor Pts: " + CurMech.GetArmor().GetArmorValue(), p[PrintConsts.TOTAL_ARMOR].x, p[PrintConsts.TOTAL_ARMOR].y );
             graphics.setFont( PrintConsts.BoldFont );
@@ -511,9 +531,9 @@ public class PrintMech implements Printable {
             graphics.drawLine(p[PrintConsts.PILOT_PILOT].x-4, p[PrintConsts.PILOT_PILOT].y+1, p[PrintConsts.PILOT_PILOT].x + 10, p[PrintConsts.PILOT_PILOT].y+1);
         } else if( PrintPilot ) {
             graphics.setFont( PrintConsts.SmallFont );
-            if ( !GroupName.isEmpty() ) {
+            if ( !GroupName.replace("[]", "").isEmpty() ) {
                 graphics.drawString( PilotName, p[PrintConsts.PILOT_NAME].x, p[PrintConsts.PILOT_NAME].y-4 );
-                graphics.drawString( GroupName, p[PrintConsts.PILOT_NAME].x, p[PrintConsts.PILOT_NAME].y+3 );
+                graphics.drawString( GroupName.replace("[]", ""), p[PrintConsts.PILOT_NAME].x, p[PrintConsts.PILOT_NAME].y+3 );
             } else {
                 graphics.drawString( PilotName, p[PrintConsts.PILOT_NAME].x, p[PrintConsts.PILOT_NAME].y );
             }
