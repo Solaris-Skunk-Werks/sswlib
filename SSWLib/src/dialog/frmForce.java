@@ -49,6 +49,7 @@ import common.DataFactory;
 import common.DesignForm;
 import components.Mech;
 
+import java.awt.event.KeyEvent;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 
@@ -364,6 +365,11 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         tblForce.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblForceMouseClicked(evt);
+            }
+        });
+        tblForce.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tblForceKeyReleased(evt);
             }
         });
         spnList.setViewportView(tblForce);
@@ -707,14 +713,15 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
     }//GEN-LAST:event_brnClearForceActionPerformed
 
     private void btnRemoveUnitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveUnitActionPerformed
-        if ( tblForce.getSelectedRowCount() > 0 ) {
-            int[] rows = tblForce.getSelectedRows();
-            for ( int i=0; i < rows.length; i++ ) {
-                Unit data = (Unit) force.getUnits().get(tblForce.convertRowIndexToModel(rows[i]));
-                force.getUnits().remove(data);
-            }
-            force.RefreshBV();
-        }
+         int[] rows = tblForce.getSelectedRows();
+         Vector<Unit> units = new Vector<Unit>();
+         for ( int i : rows ) {
+             Unit u = (Unit) force.getUnits().get(tblForce.convertRowIndexToModel(i));
+             units.add(u);
+         }
+         for ( Unit u : units ) {
+             force.RemoveUnit(u);
+         }
     }//GEN-LAST:event_btnRemoveUnitActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -998,6 +1005,12 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
     private void mnuViewInfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuViewInfActionPerformed
         cmbView.setSelectedIndex(2);
     }//GEN-LAST:event_mnuViewInfActionPerformed
+
+    private void tblForceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblForceKeyReleased
+        if ( evt.getKeyCode() == KeyEvent.VK_DELETE ) {
+            btnRemoveUnitActionPerformed(null);
+        }
+    }//GEN-LAST:event_tblForceKeyReleased
 
     public void WaitCursor() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
