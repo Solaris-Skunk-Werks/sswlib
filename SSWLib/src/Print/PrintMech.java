@@ -267,8 +267,8 @@ public class PrintMech implements Printable {
             }
         }
 
-        if ( LogoImage != null ) {
-            graphics.drawImage( LogoImage, points.GetMechImageLoc().x-3, points.GetMechImageLoc().y-6, 50, 50, null );
+        if ( printLogo && LogoImage != null ) {
+            graphics.drawImage( LogoImage, points.GetMechImageLoc().x-3, points.GetMechImageLoc().y+154, 50, 50, null );
         }
     }
 
@@ -430,7 +430,7 @@ public class PrintMech implements Printable {
         }
 
         //Output the list of Ammunition
-        if ( !TRO && Items.size() <= 10 ) {
+        if ( !TRO ) {
             if ( AmmoList.size() > 0 ) {
                 offset += 2;
                 graphics.drawString("Ammunition Type", p[0].x, p[0].y + offset);
