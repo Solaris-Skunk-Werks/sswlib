@@ -38,7 +38,7 @@ public class MechListData extends abUnitData {
         this.Name = Name;
         this.Model = Model;
         this.Configuration = Configuration;
-        this.TypeModel = Name + " " + Model;
+        this.TypeModel = this.getFullName();
         this.Level = Level;
         this.Era = Era;
         this.Tech = Tech;
@@ -71,7 +71,7 @@ public class MechListData extends abUnitData {
             this.Name = tempData.getName();
             this.Model = tempData.getModel();
             this.Configuration = tempData.getConfig();
-            this.TypeModel = tempData.getTypeModel();
+            this.TypeModel = tempData.getFullName();
             this.Level = tempData.getLevel();
             this.Era = tempData.getEra();
             this.Source = tempData.getSource();
@@ -99,7 +99,7 @@ public class MechListData extends abUnitData {
         this.Name = Items[name];
         this.Model = Items[model];
         this.Configuration = Items[configuration];
-        this.TypeModel = this.Name + " " + this.Model;
+        this.TypeModel = this.getFullName();
         this.Level = Items[level];
         this.Era = Items[era];
         this.Tech = Items[tech];
@@ -115,7 +115,7 @@ public class MechListData extends abUnitData {
         this.Config = Items[config];
         if ( !Config.isEmpty() ) { this.Omni = true; }
 
-        this.bfstat = new BattleForceStats( new String[]{this.TypeModel, Items[pv], Items[wt], Items[mv], Items[s], Items[m], Items[l], Items[e], Items[ov], Items[armor], Items[internal], Items[abilities]} );
+        this.bfstat = new BattleForceStats( new String[]{this.getFullName(), Items[pv], Items[wt], Items[mv], Items[s], Items[m], Items[l], Items[e], Items[ov], Items[armor], Items[internal], Items[abilities]} );
         this.bfstat.setName(Name);
         this.bfstat.setModel(Model);
 
@@ -123,7 +123,7 @@ public class MechListData extends abUnitData {
 
     public Unit getUnit() {
         Unit u = new Unit();
-        u.TypeModel = this.Name + " " + this.getModel();
+        u.TypeModel = getFullName();
         u.Type = this.Name;
         u.Model = this.getModel();
         u.setOmni(this.isOmni());

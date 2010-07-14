@@ -52,7 +52,7 @@ public class tbChatInformation extends abView {
         MechListData m = (MechListData) list.Get( row );
         switch( col ) {
             case 0:
-                return (m.getName() + " " + m.getModel()).trim();
+                return m.getFullName();
             case 1:
                 return m.getInfo();
             case 2:

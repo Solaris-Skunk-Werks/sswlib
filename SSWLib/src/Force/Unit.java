@@ -80,7 +80,7 @@ public class Unit implements ifSerializable {
     public Unit( MechListData m ) {
         this.Type = m.getName();
         this.Model = m.getModel();
-        this.TypeModel = m.getName() + " "  + m.getModel();
+        this.TypeModel = m.getFullName();
         this.Tonnage = m.getTonnage();
         this.BaseBV = m.getBV();
         this.Filename = m.getFilename();
@@ -143,7 +143,7 @@ public class Unit implements ifSerializable {
             }
         }
         this.Refresh();
-        TypeModel = Type + " " + Model;
+        TypeModel = (Type + " " + Model + " " + Configuration).replace("  ", " ").trim();
         this.warrior.setGunnery(Gunnery);
         this.warrior.setPiloting(Piloting);
         this.warrior.setName(Mechwarrior);
@@ -154,8 +154,8 @@ public class Unit implements ifSerializable {
         try {
             this.Type = FileCommon.DecodeFluff(n.getAttributes().getNamedItem("type").getTextContent().trim());
             this.Model = FileCommon.DecodeFluff(n.getAttributes().getNamedItem("model").getTextContent().trim());
-            TypeModel = Type + " " + Model;
             this.Configuration = n.getAttributes().getNamedItem("config").getTextContent().trim();
+            TypeModel = (Type + " " + Model + " " + Configuration).replace("  ", " ").trim();
             if ( !Configuration.isEmpty() ) isOmni = true;
             this.Tonnage = Float.parseFloat(n.getAttributes().getNamedItem("tonnage").getTextContent().trim());
             this.BaseBV = Float.parseFloat(n.getAttributes().getNamedItem("bv").getTextContent().trim());

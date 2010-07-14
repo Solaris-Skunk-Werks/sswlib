@@ -225,7 +225,7 @@ public abstract class abUnitData implements ifUnitData {
     }
 
     public String getTypeModel() {
-        if ( TypeModel.length() == 0 )  TypeModel = Name + " " + Model;
+        if ( TypeModel.length() == 0 )  TypeModel = getFullName();
         return TypeModel;
     }
 
@@ -246,7 +246,7 @@ public abstract class abUnitData implements ifUnitData {
     }
     
     public BattleForceStats getBattleForceStats() {
-        if ( bfstat.getName().isEmpty() ) bfstat.setName(this.TypeModel);
+        if ( bfstat.getName().isEmpty() ) bfstat.setName(getFullName());
         return bfstat;
     }
 
