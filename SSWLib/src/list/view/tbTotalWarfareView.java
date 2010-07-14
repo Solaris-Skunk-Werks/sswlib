@@ -57,7 +57,7 @@ public class tbTotalWarfareView extends abView {
             case 0:
                 return (int) m.getTonnage();
             case 1:
-                return (m.getName() + " " + m.getModel()).trim();
+                return m.getFullName();
             case 2:
                 return (int) m.getBV();
             case 3:

@@ -34,9 +34,10 @@ import common.CommonTools;
 import filehandlers.MechReader;
 
 public class MechListData extends abUnitData {
-    public MechListData(String Name, String Model, String Level, String Era, String Tech, String Source, String Type, String Motive, String Info, int Tonnage, int Year, int BV, double Cost, String filename, BattleForceStats bfStats){
+    public MechListData(String Name, String Model, String Configuration, String Level, String Era, String Tech, String Source, String Type, String Motive, String Info, int Tonnage, int Year, int BV, double Cost, String filename, BattleForceStats bfStats){
         this.Name = Name;
         this.Model = Model;
+        this.Configuration = Configuration;
         this.TypeModel = Name + " " + Model;
         this.Level = Level;
         this.Era = Era;
@@ -54,11 +55,11 @@ public class MechListData extends abUnitData {
     }
 
     public MechListData() {
-        this("", "",  "", "", "", "", "BattleMech", "Biped", "", 0, 2750, 0, 0, "", new BattleForceStats());
+        this("", "",  "", "", "", "", "", "BattleMech", "Biped", "", 0, 2750, 0, 0, "", new BattleForceStats());
     }
 
     public MechListData( MechListData m ) {
-        this(m.Name, m.Model, m.Level, m.Era, m.Tech, m.Source, m.Type, m.Motive, m.Info, m.Tonnage, m.Year, m.BV, m.Cost, m.filename, m.bfstat);
+        this(m.Name, m.Model, m.Configuration, m.Level, m.Era, m.Tech, m.Source, m.Type, m.Motive, m.Info, m.Tonnage, m.Year, m.BV, m.Cost, m.filename, m.bfstat);
     }
 
     public MechListData( String filename ) throws Exception {
@@ -69,6 +70,7 @@ public class MechListData extends abUnitData {
             tempData = read.ReadMechData(filename);
             this.Name = tempData.getName();
             this.Model = tempData.getModel();
+            this.Configuration = tempData.getConfig();
             this.TypeModel = tempData.getTypeModel();
             this.Level = tempData.getLevel();
             this.Era = tempData.getEra();
@@ -96,6 +98,7 @@ public class MechListData extends abUnitData {
     public MechListData( String[] Items ) {
         this.Name = Items[name];
         this.Model = Items[model];
+        this.Configuration = Items[configuration];
         this.TypeModel = this.Name + " " + this.Model;
         this.Level = Items[level];
         this.Era = Items[era];
@@ -144,6 +147,7 @@ public class MechListData extends abUnitData {
 
         data += this.Name + ",";
         data += this.Model + ",";
+        data += this.Configuration + ",";
         data += this.Level + ",";
         data += this.Era + ",";
         data += this.Tech + ",";

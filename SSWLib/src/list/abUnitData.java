@@ -38,6 +38,7 @@ import battleforce.BattleForceStats;
 public abstract class abUnitData implements ifUnitData {
     String Name = "",
            Model = "",
+           Configuration = "",
            TypeModel = "",
            Level= "Tournament Legal",
            Era = "Age of War",
@@ -61,30 +62,31 @@ public abstract class abUnitData implements ifUnitData {
     "Motive", "Info", "Config"};
     static final int name = 0,
                 model = 1,
-                level = 2,
-                era = 3,
-                tech = 4,
-                source = 5,
-                tonnage = 6,
-                year = 7,
-                bv = 8,
-                cost = 9,
-                Filename = 10,
-                type = 11,
-                motive = 12,
-                info = 13,
-                config = 14,
-                pv = 15,
-                wt = 16,
-                abilities = 17,
-                mv = 18,
-                s = 19,
-                m = 20,
-                l = 21,
-                e = 22,
-                ov = 23,
-                armor = 24,
-                internal = 25;
+                configuration = 2,
+                level = 3,
+                era = 4,
+                tech = 5,
+                source = 6,
+                tonnage = 7,
+                year = 8,
+                bv = 9,
+                cost = 10,
+                Filename = 11,
+                type = 12,
+                motive = 13,
+                info = 14,
+                config = 15,
+                pv = 16,
+                wt = 17,
+                abilities = 18,
+                mv = 19,
+                s = 20,
+                m = 21,
+                l = 22,
+                e = 23,
+                ov = 24,
+                armor = 25,
+                internal = 26;
 
     public String getName() {
         return Name;
@@ -95,7 +97,7 @@ public abstract class abUnitData implements ifUnitData {
     }
 
     public String getFullName() {
-        return Name + " " + Model;
+        return (Name + " " + Model + " " + Configuration).replace("  ", " ").trim();
     }
 
     public String getLevel() {
@@ -246,5 +248,12 @@ public abstract class abUnitData implements ifUnitData {
     public BattleForceStats getBattleForceStats() {
         if ( bfstat.getName().isEmpty() ) bfstat.setName(this.TypeModel);
         return bfstat;
+    }
+
+    public void setConfiguration(String configuration) {
+        Configuration = configuration;
+    }
+    public String getConfiguration() {
+        return Configuration;
     }
 }

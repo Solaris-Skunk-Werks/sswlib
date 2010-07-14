@@ -43,7 +43,7 @@ import list.view.tbTotalWarfareView;
 public class MechList extends AbstractTableModel {
     private Vector<MechListData> List = new Vector<MechListData>();
     private String Directory = "";
-    private int IndexVersion = 5;
+    private int IndexVersion = 6;
     private abView currentModel = new tbTotalWarfareView(this);
 
     public MechList() {
