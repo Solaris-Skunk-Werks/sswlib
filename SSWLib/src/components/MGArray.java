@@ -464,7 +464,7 @@ public class MGArray extends abPlaceable implements ifWeapon {
 
     private RangedWeapon Copy( RangedWeapon b ) {
         RangedWeapon retval = new RangedWeapon( b.ActualName(), b.CritName(), b.LookupName(), b.MegaMekName( false ), b.GetType(), b.GetSpecials(), b.GetAvailability().Clone(), b.GetWeaponClass() );
-        retval.SetStats( b.GetTonnage(), b.NumCrits(), b.GetCost(), b.GetOffensiveBV(), b.GetDefensiveBV() );
+        retval.SetStats( b.GetTonnage(), b.NumCrits(), b.NumCVSpaces(), b.GetCost(), b.GetOffensiveBV(), b.GetDefensiveBV() );
         retval.SetHeat( b.GetHeat() );
         retval.SetToHit( b.GetToHitShort(), b.GetToHitMedium(), b.GetToHitMedium() );
         retval.SetRange( b.GetRangeMin(), b.GetRangeShort(), b.GetRangeMedium(), b.GetRangeLong() );

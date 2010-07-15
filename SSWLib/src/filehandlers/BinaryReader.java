@@ -66,7 +66,7 @@ public class BinaryReader {
                     wclass = FR.readInt();
                     AvailableCode AC = GetAvailability( FR );
                     RangedWeapon rw = new RangedWeapon( aname, cname, lname, mname, type, special, AC, wclass );
-                    rw.SetStats( FR.readDouble(), FR.readInt(), FR.readDouble(), FR.readDouble(), FR.readDouble() );
+                    rw.SetStats( FR.readDouble(), FR.readInt(), FR.readInt(), FR.readDouble(), FR.readDouble(), FR.readDouble() );
                     rw.SetHeat( FR.readInt() );
                     rw.SetToHit( FR.readInt(), FR.readInt(), FR.readInt() );
                     rw.SetDamage( FR.readInt(), FR.readInt(), FR.readInt(), FR.readBoolean(), FR.readInt(), FR.readInt() );
@@ -74,6 +74,7 @@ public class BinaryReader {
                     rw.SetRange( FR.readInt(), FR.readInt(), FR.readInt(), FR.readInt() );
                     rw.SetAmmo( FR.readBoolean(), FR.readInt(), FR.readInt(), FR.readBoolean() );
                     rw.SetAllocations( FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean() );
+                    rw.SetCVAllocs( FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean() );
                     rw.SetRequirements( FR.readBoolean(), FR.readBoolean(), FR.readBoolean() );
                     rw.SetWeapon( FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean() );
                     rw.SetCaselessAmmo( FR.readBoolean(), FR.readInt() );
@@ -180,11 +181,12 @@ public class BinaryReader {
                     e.SetTonnage( FR.readDouble(), FR.readBoolean(), FR.readDouble(), FR.readDouble(), FR.readDouble() );
                     e.SetCost( FR.readDouble(), FR.readDouble() );
                     e.SetBV( FR.readDouble(), FR.readDouble() );
-                    e.SetCrits( FR.readInt(), FR.readDouble() );
+                    e.SetCrits( FR.readInt(), FR.readDouble(), FR.readInt() );
                     e.SetHeat( FR.readInt() );
                     e.SetRange( FR.readInt(), FR.readInt(), FR.readInt() );
                     e.SetAmmo( FR.readBoolean(), FR.readInt(), FR.readInt() );
                     e.SetAllocs( FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readInt() );
+                    e.SetCVAllocs( FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean(), FR.readBoolean() );
                     e.SetMountableRear( FR.readBoolean() );
                     e.SetExplosive( FR.readBoolean() );
                     e.SetBookReference( FR.readUTF() );

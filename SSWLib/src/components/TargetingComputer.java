@@ -44,7 +44,7 @@ public class TargetingComputer extends abPlaceable {
         AC.SetCLFactions( "", "", "CMN", "" );
         AC.SetPBMAllowed( true );
         AC.SetPIMAllowed( true );
-        AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+        AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
         Owner = l;
         Clan = clan;
         SetExclusions( new Exclusion( new String[] { "A.E.S." }, "Targeting Computer" ) );

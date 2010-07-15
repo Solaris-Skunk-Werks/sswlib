@@ -30,40 +30,52 @@ package components;
 
 import java.util.Vector;
 
-public class CVLoadout {
-    private CombatVehicle Owner;
-    private CVLoadout BaseLoadout = null;
-    private String Name = "",
-                   Source = "";
-    private Vector<abPlaceable> Queue = new Vector<abPlaceable>(),
-                                FrontItems = new Vector<abPlaceable>(),
-                                LeftItems = new Vector<abPlaceable>(),
-                                RightItems = new Vector<abPlaceable>(),
-                                RearItems = new Vector<abPlaceable>(),
-                                Turret1Items = new Vector<abPlaceable>(),
-                                RotorItems = new Vector<abPlaceable>(),
-                                Turret2Items = new Vector<abPlaceable>(),
-                                BodyItems = new Vector<abPlaceable>(),
-                                NonCore = new Vector<abPlaceable>(),
-                                TCList = new Vector<abPlaceable>();
-    private boolean UseAIVFCS = false,
-                    UseAVFCS = false,
-                    UseApollo = false,
-                    Use_TC = false,
-                    UsingClanCASE = false,
-                    YearSpecified = false,
-                    YearRestricted = false;
-    //private TargetingComputer CurTC = new TargetingComputer( this, false );
-    private int RulesLevel = AvailableCode.RULES_TOURNAMENT,
-                TechBase = AvailableCode.TECH_INNER_SPHERE,
-                Era = AvailableCode.ERA_STAR_LEAGUE,
-                Year = 2750;
+public class CVAmmunitionHandler {
+    private Vector<Ammunition> Ammo = new Vector<Ammunition>();
+    private CVLoadout Owner;
 
-    public CVLoadout( CombatVehicle c ) {
+    public CVAmmunitionHandler( CVLoadout c ) {
         Owner = c;
     }
 
-    public CombatVehicle GetOwner() {
-        return Owner;
+    public void AddAmmo( Ammunition a ) {
+        Ammo.add( a );
+    }
+
+    public void RemoveAmmo( Ammunition a ) {
+        Ammo.remove( a );
+    }
+
+    public Vector<Ammunition> GetAmmo() {
+        return Ammo;
+    }
+
+    public double GetTonnage() {
+        double retval = 0.0;
+        for( int i = 0; i < Ammo.size(); i++ ) {
+            retval += Ammo.get( i ).GetTonnage();
+        }
+        return retval;
+    }
+
+    public int AmmoSpace() {
+        Vector<Ammunition> check = (Vector<Ammunition>) Ammo.clone();
+        int curIDX = 0, retval = 0;
+        while( check.size() > 0 ) {
+            curIDX = check.lastElement().GetAmmoIndex();
+            check.remove( check.lastElement() );
+            retval++;
+            for( int i = check.size() - 1; i > -1; i-- ) {
+                if( check.get( i ).GetAmmoIndex() == curIDX ) {
+                    check.removeElementAt( i );
+                }
+            }
+        }
+        return retval;
+    }
+
+    @Override
+    public String toString() {
+        return "Total Ammo (" + String.format( "%1$3.1f", GetTonnage() ) + " tons, " + AmmoSpace() + " spaces)";
     }
 }

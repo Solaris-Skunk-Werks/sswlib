@@ -248,56 +248,62 @@ public class BinaryConverter {
         // Meat of the weapon stats start here
         FW.writeDouble( Double.parseDouble( data[45] ) ); // Tons
         FW.writeInt( Integer.parseInt( data[46] ) ); // Mspc
-        FW.writeDouble( Double.parseDouble( data[47] ) ); // Cost
-        FW.writeDouble( Double.parseDouble( data[48] ) ); // OBV
-        FW.writeDouble( Double.parseDouble( data[49] ) ); // DBV
-        FW.writeInt( Integer.parseInt( data[50] ) ); // heat
-        FW.writeInt( Integer.parseInt( data[51] ) ); // To-hit S
-        FW.writeInt( Integer.parseInt( data[52] ) ); // To-hit M
-        FW.writeInt( Integer.parseInt( data[53] ) ); // To-hit L
-        FW.writeInt( Integer.parseInt( data[54] ) ); // Dam S
-        FW.writeInt( Integer.parseInt( data[55] ) ); // M
-        FW.writeInt( Integer.parseInt( data[56] ) ); // L
-        FW.writeBoolean( Boolean.parseBoolean( data[57] ) ); // Cluster
-        FW.writeInt( Integer.parseInt( data[58] ) ); // Size
-        FW.writeInt( Integer.parseInt( data[59] ) ); // Group
-        FW.writeInt( Integer.parseInt( data[60] ) ); // Cluster Mod Short
-        FW.writeInt( Integer.parseInt( data[61] ) ); // Cluster Mod Medium
-        FW.writeInt( Integer.parseInt( data[62] ) ); // Cluster Mod Long
-        FW.writeInt( Integer.parseInt( data[63] ) ); // Range Min
-        FW.writeInt( Integer.parseInt( data[64] ) ); // S
-        FW.writeInt( Integer.parseInt( data[65] ) ); // M
-        FW.writeInt( Integer.parseInt( data[66] ) ); // L
-        FW.writeBoolean( Boolean.parseBoolean( data[67] ) ); // Has Ammo
-        FW.writeInt( Integer.parseInt( data[68] ) ); // Lot
-        FW.writeInt( Integer.parseInt( data[69] ) ); // Idx
-        FW.writeBoolean( Boolean.parseBoolean( data[70] ) ); // Switch
-        FW.writeBoolean( Boolean.parseBoolean( data[71] ) ); // HD
-        FW.writeBoolean( Boolean.parseBoolean( data[72] ) ); // CT
-        FW.writeBoolean( Boolean.parseBoolean( data[73] ) ); // Torso
-        FW.writeBoolean( Boolean.parseBoolean( data[74] ) ); // Arms
-        FW.writeBoolean( Boolean.parseBoolean( data[75] ) ); // Legs
-        FW.writeBoolean( Boolean.parseBoolean( data[76] ) ); // Split
-        FW.writeBoolean( Boolean.parseBoolean( data[77] ) ); // OmniArm
-        FW.writeBoolean( Boolean.parseBoolean( data[78] ) ); // Fusion
-        FW.writeBoolean( Boolean.parseBoolean( data[79] ) ); // Nuclear
-        FW.writeBoolean( Boolean.parseBoolean( data[80] ) ); // Power Amps
-        FW.writeBoolean( Boolean.parseBoolean( data[81] ) ); // OS
-        FW.writeBoolean( Boolean.parseBoolean( data[82] ) ); // Streak
-        FW.writeBoolean( Boolean.parseBoolean( data[83] ) ); // Ultra
-        FW.writeBoolean( Boolean.parseBoolean( data[84] ) ); // Rotary
-        FW.writeBoolean( Boolean.parseBoolean( data[85] ) ); // Explode
-        FW.writeBoolean( Boolean.parseBoolean( data[86] ) ); // TC
-        FW.writeBoolean( Boolean.parseBoolean( data[87] ) ); // Array
-        FW.writeBoolean( Boolean.parseBoolean( data[88] ) ); // Capacitor
-        FW.writeBoolean( Boolean.parseBoolean( data[89] ) ); // Insulator
-        FW.writeBoolean( Boolean.parseBoolean( data[90] ) );
-        FW.writeInt( Integer.parseInt( data[91] ) );
-        FW.writeBoolean( Boolean.parseBoolean( data[92] ) ); // A-IV
-        FW.writeInt( Integer.parseInt( data[93] ) ); // A-IV Type
-        FW.writeUTF( data[94] ); // ChatName
-        FW.writeUTF( data[95] ); // BookReference
-        FW.writeUTF( data[96] ); // Battleforce Abilities
+        FW.writeInt( Integer.parseInt( data[47] ) ); // Vspc
+        FW.writeDouble( Double.parseDouble( data[48] ) ); // Cost
+        FW.writeDouble( Double.parseDouble( data[49] ) ); // OBV
+        FW.writeDouble( Double.parseDouble( data[50] ) ); // DBV
+        FW.writeInt( Integer.parseInt( data[51] ) ); // heat
+        FW.writeInt( Integer.parseInt( data[52] ) ); // To-hit S
+        FW.writeInt( Integer.parseInt( data[53] ) ); // To-hit M
+        FW.writeInt( Integer.parseInt( data[54] ) ); // To-hit L
+        FW.writeInt( Integer.parseInt( data[55] ) ); // Dam S
+        FW.writeInt( Integer.parseInt( data[56] ) ); // M
+        FW.writeInt( Integer.parseInt( data[57] ) ); // L
+        FW.writeBoolean( Boolean.parseBoolean( data[58] ) ); // Cluster
+        FW.writeInt( Integer.parseInt( data[59] ) ); // Size
+        FW.writeInt( Integer.parseInt( data[60] ) ); // Group
+        FW.writeInt( Integer.parseInt( data[61] ) ); // Cluster Mod Short
+        FW.writeInt( Integer.parseInt( data[62] ) ); // Cluster Mod Medium
+        FW.writeInt( Integer.parseInt( data[63] ) ); // Cluster Mod Long
+        FW.writeInt( Integer.parseInt( data[64] ) ); // Range Min
+        FW.writeInt( Integer.parseInt( data[65] ) ); // S
+        FW.writeInt( Integer.parseInt( data[66] ) ); // M
+        FW.writeInt( Integer.parseInt( data[67] ) ); // L
+        FW.writeBoolean( Boolean.parseBoolean( data[68] ) ); // Has Ammo
+        FW.writeInt( Integer.parseInt( data[69] ) ); // Lot
+        FW.writeInt( Integer.parseInt( data[70] ) ); // Idx
+        FW.writeBoolean( Boolean.parseBoolean( data[71] ) ); // Switch
+        FW.writeBoolean( Boolean.parseBoolean( data[72] ) ); // HD
+        FW.writeBoolean( Boolean.parseBoolean( data[73] ) ); // CT
+        FW.writeBoolean( Boolean.parseBoolean( data[74] ) ); // Torso
+        FW.writeBoolean( Boolean.parseBoolean( data[75] ) ); // Arms
+        FW.writeBoolean( Boolean.parseBoolean( data[76] ) ); // Legs
+        FW.writeBoolean( Boolean.parseBoolean( data[77] ) ); // Split
+        FW.writeBoolean( Boolean.parseBoolean( data[78] ) ); // OmniArm
+        FW.writeBoolean( Boolean.parseBoolean( data[79] ) ); // CV Front
+        FW.writeBoolean( Boolean.parseBoolean( data[80] ) ); // CV Sides
+        FW.writeBoolean( Boolean.parseBoolean( data[81] ) ); // CV Rear
+        FW.writeBoolean( Boolean.parseBoolean( data[82] ) ); // CV Turret
+        FW.writeBoolean( Boolean.parseBoolean( data[83] ) ); // CV Body
+        FW.writeBoolean( Boolean.parseBoolean( data[84] ) ); // Fusion
+        FW.writeBoolean( Boolean.parseBoolean( data[85] ) ); // Nuclear
+        FW.writeBoolean( Boolean.parseBoolean( data[86] ) ); // Power Amps
+        FW.writeBoolean( Boolean.parseBoolean( data[87] ) ); // OS
+        FW.writeBoolean( Boolean.parseBoolean( data[88] ) ); // Streak
+        FW.writeBoolean( Boolean.parseBoolean( data[89] ) ); // Ultra
+        FW.writeBoolean( Boolean.parseBoolean( data[90] ) ); // Rotary
+        FW.writeBoolean( Boolean.parseBoolean( data[91] ) ); // Explode
+        FW.writeBoolean( Boolean.parseBoolean( data[92] ) ); // TC
+        FW.writeBoolean( Boolean.parseBoolean( data[93] ) ); // Array
+        FW.writeBoolean( Boolean.parseBoolean( data[94] ) ); // Capacitor
+        FW.writeBoolean( Boolean.parseBoolean( data[95] ) ); // Insulator
+        FW.writeBoolean( Boolean.parseBoolean( data[96] ) );
+        FW.writeInt( Integer.parseInt( data[97] ) );
+        FW.writeBoolean( Boolean.parseBoolean( data[98] ) ); // A-IV
+        FW.writeInt( Integer.parseInt( data[99] ) ); // A-IV Type
+        FW.writeUTF( data[100] ); // ChatName
+        FW.writeUTF( data[101] ); // BookReference
+        FW.writeUTF( data[102] ); // Battleforce Abilities
     }
 
 /**
@@ -410,29 +416,35 @@ public class BinaryConverter {
         FW.writeDouble( Double.parseDouble( data[53] ) ); // DBV
         FW.writeInt( Integer.parseInt( data[54] ) ); // NumCrits
         FW.writeDouble( Double.parseDouble( data[55] ) ); // Tons Per Crit
-        FW.writeInt( Integer.parseInt( data[56] ) ); // Heat
-        FW.writeInt( Integer.parseInt( data[57] ) ); // Short Range
-        FW.writeInt( Integer.parseInt( data[58] ) ); // Medium Range
-        FW.writeInt( Integer.parseInt( data[59] ) ); // Long Range
-        FW.writeBoolean( Boolean.parseBoolean( data[60] ) ); // Has Ammo
-        FW.writeInt( Integer.parseInt( data[61] ) ); // Lot Size
-        FW.writeInt( Integer.parseInt( data[62] ) ); // Ammo Index
-        FW.writeBoolean( Boolean.parseBoolean( data[63] ) ); // Can Alloc HD
-        FW.writeBoolean( Boolean.parseBoolean( data[64] ) ); // Can Alloc CT
-        FW.writeBoolean( Boolean.parseBoolean( data[65] ) ); // Can Alloc Torso
-        FW.writeBoolean( Boolean.parseBoolean( data[66] ) ); // Can Alloc Arms
-        FW.writeBoolean( Boolean.parseBoolean( data[67] ) ); // Can Alloc Legs
-        FW.writeBoolean( Boolean.parseBoolean( data[68] ) ); // Can Split
-        FW.writeBoolean( Boolean.parseBoolean( data[69] ) ); // Requires Quad
-        FW.writeInt( Integer.parseInt( data[70] ) ); // Number Allowed Per Mech
-        FW.writeBoolean( Boolean.parseBoolean( data[71] ) ); // Can Mount Rear
-        FW.writeBoolean( Boolean.parseBoolean( data[72] ) ); // Explosive
-        FW.writeUTF( data[73] ); // Book Reference
-        FW.writeUTF( data[74] ); // Battleforce Abilities
-        int numexceptions = Integer.parseInt( data[75] );
+        FW.writeInt( Integer.parseInt( data[56] ) ); // Vspc
+        FW.writeInt( Integer.parseInt( data[57] ) ); // Heat
+        FW.writeInt( Integer.parseInt( data[58] ) ); // Short Range
+        FW.writeInt( Integer.parseInt( data[59] ) ); // Medium Range
+        FW.writeInt( Integer.parseInt( data[60] ) ); // Long Range
+        FW.writeBoolean( Boolean.parseBoolean( data[61] ) ); // Has Ammo
+        FW.writeInt( Integer.parseInt( data[62] ) ); // Lot Size
+        FW.writeInt( Integer.parseInt( data[63] ) ); // Ammo Index
+        FW.writeBoolean( Boolean.parseBoolean( data[64] ) ); // Can Alloc HD
+        FW.writeBoolean( Boolean.parseBoolean( data[65] ) ); // Can Alloc CT
+        FW.writeBoolean( Boolean.parseBoolean( data[66] ) ); // Can Alloc Torso
+        FW.writeBoolean( Boolean.parseBoolean( data[67] ) ); // Can Alloc Arms
+        FW.writeBoolean( Boolean.parseBoolean( data[68] ) ); // Can Alloc Legs
+        FW.writeBoolean( Boolean.parseBoolean( data[69] ) ); // Can Split
+        FW.writeBoolean( Boolean.parseBoolean( data[70] ) ); // Requires Quad
+        FW.writeInt( Integer.parseInt( data[71] ) ); // Number Allowed Per Mech
+        FW.writeBoolean( Boolean.parseBoolean( data[72] ) ); // Can alloc front
+        FW.writeBoolean( Boolean.parseBoolean( data[73] ) ); // Can alloc sides
+        FW.writeBoolean( Boolean.parseBoolean( data[74] ) ); // Can alloc rear
+        FW.writeBoolean( Boolean.parseBoolean( data[75] ) ); // Can alloc turret
+        FW.writeBoolean( Boolean.parseBoolean( data[76] ) ); // Can alloc body
+        FW.writeBoolean( Boolean.parseBoolean( data[77] ) ); // Can Mount Rear
+        FW.writeBoolean( Boolean.parseBoolean( data[78] ) ); // Explosive
+        FW.writeUTF( data[79] ); // Book Reference
+        FW.writeUTF( data[80] ); // Battleforce Abilities
+        int numexceptions = Integer.parseInt( data[81] );
         FW.writeInt( numexceptions ); // number of exceptions to read
         for( int i = 0; i < numexceptions; i++ ) {
-            FW.writeUTF( data[76+i] ); // each exception
+            FW.writeUTF( data[82+i] ); // each exception
         }
     }
 

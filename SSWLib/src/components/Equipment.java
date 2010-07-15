@@ -163,9 +163,10 @@ public class Equipment extends abPlaceable {
         DefBV = dbv;
     }
 
-    public void SetCrits( int crits, double tonspercrit ) {
+    public void SetCrits( int crits, double tonspercrit, int vspace ) {
         Crits = crits;
         TonsPerCrit = tonspercrit;
+        CVSpace = vspace;
     }
 
     public void SetHeat( int h ) {

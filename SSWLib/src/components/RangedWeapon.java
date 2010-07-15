@@ -190,9 +190,10 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
         SetBattleForceAbilities( r.GetBattleForceAbilities() );
     }
 
-    public void SetStats( double tons, int crits, double cost, double obv, double dbv ) {
+    public void SetStats( double tons, int crits, int vspace, double cost, double obv, double dbv ) {
         Tonnage = tons;
         NumCrits = crits;
+        CVSpace = vspace;
         Cost = cost;
         OffBV = obv;
         DefBV = dbv;
