@@ -35,7 +35,7 @@ public class MechTurret extends abPlaceable implements ifTurret {
 
     private ifMechLoadout Owner;
     private AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
-    private Vector<RangedWeapon> weapons = new Vector<RangedWeapon>();
+    private Vector<ifWeapon> weapons = new Vector<ifWeapon>();
 
     public MechTurret( ifMechLoadout l ) {
         Owner = l;
@@ -48,25 +48,31 @@ public class MechTurret extends abPlaceable implements ifTurret {
         AC.SetCLFactions( "", "", "PS", "" );
     }
 
-    public boolean AddWeapon( RangedWeapon w ) {
-        if( w.CanSplit() ) {
-            if( Owner.FindIndexes( w ).size() > 1 ) {
-                return false;
+    public boolean AddWeapon( ifWeapon w ) {
+        if( ! (( w instanceof RangedWeapon ) || ( w instanceof MGArray )) ) {
+            return false;
+        }
+        if( w instanceof RangedWeapon ) {
+            if( ((RangedWeapon) w).CanSplit() ) {
+                if( Owner.FindIndexes( (abPlaceable) w ).size() > 1 ) {
+                    return false;
+                }
             }
         }
         weapons.add( w );
         return true;
     }
 
-    public void RemoveWeapon( RangedWeapon w ) {
+    public void RemoveWeapon( ifWeapon w ) {
+        // extra code here!
         weapons.remove( w );
     }
 
-    public Vector<RangedWeapon> GetWeapons() {
+    public Vector<ifWeapon> GetWeapons() {
         return weapons;
     }
 
-    public boolean IsInstalled( RangedWeapon w ) {
+    public boolean IsInstalled( ifWeapon w ) {
         return weapons.contains( w );
     }
 
@@ -153,7 +159,7 @@ public class MechTurret extends abPlaceable implements ifTurret {
     private double GetSize() {
         double retval = 0.0;
         for( int i = 0; i < weapons.size(); i++ ) {
-            retval += weapons.get( i ).GetTonnage();
+            retval += ((abPlaceable) weapons.get( i )).GetTonnage();
         }
         if( Owner.GetMech().UsingFractionalAccounting() ) {
             return CommonTools.RoundFractionalTons( retval );

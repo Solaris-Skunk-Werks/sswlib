@@ -314,6 +314,12 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
         }
         if( IsTurreted() ) {
             retval = "(T) " + retval;
+        } else {
+            if( InArray ) {
+                if( CurArray.IsTurreted() ) {
+                    retval = "(T) " + retval;
+                }
+            }
         }
         if( MountedRear ) {
             return "(R) " + retval;
@@ -658,6 +664,7 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
     }
 
     public boolean IsExplosive() {
+        if( UsingCapacitor ) { return true; }
         return Explosive;
     }
 
@@ -926,6 +933,13 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
     }
 
     public boolean AddToTurret( ifTurret t ) {
+        if( InArray ) {
+            if( CurArray.AddToTurret( t ) ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
         if( t.AddWeapon( this ) ) {
             Turret = t;
             return true;
@@ -936,11 +950,18 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
     }
 
     public void RemoveFromTurret( ifTurret t ) {
+        if( InArray ) {
+            CurArray.RemoveFromTurret( t );
+            return;
+        }
         t.RemoveWeapon( this );
         Turret = null;
     }
 
     public boolean IsTurreted() {
+        if( InArray ) {
+            return CurArray.IsTurreted();
+        }
         if( Turret != null ) { return true; }
         return false;
     }

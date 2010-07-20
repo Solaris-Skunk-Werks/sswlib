@@ -61,7 +61,7 @@ public class CASE extends abPlaceable {
     }
 
     public String LookupName() {
-        return "C.A.S.E.";
+        return "CASE";
     }
 
     public String ChatName() {

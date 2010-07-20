@@ -364,6 +364,14 @@ public class Cockpit extends abPlaceable {
     }
 
     // the following 3 methods provided for the torso-mounted cockpit for saving
+    public SimplePlaceable GetFirstSensors() {
+        return CurConfig.GetSensors();
+    }
+
+    public SimplePlaceable GetSecondSensors() {
+        return CurConfig.GetSecondSensors();
+    }
+
     public SimplePlaceable GetThirdSensors() {
         return CurConfig.GetThirdSensors();
     }

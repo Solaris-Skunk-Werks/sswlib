@@ -237,34 +237,207 @@ public class FileCommon {
 
     public static String BuildActuators( Mech m, boolean web ) {
         // builds a string that explains what arm actuators the mech has
+        String retval = "";
+        ActuatorSet a = m.GetActuators();
         if( m.IsQuad() ) {
-            if( web ) {
-                return "L: H+UL+LL+F&nbsp&nbsp&nbsp R: H+UL+LL+F";
+            retval += "L: ";
+            if( a.LeftFrontHip.IsArmored() ) {
+                retval += "(A)H";
             } else {
-                return "L: H+UL+LL+F    R: H+UL+LL+F";
+                retval += "H";
             }
-        }
-        String retval;
-        String left = "L: SH+UA";
-        String right = "R: SH+UA";
-
-        if( m.GetActuators().LeftLowerInstalled() ) {
-            left += "+LA";
-            if( m.GetActuators().LeftHandInstalled() ) {
-                left += "+H";
+            if( a.LeftFrontUpperLeg.IsArmored() ) {
+                retval += "+(A)UL";
+            } else {
+                retval += "+UL";
             }
-        }
-        if( m.GetActuators().RightLowerInstalled() ) {
-            right += "+LA";
-            if( m.GetActuators().RightHandInstalled() ) {
-                right += "+H";
+            if( a.LeftFrontLowerLeg.IsArmored() ) {
+                retval += "+(A)LL";
+            } else {
+                retval += "+LL";
             }
-        }
-
-        if( web ) {
-            retval = left + "&nbsp&nbsp&nbsp " + right;
+            if( a.LeftFrontFoot.IsArmored() ) {
+                retval += "+(A)F";
+            } else {
+                retval += "+F";
+            }
+            if( web ) {
+                retval += "&nbsp&nbsp&nbsp ";
+            } else {
+                retval += "    ";
+            }
+            retval += "R: ";
+            if( a.RightFrontHip.IsArmored() ) {
+                retval += "(A)H";
+            } else {
+                retval += "H";
+            }
+            if( a.RightFrontUpperLeg.IsArmored() ) {
+                retval += "+(A)UL";
+            } else {
+                retval += "+UL";
+            }
+            if( a.RightFrontLowerLeg.IsArmored() ) {
+                retval += "+(A)LL";
+            } else {
+                retval += "+LL";
+            }
+            if( a.RightFrontFoot.IsArmored() ) {
+                retval += "+(A)F";
+            } else {
+                retval += "+F";
+            }
         } else {
-            retval = left + "    " + right;
+            retval += "L: ";
+            if( a.LeftShoulder.IsArmored() ) {
+                retval += "(A)SH";
+            } else {
+                retval += "SH";
+            }
+            if( a.LeftUpperArm.IsArmored() ) {
+                retval += "+(A)UA";
+            } else {
+                retval += "+UA";
+            }
+            if( m.GetActuators().LeftLowerInstalled() ) {
+                if( a.LeftLowerArm.IsArmored() ) {
+                    retval += "+(A)LA";
+                } else {
+                    retval += "+LA";
+                }
+                if( m.GetActuators().LeftHandInstalled() ) {
+                    if( a.LeftHand.IsArmored() ) {
+                        retval += "+(A)H";
+                    } else {
+                        retval += "+H";
+                    }
+                }
+            }
+            if( web ) {
+                retval += "&nbsp&nbsp&nbsp ";
+            } else {
+                retval += "    ";
+            }
+            retval += "R: ";
+            if( a.RightShoulder.IsArmored() ) {
+                retval += "(A)SH";
+            } else {
+                retval += "SH";
+            }
+            if( a.RightUpperArm.IsArmored() ) {
+                retval += "+(A)UA";
+            } else {
+                retval += "+UA";
+            }
+            if( m.GetActuators().RightLowerInstalled() ) {
+                if( a.RightLowerArm.IsArmored() ) {
+                    retval += "+(A)LA";
+                } else {
+                    retval += "+LA";
+                }
+                if( m.GetActuators().RightHandInstalled() ) {
+                    if( a.RightHand.IsArmored() ) {
+                        retval += "+(A)H";
+                    } else {
+                        retval += "+H";
+                    }
+                }
+            }
+        }
+        return retval;
+    }
+
+    public static boolean NeedsLegActuatorLine( Mech m ) {
+        ActuatorSet a = m.GetActuators();
+        return a.LeftFoot.IsArmored() || a.RightFoot.IsArmored() || a.LeftUpperLeg.IsArmored() || a.RightUpperLeg.IsArmored() || a.LeftLowerLeg.IsArmored() || a.RightLowerLeg.IsArmored() || a.LeftHip.IsArmored() || a.RightHip.IsArmored();
+    }
+
+    public static String BuildLegActuators( Mech m, boolean web ) {
+        // builds a string that explains what leg actuators the mech has
+        String retval = "";
+        ActuatorSet a = m.GetActuators();
+        retval += "L: ";
+        if( a.LeftHip.IsArmored() ) {
+            retval += "(A)H";
+        } else {
+            retval += "H";
+        }
+        if( a.LeftUpperLeg.IsArmored() ) {
+            retval += "+(A)UL";
+        } else {
+            retval += "+UL";
+        }
+        if( a.LeftLowerLeg.IsArmored() ) {
+            retval += "+(A)LL";
+        } else {
+            retval += "+LL";
+        }
+        if( a.LeftFoot.IsArmored() ) {
+            retval += "+(A)F";
+        } else {
+            retval += "+F";
+        }
+        if( web ) {
+            retval += "&nbsp&nbsp&nbsp ";
+        } else {
+            retval += "    ";
+        }
+        retval += "R: ";
+        if( a.RightHip.IsArmored() ) {
+            retval += "(A)H";
+        } else {
+            retval += "H";
+        }
+        if( a.RightUpperLeg.IsArmored() ) {
+            retval += "+(A)UL";
+        } else {
+            retval += "+UL";
+        }
+        if( a.RightLowerLeg.IsArmored() ) {
+            retval += "+(A)LL";
+        } else {
+            retval += "+LL";
+        }
+        if( a.RightFoot.IsArmored() ) {
+            retval += "+(A)F";
+        } else {
+            retval += "+F";
+        }
+        return retval;
+    }
+
+    public static boolean NeedsCockpitComponentLine( Mech m ) {
+        Cockpit c = m.GetCockpit();
+        if( c.GetThirdSensors() == null ) {
+            return c.GetFirstLS().IsArmored() || c.GetSecondLS().IsArmored() || c.GetFirstSensors().IsArmored() || c.GetSecondSensors().IsArmored();
+        } else {
+            return c.GetFirstLS().IsArmored() || c.GetSecondLS().IsArmored() || c.GetFirstSensors().IsArmored() || c.GetSecondSensors().IsArmored() || c.GetThirdSensors().IsArmored();
+        }
+    }
+
+    public static String GetCockpitComponentLine( Mech m ) {
+        String retval = "";
+        Cockpit c = m.GetCockpit();
+        if( c.GetFirstSensors().IsArmored() ) {
+            retval += "(A) Sensors";
+        }
+        if( c.GetSecondSensors().IsArmored() ) {
+            if( retval.length() > 0 ) { retval += " + "; }
+            retval += "(A) Sensors";
+        }
+        if( c.GetThirdSensors() != null ) {
+            if( c.GetThirdSensors().IsArmored() ) {
+                if( retval.length() > 0 ) { retval += " + "; }
+                retval += "(A) Sensors";
+            }
+        }
+        if( c.GetFirstLS().IsArmored() ) {
+            if( retval.length() > 0 ) { retval += " + "; }
+            retval += "(A) Life Support";
+        }
+        if( c.GetSecondLS().IsArmored() ) {
+            if( retval.length() > 0 ) { retval += " + "; }
+            retval += "(A) Life Support";
         }
         return retval;
     }
@@ -829,5 +1002,56 @@ public class FileCommon {
             return s.substring(5);
         }
         return s;
+    }
+
+    public static String GetExportName( Mech m, abPlaceable p ) {
+        String retval;
+        if( m.GetTechBase() == AvailableCode.TECH_BOTH ) {
+            if( p instanceof Equipment ) {
+                if( ((Equipment) p).IsVariableSize() ) {
+                    retval = p.CritName();
+                } else {
+                    retval = p.LookupName();
+                }
+            } else {
+                retval = p.LookupName();
+            }
+        } else {
+            retval = p.CritName();
+        }
+        if( p instanceof MechTurret ) {
+            retval = p.ActualName();
+        }
+        if( p instanceof Cockpit ) {
+            retval = ((Cockpit) p).GetReportName();
+        }
+        if( p instanceof Gyro ) {
+            retval += ((Gyro) p).GetReportName();
+        }
+        if( p.IsArmored() ) {
+            retval = "(A) " + retval;
+        }
+        return retval;
+    }
+
+    public static String GetFluffName( Mech m, abPlaceable p ) {
+        String retval;
+        if( m.GetTechBase() == AvailableCode.TECH_BOTH ) {
+            if( p instanceof Equipment ) {
+                if( ((Equipment) p).IsVariableSize() ) {
+                    retval = p.CritName();
+                } else {
+                    retval = p.LookupName();
+                }
+            } else {
+                retval = p.LookupName();
+            }
+        } else {
+            retval = p.CritName();
+        }
+        if( p instanceof MechTurret ) {
+            retval = p.ActualName();
+        }
+        return retval;
     }
 }

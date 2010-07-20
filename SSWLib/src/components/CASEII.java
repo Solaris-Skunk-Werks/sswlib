@@ -67,9 +67,9 @@ public class CASEII extends abPlaceable {
 
     public String LookupName() {
         if( Clan ) {
-            return "(CL) C.A.S.E. II";
+            return "(CL) CASE II";
         } else {
-            return "(IS) C.A.S.E. II";
+            return "(IS) CASE II";
         }
     }
 

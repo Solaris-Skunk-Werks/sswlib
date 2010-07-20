@@ -41,6 +41,7 @@ public class MGArray extends abPlaceable implements ifWeapon {
                   MGTons;
     private String Manufacturer = "";
     private AvailableCode AC;
+    private ifTurret Turret = null;
 
     public MGArray( RangedWeapon type, int num, double tons, boolean c, AvailableCode a ) {
         MGType = type;
@@ -87,28 +88,36 @@ public class MGArray extends abPlaceable implements ifWeapon {
 
     // the lookup name is used when we are trying to find the piece of equipment.
     public String LookupName() {
+        String retval = GetName();
         if( Rear ) {
             if( Clan ) {
-                return "(R) (CL) " + GetName();
+                retval = "(R) (CL) " + retval;
             } else {
-                return "(R) (IS) " + GetName();
+                retval = "(R) (IS) " + retval;
             }
         } else {
             if( Clan ) {
-                return "(CL) " + GetName();
+                retval = "(CL) " + retval;
             } else {
-                return "(IS) " + GetName();
+                retval = "(IS) " + retval;
             }
         }
+        if( IsTurreted() ) {
+            retval = "(T) " + retval;
+        }
+        return retval;
     }
 
     // the crit name is how the item appears in the loadout when allocated.
     public String CritName() {
+        String retval = GetShortName();
         if( Rear ) {
-            return "(R) " + GetShortName();
-        } else {
-            return GetShortName();
+            retval = "(R) " + retval;
         }
+        if( IsTurreted() ) {
+            retval = "(T) " + retval;
+        }
+        return retval;
     }
 
     // the name to be used when expoerting this equipment to a chat line.
@@ -460,6 +469,30 @@ public class MGArray extends abPlaceable implements ifWeapon {
     @Override
     public String GetManufacturer() {
         return Manufacturer;
+    }
+
+    public boolean AddToTurret( ifTurret t ) {
+        if( t.AddWeapon( this ) ) {
+            Turret = t;
+            return true;
+        } else {
+            Turret = null;
+            return false;
+        }
+    }
+
+    public void RemoveFromTurret( ifTurret t ) {
+        t.RemoveWeapon( this );
+        Turret = null;
+    }
+
+    public boolean IsTurreted() {
+        if( Turret != null ) { return true; }
+        return false;
+    }
+
+    public ifTurret GetTurret() {
+        return Turret;
     }
 
     private RangedWeapon Copy( RangedWeapon b ) {
