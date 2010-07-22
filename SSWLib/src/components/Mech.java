@@ -1643,6 +1643,7 @@ public class Mech implements ifUnit, ifBattleforce {
     public int GetAdjustedWalkingMP( boolean BV, boolean MASCTSM ) {
         int retval = WalkMP;
         retval += GetTotalModifiers( BV, MASCTSM ).WalkingAdder();
+        if( retval < 0 ) { return 0; }
         return retval;
     }
 
@@ -1685,7 +1686,9 @@ public class Mech implements ifUnit, ifBattleforce {
         MechModifier m = GetTotalModifiers( BV, MASCTSM );
         int WalkValue = GetAdjustedWalkingMP( BV, MASCTSM );
         double Multiplier = 1.5 + m.RunningMultiplier();
-        return (int) Math.floor( WalkValue * Multiplier + 0.5 ) + m.RunningAdder();
+        int retval = (int) Math.floor( WalkValue * Multiplier + 0.5 ) + m.RunningAdder();
+        if( retval < 0 ) { return 0; }
+        return retval;
     }
 
     public int GetAdjustedRunningMP( boolean BV, boolean MASCTSM, int MiniMult ) {
@@ -1695,7 +1698,9 @@ public class Mech implements ifUnit, ifBattleforce {
         MechModifier m = GetTotalModifiers( BV, MASCTSM );
         int WalkValue = GetAdjustedWalkingMP( BV, MASCTSM ) * MiniMult;
         double Multiplier = 1.5 + m.RunningMultiplier();
-        return (int) Math.floor( WalkValue * Multiplier + 0.5 ) + m.RunningAdder();
+        int retval = (int) Math.floor( WalkValue * Multiplier + 0.5 ) + m.RunningAdder();
+        if( retval < 0 ) { return 0; }
+        return retval;
     }
 
     public int GetAdjustedJumpingMP( boolean BV ) {
@@ -1706,6 +1711,7 @@ public class Mech implements ifUnit, ifBattleforce {
             int retval = CurLoadout.GetJumpJets().GetNumJJ();
             if( HasPartialWing && retval > 0 &! CurLoadout.GetJumpJets().IsUMU() ) { retval += Wing.GetJumpBonus(); }
             retval += GetTotalModifiers( BV, true ).JumpingAdder();
+            if( retval < 0 ) { return 0; }
             return retval;
         }
     }
@@ -1725,6 +1731,7 @@ public class Mech implements ifUnit, ifBattleforce {
         } else {
             int retval = JumpBooster.GetMP();
             retval += GetTotalModifiers( BV, true ).JumpingAdder();
+            if( retval < 0 ) { return 0; }
             return retval;
         }
     }
@@ -2234,49 +2241,57 @@ public class Mech implements ifUnit, ifBattleforce {
         for( int i = 0; i < v.size(); i++ ) {
             p = (abPlaceable) v.get( i );
             Explode = false;
-            if( p instanceof ifWeapon ) { Explode = ((ifWeapon) p).IsExplosive(); }
+            int mod = 0;
+            if( p instanceof ifWeapon ) {
+                Explode = ((ifWeapon) p).IsExplosive();
+                if( p instanceof RangedWeapon ) {
+                    if( ((RangedWeapon) p).IsUsingCapacitor() ) {
+                        mod = 1;
+                    }
+                }
+            }
             if( p instanceof Equipment ) { Explode = ((Equipment) p).IsExplosive(); }
             if( Explode ) {
                 if( CurEngine.IsISXL() ) {
                     switch( CurLoadout.Find( p ) ) {
                         case 0:
                             if( ! CurLoadout.HasHDCASEII() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 1:
                             if( ! CurLoadout.HasCTCASEII() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 2:
                             if( ! CurLoadout.HasLTCASEII() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 3:
                             if( ! CurLoadout.HasRTCASEII() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 4:
                             if( ! CurLoadout.HasLACASEII() &! CurLoadout.HasLTCASEII() &! CurLoadout.IsUsingClanCASE() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 5:
                             if( ! CurLoadout.HasRACASEII() &! CurLoadout.HasRTCASEII() &! CurLoadout.IsUsingClanCASE() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 6:
                             if( ! CurLoadout.HasLLCASEII() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 7:
                             if( ! CurLoadout.HasRLCASEII() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                     }
@@ -2284,42 +2299,42 @@ public class Mech implements ifUnit, ifBattleforce {
                     switch( CurLoadout.Find( p ) ) {
                         case 0:
                             if( ! CurLoadout.HasHDCASEII() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 1:
                             if( ! CurLoadout.HasCTCASEII() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 2:
                             if( ! CurLoadout.HasLTCASEII() &! CurLoadout.HasLTCASE() &! CurLoadout.IsUsingClanCASE() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 3:
                             if( ! CurLoadout.HasRTCASEII() &! CurLoadout.HasRTCASE() &! CurLoadout.IsUsingClanCASE() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 4:
                             if( ! CurLoadout.HasLACASEII() &! CurLoadout.HasLTCASEII() &! CurLoadout.HasLTCASE() &! CurLoadout.IsUsingClanCASE() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 5:
                             if( ! CurLoadout.HasRACASEII() &! CurLoadout.HasRTCASEII() &! CurLoadout.HasRTCASE() &! CurLoadout.IsUsingClanCASE() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 6:
                             if( ! CurLoadout.HasLLCASEII() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                         case 7:
                             if( ! CurLoadout.HasRLCASEII() ) {
-                                result -= p.NumCrits();
+                                result -= p.NumCrits() + mod;
                             }
                             break;
                     }
@@ -3794,6 +3809,70 @@ public class Mech implements ifUnit, ifBattleforce {
         }
 
         return Base;
+    }
+
+    public void CheckArmoredComponents() {
+        if( GetRulesLevel() < AvailableCode.RULES_EXPERIMENTAL ) {
+            CurEngine.ArmorComponent( false );
+            CurGyro.ArmorComponent( false );
+            CurCockpit.ArmorComponent( false );
+            CurCockpit.GetFirstSensors().ArmorComponent( false );
+            CurCockpit.GetSecondSensors().ArmorComponent( false );
+            CurCockpit.GetFirstLS().ArmorComponent( false );
+            CurCockpit.GetSecondLS().ArmorComponent( false );
+            if( CurCockpit.GetThirdSensors() != null ) {
+                CurCockpit.GetThirdSensors().ArmorComponent( false );
+            }
+            CurPhysEnhance.ArmorComponent( false );
+            GetActuators().LeftFoot.ArmorComponent( false );
+            GetActuators().RightFoot.ArmorComponent( false );
+            GetActuators().LeftLowerLeg.ArmorComponent( false );
+            GetActuators().RightLowerLeg.ArmorComponent( false );
+            GetActuators().LeftUpperLeg.ArmorComponent( false );
+            GetActuators().RightUpperLeg.ArmorComponent( false );
+            GetActuators().LeftHip.ArmorComponent( false );
+            GetActuators().RightHip.ArmorComponent( false );
+
+            GetActuators().LeftShoulder.ArmorComponent( false );
+            GetActuators().RightShoulder.ArmorComponent( false );
+            GetActuators().LeftUpperArm.ArmorComponent( false );
+            GetActuators().RightUpperArm.ArmorComponent( false );
+            GetActuators().LeftLowerArm.ArmorComponent( false );
+            GetActuators().RightLowerArm.ArmorComponent( false );
+            GetActuators().LeftHand.ArmorComponent( false );
+            GetActuators().RightHand.ArmorComponent( false );
+
+            GetActuators().LeftFrontFoot.ArmorComponent( false );
+            GetActuators().RightFrontFoot.ArmorComponent( false );
+            GetActuators().LeftFrontLowerLeg.ArmorComponent( false );
+            GetActuators().RightFrontLowerLeg.ArmorComponent( false );
+            GetActuators().LeftFrontUpperLeg.ArmorComponent( false );
+            GetActuators().RightFrontUpperLeg.ArmorComponent( false );
+            GetActuators().LeftFrontHip.ArmorComponent( false );
+            GetActuators().RightFrontHip.ArmorComponent( false );
+
+            if( GetHeatSinks().GetPlacedHeatSinks().length > 0 ) {
+                HeatSink[] placed = GetHeatSinks().GetPlacedHeatSinks();
+                for( int i = 0; i < placed.length; i++ ) {
+                    placed[i].ArmorComponent( false );
+                }
+            }
+            if( GetJumpJets().GetNumJJ() > 0 ) {
+                JumpJet[] placed = GetJumpJets().GetPlacedJumps();
+                for( int i = 0; i < placed.length; i++ ) {
+                    placed[i].ArmorComponent( false );
+                }
+            }
+            if( HasCommandConsole() ) {
+                CommandConsole.ArmorComponent( false );
+            }
+            if( CurLoadout.UsingTC() ) {
+                GetTC().ArmorComponent( false );
+            }
+            if( CurLoadout.HasSupercharger() ) {
+                CurLoadout.GetSupercharger().ArmorComponent( false );
+            }
+        }
     }
 
     public Vector SortLoadout( Vector v ) {

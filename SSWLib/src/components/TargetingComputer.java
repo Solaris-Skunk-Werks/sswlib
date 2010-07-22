@@ -156,14 +156,20 @@ public class TargetingComputer extends abPlaceable {
         }
 
         for( int i = 0; i < V.size(); i++ ) {
-            if( V.get( i ) instanceof RangedWeapon ) {
-                if( ((RangedWeapon) V.get( i )).IsUsingCapacitor() ) {
-                    Build += ((abPlaceable) V.get( i )).GetTonnage() - 1.0;
+            abPlaceable a = (abPlaceable) V.get( i );
+            if( a instanceof RangedWeapon ) {
+                if( ((RangedWeapon) a).IsUsingCapacitor() ) {
+                    Build += a.GetTonnage() - ((RangedWeapon) a).GetCapacitor().GetTonnage();
+                } else if( ((RangedWeapon) a).IsUsingInsulator() ) {
+                    Build += a.GetTonnage() - ((RangedWeapon) a).GetInsulator().GetTonnage();
                 } else {
-                    Build += ((abPlaceable) V.get( i )).GetTonnage();
+                    Build += a.GetTonnage();
                 }
             } else {
-                Build += ((abPlaceable) V.get( i )).GetTonnage();
+                Build += a.GetTonnage();
+            }
+            if( a.IsArmored() ) {
+                Build -= a.NumCrits() * 0.5;
             }
         }
 

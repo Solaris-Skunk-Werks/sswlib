@@ -444,15 +444,15 @@ public class MechWriter {
                     FR.newLine();
                 }
                 if( CurMech.GetLoadout().HasHDTurret() &! CurMech.GetBaseLoadout().HasHDTurret() ) {
-                    FR.write( tab + tab + "<turret type=\"head\" index=\"" + CurMech.GetLoadout().FindIndex( CurMech.GetBaseLoadout().GetHDTurret() ).Index + "\"/>" );
+                    FR.write( tab + tab + "<turret type=\"head\" index=\"" + CurMech.GetLoadout().FindIndex( CurMech.GetLoadout().GetHDTurret() ).Index + "\"/>" );
                     FR.newLine();
                 }
                 if( CurMech.GetLoadout().HasLTTurret() &! CurMech.GetBaseLoadout().HasLTTurret() ) {
-                    FR.write( tab + tab + "<turret type=\"left torso\" index=\"" + CurMech.GetLoadout().FindIndex( CurMech.GetBaseLoadout().GetLTTurret() ).Index + "\"/>" );
+                    FR.write( tab + tab + "<turret type=\"left torso\" index=\"" + CurMech.GetLoadout().FindIndex( CurMech.GetLoadout().GetLTTurret() ).Index + "\"/>" );
                     FR.newLine();
                 }
                 if( CurMech.GetLoadout().HasRTTurret() &! CurMech.GetBaseLoadout().HasRTTurret() ) {
-                    FR.write( tab + tab + "<turret type=\"right torso\" index=\"" + CurMech.GetLoadout().FindIndex( CurMech.GetBaseLoadout().GetRTTurret() ).Index + "\"/>" );
+                    FR.write( tab + tab + "<turret type=\"right torso\" index=\"" + CurMech.GetLoadout().FindIndex( CurMech.GetLoadout().GetRTTurret() ).Index + "\"/>" );
                     FR.newLine();
                 }
                 FR.write( GetEquipmentLines( tab + tab ) );

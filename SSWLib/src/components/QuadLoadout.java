@@ -704,12 +704,16 @@ public class QuadLoadout implements ifMechLoadout {
             if( Find( Owner.GetCockpit() ) != LocationIndex.MECH_LOC_HD ) {
                 throw new Exception( p.CritName() + " cannot be allocated to the head\nbecause the head does not contain the cockpit." );
             }
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_HD ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the head\nbecause only one may be mounted in any location." );
+                    }
+                }
+            }
         }
-        try {
-            Allocate( p, SIndex, HDCrits );
-        } catch( Exception e ) {
-            throw e;
-        }
+        Allocate( p, SIndex, HDCrits );
     }
 
     public void AddToCT( abPlaceable p, int SIndex ) throws Exception {
@@ -725,12 +729,16 @@ public class QuadLoadout implements ifMechLoadout {
             if( Find( Owner.GetCockpit() ) != LocationIndex.MECH_LOC_CT ) {
                 throw new Exception( p.CritName() + " cannot be allocated to the center torso\nbecause the center torso does not contain the cockpit." );
             }
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_CT ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the center torso\nbecause only one may be mounted in any location." );
+                    }
+                }
+            }
         }
-        try {
-            Allocate( p, SIndex, CTCrits );
-        } catch( Exception e ) {
-            throw e;
-        }
+        Allocate( p, SIndex, CTCrits );
     }
 
     public void AddToRT( abPlaceable p, int SIndex ) throws Exception {
@@ -740,23 +748,25 @@ public class QuadLoadout implements ifMechLoadout {
                 " cannot be allocated to the right torso." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
             throw new Exception( p.CritName() + " cannot be allocated to the right torso\nbecause the right torso does not contain the cockpit." );
-        } else {
-            if (p instanceof PhysicalWeapon){
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RT ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the right torso\nbecause only one may be mounted in any location." );
+                    }
+                }
+            }
+        } else if( p instanceof PhysicalWeapon ) {
                 // Ensure that no other physical weapons of the same class are mounted in this location,
                 for( int i = 0; i < NonCore.size(); i++ ){
                     if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RT) {
                         if ( ((PhysicalWeapon)p).GetPWClass() == ((PhysicalWeapon)NonCore.get( i )).GetPWClass() )
                             throw new Exception( p.CritName() +
                                 " cannot be allocated to the right torso because\nthe torso already mounts a physical weapon of the same class." );
-                    }
                 }
             }
-            try {
-                Allocate( p, SIndex, RTCrits );
-            } catch( Exception e ) {
-                throw e;
-            }
         }
+        Allocate( p, SIndex, RTCrits );
     }
 
     public void AddToLT( abPlaceable p, int SIndex ) throws Exception {
@@ -766,23 +776,25 @@ public class QuadLoadout implements ifMechLoadout {
                 " cannot be allocated to the left torso." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
             throw new Exception( p.CritName() + " cannot be allocated to the left torso\nbecause the left torso does not contain the cockpit." );
-        } else {
-            if (p instanceof PhysicalWeapon){
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LT ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the left torso\nbecause only one may be mounted in any location." );
+                    }
+                }
+            }
+        } else if( p instanceof PhysicalWeapon ) {
                 // Ensure that no other physical weapons of the same class are mounted in this location,
                 for( int i = 0; i < NonCore.size(); i++ ){
                     if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LT) {
                         if ( ((PhysicalWeapon)p).GetPWClass() == ((PhysicalWeapon)NonCore.get( i )).GetPWClass() )
                             throw new Exception( p.CritName() +
                                 " cannot be allocated to the left torso because\nthe torso already mounts a physical weapon of the same class." );
-                    }
                 }
             }
-            try {
-                Allocate( p, SIndex, LTCrits );
-            } catch( Exception e ) {
-                throw e;
-            }
         }
+        Allocate( p, SIndex, LTCrits );
     }
 
     public void AddToRA( abPlaceable p, int SIndex ) throws Exception {
@@ -792,13 +804,16 @@ public class QuadLoadout implements ifMechLoadout {
                 " cannot be allocated to the right front leg." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
             throw new Exception( p.CritName() + " cannot be allocated to the right front leg\nbecause the right front leg does not contain the cockpit." );
-        } else {
-            try {
-                Allocate( p, SIndex, RACrits );
-            } catch( Exception e ) {
-                throw e;
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RA ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the right front leg\nbecause only one may be mounted in any location." );
+                    }
+                }
             }
         }
+        Allocate( p, SIndex, RACrits );
     }
     
     public void AddToLA( abPlaceable p, int SIndex ) throws Exception {
@@ -808,13 +823,16 @@ public class QuadLoadout implements ifMechLoadout {
                 " cannot be allocated to the left front leg." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
             throw new Exception( p.CritName() + " cannot be allocated to the left front leg\nbecause the left front leg does not contain the cockpit." );
-        } else {
-            try {
-                Allocate( p, SIndex, LACrits );
-            } catch( Exception e ) {
-                throw e;
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LA ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the left front leg\nbecause only one may be mounted in any location." );
+                    }
+                }
             }
         }
+        Allocate( p, SIndex, LACrits );
     }
     
     public void AddToRL( abPlaceable p, int SIndex ) throws Exception {
@@ -824,13 +842,16 @@ public class QuadLoadout implements ifMechLoadout {
                 " cannot be allocated to the right rear leg." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
             throw new Exception( p.CritName() + " cannot be allocated to the right rear leg\nbecause the right rear leg does not contain the cockpit." );
-        } else {
-            try {
-                Allocate( p, SIndex, RLCrits );
-            } catch( Exception e ) {
-                throw e;
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RL ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the right rear leg\nbecause only one may be mounted in any location." );
+                    }
+                }
             }
         }
+        Allocate( p, SIndex, RLCrits );
     }
     
     public void AddToLL( abPlaceable p, int SIndex ) throws Exception {
@@ -840,13 +861,16 @@ public class QuadLoadout implements ifMechLoadout {
                 " cannot be allocated to the left rear leg." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
             throw new Exception( p.CritName() + " cannot be allocated to the left rear leg\nbecause the left rear leg does not contain the cockpit." );
-        } else {
-            try {
-                Allocate( p, SIndex, LLCrits );
-            } catch( Exception e ) {
-                throw e;
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LL ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the left rear leg\nbecause only one may be mounted in any location." );
+                    }
+                }
             }
         }
+        Allocate( p, SIndex, LLCrits );
     }
 
     public abPlaceable[] GetHDCrits() {
@@ -1704,6 +1728,9 @@ public class QuadLoadout implements ifMechLoadout {
         // this method is provided for non-core equipment
         AvailableCode AC;
         abPlaceable p;
+        int Rules = Owner.GetRulesLevel();
+
+        Owner.CheckArmoredComponents();
 
         // see if there's anything to flush out
         if( NonCore.size() <= 0 ) { return; }
@@ -1718,6 +1745,11 @@ public class QuadLoadout implements ifMechLoadout {
                 }
             } catch( Exception e ) {
                 Remove( p );
+            }
+            if( NonCore.contains( p ) ) {
+                if( Rules < AvailableCode.RULES_EXPERIMENTAL ) {
+                    p.ArmorComponent( false );
+                }
             }
         }
     }

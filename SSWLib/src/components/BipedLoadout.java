@@ -713,6 +713,14 @@ public class BipedLoadout implements ifMechLoadout {
             if( Find( Owner.GetCockpit() ) != LocationIndex.MECH_LOC_HD ) {
                 throw new Exception( p.CritName() + " cannot be allocated to the head\nbecause the head does not contain the cockpit." );
             }
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_HD ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the head\nbecause only one may be mounted in any location." );
+                    }
+                }
+            }
         } else {
            if( p instanceof PhysicalWeapon ) {
            // Ensure that no other physical weapons are mounted in this location
@@ -723,11 +731,7 @@ public class BipedLoadout implements ifMechLoadout {
                 }
            }
         }
-        try {
-            Allocate( p, SIndex, HDCrits );
-        } catch( Exception e ) {
-            throw e;
-        }
+        Allocate( p, SIndex, HDCrits );
     }
 
     public void AddToCT( abPlaceable p, int SIndex ) throws Exception {
@@ -743,6 +747,14 @@ public class BipedLoadout implements ifMechLoadout {
             if( Find( Owner.GetCockpit() ) != LocationIndex.MECH_LOC_CT ) {
                 throw new Exception( p.CritName() + " cannot be allocated to the center torso\nbecause the center torso does not contain the cockpit." );
             }
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_CT ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the center torso\nbecause only one may be mounted in any location." );
+                    }
+                }
+            }
         } else {
            if( p instanceof PhysicalWeapon ) {
            // Ensure that no other physical weapons are mounted in this location
@@ -753,11 +765,7 @@ public class BipedLoadout implements ifMechLoadout {
                 }
            }
         }
-        try {
-            Allocate( p, SIndex, CTCrits );
-        } catch( Exception e ) {
-            throw e;
-        }
+        Allocate( p, SIndex, CTCrits );
     }
 
     public void AddToRT( abPlaceable p, int SIndex ) throws Exception {
@@ -767,21 +775,23 @@ public class BipedLoadout implements ifMechLoadout {
                 " cannot be allocated to the right torso." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
             throw new Exception( p.CritName() + " cannot be allocated to the right torso\nbecause the right torso does not contain the cockpit." );
-        } else {
-           if( p instanceof PhysicalWeapon ) {
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RT ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the right torso\nbecause only one may be mounted in any location." );
+                    }
+                }
+            }
+        } else if( p instanceof PhysicalWeapon ) {
            // Ensure that no other physical weapons are mounted in this location
                 for( int i = 0; i < NonCore.size(); i++ ){
                     if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RT)
                         throw new Exception( p.CritName() +
                             " cannot be allocated to the right torso because\nthe torso already mounts a physical weapon." );
-                }
-           }
-            try {
-                Allocate( p, SIndex, RTCrits );
-            } catch( Exception e ) {
-                throw e;
             }
         }
+        Allocate( p, SIndex, RTCrits );
     }
 
     public void AddToLT( abPlaceable p, int SIndex ) throws Exception {
@@ -791,21 +801,23 @@ public class BipedLoadout implements ifMechLoadout {
                 " cannot be allocated to the left torso." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
             throw new Exception( p.CritName() + " cannot be allocated to the left torso\nbecause the left torso does not contain the cockpit." );
-        } else {
-           if( p instanceof PhysicalWeapon ) {
-           // Ensure that no other physical weapons are mounted in this location
-                for( int i = 0; i < NonCore.size(); i++ ){
-                    if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LT)
-                        throw new Exception( p.CritName() +
-                            " cannot be allocated to the left torso because\nthe torso already mounts a physical weapon." );
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LT ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the left torso\nbecause only one may be mounted in any location." );
+                    }
                 }
-           }
-            try {
-                Allocate( p, SIndex, LTCrits );
-            } catch( Exception e ) {
-                throw e;
+            }
+        } else if( p instanceof PhysicalWeapon ) {
+            // Ensure that no other physical weapons are mounted in this location
+            for( int i = 0; i < NonCore.size(); i++ ){
+                if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LT)
+                    throw new Exception( p.CritName() +
+                        " cannot be allocated to the left torso because\nthe torso already mounts a physical weapon." );
             }
         }
+        Allocate( p, SIndex, LTCrits );
     }
 
     public void AddToRA( abPlaceable p, int SIndex ) throws Exception {
@@ -815,59 +827,60 @@ public class BipedLoadout implements ifMechLoadout {
                 " cannot be allocated to the right arm." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
             throw new Exception( p.CritName() + " cannot be allocated to the right arm\nbecause the right arm does not contain the cockpit." );
-        } else {
-            if( p instanceof PhysicalWeapon ) {
-                // Ensure that no other physical weapons of the same class are mounted in this location,
-                for( int i = 0; i < NonCore.size(); i++ ){
-                    if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RA) {
-                        if ( ((PhysicalWeapon)p).GetPWClass() == ((PhysicalWeapon)NonCore.get( i )).GetPWClass() )
-                            throw new Exception( p.CritName() +
-                                " cannot be allocated to the right arm because\nthe arm already mounts a physical weapon of the same class." );
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RA ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the right arm\nbecause only one may be mounted in any location." );
                     }
                 }
-
-                // Check for proper actuators
-                if ( ((PhysicalWeapon)p).RequiresHand() && ! ( RACrits[3] instanceof Actuator ) ) {
-                    throw new Exception( p.CritName() +
-                        " cannot be allocated to the right arm because\nthe arm does not have a hand actuator." );
-                }
-                if ( ((PhysicalWeapon)p).RequiresLowerArm() && ! ( RACrits[2] instanceof Actuator ) ) {
-                    throw new Exception( p.CritName() +
-                        " cannot be allocated to the right arm because\nthe arm does not have a lower arm actuator." );
-                }
-                if ( ((PhysicalWeapon)p).ReplacesHand() && ( RACrits[3] instanceof Actuator ) ) {
-                    throw new Exception( p.CritName() +
-                        " cannot be allocated to the right arm because\nthe arm contains a hand actuator." );
-                }
-                if ( ((PhysicalWeapon)p).ReplacesLowerArm() && ( RACrits[2] instanceof Actuator ) ) {
-                    throw new Exception( p.CritName() +
-                        " cannot be allocated to the right arm because\nthe arm contains a lower arm actuator." );
+            }
+        } else if( p instanceof PhysicalWeapon ) {
+            // Ensure that no other physical weapons of the same class are mounted in this location,
+            for( int i = 0; i < NonCore.size(); i++ ){
+                if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RA) {
+                    if ( ((PhysicalWeapon)p).GetPWClass() == ((PhysicalWeapon)NonCore.get( i )).GetPWClass() )
+                        throw new Exception( p.CritName() +
+                            " cannot be allocated to the right arm because\nthe arm already mounts a physical weapon of the same class." );
                 }
             }
-            if( p instanceof ifWeapon ) {
-                if( ((ifWeapon) p).OmniRestrictActuators() && Owner.IsOmnimech() ) {
-                    if( ( RACrits[2] instanceof Actuator ) || ( RACrits[3] instanceof Actuator ) ) {
-                        // check for physical weapons before removing the actuators
-                        // otherwise throw an exception
-                        for( int i = 0; i < NonCore.size(); i++ ) {
-                            if( NonCore.get( i ) instanceof PhysicalWeapon ) {
-                                if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RA ) {
-                                    throw new Exception( p.CritName() +
-                                        " cannot be allocated to the right arm\n" +
-                                        "because the arm contains lower arm or hand actuators." );
-                                }
+
+            // Check for proper actuators
+            if ( ((PhysicalWeapon)p).RequiresHand() && ! ( RACrits[3] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the right arm because\nthe arm does not have a hand actuator." );
+            }
+            if ( ((PhysicalWeapon)p).RequiresLowerArm() && ! ( RACrits[2] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the right arm because\nthe arm does not have a lower arm actuator." );
+            }
+            if ( ((PhysicalWeapon)p).ReplacesHand() && ( RACrits[3] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the right arm because\nthe arm contains a hand actuator." );
+            }
+            if ( ((PhysicalWeapon)p).ReplacesLowerArm() && ( RACrits[2] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the right arm because\nthe arm contains a lower arm actuator." );
+            }
+        } else if( p instanceof ifWeapon ) {
+            if( ((ifWeapon) p).OmniRestrictActuators() && Owner.IsOmnimech() ) {
+                if( ( RACrits[2] instanceof Actuator ) || ( RACrits[3] instanceof Actuator ) ) {
+                    // check for physical weapons before removing the actuators
+                    // otherwise throw an exception
+                    for( int i = 0; i < NonCore.size(); i++ ) {
+                        if( NonCore.get( i ) instanceof PhysicalWeapon ) {
+                            if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RA ) {
+                                throw new Exception( p.CritName() +
+                                    " cannot be allocated to the right arm\n" +
+                                    "because the arm contains lower arm or hand actuators." );
                             }
                         }
-                        Actuators.RemoveRightLowerArm();
                     }
+                    Actuators.RemoveRightLowerArm();
                 }
             }
-            try {
-                Allocate( p, SIndex, RACrits );
-            } catch( Exception e ) {
-                throw e;
-            }
         }
+        Allocate( p, SIndex, RACrits );
     }
 
     public void AddToLA( abPlaceable p, int SIndex ) throws Exception {
@@ -877,59 +890,60 @@ public class BipedLoadout implements ifMechLoadout {
                 " cannot be allocated to the left arm." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
             throw new Exception( p.CritName() + " cannot be allocated to the left arm\nbecause the left arm does not contain the cockpit." );
-        } else {
-            if( p instanceof PhysicalWeapon ) {
-                // Ensure that no other physical weapons of the same class are mounted in this location,
-                for( int i = 0; i < NonCore.size(); i++ ){
-                    if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LA) {
-                        if ( ((PhysicalWeapon)p).GetPWClass() == ((PhysicalWeapon)NonCore.get( i )).GetPWClass() )
-                            throw new Exception( p.CritName() +
-                                " cannot be allocated to the left arm because\nthe arm already mounts a physical weapon of the same class." );
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LA ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the left arm\nbecause only one may be mounted in any location." );
                     }
                 }
-
-                // Check for proper actuators
-                if ( ((PhysicalWeapon)p).RequiresHand() && ! ( LACrits[3] instanceof Actuator ) ) {
-                    throw new Exception( p.CritName() +
-                        " cannot be allocated to the left arm because\nthe arm does not have a hand actuator." );
-                }
-                if ( ((PhysicalWeapon)p).RequiresLowerArm() && ! ( LACrits[2] instanceof Actuator ) ) {
-                    throw new Exception( p.CritName() +
-                        " cannot be allocated to the left arm because\nthe arm does not have a lower arm actuator." );
-                }
-                if ( ((PhysicalWeapon)p).ReplacesHand() && ( LACrits[3] instanceof Actuator ) ) {
-                    throw new Exception( p.CritName() +
-                        " cannot be allocated to the left arm because\nthe arm contains a hand actuator." );
-                }
-                if ( ((PhysicalWeapon)p).ReplacesLowerArm() && ( LACrits[2] instanceof Actuator ) ) {
-                    throw new Exception( p.CritName() +
-                        " cannot be allocated to the left arm because\nthe arm contains a lower arm actuator." );
+            }
+        } else if( p instanceof PhysicalWeapon ) {
+            // Ensure that no other physical weapons of the same class are mounted in this location,
+            for( int i = 0; i < NonCore.size(); i++ ){
+                if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LA) {
+                    if ( ((PhysicalWeapon)p).GetPWClass() == ((PhysicalWeapon)NonCore.get( i )).GetPWClass() )
+                        throw new Exception( p.CritName() +
+                            " cannot be allocated to the left arm because\nthe arm already mounts a physical weapon of the same class." );
                 }
             }
-            if( p instanceof ifWeapon ) {
-                if( ((ifWeapon) p).OmniRestrictActuators() && Owner.IsOmnimech() ) {
-                    if( ( LACrits[2] instanceof Actuator ) || ( LACrits[3] instanceof Actuator ) ) {
-                        // check for physical weapons before removing the actuators
-                        // otherwise throw an exception
-                        for( int i = 0; i < NonCore.size(); i++ ) {
-                            if( NonCore.get( i ) instanceof PhysicalWeapon ) {
-                                if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LA ) {
-                                    throw new Exception( p.CritName() +
-                                        " cannot be allocated to the right arm\n" +
-                                        "because the arm contains lower arm or hand actuators." );
-                                }
+
+            // Check for proper actuators
+            if ( ((PhysicalWeapon)p).RequiresHand() && ! ( LACrits[3] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the left arm because\nthe arm does not have a hand actuator." );
+            }
+            if ( ((PhysicalWeapon)p).RequiresLowerArm() && ! ( LACrits[2] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the left arm because\nthe arm does not have a lower arm actuator." );
+            }
+            if ( ((PhysicalWeapon)p).ReplacesHand() && ( LACrits[3] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the left arm because\nthe arm contains a hand actuator." );
+            }
+            if ( ((PhysicalWeapon)p).ReplacesLowerArm() && ( LACrits[2] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the left arm because\nthe arm contains a lower arm actuator." );
+            }
+        } else if( p instanceof ifWeapon ) {
+            if( ((ifWeapon) p).OmniRestrictActuators() && Owner.IsOmnimech() ) {
+                if( ( LACrits[2] instanceof Actuator ) || ( LACrits[3] instanceof Actuator ) ) {
+                    // check for physical weapons before removing the actuators
+                    // otherwise throw an exception
+                    for( int i = 0; i < NonCore.size(); i++ ) {
+                        if( NonCore.get( i ) instanceof PhysicalWeapon ) {
+                            if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LA ) {
+                                throw new Exception( p.CritName() +
+                                    " cannot be allocated to the right arm\n" +
+                                    "because the arm contains lower arm or hand actuators." );
                             }
                         }
-                        Actuators.RemoveLeftLowerArm();
                     }
+                    Actuators.RemoveLeftLowerArm();
                 }
             }
-            try {
-                Allocate( p, SIndex, LACrits );
-            } catch( Exception e ) {
-                throw e;
-            }
         }
+        Allocate( p, SIndex, LACrits );
     }
 
     public void AddToRL( abPlaceable p, int SIndex ) throws Exception {
@@ -939,22 +953,24 @@ public class BipedLoadout implements ifMechLoadout {
                 " cannot be allocated to the right leg." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
             throw new Exception( p.CritName() + " cannot be allocated to the right leg\nbecause the right leg does not contain the cockpit." );
-        } else {
-            if( p instanceof PhysicalWeapon ) {
-            // Ensure that no other physical weapons are mounted in this location
-                 for( int i = 0; i < NonCore.size(); i++ ){
-                     if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RL)
-                         if ( ((PhysicalWeapon)p).GetPWClass() != PhysicalWeapon.PW_CLASS_TALON )
-                             throw new Exception( p.CritName() +
-                                 " cannot be allocated to the right leg because\nthe leg already mounts a physical weapon." );
-                 }
+        } else if( p instanceof ModularArmor ) {
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if ( NonCore.get( i ) instanceof ModularArmor ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RL ) {
+                        throw new Exception( p.CritName() + " cannot be allocated to the right leg\nbecause only one may be mounted in any location." );
+                    }
+                }
             }
-            try {
-                Allocate( p, SIndex, RLCrits );
-            } catch( Exception e ) {
-                throw e;
-            }
+        } else if( p instanceof PhysicalWeapon ) {
+             // Ensure that no other physical weapons are mounted in this location
+             for( int i = 0; i < NonCore.size(); i++ ){
+                 if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RL)
+                     if ( ((PhysicalWeapon)p).GetPWClass() != PhysicalWeapon.PW_CLASS_TALON )
+                         throw new Exception( p.CritName() +
+                             " cannot be allocated to the right leg because\nthe leg already mounts a physical weapon." );
+             }
         }
+        Allocate( p, SIndex, RLCrits );
     }
 
     public void AddToLL( abPlaceable p, int SIndex ) throws Exception {
@@ -964,22 +980,24 @@ public class BipedLoadout implements ifMechLoadout {
                 " cannot be allocated to the left leg." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
             throw new Exception( p.CritName() + " cannot be allocated to the left leg\nbecause the left leg does not contain the cockpit." );
-        } else {
-           if( p instanceof PhysicalWeapon ) {
-           // Ensure that no other physical weapons are mounted in this location
-                for( int i = 0; i < NonCore.size(); i++ ){
-                    if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LL)
-                        if ( ((PhysicalWeapon)p).GetPWClass() != PhysicalWeapon.PW_CLASS_TALON )
-                            throw new Exception( p.CritName() +
-                                " cannot be allocated to the left leg because\nthe leg already mounts a physical weapon." );
+        } else if( p instanceof ModularArmor ) {
+                for( int i = 0; i < NonCore.size(); i++ ) {
+                    if ( NonCore.get( i ) instanceof ModularArmor ) {
+                        if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LL ) {
+                            throw new Exception( p.CritName() + " cannot be allocated to the left leg\nbecause only one may be mounted in any location." );
+                        }
+                    }
                 }
-           }
-            try {
-                Allocate( p, SIndex, LLCrits );
-            } catch( Exception e ) {
-                throw e;
-            }
+        } else if( p instanceof PhysicalWeapon ) {
+             // Ensure that no other physical weapons are mounted in this location
+             for( int i = 0; i < NonCore.size(); i++ ) {
+                 if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LL)
+                     if ( ((PhysicalWeapon)p).GetPWClass() != PhysicalWeapon.PW_CLASS_TALON )
+                         throw new Exception( p.CritName() +
+                             " cannot be allocated to the left leg because\nthe leg already mounts a physical weapon." );
+             }
         }
+        Allocate( p, SIndex, LLCrits );
     }
 
     public abPlaceable[] GetHDCrits() {
@@ -1945,6 +1963,9 @@ public class BipedLoadout implements ifMechLoadout {
         // this method is provided for non-core equipment
         AvailableCode AC;
         abPlaceable p;
+        int Rules = Owner.GetRulesLevel();
+
+        Owner.CheckArmoredComponents();
 
         // see if there's anything to flush out
         if( NonCore.size() <= 0 ) { return; }
@@ -1959,6 +1980,11 @@ public class BipedLoadout implements ifMechLoadout {
                 }
             } catch( Exception e ) {
                 Remove( p );
+            }
+            if( NonCore.contains( p ) ) {
+                if( Rules < AvailableCode.RULES_EXPERIMENTAL ) {
+                    p.ArmorComponent( false );
+                }
             }
         }
     }
