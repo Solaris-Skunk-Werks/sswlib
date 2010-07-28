@@ -170,7 +170,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
             }
         }
 
-        if (TotalC3BV > 0) TotalC3BV *= .05;
+        if (TotalC3BV > 1) TotalC3BV *= .05;
 
         for ( Unit u : getUnits() ) {
             u.setForceC3BV(TotalC3BV);
@@ -185,7 +185,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
             TotalForcePV += u.getBFStats().getPointValue();
         }
 
-        TotalForceBV += TotalAdjustedBV + TotalC3BV;
+        TotalForceBV += TotalAdjustedBV; //+ TotalC3BV;
         TotalForceBVAdjusted = TotalForceBV;
         if ( useUnevenForceMod ) {
             UnevenForceMod = CommonTools.GetForceSizeMultiplier(OpForSize, Units.size());
