@@ -315,17 +315,27 @@ public class TWBipedPoints implements ifPrintPoints {
         new Point( 470, 444 ), new Point( 470, 450 ), new Point( 470, 456 ),
         new Point( 476, 450 ), new Point( 476, 456 ), new Point( 481, 453 ) };
     private final static Point[] LLInternalPoints = {
-        new Point( 439, 464 ), new Point( 433, 464 ), new Point( 438, 470 ), new Point( 432, 470 ),
-        new Point( 437, 476 ), new Point( 431, 476 ), new Point( 436, 482 ), new Point( 430, 482 ),
-        new Point( 435, 488 ), new Point( 429, 488 ), new Point( 434, 494 ), new Point( 428, 494 ),
-        new Point( 433, 500 ), new Point( 427, 500 ), new Point( 431, 506 ), new Point( 425, 506 ),
-        new Point( 431, 518 ), new Point( 425, 518 ), new Point( 431, 518 ), new Point( 425, 518 ), new Point( 425, 524 ) };
+        new Point( 439, 464 ), new Point( 433, 464 ),
+        new Point( 438, 470 ), new Point( 432, 470 ),
+        new Point( 437, 476 ), new Point( 431, 476 ),
+        new Point( 436, 482 ), new Point( 430, 482 ),
+        new Point( 435, 488 ), new Point( 429, 488 ),
+        new Point( 434, 494 ), new Point( 428, 494 ),
+        new Point( 433, 500 ), new Point( 427, 500 ), 
+        new Point( 432, 506 ), new Point( 426, 506 ),
+        new Point( 431, 512 ), new Point( 425, 512 ),
+        new Point( 430, 518 ), new Point( 424, 518 ), new Point( 425, 524 ) };
     private final static Point[] RLInternalPoints = {
-        new Point( 473, 464 ), new Point( 479, 464 ), new Point( 474, 470 ), new Point( 480, 470 ),
-        new Point( 475, 476 ), new Point( 481, 476 ), new Point( 476, 482 ), new Point( 482, 482 ),
-        new Point( 477, 488 ), new Point( 483, 488 ), new Point( 478, 494 ), new Point( 484, 494 ),
-        new Point( 479, 500 ), new Point( 485, 500 ), new Point( 481, 506 ), new Point( 487, 506 ),
-        new Point( 481, 518 ), new Point( 487, 518 ), new Point( 481, 518 ), new Point( 487, 518 ), new Point( 487, 524 ) };
+        new Point( 473, 464 ), new Point( 479, 464 ),
+        new Point( 474, 470 ), new Point( 480, 470 ),
+        new Point( 475, 476 ), new Point( 481, 476 ),
+        new Point( 476, 482 ), new Point( 482, 482 ),
+        new Point( 477, 488 ), new Point( 483, 488 ),
+        new Point( 478, 494 ), new Point( 484, 494 ),
+        new Point( 479, 500 ), new Point( 485, 500 ),
+        new Point( 481, 506 ), new Point( 487, 506 ),
+        new Point( 483, 512 ), new Point( 489, 512 ),
+        new Point( 485, 518 ), new Point( 491, 518 ), new Point( 487, 524 ) };
     private final static Point[] LAInternalPoints = {
         new Point( 413, 401 ), new Point( 407, 401 ), new Point( 412, 407 ), new Point( 406, 407 ),
         new Point( 411, 413 ), new Point( 405, 413 ), new Point( 410, 419 ), new Point( 404, 419 ),
