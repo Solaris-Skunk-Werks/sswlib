@@ -73,6 +73,29 @@ public class ForceListPrinter implements Printable {
     public void clearForces() {
         this.forces.clear();
     }
+
+    public int CreateForce( Force force ) {
+        this.forces.add(new Force(force));
+        return this.forces.size()-1;
+    }
+    
+    public boolean AddGroup( int ForceIndex, Group g ) {
+        this.forces.get(ForceIndex).AddGroup(g);
+        return (getForcePrintCount() <= 50);
+    }
+
+    public void SetTotals( int ForceIndex, Force f ) {
+        this.forces.get(ForceIndex).SetTotals(f);
+    }
+
+    public int getForcePrintCount() {
+        int count = 0;
+        for ( Force f : forces ) {
+            count += (f.Groups.size() * 2);
+            count += f.getUnits().size();
+        }
+        return count;
+    }
     
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
         Graphic = (Graphics2D) graphics;
