@@ -63,11 +63,13 @@ public class Force extends AbstractTableModel implements ifSerializable {
                  TotalForcePV = 0.0f,
                  UnevenForceMod = 0.0f,
                  TotalForceBVAdjusted = 0.0f;
-    public int  NumC3 = 0,
+    public int  TotalUnits = 0,
+                NumC3 = 0,
                 OpForSize = 0;
     public boolean isDirty = false,
                     useUnevenForceMod = true,
-                    unitsChanged = false;
+                    unitsChanged = false,
+                    printTotals = true;
     private abTable currentModel = new tbTotalWarfare(this);
 
 
@@ -85,6 +87,14 @@ public class Force extends AbstractTableModel implements ifSerializable {
 
     public Force(){
         Groups.add(new Group("", Type, this));
+    }
+
+    public Force( Force f ) {
+        ForceName = f.ForceName;
+        LogoPath = f.LogoPath;
+        Type = f.getType();
+        useUnevenForceMod = f.useUnevenForceMod;
+        printTotals = false;
     }
 
     public Force(Node ForceNode) throws Exception {
@@ -151,6 +161,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
 
     public void RefreshBV() {
         NumC3 = 0;
+        TotalUnits = Units.size();
         TotalBaseBV = 0.0f;
         TotalBasePV = 0.0f;
         TotalModifier = 0.0f;
@@ -195,6 +206,15 @@ public class Force extends AbstractTableModel implements ifSerializable {
         }
 
         currentModel.fireTableDataChanged();
+    }
+
+    public void SetTotals(Force f ) {
+        printTotals = true;
+        TotalUnits = f.TotalUnits;
+        TotalTonnage = f.TotalTonnage;
+        TotalBaseBV = f.TotalBaseBV;
+        TotalForceBV = f.TotalForceBV;
+        TotalForceBVAdjusted = f.TotalForceBVAdjusted;
     }
 
     public void AddUnit( Unit u ) {
@@ -319,7 +339,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
         return SerializeClipboard();
     }
 
-    public void RenderPrint(ForceListPrinter p, ImageTracker imageTracker) {
+    public void RenderPrint(ForceListPrinter p, ImageTracker imageTracker, boolean PrintTotals) {
         if ( getUnits().size() == 0 ) { return; }
         p.setFont(PrintConsts.SectionHeaderFont);
         if ( p.PrintLogo() ) {
@@ -344,13 +364,15 @@ public class Force extends AbstractTableModel implements ifSerializable {
             p.WriteStr(curGroup, 120);
 
             p.setFont(PrintConsts.ItalicFont);
-            p.WriteStr("Mechwarrior", 140);
+            String colName = "Mechwarrior";
+            if( curGroup.length() >= 25) colName = "";
+            p.WriteStr(colName, 140);
             p.WriteStr("Type", 60);
             p.WriteStr("Tonnage", 50);
             p.WriteStr("Base BV", 40);
             p.WriteStr("G/P", 30);
             p.WriteStr("Modifier", 40);
-            p.WriteStr("Use C3", 30);
+            p.WriteStr("C3", 30);
             p.WriteStr("Total BV", 40);
             p.NewLine();
 
@@ -359,7 +381,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
             }
 
             if ( Groups.size() > 1 ) {
-                //Outut Totals
+                //Output Totals
                 p.currentY -= 2;
                 p.setFont(PrintConsts.SmallItalicFont);
                 p.WriteStr(g.getUnits().size() + " Units", 120);
@@ -376,27 +398,33 @@ public class Force extends AbstractTableModel implements ifSerializable {
             }
         }
 
-        p.WriteLine();
-
         //Output Totals
-        p.setFont(PrintConsts.ItalicFont);
-        p.WriteStr(Units.size() + " Units", 120);
-        p.WriteStr("", 140);
-        p.WriteStr("", 60);
-        p.WriteStr(String.format("%1$,.2f", TotalTonnage), 50);
-        p.WriteStr(String.format("%1$,.0f", TotalBaseBV), 40);
-        p.WriteStr("", 30);
-        p.WriteStr("", 40);
-        p.WriteStr("", 30);
-        p.setFont(PrintConsts.BoldFont);
-        p.WriteStr(String.format("%1$,.0f", TotalForceBV), 20);
-        p.NewLine();
-        if ( TotalForceBV != TotalForceBVAdjusted ) {
-            p.currentX = 510;
+        if ( printTotals ) {
+            p.WriteLine();
+
             p.setFont(PrintConsts.ItalicFont);
-            p.WriteStr(String.format("%1$,.0f", TotalForceBVAdjusted), 0);
+            p.WriteStr(TotalUnits + " Units", 120);
+            p.WriteStr("", 140);
+            p.WriteStr("", 60);
+            p.WriteStr(String.format("%1$,.2f", TotalTonnage), 50);
+            p.WriteStr(String.format("%1$,.0f", TotalBaseBV), 40);
+            p.WriteStr("", 30);
+            p.WriteStr("", 40);
+            p.WriteStr("", 30);
+            p.setFont(PrintConsts.BoldFont);
+            p.WriteStr(String.format("%1$,.0f", TotalForceBV), 20);
+            p.NewLine();
+            if ( TotalForceBV != TotalForceBVAdjusted ) {
+                p.currentX = 510;
+                p.setFont(PrintConsts.ItalicFont);
+                p.WriteStr(String.format("%1$,.0f", TotalForceBVAdjusted), 0);
+            }
         }
         p.setFont(PrintConsts.PlainFont);
+    }
+
+    public void RenderPrint(ForceListPrinter p, ImageTracker imageTracker) {
+        RenderPrint(p, imageTracker, printTotals);
     }
 
     public void Clear() {
@@ -682,5 +710,17 @@ public class Force extends AbstractTableModel implements ifSerializable {
             unitsChanged = false;
         }
         return Units;
+    }
+
+    public void AddGroup( Group g ) {
+        Groups.add(g);
+        unitsChanged = true;
+    }
+
+    public int getForcePrintCount() {
+        int count = 0;
+        count += (Groups.size() * 2);
+        count += getUnits().size();
+        return count;
     }
 }
