@@ -219,11 +219,42 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         }
         
         if ( chkPrintForce.isSelected() ) {
+            int index = 0;
             ForceListPrinter sheet = new ForceListPrinter(imageTracker);
             sheet.setPrintLogo(chkLogo.isSelected());
             sheet.setTitle(scenario.getName());
-            sheet.AddForces(scenario.getForces());
-            printer.Append( BFBPrinter.Letter.toPage(), sheet );
+            if ( scenario.getForcePrintCount() > 50 ) {
+                for ( Force f : scenario.getForces() ) {
+                    if ( f.getForcePrintCount() > 50 ) {
+                        index = sheet.CreateForce(f);
+                        for ( Group g : f.Groups ) {
+                            if ( !sheet.AddGroup(index, g) ) {
+                                printer.Append( BFBPrinter.Letter.toPage(), sheet );
+
+                                sheet = new ForceListPrinter(imageTracker);
+                                index = sheet.CreateForce(f);
+                                sheet.setPrintLogo(chkLogo.isSelected());
+                                sheet.setTitle(scenario.getName());
+                            }
+                        }
+                        sheet.SetTotals(index, f);
+                    } else {
+                        sheet.AddForce(f);
+                        printer.Append( BFBPrinter.Letter.toPage(), sheet );
+                        sheet = new ForceListPrinter(imageTracker);
+                        sheet.setPrintLogo(chkLogo.isSelected());
+                        sheet.setTitle(scenario.getName());
+                    }
+                }
+                printer.Append( BFBPrinter.Letter.toPage(), sheet );
+
+            } else {
+                sheet.AddForces(scenario.getForces());
+                printer.Append( BFBPrinter.Letter.toPage(), sheet );
+            }
+
+            
+            
         }
 
         if ( chkPrintScenario.isSelected() ) {
