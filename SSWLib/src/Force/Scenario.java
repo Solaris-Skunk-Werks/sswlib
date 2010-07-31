@@ -414,4 +414,13 @@ public class Scenario implements ifSerializable {
     public boolean UseForceSizeModifier() {
         return forceSizeModifier;
     }
+
+    public int getForcePrintCount() {
+        int count = 0;
+        for ( Force f : forces ) {
+            count += (f.Groups.size() * 2);
+            count += f.getUnits().size();
+        }
+        return count;
+    }
 }
