@@ -123,6 +123,10 @@ public class Media {
         Tracker.removeImage(image);
     }
 
+    public void blankLogo( javax.swing.JLabel lblLogo) {
+        lblLogo.setIcon(null);
+    }
+
     public void setLogo( javax.swing.JLabel lblLogo, String url ) {
         ImageIcon icon;
         if ( !url.isEmpty() ) {
@@ -252,7 +256,7 @@ public class Media {
         if ( DirectoryPath.isEmpty() ) return "";
 
         //Create a list of the names to check first starting with the most accurate and working down
-        Name = Name.trim();
+        Name = Name.replace("\"", "").trim();
         Model = Model.trim();
         Vector<String> PossibleNames = new Vector<String>();
         PossibleNames.add(Name + " " + Model);
