@@ -114,7 +114,7 @@ public class stArmorCLFL implements ifArmor, ifState {
     }
 
     public double GetAVMult() {
-        return 0.875f;
+        return 0.875;
     }
 
     public double GetPointsPerTon() {
@@ -126,11 +126,11 @@ public class stArmorCLFL implements ifArmor, ifState {
     }
 
     public double GetCostMult() {
-        return 35000.0f;
+        return 35000.0;
     }
 
     public double GetBVTypeMult() {
-        return 1.2f;
+        return 1.2;
     }
 
     public int GetBAR() {

@@ -1660,10 +1660,10 @@ public class Mech implements ifUnit, ifBattleforce {
                 MainLoadout.Remove( CurEngine );
                 CurEngine.SetRating( oldrate );
                 WalkMP = (int) oldrate / Tonnage;
-                CurEngine.Place( MainLoadout );
-                throw new Exception( "The engine cannot support the new rating of " + rate + "\nbecause there is no room for the engine!" );
+                throw new Exception( "The engine cannot support the new rating of " + rate + "\nbecause there is no room for the engine!\nEngine reset to the previous rating." );
+            } else {
+                WalkMP = mp;
             }
-            WalkMP = mp;
         } else {
             CurEngine.SetRating( rate );
             WalkMP = mp;

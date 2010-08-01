@@ -1026,7 +1026,7 @@ public class FileCommon {
             retval = ((Cockpit) p).GetReportName();
         }
         if( p instanceof Gyro ) {
-            retval += ((Gyro) p).GetReportName();
+            retval = ((Gyro) p).GetReportName();
         }
         if( p.IsArmored() ) {
             retval = "(A) " + retval;

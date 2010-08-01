@@ -104,7 +104,7 @@ public class stArmorHA implements ifArmor, ifState {
     }
 
     public double GetAVMult() {
-        return 0.5f;
+        return 0.5;
     }
 
     public double GetPointsPerTon() {
@@ -116,11 +116,11 @@ public class stArmorHA implements ifArmor, ifState {
     }
 
     public double GetCostMult() {
-        return 15000.0f;
+        return 15000.0;
     }
 
     public double GetBVTypeMult() {
-        return 2.0f;
+        return 2.0;
     }
 
     public int GetBAR() {

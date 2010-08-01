@@ -149,14 +149,14 @@ public class TXTWriter {
         retval += "Chassis: " + CurMech.GetChassisModel() + " " + CurMech.GetIntStruc().CritName() + NL;
         retval += "Power Plant: " + CurMech.GetEngineManufacturer() + " " + CurMech.GetEngine().GetRating() + " " + CurMech.GetEngine() + NL;
         if( CurMech.GetAdjustedWalkingMP( false, true ) != CurMech.GetWalkingMP() ) {
-            retval += "Walking Speed: " + ( CurMech.GetWalkingMP() * 10.8 ) + " km/h (" + ( CurMech.GetAdjustedWalkingMP( false, true ) * 10.8 ) + " km/h)" + NL;
+            retval += "Walking Speed: " + CommonTools.FormatSpeed( CurMech.GetWalkingMP() * 10.8 ) + " km/h (" + CommonTools.FormatSpeed( CurMech.GetAdjustedWalkingMP( false, true ) * 10.8 ) + " km/h)" + NL;
         } else {
-            retval += "Walking Speed: " + ( CurMech.GetWalkingMP() * 10.8 ) + " km/h" + NL;
+            retval += "Walking Speed: " + CommonTools.FormatSpeed( CurMech.GetWalkingMP() * 10.8 ) + " km/h" + NL;
         }
         if( CurMech.GetAdjustedRunningMP( false, true ) != CurMech.GetRunningMP() ) {
-            retval += "Maximum Speed: " + ( CurMech.GetRunningMP() * 10.8 ) + " km/h (" + ( CurMech.GetAdjustedRunningMP( false, true ) * 10.8 ) + " km/h)" + NL;
+            retval += "Maximum Speed: " + CommonTools.FormatSpeed( CurMech.GetRunningMP() * 10.8 ) + " km/h (" + CommonTools.FormatSpeed( CurMech.GetAdjustedRunningMP( false, true ) * 10.8 ) + " km/h)" + NL;
         } else {
-            retval += "Maximum Speed: " + ( CurMech.GetRunningMP() * 10.8 ) + " km/h" + NL;
+            retval += "Maximum Speed: " + CommonTools.FormatSpeed( CurMech.GetRunningMP() * 10.8 ) + " km/h" + NL;
         }
         retval += "Jump Jets: " + CurMech.GetJJModel() + NL;
         retval += "    Jump Capacity: " + GetJumpJetDistanceLine() + NL;

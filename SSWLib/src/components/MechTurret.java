@@ -162,7 +162,7 @@ public class MechTurret extends abPlaceable implements ifTurret {
             retval += ((abPlaceable) weapons.get( i )).GetTonnage();
         }
         if( Owner.GetMech().UsingFractionalAccounting() ) {
-            return CommonTools.RoundFractionalTons( retval );
+            return CommonTools.RoundFractionalTons( retval * 0.1 );
         } else {
             return ((int) ( Math.ceil( retval * 0.1 * 2 ))) * 0.5;
         }

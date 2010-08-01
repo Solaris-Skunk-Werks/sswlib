@@ -114,7 +114,7 @@ public class stArmorISFF implements ifArmor, ifState {
     }
 
     public double GetAVMult() {
-        return 1.12f;
+        return 1.12;
     }
 
     public double GetPointsPerTon() {
@@ -126,11 +126,11 @@ public class stArmorISFF implements ifArmor, ifState {
     }
 
     public double GetCostMult() {
-        return 20000.0f;
+        return 20000.0;
     }
 
     public double GetBVTypeMult() {
-        return 1.0f;
+        return 1.0;
     }
 
     public int GetBAR() {

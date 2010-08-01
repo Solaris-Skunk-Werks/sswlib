@@ -114,7 +114,7 @@ public class stArmorISHF implements ifArmor, ifState {
     }
 
     public double GetAVMult() {
-        return 1.24f;
+        return 1.24;
     }
 
     public double GetPointsPerTon() {
@@ -122,7 +122,7 @@ public class stArmorISHF implements ifArmor, ifState {
     }
 
     public double GetCostMult() {
-        return 25000.0f;
+        return 25000.0;
     }
 
     public boolean IsStealth() {
@@ -130,7 +130,7 @@ public class stArmorISHF implements ifArmor, ifState {
     }
 
     public double GetBVTypeMult() {
-        return 1.0f;
+        return 1.0;
     }
 
     public int GetBAR() {

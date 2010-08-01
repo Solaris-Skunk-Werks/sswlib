@@ -289,6 +289,9 @@ public class Engine extends abPlaceable {
         // First, ensure we're fooling the loadout for CT placement.
         FoolLoadoutCT = true;
 
+        // reset the large placement in case it's still set to true.
+        UseLargePlacement = false;
+
         // Place the first block.  This is the easy one.
         try {
             l.AddToCT( this, 0 );

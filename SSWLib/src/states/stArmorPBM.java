@@ -102,7 +102,7 @@ public class stArmorPBM implements ifArmor, ifState {
     }
 
     public double GetAVMult() {
-        return 0.67f;
+        return 0.67;
     }
 
     public double GetPointsPerTon() {
@@ -110,7 +110,7 @@ public class stArmorPBM implements ifArmor, ifState {
     }
 
     public double GetCostMult() {
-        return 5000.0f;
+        return 5000.0;
     }
 
     public boolean IsStealth() {
@@ -118,7 +118,7 @@ public class stArmorPBM implements ifArmor, ifState {
     }
 
     public double GetBVTypeMult() {
-        return 1.0f;
+        return 1.0;
     }
 
     public int GetBAR() {

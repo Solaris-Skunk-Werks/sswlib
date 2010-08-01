@@ -2307,8 +2307,8 @@ public class QuadLoadout implements ifMechLoadout {
     private int AddTo( abPlaceable[] Loc, abPlaceable p, int index ) throws Exception {
         // support for splittable crits.  Adds the item into the specified loc
         // at the requested index and returns the number of crits left to place.
-        int temp = 0;
-
+        int temp = FreeFrom( Loc, index );
+/* testing
         // check for space to fill the item into.
         for( int i = index; i < Loc.length; i++ ) {
             if( Loc[i].LocationLocked() || Loc[i].LocationLinked() ) {
@@ -2328,6 +2328,11 @@ public class QuadLoadout implements ifMechLoadout {
                 UnallocateByIndex( i, Loc );
             }
             // finally, allocate the item slot
+            Loc[i] = p;
+        }
+*/
+        for( int i = index; i < temp + index; i++ ) {
+            // allocate the item slot
             Loc[i] = p;
         }
 
@@ -2394,8 +2399,16 @@ public class QuadLoadout implements ifMechLoadout {
         // returns the number of free crits from the specified index.  Items that
         // can be removed are treated as free for this purpose.
         int result = 0;
-
+// testing
         for( int i = index; i < Loc.length; i++ ) {
+            if( Loc[i] == NoItem ) {
+                result ++;
+            } else {
+                return result;
+            }
+        }
+
+/*        for( int i = index; i < Loc.length; i++ ) {
             if( Loc[i].LocationLinked() || Loc[i].LocationLocked() ) {
                 // found the last in this contiguous block
                 return result;
@@ -2403,7 +2416,7 @@ public class QuadLoadout implements ifMechLoadout {
                 result ++;
             }
         }
-
+*/
         return result;
     }
 

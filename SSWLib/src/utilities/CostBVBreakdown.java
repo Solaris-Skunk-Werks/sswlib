@@ -291,37 +291,37 @@ public class CostBVBreakdown {
             retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", CurMech.GetLoadout().GetRTTurret().CritName(), CurMech.GetLoadout().GetRTTurret().GetDefensiveBV(), CurMech.GetLoadout().GetRTTurret().GetOffensiveBV(), CurMech.GetLoadout().GetRTTurret().GetCost() ) + NL;
         }
         if( CurMech.HasCTCase() ) {
-            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE", 0.0f, 0.0f, CurMech.GetLoadout().GetCTCase().GetCost() ) + NL;
+            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE", 0.0, 0.0, CurMech.GetLoadout().GetCTCase().GetCost() ) + NL;
         }
         if( CurMech.HasLTCase() ) {
-            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE", 0.0f, 0.0f, CurMech.GetLoadout().GetLTCase().GetCost() ) + NL;
+            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE", 0.0, 0.0, CurMech.GetLoadout().GetLTCase().GetCost() ) + NL;
         }
         if( CurMech.HasRTCase() ) {
-            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE", 0.0f, 0.0f, CurMech.GetLoadout().GetRTCase().GetCost() ) + NL;
+            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE", 0.0, 0.0, CurMech.GetLoadout().GetRTCase().GetCost() ) + NL;
         }
         if( CurMech.GetLoadout().HasHDCASEII() ) {
-            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0f, 0.0f, CurMech.GetLoadout().GetHDCaseII().GetCost() ) + NL;
+            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0, 0.0, CurMech.GetLoadout().GetHDCaseII().GetCost() ) + NL;
         }
         if( CurMech.GetLoadout().HasCTCASEII() ) {
-            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0f, 0.0f, CurMech.GetLoadout().GetCTCaseII().GetCost() ) + NL;
+            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0, 0.0, CurMech.GetLoadout().GetCTCaseII().GetCost() ) + NL;
         }
         if( CurMech.GetLoadout().HasLTCASEII() ) {
-            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0f, 0.0f, CurMech.GetLoadout().GetLTCaseII().GetCost() ) + NL;
+            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0, 0.0, CurMech.GetLoadout().GetLTCaseII().GetCost() ) + NL;
         }
         if( CurMech.GetLoadout().HasRTCASEII() ) {
-            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0f, 0.0f, CurMech.GetLoadout().GetRTCaseII().GetCost() ) + NL;
+            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0, 0.0, CurMech.GetLoadout().GetRTCaseII().GetCost() ) + NL;
         }
         if( CurMech.GetLoadout().HasLACASEII() ) {
-            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0f, 0.0f, CurMech.GetLoadout().GetLACaseII().GetCost() ) + NL;
+            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0, 0.0, CurMech.GetLoadout().GetLACaseII().GetCost() ) + NL;
         }
         if( CurMech.GetLoadout().HasRACASEII() ) {
-            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0f, 0.0f, CurMech.GetLoadout().GetRACaseII().GetCost() ) + NL;
+            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0, 0.0, CurMech.GetLoadout().GetRACaseII().GetCost() ) + NL;
         }
         if( CurMech.GetLoadout().HasLLCASEII() ) {
-            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0f, 0.0f, CurMech.GetLoadout().GetLLCaseII().GetCost() ) + NL;
+            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0, 0.0, CurMech.GetLoadout().GetLLCaseII().GetCost() ) + NL;
         }
         if( CurMech.GetLoadout().HasRLCASEII() ) {
-            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0f, 0.0f, CurMech.GetLoadout().GetRLCaseII().GetCost() ) + NL;
+            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "CASE II", 0.0, 0.0, CurMech.GetLoadout().GetRLCaseII().GetCost() ) + NL;
         }
         return retval;
     }
@@ -343,7 +343,7 @@ public class CostBVBreakdown {
 
     public String PrintHeatAdjustedWeaponBV() {
         Vector v = CurMech.GetLoadout().GetNonCore(), wep = new Vector();
-        double foreBV = 0.0f, rearBV = 0.0f;
+        double foreBV = 0.0, rearBV = 0.0;
         boolean UseRear = false, TC = CurMech.UsingTC(), UseAESMod = false;
         String retval = "";
         abPlaceable a;
@@ -406,7 +406,7 @@ public class CostBVBreakdown {
                 if( ((ifWeapon) sorted[i]).GetBVHeat() <= 0 ) {
                     retval += String.format( "%1$-71s %2$,8.2f", "    -> " + a.CritName(), a.GetCurOffensiveBV( UseRear, TC, UseAESMod ) ) + NL;
                 } else {
-                    retval += String.format( "%1$-71s %2$,8.2f", "    -> " + a.CritName(), a.GetCurOffensiveBV( UseRear, TC, UseAESMod ) * 0.5f ) + NL;
+                    retval += String.format( "%1$-71s %2$,8.2f", "    -> " + a.CritName(), a.GetCurOffensiveBV( UseRear, TC, UseAESMod ) * 0.5 ) + NL;
                 }
             }
             curheat += ((ifWeapon) sorted[i]).GetBVHeat();
@@ -431,16 +431,16 @@ public class CostBVBreakdown {
 
         // Get the defensive factors for jumping and running movement
         double ground = Mech.DefensiveFactor[RunMP];
-        double jump = 0.0f;
+        double jump = 0.0;
         if( CurMech.GetJumpJets().GetNumJJ() > 0 ) {
             JumpMP = CurMech.GetAdjustedJumpingMP( true ) - 1;
-                jump = Mech.DefensiveFactor[JumpMP] + 0.1f;
+                jump = Mech.DefensiveFactor[JumpMP] + 0.1;
         }
         if( CurMech.UsingJumpBooster() ) {
             int boostMP = CurMech.GetJumpBoosterMP();
             if( boostMP > JumpMP ) {
                 JumpMP = boostMP;
-                jump = Mech.DefensiveFactor[JumpMP] + 0.1f;
+                jump = Mech.DefensiveFactor[JumpMP] + 0.1;
             }
         }
 
@@ -463,19 +463,19 @@ public class CostBVBreakdown {
             int boost = CurMech.GetAdjustedBoosterMP( true );
             int jump = CurMech.GetAdjustedJumpingMP( true );
             if( jump >= boost ) {
-                temp = (double) (CurMech.GetAdjustedRunningMP(true, true) + (Math.floor(CurMech.GetAdjustedJumpingMP(true) * 0.5f + 0.5f)) - 5.0f);
-                retval += "    Adjusted Running MP (" + CurMech.GetAdjustedRunningMP( true, true ) + ") + ( Adjusted Jumping MP (" + CurMech.GetAdjustedJumpingMP( true ) + ") / 2 ) - 5 = " + String.format( "%1$,.2f", CurMech.GetAdjustedRunningMP( true, true ) + ( Math.floor( CurMech.GetAdjustedJumpingMP( true ) * 0.5f + 0.5f )  ) - 5.0f ) + NL;
+                temp = (double) (CurMech.GetAdjustedRunningMP(true, true) + (Math.floor(CurMech.GetAdjustedJumpingMP(true) * 0.5 + 0.5)) - 5.0);
+                retval += "    Adjusted Running MP (" + CurMech.GetAdjustedRunningMP( true, true ) + ") + ( Adjusted Jumping MP (" + CurMech.GetAdjustedJumpingMP( true ) + ") / 2 ) - 5 = " + String.format( "%1$,.2f", CurMech.GetAdjustedRunningMP( true, true ) + ( Math.floor( CurMech.GetAdjustedJumpingMP( true ) * 0.5 + 0.5 )  ) - 5.0 ) + NL;
             } else {
-                temp = (double) (CurMech.GetAdjustedRunningMP(true, true) + (Math.floor(CurMech.GetAdjustedBoosterMP(true) * 0.5f + 0.5f)) - 5.0f);
-                retval += "    Adjusted Running MP (" + CurMech.GetAdjustedRunningMP( true, true ) + ") + ( Adjusted Jumping MP (" + CurMech.GetAdjustedBoosterMP( true ) + ") / 2 ) - 5 = " + String.format( "%1$,.2f", CurMech.GetAdjustedRunningMP( true, true ) + ( Math.floor( CurMech.GetAdjustedBoosterMP( true ) * 0.5f + 0.5f )  ) - 5.0f ) + NL;
+                temp = (double) (CurMech.GetAdjustedRunningMP(true, true) + (Math.floor(CurMech.GetAdjustedBoosterMP(true) * 0.5 + 0.5)) - 5.0);
+                retval += "    Adjusted Running MP (" + CurMech.GetAdjustedRunningMP( true, true ) + ") + ( Adjusted Jumping MP (" + CurMech.GetAdjustedBoosterMP( true ) + ") / 2 ) - 5 = " + String.format( "%1$,.2f", CurMech.GetAdjustedRunningMP( true, true ) + ( Math.floor( CurMech.GetAdjustedBoosterMP( true ) * 0.5 + 0.5 )  ) - 5.0 ) + NL;
             }
         } else {
-            temp = (double) (CurMech.GetAdjustedRunningMP(true, true) + (Math.floor(CurMech.GetAdjustedJumpingMP(true) * 0.5f + 0.5f)) - 5.0f);
-            retval += "    Adjusted Running MP (" + CurMech.GetAdjustedRunningMP( true, true ) + ") + ( Adjusted Jumping MP (" + CurMech.GetAdjustedJumpingMP( true ) + ") / 2 ) - 5 = " + String.format( "%1$,.2f", CurMech.GetAdjustedRunningMP( true, true ) + ( Math.floor( CurMech.GetAdjustedJumpingMP( true ) * 0.5f + 0.5f )  ) - 5.0f ) + NL;
+            temp = (double) (CurMech.GetAdjustedRunningMP(true, true) + (Math.floor(CurMech.GetAdjustedJumpingMP(true) * 0.5 + 0.5)) - 5.0);
+            retval += "    Adjusted Running MP (" + CurMech.GetAdjustedRunningMP( true, true ) + ") + ( Adjusted Jumping MP (" + CurMech.GetAdjustedJumpingMP( true ) + ") / 2 ) - 5 = " + String.format( "%1$,.2f", CurMech.GetAdjustedRunningMP( true, true ) + ( Math.floor( CurMech.GetAdjustedJumpingMP( true ) * 0.5 + 0.5 )  ) - 5.0 ) + NL;
         }
-        retval += "    " + String.format( "%1$,.2f", temp ) + " / 10 + 1 = " + ( temp * 0.1f + 1.0f ) + NL;
-        temp = temp * 0.1f + 1.0f;
-        retval += "    " + String.format( "%1$,.2f", temp ) + " ^ 1.2 = " + (double) Math.floor( ( Math.pow( temp, 1.2f ) ) * 100 + 0.5f ) / 100 + " (rounded off to two digits)" + NL;
+        retval += "    " + String.format( "%1$,.2f", temp ) + " / 10 + 1 = " + String.format( "%1$.3f", ( temp * 0.1 + 1.0 ) ) + NL;
+        temp = temp * 0.1 + 1.0;
+        retval += "    " + String.format( "%1$,.2f", temp ) + " ^ 1.2 = " + (double) Math.floor( ( Math.pow( temp, 1.2 ) ) * 100 + 0.5 ) / 100 + " (rounded off to two digits)" + NL;
 
         return retval;
     }

@@ -231,8 +231,8 @@ public class BattleForceData {
         @Override
         public String toString() {
             String data = "";
-            data += " Base: " + baseShort + "/" + baseMedium + "/" + baseLong + "/" + baseExtreme + "\n";
-            if ( hasOverheat) data += " Heat: " + heatShort + "/" + heatMedium + "/" + heatLong + "/" + heatExtreme + "\n";
+            data += " Base: " + String.format( "%1$,.2f", baseShort ) + "/" + String.format( "%1$,.2f", baseMedium ) + "/" + String.format( "%1$,.2f", baseLong ) + "/" + String.format( "%1$,.2f", baseExtreme ) + "\n";
+            if ( hasOverheat) data += " Heat: " + String.format( "%1$,.2f", heatShort ) + "/" + String.format( "%1$,.2f", heatMedium ) + "/" + String.format( "%1$,.2f", heatLong ) + "/" + String.format( "%1$,.2f", heatExtreme ) + "\n";
             data += "   BF: " + BFShort + "/" + BFMedium + "/" + BFLong + "/" + BFExtreme + "\n";
             data += " Separate Damage: " + SpecialDamage + "\n";
             return data;

@@ -137,12 +137,12 @@ public class CommonTools {
         // an aggregate battle value string for reporting
         String result = "";
         if( p.GetOffensiveBV() > 0.0 ) {
-            result += p.GetOffensiveBV() + "";
+            result += String.format( "%1$.2f", p.GetOffensiveBV() );
             if( p.GetDefensiveBV() > 0.0 ) {
-                result += " / " + p.GetDefensiveBV() + "(D)";
+                result += " / " + String.format( "%1$.2f", p.GetDefensiveBV() ) + "(D)";
             }
         } else if( p.GetDefensiveBV() > 0.0 ) {
-            result += p.GetDefensiveBV() + "(D)";
+            result += String.format( "%1$.2f", p.GetDefensiveBV() ) + "(D)";
         } else {
             result += "0";
         }
@@ -790,6 +790,10 @@ public class CommonTools {
 
     public static double RoundFractionalCost( double d ) {
         return Double.valueOf( dfc.format( d ) );
+    }
+
+    public static String FormatSpeed( double d ) {
+        return String.format( "%1$.1f", d );
     }
 
     public static String shortenPath( String path, int maxlength ) {
