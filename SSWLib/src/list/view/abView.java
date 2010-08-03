@@ -42,6 +42,7 @@ public abstract class abView extends AbstractTableModel {
     public MechList list;
 
     public void setupTable( JTable tbl ) {
+        tbl.setModel(this);
         //Create a sorting class and apply it to the list
         TableRowSorter Leftsorter = new TableRowSorter<abView>(this);
         List <RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
@@ -61,7 +62,7 @@ public abstract class abView extends AbstractTableModel {
         tbl.setRowSorter(Leftsorter);
 
         for ( Column col : Columns ) {
-            if ( col.preferredWidth > 0 ) {
+            if ( col.preferredWidth > 0 && list.Size() > 0 ) {
                 tbl.getColumnModel().getColumn(col.Index).setPreferredWidth(col.preferredWidth);
             }
         }
