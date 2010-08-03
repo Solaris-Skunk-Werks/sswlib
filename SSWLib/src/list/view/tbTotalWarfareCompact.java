@@ -36,12 +36,11 @@ public class tbTotalWarfareCompact extends abView {
         this.list = list;
 
         Columns.add(new Column( 0, "Tons", "Tonnage", false, 20, Integer.class, true, SortOrder.ASCENDING ));
-        Columns.add(new Column( 1, "Type/Model", "Name", false, 150, String.class, true, SortOrder.ASCENDING ));
+        Columns.add(new Column( 1, "Type/Model", "Name", false, 180, String.class, true, SortOrder.ASCENDING ));
         Columns.add(new Column( 2, "BV", "BV", false, 20, Integer.class, true, SortOrder.ASCENDING ));
-        Columns.add(new Column( 3, "Cost", "Cost", 20, Integer.class ));
-        Columns.add(new Column( 4, "Level", "Level", 80 ));
-        Columns.add(new Column( 5, "Era", "Era", 100 ));
-        Columns.add(new Column( 6, "Tech", "Tech", 50 ));
+        Columns.add(new Column( 3, "Level", "Level", 100 ));
+        Columns.add(new Column( 4, "Era", "Era", 100 ));
+        Columns.add(new Column( 5, "Tech", "Tech", 50 ));
 
         SortFields.add(Columns.get(0));
         SortFields.add(Columns.get(1));
@@ -58,12 +57,10 @@ public class tbTotalWarfareCompact extends abView {
             case 2:
                 return (int) m.getBV();
             case 3:
-                return String.format( "%1$,d",(int) m.getCost());
-            case 4:
                 return m.getLevel();
-            case 5:
+            case 4:
                 return m.getEra();
-            case 6:
+            case 5:
                 return m.getTech();
         }
         return null;
