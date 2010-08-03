@@ -383,12 +383,12 @@ public class PrintMech implements Printable {
         p = points.GetWeaponChartPoints();
 
         //Range TH Modifiers
-        if ( !TRO ) {
-            graphics.setFont( PrintConsts.CrazyTinyFont);
-            graphics.drawString("+0", p[6].x, p[6].y-15);
-            graphics.drawString("+2", p[7].x, p[7].y-15);
-            graphics.drawString("+4", p[8].x, p[8].y-15);
-        }
+//        if ( !TRO ) {
+//            graphics.setFont( PrintConsts.CrazyTinyFont);
+//            graphics.drawString("+0", p[6].x, p[6].y-15);
+//            graphics.drawString("+2", p[7].x, p[7].y-15);
+//            graphics.drawString("+4", p[8].x, p[8].y-15);
+//        }
 
         graphics.setFont( PrintConsts.ReallySmallFont );
         if (TotalItemLines() > 15) { graphics.setFont( PrintConsts.TinyFont ); }
@@ -451,13 +451,13 @@ public class PrintMech implements Printable {
         p = points.GetDataChartPoints();
         graphics.drawString( CurMech.GetFullName(), p[PrintConsts.MECHNAME].x, p[PrintConsts.MECHNAME].y );
 
-        //Movement Heat
-        if ( !TRO ) {
-            graphics.setFont(PrintConsts.CrazyTinyFont);
-            graphics.drawString("1", p[PrintConsts.WALKMP].x-14, p[PrintConsts.WALKMP].y+1);
-            graphics.drawString("2", p[PrintConsts.RUNMP].x-14, p[PrintConsts.RUNMP].y+1);
-            graphics.drawString("" + CurMech.GetJumpingHeat(), p[PrintConsts.JUMPMP].x-12, p[PrintConsts.JUMPMP].y+1);
-        }
+//        //Movement Heat
+//        if ( !TRO ) {
+//            graphics.setFont(PrintConsts.CrazyTinyFont);
+//            graphics.drawString("1", p[PrintConsts.WALKMP].x-14, p[PrintConsts.WALKMP].y+1);
+//            graphics.drawString("2", p[PrintConsts.RUNMP].x-14, p[PrintConsts.RUNMP].y+1);
+//            graphics.drawString("" + CurMech.GetJumpingHeat(), p[PrintConsts.JUMPMP].x-12, p[PrintConsts.JUMPMP].y+1);
+//        }
 
         // have to hack the movement to print the correct stuff here.
         graphics.setFont( PrintConsts.Small8Font );
