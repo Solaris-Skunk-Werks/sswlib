@@ -45,7 +45,7 @@ public class tbBattleForce extends abTable {
         Columns.add(new Column( 8, "Wt", "Wt", 20, Integer.class ));
         Columns.add(new Column( 9, "OV", "OV", 20, Integer.class ));
         Columns.add(new Column( 10, "A/S", "Armor", 20, Integer.class ));
-        Columns.add(new Column( 11, "Skill", "Skill", 20, Integer.class ));
+        Columns.add(new Column( 11, "Skill", "Skill", true, 20, Integer.class, false, SortOrder.ASCENDING ));
         Columns.add(new Column( 12, "Base PV", "BaseBV", 30, Integer.class ));
         Columns.add(new Column( 13, "Adj PV", "TotalBV", false, 40, Integer.class, true, SortOrder.ASCENDING ));
     }
@@ -108,6 +108,10 @@ public class tbBattleForce extends abTable {
             case 2:
                 u.setGroup(value.toString());
                 force.GroupUnit(u);
+                break;
+            case 11:
+                String Skills = u.getBFStats().determineGP(Integer.parseInt(value.toString()));
+                u.setGP(Integer.parseInt(Skills.split("/")[0]), Integer.parseInt(Skills.split("/")[1]));
                 break;
         }
         force.isDirty = true;
