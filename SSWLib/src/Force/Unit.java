@@ -233,6 +233,8 @@ public class Unit implements ifSerializable {
     public void UpdateByMech() {
         LoadMech();
         if ( m != null ) {
+            Type = m.GetName();
+            Model = m.GetModel();
             TypeModel = m.GetFullName();
             Configuration = m.GetLoadout().GetName();
             BaseBV = m.GetCurrentBV();
@@ -279,6 +281,7 @@ public class Unit implements ifSerializable {
         file.newLine();
         warrior.SerializeXML(file);
         mwrite.WriteXML(file);
+        m.SetCurLoadout(this.Configuration);
         file.write(CommonTools.Tabs(4) + "</unit>");
         file.newLine();
     }
@@ -407,6 +410,16 @@ public class Unit implements ifSerializable {
     public void setGunnery(int Gunnery) {
         warrior.setGunnery(Gunnery);
         BFStats.setGunnery(Gunnery);
+    }
+
+    public void setGP(int Gunnery, int Piloting) {
+        this.Gunnery = Gunnery;
+        this.Piloting = Piloting;
+
+        warrior.setGunnery(Gunnery);
+        warrior.setPiloting(Piloting);
+
+        BFStats.setGP(Gunnery, Piloting);
     }
 
     public boolean IsOmni() {
