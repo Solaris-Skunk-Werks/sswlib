@@ -180,6 +180,49 @@ public class BattleForceStats {
         updatePointValue();
     }
 
+    public String determineGP( int Skill ) {
+        this.Skill = Skill;
+        updateGP();
+        return Gunnery + "/" + Piloting;
+    }
+    
+    private void updateGP() {
+        switch (Skill) {
+            case 0:
+                Gunnery = 0;
+                Piloting = 1;
+                break;
+            case 1:
+                Gunnery = 1;
+                Piloting = 2;
+                break;
+            case 2:
+                Gunnery = 2;
+                Piloting = 3;
+                break;
+            case 3:
+                Gunnery = 3;
+                Piloting = 4;
+                break;
+            case 4:
+                Gunnery = 4;
+                Piloting = 5;
+                break;
+            case 5:
+                Gunnery = 5;
+                Piloting = 6;
+                break;
+            case 6:
+                Gunnery = 6;
+                Piloting = 7;
+                break;
+            default:
+                Gunnery = 7;
+                Piloting = 8;
+                break;
+        }
+    }
+
     private void updatePointValue() {
         PV = (int)((int) BasePV * Mods[Skill]);
     }
@@ -390,6 +433,11 @@ public class BattleForceStats {
         return Skill;
     }
 
+    public void setSkill(int Skill) {
+        this.Skill = Skill;
+        updateGP();
+    }
+
     public String getUnit() {
         return Unit;
     }
@@ -412,6 +460,12 @@ public class BattleForceStats {
     }
 
     public void setPiloting(int Piloting) {
+        this.Piloting = Piloting;
+        updateSkill();
+    }
+
+    public void setGP(int Gunnery, int Piloting) {
+        this.Gunnery = Gunnery;
         this.Piloting = Piloting;
         updateSkill();
     }
