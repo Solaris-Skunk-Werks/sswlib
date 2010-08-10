@@ -129,7 +129,6 @@ public class MechListData extends abUnitData {
         u.setOmni(this.isOmni());
         if ( this.isOmni() ) {
             u.setOmni(true);
-            u.Model = this.Config;
             u.Configuration = this.Config;
         }
         u.BaseBV = this.BV;

@@ -308,7 +308,7 @@ public class MechList extends AbstractTableModel {
             case 0:
                 return m.getTonnage();
             case 1:
-                return m.getName();
+                return m.getFullName();
             case 2:
                 return m.getBV();
             case 3:
@@ -338,7 +338,7 @@ public class MechList extends AbstractTableModel {
             case 0:
                 return m.getTonnage();
             case 1:
-                return (m.getName() + " " + m.getModel()).trim();
+                return m.getFullName();
             case 2:
                 return m.getBV();
             case 3:
