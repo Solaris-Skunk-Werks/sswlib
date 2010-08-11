@@ -185,7 +185,7 @@ public class QSHorizontalCardPrinter implements Printable {
 
             //Unit Name
             PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, NameColor, DarkShadow, stats.getModel(), x+5, y+12 );
-            p.setLocation(5, 21);
+            p.setLocation(5, 22);
             for ( String line : PrintConsts.wrapText(stats.getName().toUpperCase(), 24, false) ) {
                 PrintConsts.ShadowText( graphic, PrintConsts.OVFont, NameColor, DarkShadow, line, x+p.x, y+p.y);
                 p.y += graphic.getFont().getSize();
