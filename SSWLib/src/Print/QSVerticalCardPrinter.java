@@ -211,7 +211,7 @@ public class QSVerticalCardPrinter implements Printable {
 
         //Unit Name
         PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, NameColor, DarkShadow, stats.getModel(), x+5, y+10);
-        p.y = y + 18;
+        p.y = y + 19;
         for ( String line : PrintConsts.wrapText(stats.getName().toUpperCase(), 14, false) ) {
             PrintConsts.ShadowText( graphic, PrintConsts.BoldFont, NameColor, DarkShadow, line, x+5, p.y);
             p.y += graphic.getFont().getSize()-2;
