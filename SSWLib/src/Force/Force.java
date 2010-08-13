@@ -269,6 +269,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
         }
 
         clearEmptyGroups();
+        this.isDirty = true;
     }
 
     public void clearEmptyGroups() {
