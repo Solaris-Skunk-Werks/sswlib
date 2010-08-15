@@ -37,17 +37,18 @@ public class tbBattleForce extends abTable {
         Columns.add(new Column( 0, "Unit", "TypeModel", 150 ));
         Columns.add(new Column( 1, "Type", "UnitType", 50 ));
         Columns.add(new Column( 2, "Lance/Star", "Group", true, 0, String.class, true, SortOrder.ASCENDING));
-        Columns.add(new Column( 3, "MV", "MV", 20, Integer.class ));
-        Columns.add(new Column( 4, "S", "S", 20, Integer.class ));
-        Columns.add(new Column( 5, "M", "M", 20, Integer.class ));
-        Columns.add(new Column( 6, "L", "L", 20, Integer.class ));
-        Columns.add(new Column( 7, "E", "E", 20, Integer.class ));
-        Columns.add(new Column( 8, "Wt", "Wt", 20, Integer.class ));
-        Columns.add(new Column( 9, "OV", "OV", 20, Integer.class ));
+        Columns.add(new Column( 3, "MV", "MV", 10, Integer.class ));
+        Columns.add(new Column( 4, "S", "S", 10, Integer.class ));
+        Columns.add(new Column( 5, "M", "M", 10, Integer.class ));
+        Columns.add(new Column( 6, "L", "L", 10, Integer.class ));
+        Columns.add(new Column( 7, "E", "E", 10, Integer.class ));
+        Columns.add(new Column( 8, "Wt", "Wt", 10, Integer.class ));
+        Columns.add(new Column( 9, "OV", "OV", 10, Integer.class ));
         Columns.add(new Column( 10, "A/S", "Armor", 20, Integer.class ));
-        Columns.add(new Column( 11, "Skill", "Skill", true, 20, Integer.class, false, SortOrder.ASCENDING ));
-        Columns.add(new Column( 12, "Base PV", "BaseBV", 30, Integer.class ));
-        Columns.add(new Column( 13, "Adj PV", "TotalBV", false, 40, Integer.class, true, SortOrder.ASCENDING ));
+        Columns.add(new Column( 11, "SA", "SA", 150, String.class ));
+        Columns.add(new Column( 12, "Skill", "Skill", true, 20, Integer.class, false, SortOrder.ASCENDING ));
+        Columns.add(new Column( 13, "Base PV", "BaseBV", 30, Integer.class ));
+        Columns.add(new Column( 14, "Adj PV", "TotalBV", false, 40, Integer.class, true, SortOrder.ASCENDING ));
     }
 
     public tbBattleForce( Force f ) {
@@ -93,10 +94,12 @@ public class tbBattleForce extends abTable {
             case 10:
                 return u.getBFStats().getArmor() + " (" + u.getBFStats().getInternal() + ")";
             case 11:
-                return u.getBFStats().getSkill();
+                return u.getBFStats().getAbilitiesString();
             case 12:
-                return u.getBFStats().getBasePV();
+                return u.getBFStats().getSkill();
             case 13:
+                return u.getBFStats().getBasePV();
+            case 14:
                 return u.getBFStats().getPointValue();
         }
         return null;
@@ -109,7 +112,7 @@ public class tbBattleForce extends abTable {
                 u.setGroup(value.toString());
                 force.GroupUnit(u);
                 break;
-            case 11:
+            case 12:
                 String Skills = u.getBFStats().determineGP(Integer.parseInt(value.toString()));
                 u.setGP(Integer.parseInt(Skills.split("/")[0]), Integer.parseInt(Skills.split("/")[1]));
                 break;
