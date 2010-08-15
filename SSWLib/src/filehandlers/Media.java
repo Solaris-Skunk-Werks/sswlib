@@ -283,7 +283,14 @@ public class Media {
              DirectoryPath.endsWith(".gif") ||
              DirectoryPath.endsWith(".ssw") ) DirectoryPath = DirectoryPath.substring(0, DirectoryPath.lastIndexOf("\\")+1);
         if ( !DirectoryPath.endsWith("\\") ) DirectoryPath += "\\";
+       
+        String path;
+        for ( String nameToCheck : PossibleNames ) {
+            path = CheckDirectories( nameToCheck, DirectoryPath );
+            if ( !path.isEmpty() ) return path;
+        }
 
+        /*
         //DirectoryPath = DirectoryPath.substring(0, DirectoryPath.lastIndexOf(File.separator) + 1);
         File d = new File(DirectoryPath);
         if ( d.isDirectory() ) {
@@ -292,6 +299,8 @@ public class Media {
 
             for ( String nameToCheck : PossibleNames ) {
                 //System.out.println(nameToCheck.trim());
+                return CheckDirectories( nameToCheck, DirectoryPath );
+
                 for ( String f : fileList ) {
                     if ( !f.isEmpty() && f.contains(".") )
                         if ( f.substring(0, f.lastIndexOf(".")).toLowerCase().equals( nameToCheck.trim().toLowerCase() ) ) {
@@ -301,6 +310,27 @@ public class Media {
                 }
             }
         }
+        */
+
+        return "";
+    }
+
+    private String CheckDirectories( String nameToCheck, String DirectoryPath ) {
+        try
+        {
+            File d = new File(DirectoryPath);
+            if ( d.isDirectory() ) {
+                for ( File f : d.listFiles() ) {
+                    if ( f.isDirectory() ) {
+                        String Name = CheckDirectories(nameToCheck, f.getCanonicalPath());
+                        if ( !Name.isEmpty() ) return Name;
+                    } else {
+                        if ( f.getName().substring(0, f.getName().lastIndexOf(".")).toLowerCase().equals( nameToCheck.trim().toLowerCase() ) )
+                            return f.getCanonicalPath();
+                    }
+                }
+            }
+        } catch ( Exception e ) { return ""; }
 
         return "";
     }
