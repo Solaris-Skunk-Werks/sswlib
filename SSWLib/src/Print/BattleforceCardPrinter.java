@@ -176,7 +176,11 @@ public class BattleforceCardPrinter implements Printable {
             graphic.setFont( PrintConsts.PlainFont );
             
             //Unit Name
-            graphic.drawString( stats.getElement(), x+5, y+55);
+            int offset = y + 55;
+            for ( String line : PrintConsts.wrapText(stats.getElement(), 24, false) ) {
+                graphic.drawString( line, x+5, offset);
+                offset += graphic.getFont().getSize();
+            }
 
             if ( printWarriorData ) {
                 //Pilot Name
@@ -193,7 +197,7 @@ public class BattleforceCardPrinter implements Printable {
 
             graphic.setFont( PrintConsts.PlainFont );
             //Movement (MV)
-            int offset = 15;
+            offset = 15;
             if ( stats.getMovement(useTerrainMod).length() > 2 ) { offset -= 5; }
             graphic.drawString(stats.getMovement(useTerrainMod), x+offset, y+218);
 
