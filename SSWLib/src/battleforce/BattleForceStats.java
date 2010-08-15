@@ -44,7 +44,9 @@ public class BattleForceStats {
                     Unit = "",
                     ForceName = "",
                     Image = "",
-                    Warrior = "";
+                    Warrior = "",
+                    Type = "",
+                    SubType = "";
     private double[] Mods = {2.63, 2.24, 1.82, 1.38, 1.00, 0.86, 0.77, 0.68};
 
     private boolean isTerrainModified = false;
@@ -153,6 +155,32 @@ public class BattleForceStats {
             String[] Ability = items[11].split("~");
             for ( String item : Ability ) {
                 Abilities.add(item.trim());
+            }
+        }
+        PV = BasePV;
+    }
+
+    public BattleForceStats( String CSVString ) {
+        String[] parts = CSVString.split(",");
+        Name = parts[3];
+        Model = parts[4];
+        Element = parts[3] + " " + parts[4];
+        Type = parts[0];
+        SubType = parts[1];
+        if ( !parts[15].equals("--") ) BasePV = Integer.parseInt(parts[15]);
+        try { Wt = Integer.parseInt(parts[5]); } catch(Exception e) {}
+        MV = parts[6];
+        setTerrain();
+        try { S = Integer.parseInt(parts[10]); } catch(Exception e) {}
+        try { M = Integer.parseInt(parts[11]); } catch(Exception e) {}
+        try { L = Integer.parseInt(parts[12]); } catch(Exception e) {}
+        try { E = Integer.parseInt(parts[13]); } catch(Exception e) {}
+        try { OV = Integer.parseInt(parts[14]); } catch(Exception e) {}
+        try { Armor = Integer.parseInt(parts[7]); } catch(Exception e) {}
+        try { Internal = Integer.parseInt(parts[9]); } catch(Exception e) {}
+        if ( parts.length >= 16 ) {
+            for ( int i=16; i<parts.length; i++ ) {
+                Abilities.add(parts[i].replace("\"", "").trim());
             }
         }
         PV = BasePV;
@@ -304,7 +332,7 @@ public class BattleForceStats {
                 String[] info = new String[5];
                 info[0] = ability.substring(0, 3).trim();
                 if (info[0].length() == 2) info[0] = "  " + info[0];
-                String[] data = ability.replace("AC ", "").replace("SRM ", "").replace("LRM ", "").split("/");
+                String[] data = ability.replace("AC ", "").replace("SRM ", "").replace("LRM ", "").replace("AC", "").replace("SRM", "").replace("LRM", "").replace("TUR", "").replace("(", "").replace(")", "").split("/");
                 info[1] = data[0];
                 info[2] = data[1];
                 info[3] = data[2];
@@ -511,10 +539,18 @@ public class BattleForceStats {
     }
 
     public void setTerrain() {
+        String charMask = "abcdefghijklmnopqrstuvwxyz";
+        String moveMode = "";
         if ( MV.length() == 0 ) { return; }
         for ( String s : MV.split("/") ) {
-            TerrainMV = (Integer.parseInt(s.replace("j", "")) * 2) + "";
-            if (s.contains("j")) TerrainMV += "j";
+            moveMode = "";
+            if ( charMask.contains(s.charAt(s.length()-1)+"") ) {
+                moveMode = s.charAt(s.length()-1)+"";
+                for ( int i=0; i < charMask.length(); i++ ) {
+                    s = s.replace(charMask.charAt(i)+"", "");
+                }
+            }
+            TerrainMV = (Integer.parseInt(s) * 2) + "" + moveMode;
             TerrainMV += "/";
         }
         TerrainMV = TerrainMV.substring(0, TerrainMV.length()-1);
@@ -530,5 +566,26 @@ public class BattleForceStats {
 
     public void setForceName(String ForceName) {
         this.ForceName = ForceName;
+    }
+
+    @Override
+    public String toString() {
+        return Element + " " + MV + " " + Wt + " " + S + "/" + M + "/" + L + "/" + E;
+    }
+
+    public String getType() {
+        return Type;
+    }
+
+    public void setType(String Type) {
+        this.Type = Type;
+    }
+
+    public String getSubType() {
+        return SubType;
+    }
+
+    public void setSubType(String SubType) {
+        this.SubType = SubType;
     }
 }
