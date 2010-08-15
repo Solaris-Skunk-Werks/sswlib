@@ -83,6 +83,13 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         dispose();
     }
 
+    public void setBFOnly() {
+        chkPrintRecordsheets.setEnabled(false);
+        chkPrintBattleforce.setSelected(true);
+        chkPrintScenario.setEnabled(false);
+        Verify();
+    }
+
     public void setScenario( Scenario scenario ) {
         this.scenario = scenario;
         scenario.getAttackerForce().sortForPrinting();
