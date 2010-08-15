@@ -119,6 +119,31 @@ public class Unit implements ifSerializable {
         Refresh();
     }
 
+    public Unit( BattleForceStats stat ) {
+        Type = stat.getName();
+        Model = stat.getModel();
+        TypeModel = stat.getElement();
+        BaseBV = stat.getBasePV() * 100;
+        this.BFStats = stat;
+
+        if ( stat.getType().equals("Combat Vehicle") || stat.getType().equals("Naval Vessel") ) this.UnitType = CommonTools.Vehicle;
+        if ( stat.getType().equals("Protomech") ) this.UnitType = CommonTools.ProtoMech;
+        if ( stat.getType().equals("IndustrialMech") ) this.UnitType = CommonTools.IndustrialMech;
+        if ( stat.getType().equals("Infantry") ) {
+            if ( stat.getSubType().equals("Battle Armor") )
+                this.UnitType = CommonTools.Infantry;
+            else
+                this.UnitType = CommonTools.BattleArmor;
+        }
+        if ( stat.getType().equals("Aerospace") ) {
+            if ( stat.getSubType().equals("Conventional Fighter"))
+                this.UnitType = CommonTools.ConvFighter;
+            else
+                this.UnitType = CommonTools.AeroFighter;
+        }
+
+    }
+
     public Unit( Node n ) throws Exception {
         for (int i=0; i < n.getChildNodes().getLength(); i++) {
             String nodeName = n.getChildNodes().item(i).getNodeName();
