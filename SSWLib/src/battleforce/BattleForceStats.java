@@ -335,7 +335,10 @@ public class BattleForceStats {
                 String[] data = ability.replace("AC ", "").replace("SRM ", "").replace("LRM ", "").replace("AC", "").replace("SRM", "").replace("LRM", "").replace("TUR", "").replace("(", "").replace(")", "").split("/");
                 info[1] = data[0];
                 info[2] = data[1];
-                info[3] = data[2];
+                if ( data.length > 2 ) 
+                    info[3] = data[2];
+                else
+                    info[3] = "0";
                 if ( data.length == 4 ) {
                     info[4] = data[3];
                 } else {
