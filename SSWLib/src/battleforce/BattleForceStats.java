@@ -46,7 +46,8 @@ public class BattleForceStats {
                     Image = "",
                     Warrior = "",
                     Type = "",
-                    SubType = "";
+                    SubType = "",
+                    Logo = "";
     private double[] Mods = {2.63, 2.24, 1.82, 1.38, 1.00, 0.86, 0.77, 0.68};
 
     private boolean isTerrainModified = false;
@@ -590,5 +591,13 @@ public class BattleForceStats {
 
     public void setSubType(String SubType) {
         this.SubType = SubType;
+    }
+
+    public String getLogo() {
+        return Logo;
+    }
+
+    public void setLogo(String Logo) {
+        this.Logo = Logo;
     }
 }
