@@ -177,7 +177,7 @@ public class QSHorizontalCardPrinter implements Printable {
                     }
                 }
             }
-            
+
             if ( !isBlackandWhite ) graphic.drawImage( Background, x, y, UnitImageWidth, UnitImageHeight, null);
 
             //PV
@@ -256,6 +256,15 @@ public class QSHorizontalCardPrinter implements Printable {
                 p.y += graphic.getFont().getSize();
             }
 
+            if ( printLogo ) {
+                if ( !stats.getLogo().isEmpty() ) {
+                    p.x = 148;
+                    p.y = 140;
+                    Image logo = imageTracker.getImage(stats.getLogo());
+                    graphic.drawImage(logo, x+p.x, y+p.y, 15, 15, null);
+                }
+            }
+            
             x += UnitImageWidth + 1;
 
             if ( printCardBack ) {
