@@ -188,6 +188,7 @@ public class Scenario implements ifSerializable {
                     BattleForceStats stat = u.getBFStats();
                     stat.setUnit( g.getName() );
                     stat.setForceName( f.ForceName );
+                    stat.setLogo(g.getLogo());
                     bf.BattleForceStats.add(stat);
                     
                     if ( bf.BattleForceStats.size() == SizeLimit ) {
