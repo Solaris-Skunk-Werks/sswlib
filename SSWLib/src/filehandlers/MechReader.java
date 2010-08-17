@@ -171,7 +171,7 @@ public class MechReader {
                 map = OmniLoads.item( k ).getAttributes();
                 if( map.getNamedItem( "name" ) != null ) {
                     Config.setName( Config.getName());
-                    Config.setModel( FileCommon.DecodeFluff( map.getNamedItem( "name" ).getTextContent() ) );
+                    Config.setModel( Config.getModel() );
                     Config.setConfig(FileCommon.DecodeFluff( map.getNamedItem( "name" ).getTextContent() ));
                 }
                 if( map.getNamedItem( "ruleslevel" ) != null ) {
