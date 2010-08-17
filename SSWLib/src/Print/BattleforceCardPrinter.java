@@ -157,8 +157,7 @@ public class BattleforceCardPrinter implements Printable {
 
             //Image
             if ( printMechs ) {
-                if ( stats.getImage().replace("../Images/No_Image.png", "").isEmpty() )
-                    stats.setImage( media.FindMatchingImage(stats.getName(), stats.getModel()));
+                stats.setImage(media.DetermineMatchingImage(stats.getName(), stats.getModel(), stats.getImage()));
                 if ( !stats.getImage().isEmpty() ) {
                     Image image = imageTracker.getImage(stats.getImage());
                     Dimension dim = media.reSize(image, 110d, 130d);
@@ -185,7 +184,7 @@ public class BattleforceCardPrinter implements Printable {
             if ( printWarriorData ) {
                 //Pilot Name
                 graphic.setFont( PrintConsts.SmallFont );
-                graphic.drawString( stats.getWarrior(), x+5, y+62);
+                graphic.drawString( stats.getWarrior(), x+5, offset);
 
                 //Unit
                 //graphic.drawString( stats.getUnit(), x+5, y+68);
