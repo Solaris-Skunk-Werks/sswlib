@@ -200,6 +200,15 @@ public class QSVerticalCardPrinter implements Printable {
                 graphic.drawImage(image, x+p.x+offset.x, y+p.y+offset.y, dim.width, dim.height, null);
             }
         }
+        
+        if ( printLogo ) {
+            if ( !stats.getLogo().isEmpty() ) {
+                p.x = 19;
+                p.y = 154;
+                Image logo = imageTracker.getImage(stats.getLogo());
+                graphic.drawImage(logo, x+p.x, y+p.y, 15, 15, null);
+            }
+        }
 
         graphic.drawImage( Background, x, y, UnitImageWidth, UnitImageHeight, null);
 
