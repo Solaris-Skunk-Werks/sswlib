@@ -295,7 +295,6 @@ public class Unit implements ifSerializable {
 
     public void SerializeXML(BufferedWriter file) throws IOException {
         LoadMech();
-        MechWriter mwrite = new MechWriter(m);
         file.write(CommonTools.Tabs(4) + "<unit type=\"" + FileCommon.EncodeFluff(this.Type) + "\" model=\"" + FileCommon.EncodeFluff(this.Model) + "\" config=\"" + this.Configuration + "\" tonnage=\"" + this.Tonnage + "\" bv=\"" + this.BaseBV + "\" design=\"" + this.UnitType + "\" file=\"" + this.Filename + "\" c3status=\"" + this.UsingC3 + "\">");
         file.newLine();
         BFStats.SerializeXML(file, 5);
@@ -305,8 +304,11 @@ public class Unit implements ifSerializable {
         file.write(CommonTools.Tabs(5) + "<quirks>" + this.UnitQuirks + "</quirks>");
         file.newLine();
         warrior.SerializeXML(file);
-        mwrite.WriteXML(file);
-        m.SetCurLoadout(this.Configuration);
+        if ( m != null) {
+            MechWriter mwrite = new MechWriter(m);
+            mwrite.WriteXML(file);
+            m.SetCurLoadout(this.Configuration);
+        }
         file.write(CommonTools.Tabs(4) + "</unit>");
         file.newLine();
     }
