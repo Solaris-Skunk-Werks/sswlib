@@ -214,6 +214,7 @@ public abstract class abUnitData implements ifUnitData {
 
     public void setConfig(String Config) {
         this.Config = Config;
+        this.Configuration = Config;
     }
 
     public String getSource() {
