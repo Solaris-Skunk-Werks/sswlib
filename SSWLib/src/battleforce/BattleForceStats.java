@@ -319,7 +319,7 @@ public class BattleForceStats {
     public Vector<String> getFilteredAbilities() {
         Vector<String> filtered = new Vector<String>();
          for ( String ability : Abilities ) {
-            if ( !ability.contains("AC") && !ability.contains("SRM") && !ability.contains("LRM") ) {
+            if ( !ability.contains("AC") && !ability.contains("SRM") && !ability.contains("LRM") && !ability.contains("TUR") ) {
                 filtered.add(ability);
             }
          }
@@ -329,7 +329,7 @@ public class BattleForceStats {
     public Vector<String[]> getDamageAbilities() {
         Vector<String[]> list = new Vector<String[]>();
         for ( String ability : Abilities ) {
-            if ( ability.contains("AC") || ability.contains("SRM") || ability.contains("LRM") ) {
+            if ( ability.contains("AC") || ability.contains("SRM") || ability.contains("LRM") || ability.contains("TUR") ) {
                 String[] info = new String[5];
                 info[0] = ability.substring(0, 3).trim();
                 if (info[0].length() == 2) info[0] = "  " + info[0];
