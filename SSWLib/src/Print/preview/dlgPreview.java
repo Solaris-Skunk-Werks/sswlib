@@ -367,6 +367,18 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                     }
                     break;
 
+                case 4:
+                    imageTracker.preLoadBattleForceImages();
+                    for ( BattleForce f : scenario.toBattleForceByGroup( 6 ) ) {
+                        QSCardSheetPrinter bf = new QSCardSheetPrinter(f, imageTracker);
+                        bf.setPrintLogo(chkLogo.isSelected());
+                        bf.setPrintMechs(chkImage.isSelected());
+                        bf.setPrintWarriorData(chkPrintGroup.isSelected());
+                        if ( chkBFTerrainMV.isSelected() ) bf.setTerrain(true);
+                        printer.Append( BFBPrinter.Letter.toPage(), bf);
+                    }
+                    break;
+
                 default:
             }
         }
@@ -727,7 +739,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             }
         });
 
-        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "*Strategic Ops", "*QuickStrike Cards", "BattleForce Sheet", "Vertical Cards" }));
+        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "*Strategic Ops", "*QuickStrike Cards", "BattleForce Sheet", "Vertical Cards", "QuickStrike Card Sheet" }));
         cmbBFSheetType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 itemChanged(evt);
