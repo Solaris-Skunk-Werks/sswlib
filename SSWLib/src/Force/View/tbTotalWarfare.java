@@ -43,7 +43,7 @@ public class tbTotalWarfare extends abTable {
         Columns.add(new Column( 5, "Base BV", "BaseBV", 20, Integer.class ));
         Columns.add(new Column( 6, "G", "Gunnery", 20, true, Integer.class ));
         Columns.add(new Column( 7, "P", "Piloting", 20, true, Integer.class ));
-        Columns.add(new Column( 8, "MD", "MD", 30, false, Double.class ));
+        Columns.add(new Column( 8, "MD", "MD", 30, true, Double.class ));
         Columns.add(new Column( 9, "C3", "UsesC3", 30, false, String.class ));
         Columns.add(new Column( 10, "Adj BV", "TotalBV", false, 40, Integer.class, true, SortOrder.ASCENDING ));
 
