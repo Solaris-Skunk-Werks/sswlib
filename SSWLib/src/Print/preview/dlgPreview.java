@@ -481,6 +481,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         jSeparator4 = new javax.swing.JToolBar.Separator();
         btnCheckImages = new javax.swing.JButton();
         btnClearImages = new javax.swing.JButton();
+        btnImageDefault = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         btnSaveOptions = new javax.swing.JButton();
         btnPrint = new javax.swing.JButton();
@@ -920,6 +921,18 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             }
         });
         jToolBar1.add(btnClearImages);
+
+        btnImageDefault.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder-open-image.png"))); // NOI18N
+        btnImageDefault.setText("Location");
+        btnImageDefault.setFocusable(false);
+        btnImageDefault.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnImageDefault.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnImageDefault.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImageDefaultActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btnImageDefault);
         jToolBar1.add(jSeparator2);
 
         btnSaveOptions.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/disk-black.png"))); // NOI18N
@@ -1085,6 +1098,11 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         Verify();
 }//GEN-LAST:event_chkGenericAmmoitemChanged
 
+    private void btnImageDefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImageDefaultActionPerformed
+        String dir = media.GetDirectorySelection(this, sswPrefs.get("DefaultImagePath", ""));
+        if ( !dir.isEmpty() ) sswPrefs.put("DefaultImagePath", dir);
+    }//GEN-LAST:event_btnImageDefaultActionPerformed
+
     private void WaitCursor() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
@@ -1099,6 +1117,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JButton btnClearImages;
     private javax.swing.JButton btnCloseDialog;
     private javax.swing.JButton btnForward;
+    private javax.swing.JButton btnImageDefault;
     private javax.swing.JButton btnPageHeight;
     private javax.swing.JButton btnPageWidth;
     private javax.swing.JButton btnPreview;
