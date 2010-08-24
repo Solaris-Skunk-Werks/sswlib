@@ -1054,4 +1054,12 @@ public class FileCommon {
         }
         return retval;
     }
+
+    public static String CSVFormat( String data ) {
+        return "\"" + data + "\", ";
+    }
+
+    public static String CSVFormat( int data ) {
+        return data + ",";
+    }
 }
