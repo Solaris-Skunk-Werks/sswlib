@@ -41,6 +41,7 @@ public abstract class abTable extends AbstractTableModel {
     public Vector<Column> Columns = new Vector<Column>();
     public Vector<Column> SortFields = new Vector<Column>();
     public Force force;
+    private TableRowSorter sorter;
 
     public abstract void setForce( Force f );
     public abstract abTable Create();
@@ -51,7 +52,7 @@ public abstract class abTable extends AbstractTableModel {
 
     public void setupTable( JTable tbl ) {
         //Create a sorting class and apply it to the list
-        TableRowSorter Leftsorter = new TableRowSorter<abTable>(this);
+        sorter = new TableRowSorter<abTable>(this);
         List <RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
 
         if ( SortFields.size() > 0 ) {
@@ -67,8 +68,8 @@ public abstract class abTable extends AbstractTableModel {
                 }
             }
         }
-        Leftsorter.setSortKeys(sortKeys);
-        tbl.setRowSorter(Leftsorter);
+        sorter.setSortKeys(sortKeys);
+        tbl.setRowSorter(sorter);
 
         for ( Column col : Columns ) {
             if ( col.preferredWidth > 0 ) {
@@ -86,5 +87,13 @@ public abstract class abTable extends AbstractTableModel {
     public Object getClassOf( int row, int col ) { return Columns.get(col).classType; }
     @Override
     public boolean isCellEditable( int row, int col ) { return Columns.get(col).isEditable; }
+
+    public TableRowSorter getSorter() {
+        return sorter;
+    }
+
+    public void setSorter(TableRowSorter sorter) {
+        this.sorter = sorter;
+    }
 
 }

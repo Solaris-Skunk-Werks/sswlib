@@ -170,6 +170,15 @@ public class Scenario implements ifSerializable {
         }
     }
 
+    public void setFactors() {
+        for ( Force force : getForces() ) {
+            for ( Unit u : force.getUnits() ) {
+                u.LoadMech();
+            }
+            force.RefreshBV();
+        }
+    }
+
     public void Refresh() {
         for ( Force f : forces ) {
             f.RefreshBV();

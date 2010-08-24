@@ -35,11 +35,14 @@ import filehandlers.MechReader;
 import Print.ForceListPrinter;
 
 import Print.PrintConsts;
+import components.PhysicalWeapon;
+import components.RangedWeapon;
 import filehandlers.FileCommon;
 import filehandlers.MechWriter;
 import filehandlers.Media;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Vector;
 import list.view.Column;
 import org.w3c.dom.Node;
 
@@ -66,6 +69,18 @@ public class Unit implements ifSerializable {
     public float TotalBV = 0.0f;
     private int Piloting = 5;
     private int Gunnery = 4;
+    public int Probe = 0,
+                Jump = 0,
+                ECM = 0,
+                HeadCap = 0,
+                Eight = 0,
+                Ten = 0,
+                Physical = 0,
+                TSM = 0,
+                Speed = 0,
+                Armor = 0,
+                TC = 0,
+                Damage = 0;
     public int UnitType = CommonTools.BattleMech;
     public Warrior warrior = new Warrior();
     public boolean UsingC3 = false,
@@ -115,6 +130,35 @@ public class Unit implements ifSerializable {
             setOmni(true);
             Configuration = m.GetLoadout().GetName();
         }
+
+        //Calc Fields
+        if ( m.HasECM() ) ECM = 1;
+        if ( m.HasProbe() ) Probe = 1;
+        if ( m.GetJumpJets().GetNumJJ() > 0 ) Jump = 1;
+        Armor = m.GetArmor().GetArmorValue();
+        TSM = m.GetPhysEnhance().IsTSM() ? 1 : 0;
+        Speed = m.GetAdjustedRunningMP(false, true);
+        if ( m.UsingTC() ) TC = 1;
+
+        Vector v = (Vector) m.GetLoadout().GetNonCore().clone();
+        for (int i=0; i < v.size(); i++)
+        {
+            if ( v.get(i) instanceof PhysicalWeapon ) {
+                Physical += 1;
+            }
+
+            if ( v.get(i) instanceof RangedWeapon ) {
+                RangedWeapon w = (RangedWeapon)v.get(i);
+                Damage += w.GetDamageShort();
+                if ( w.GetDamageShort() >= 12 )
+                    HeadCap += 1;
+                if ( w.GetDamageShort() >= 10 )
+                    Ten += 1;
+                if ( w.GetDamageShort() >= 8 )
+                    Eight += 1;
+            }
+        }
+
         this.m = m;
         Refresh();
     }
@@ -271,6 +315,34 @@ public class Unit implements ifSerializable {
                 }
             }
             BFStats = new BattleForceStats(m);
+
+            //Calc Fields
+            if ( m.HasECM() ) ECM = 1;
+            if ( m.HasProbe() ) Probe = 1;
+            if ( m.GetJumpJets().GetNumJJ() > 0 ) Jump = 1;
+            Armor = m.GetArmor().GetArmorValue();
+            TSM = m.GetPhysEnhance().IsTSM() ? 1 : 0;
+            Speed = m.GetAdjustedRunningMP(false, true);
+            if ( m.UsingTC() ) TC = 1;
+
+            Vector v = (Vector) m.GetLoadout().GetNonCore().clone();
+            for (int i=0; i < v.size(); i++)
+            {
+                if ( v.get(i) instanceof PhysicalWeapon ) {
+                    Physical += 1;
+                }
+
+                if ( v.get(i) instanceof RangedWeapon ) {
+                    RangedWeapon w = (RangedWeapon)v.get(i);
+                    Damage += w.GetDamageShort();
+                    if ( w.GetDamageShort() >= 12 )
+                        HeadCap += 1;
+                    if ( w.GetDamageShort() >= 10 )
+                        Ten += 1;
+                    if ( w.GetDamageShort() >= 8 )
+                        Eight += 1;
+                }
+            }
         }
         Refresh();
     }
@@ -340,6 +412,29 @@ public class Unit implements ifSerializable {
         return data;
     }
 
+    public String SerializeFactors() {
+        String data = "";
+
+        data += FileCommon.CSVFormat(getFullName());
+        data += FileCommon.CSVFormat(CommonTools.UnitTypes[UnitType]);
+        data += FileCommon.CSVFormat(Probe);
+        data += FileCommon.CSVFormat(ECM);
+        data += FileCommon.CSVFormat(Speed);
+        data += FileCommon.CSVFormat(Jump);
+        data += FileCommon.CSVFormat(TSM);
+        data += FileCommon.CSVFormat(Physical);
+        data += FileCommon.CSVFormat(Armor);
+        data += FileCommon.CSVFormat(TC);
+        data += FileCommon.CSVFormat(Eight);
+        data += FileCommon.CSVFormat(Ten);
+        data += FileCommon.CSVFormat(HeadCap);
+        data += FileCommon.CSVFormat(Damage);
+        data += FileCommon.CSVFormat((int)BaseBV);
+        data += FileCommon.CSVFormat((int)TotalBV);
+
+        return data.substring(0, data.length()-2);
+    }
+
     private String convertColumn( Column c ) {
         if ( c.Title.equals("Unit") ) {
             return this.TypeModel.trim();
@@ -382,6 +477,49 @@ public class Unit implements ifSerializable {
                 }
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
+            }
+        }
+
+        if ( m != null ) {
+            Probe = 0;
+            Jump = 0;
+            ECM = 0;
+            HeadCap = 0;
+            Eight = 0;
+            Ten = 0;
+            Physical = 0;
+            TSM = 0;
+            Speed = 0;
+            Armor = 0;
+            TC = 0;
+            Damage = 0;
+
+            //Calc Fields
+            if ( m.HasECM() ) ECM = 1;
+            if ( m.HasProbe() ) Probe = 1;
+            if ( m.GetJumpJets().GetNumJJ() > 0 ) Jump = 1;
+            Armor = m.GetArmor().GetArmorValue();
+            TSM = m.GetPhysEnhance().IsTSM() ? 1 : 0;
+            Speed = m.GetAdjustedRunningMP(false, true);
+            if ( m.UsingTC() ) TC = 1;
+
+            Vector v = (Vector) m.GetLoadout().GetNonCore().clone();
+            for (int i=0; i < v.size(); i++)
+            {
+                if ( v.get(i) instanceof PhysicalWeapon ) {
+                    Physical += 1;
+                }
+
+                if ( v.get(i) instanceof RangedWeapon ) {
+                    RangedWeapon w = (RangedWeapon)v.get(i);
+                    Damage += w.GetDamageShort();
+                    if ( w.GetDamageShort() >= 12 )
+                        HeadCap += 1;
+                    if ( w.GetDamageShort() >= 10 )
+                        Ten += 1;
+                    if ( w.GetDamageShort() >= 8 )
+                        Eight += 1;
+                }
             }
         }
     }
@@ -494,5 +632,9 @@ public class Unit implements ifSerializable {
     public void setForceC3BV(float ForceC3BV) {
         this.ForceC3BV = ForceC3BV;
         this.Refresh();
+    }
+
+    public String getFullName() {
+        return (Type + " " + Model + " " + Configuration).replace("  ", " ").trim();
     }
 }

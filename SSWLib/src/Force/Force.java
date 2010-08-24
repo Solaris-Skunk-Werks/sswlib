@@ -34,6 +34,7 @@ import Print.ForceListPrinter;
 import Print.PrintConsts;
 import battleforce.*;
 
+import filehandlers.FileCommon;
 import filehandlers.ImageTracker;
 import java.awt.Image;
 import java.io.BufferedWriter;
@@ -66,6 +67,18 @@ public class Force extends AbstractTableModel implements ifSerializable {
     public int  TotalUnits = 0,
                 NumC3 = 0,
                 OpForSize = 0;
+    public int Probe = 0,
+                Jump = 0,
+                ECM = 0,
+                HeadCap = 0,
+                Eight = 0,
+                Ten = 0,
+                Physical = 0,
+                TSM = 0,
+                Speed = 0,
+                Armor = 0,
+                TC = 0,
+                Damage = 0;
     public boolean isDirty = false,
                     useUnevenForceMod = true,
                     unitsChanged = false,
@@ -173,6 +186,19 @@ public class Force extends AbstractTableModel implements ifSerializable {
         TotalForceBV = 0.0f;
         TotalForcePV = 0.0f;
 
+        Probe = 0;
+        Jump = 0;
+        ECM = 0;
+        HeadCap = 0;
+        Eight = 0;
+        Ten = 0;
+        Physical = 0;
+        TSM = 0;
+        Speed = 0;
+        Armor = 0;
+        TC = 0;
+        Damage = 0;
+
         //First pass to determine C3 totals
         for ( Unit u : getUnits() ) {
              if (u.UsingC3) {
@@ -194,6 +220,20 @@ public class Force extends AbstractTableModel implements ifSerializable {
 
             TotalBasePV += u.getBFStats().getBasePV();
             TotalForcePV += u.getBFStats().getPointValue();
+
+            //Factors rollup
+            Probe += u.Probe;
+            Jump += u.Jump;
+            ECM += u.ECM;
+            HeadCap += u.HeadCap;
+            Eight += u.Eight;
+            Ten += u.Ten;
+            Physical += u.Physical;
+            TSM += u.TSM;
+            Speed += u.Speed;
+            Armor += u.Armor;
+            TC += u.TC;
+            Damage += u.Damage;
         }
 
         TotalForceBV += TotalAdjustedBV; //+ TotalC3BV;
@@ -297,6 +337,29 @@ public class Force extends AbstractTableModel implements ifSerializable {
         file.write( CommonTools.Tabs(2) + "</force>" );
         file.newLine();
         isDirty = false;
+    }
+
+    public String SerializeFactors() {
+        String data = "";
+
+        data += FileCommon.CSVFormat("");
+        data += FileCommon.CSVFormat("");
+        data += FileCommon.CSVFormat(Probe);
+        data += FileCommon.CSVFormat(ECM);
+        data += FileCommon.CSVFormat(Speed);
+        data += FileCommon.CSVFormat(Jump);
+        data += FileCommon.CSVFormat(TSM);
+        data += FileCommon.CSVFormat(Physical);
+        data += FileCommon.CSVFormat(Armor);
+        data += FileCommon.CSVFormat(TC);
+        data += FileCommon.CSVFormat(Eight);
+        data += FileCommon.CSVFormat(Ten);
+        data += FileCommon.CSVFormat(HeadCap);
+        data += FileCommon.CSVFormat(Damage);
+        data += FileCommon.CSVFormat((int)TotalBaseBV);
+        data += FileCommon.CSVFormat((int)TotalAdjustedBV);
+
+        return data.substring(0, data.length()-2);
     }
 
     public void SerializeMUL(BufferedWriter file) throws IOException {
