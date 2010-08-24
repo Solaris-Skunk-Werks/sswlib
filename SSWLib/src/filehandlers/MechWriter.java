@@ -384,6 +384,7 @@ public class MechWriter {
         FR.newLine();
 
         if( CurMech.IsOmnimech() ) {
+            String curLoadout = CurMech.GetLoadout().GetName();
             Vector v = CurMech.GetLoadouts();
             for( int i = 0; i < v.size(); i++ ) {
                 CurMech.SetCurLoadout( ((ifMechLoadout) v.get( i )).GetName() );
@@ -463,6 +464,7 @@ public class MechWriter {
                 FR.write( tab + "</loadout>" );
                 FR.newLine();
             }
+            CurMech.SetCurLoadout(curLoadout);
         }
 
         FR.write( tab + "<fluff>" );
