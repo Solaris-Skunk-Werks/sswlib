@@ -32,6 +32,7 @@ import common.*;
 import java.util.Vector;
 import org.w3c.dom.Node;
 import components.Mech;
+import filehandlers.FileCommon;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
@@ -274,28 +275,20 @@ public class BattleForceStats {
     public String SerializeCSV( boolean IncludeElementName ) {
         String data = "";
 
-        if ( IncludeElementName ) data += CSVFormat(getElement());
-        data += CSVFormat(PV);
-        data += CSVFormat(Wt);
-        data += CSVFormat(MV);
-        data += CSVFormat(getShort());
-        data += CSVFormat(getMedium());
-        data += CSVFormat(getLong());
-        data += CSVFormat(getExtreme());
-        data += CSVFormat(getOverheat());
-        data += CSVFormat(getArmor());
-        data += CSVFormat(getInternal());
-        data += CSVFormat(getAbilities().toString().replace("[", "").replace("]", ""));
+        if ( IncludeElementName ) data += FileCommon.CSVFormat(getElement());
+        data += FileCommon.CSVFormat(PV);
+        data += FileCommon.CSVFormat(Wt);
+        data += FileCommon.CSVFormat(MV);
+        data += FileCommon.CSVFormat(getShort());
+        data += FileCommon.CSVFormat(getMedium());
+        data += FileCommon.CSVFormat(getLong());
+        data += FileCommon.CSVFormat(getExtreme());
+        data += FileCommon.CSVFormat(getOverheat());
+        data += FileCommon.CSVFormat(getArmor());
+        data += FileCommon.CSVFormat(getInternal());
+        data += FileCommon.CSVFormat(getAbilities().toString().replace("[", "").replace("]", ""));
 
         return data.substring(0, data.length()-2);
-    }
-
-    public String CSVFormat( String data ) {
-        return "\"" + data + "\", ";
-    }
-
-    public String CSVFormat( int data ) {
-        return data + ",";
     }
 
     public Vector<String> getAbilities() {
