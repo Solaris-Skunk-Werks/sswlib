@@ -38,6 +38,10 @@ public class Column {
         this(Index, Title, propertyName, false, PreferredWidth, ClassType, false, null);
     }
 
+    public Column( int Index, String Title, String propertyName, int PreferredWidth, Class ClassType, boolean Sortable, SortOrder sortOrder  ) {
+        this(Index, Title, propertyName, false, PreferredWidth, ClassType, Sortable, sortOrder);
+    }
+
     public Column( int Index, String Title, String propertyName, boolean isEditable, int PreferredWidth, Class ClassType, boolean Sortable, SortOrder sortOrder ) {
         this.Index = Index;
         this.Title = Title;
