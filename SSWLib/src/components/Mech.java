@@ -4070,6 +4070,18 @@ public class Mech implements ifUnit, ifBattleforce {
         return false;
     }
 
+    public boolean HasProbe() {
+        // ensures that, if the 'Mech needs Probe, it has it.
+        SimplePlaceable p = new SimplePlaceable( "ProbeTest", "ProbeTest", "ProbeTest", "ProbeTest", "none", 0, false, null );
+        p.SetExclusions( new Exclusion( new String[] { "Probe" }, "ProbeTest" ) );
+        try {
+            CurLoadout.CheckExclusions( p );
+        } catch( Exception e ) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean ValidateECM() {
         if( CurArmor.IsStealth() || HasVoidSig() ) {
             return HasECM();
