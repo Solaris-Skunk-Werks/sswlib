@@ -2853,6 +2853,24 @@ public class Mech implements ifUnit, ifBattleforce {
         }
     }
 
+    @Override
+    public int GetAmmoCount( int ammoIndex )
+    {
+        int retval = 0;
+        Vector v = CurLoadout.GetNonCore();
+        if( v.size() > 0 ) {
+            for( int i = 0; i < v.size(); i++ ) {
+                if( ( v.get( i ) instanceof Ammunition ) ) {
+                    if ( ((Ammunition)v.get(i)).GetAmmoIndex() == ammoIndex )
+                        retval += ((Ammunition)v.get(i)).GetLotSize();
+                }
+            }
+            return retval;
+        }
+
+        return retval;
+    }
+
     public void AddCTCase() throws Exception {
         // adds CASE equipment to the CT
         CurLoadout.SetCTCASE( true, -1 );
@@ -4392,10 +4410,14 @@ public class Mech implements ifUnit, ifBattleforce {
         int walkMP = GetBFPrimeMovement();
         int jumpMP = GetAdjustedJumpingMP(false);
 
+        System.out.println(baseMP + " " + walkMP + " " + jumpMP);
+
         if ( jumpMP > 0 && walkMP != jumpMP ){
             if ( baseMP > jumpMP )
                 return (int)(Math.round(jumpMP*0.66));
             else if ( baseMP == jumpMP && walkMP > jumpMP )
+                return jumpMP;
+            else if ( walkMP < jumpMP )
                 return jumpMP;
             else
                 return 0;
@@ -4408,6 +4430,8 @@ public class Mech implements ifUnit, ifBattleforce {
         int jumpMP = GetAdjustedJumpingMP(false);
 
         if ( jumpMP > 0 && walkMP != jumpMP )
+            return "j";
+        else if ( walkMP < jumpMP )
             return "j";
         else
             return "";

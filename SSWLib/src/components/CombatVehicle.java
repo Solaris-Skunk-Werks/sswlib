@@ -388,6 +388,12 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
+    public int GetAmmoCount( int ammoIndex )
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     public int GetUnitType() {
         return AvailableCode.UNIT_COMBATVEHICLE;
     }

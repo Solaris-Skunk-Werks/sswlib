@@ -159,6 +159,19 @@ public class BattleForceTools {
                 retval[BFConstants.BF_SHORT] *= BattleForceTools.BFMinRangeModifiers[minrange];
         }
 
+        // Check to see if this weapon has enough ammunition to last
+        // at least 10 turns.  If not, reduce the damage by 25%.
+        if ( w.HasAmmo() && ! w.IsOneShot() )
+        {
+            if ( b.GetAmmoCount( w.GetAmmoIndex() ) < 10 )
+            {
+                retval[BFConstants.BF_SHORT] *= 0.75;
+                retval[BFConstants.BF_MEDIUM] *= 0.75;
+                retval[BFConstants.BF_LONG] *= 0.75;
+                retval[BFConstants.BF_EXTREME] *= 0.75;
+            }
+        }
+
         if ( w instanceof RangedWeapon ) {
 
             // Adjust for capacitors

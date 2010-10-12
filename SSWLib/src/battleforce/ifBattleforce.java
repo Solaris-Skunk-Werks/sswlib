@@ -44,4 +44,5 @@ public interface ifBattleforce {
     public Vector GetBFAbilities();
     public String GetBFConversionStr( );
     public int GetBFPoints();
+    public int GetAmmoCount( int ammoIndex );
 }
