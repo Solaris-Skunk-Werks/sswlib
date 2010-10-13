@@ -4410,8 +4410,6 @@ public class Mech implements ifUnit, ifBattleforce {
         int walkMP = GetBFPrimeMovement();
         int jumpMP = GetAdjustedJumpingMP(false);
 
-        System.out.println(baseMP + " " + walkMP + " " + jumpMP);
-
         if ( jumpMP > 0 && walkMP != jumpMP ){
             if ( baseMP > jumpMP )
                 return (int)(Math.round(jumpMP*0.66));
