@@ -217,4 +217,7 @@ public interface ifMechLoadout {
     public void AddMechModifier( MechModifier m );
     public void RemoveMechMod( MechModifier m );
     public Vector GetMechMods();
+    public void SetBoobyTrap( boolean b ) throws Exception;
+    public boolean HasBoobyTrap();
+    public BoobyTrap GetBoobyTrap();
 }

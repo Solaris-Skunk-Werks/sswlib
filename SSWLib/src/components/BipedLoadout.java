@@ -78,6 +78,7 @@ public class BipedLoadout implements ifMechLoadout {
     private ifMechLoadout BaseLoadout = null;
     private PowerAmplifier PowerAmp = new PowerAmplifier( this );
     private Supercharger SCharger = new Supercharger( this );
+    private BoobyTrap BTrap = new BoobyTrap( this );
     private int RulesLevel = AvailableCode.RULES_TOURNAMENT,
                 TechBase = AvailableCode.TECH_INNER_SPHERE,
                 Era = AvailableCode.ERA_STAR_LEAGUE,
@@ -4688,6 +4689,56 @@ public class BipedLoadout implements ifMechLoadout {
                 UnallocateAll( (abPlaceable) NonCore.get( i ), true );
             }
         }
+    }
+
+    @Override
+    public void SetBoobyTrap( boolean b ) throws Exception{
+        if ( b == false && this.HasBoobyTrap() )
+        {
+            this.Remove(BTrap);
+            return;
+        }
+
+        if ( b == true && !this.HasBoobyTrap() )
+        {
+            // Booby Traps are always located in the center torso and take up
+            // a single crit location.
+            //
+            // ...
+            // Interesting note.  TacOps states that Booby Traps must be in the same location
+            // as a unit's engine.  However the example states this must be the CT.
+            // I wonder if booby traps may be placed in RT/LT if the unit has a
+            // XL engine?
+
+            boolean placed = false;
+            int increment = 0;
+
+            while( placed == false ) {
+                if ( increment > 11 ) {
+                    throw new Exception( "No room was available in the CT for the Booby Trap.\nIt has been removed." );
+                }
+                try {
+                    AddToCT( BTrap, increment );
+                    placed = true;
+                } catch ( Exception e ) {
+                    increment++;
+                }
+
+            }
+        }
+    }
+
+    @Override
+    public boolean HasBoobyTrap() {
+        if ( IsAllocated (BTrap) )
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    public BoobyTrap GetBoobyTrap() {
+        return BTrap;
     }
 
     public void CheckExclusions( abPlaceable p ) throws Exception {

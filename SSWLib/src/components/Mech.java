@@ -1784,6 +1784,7 @@ public class Mech implements ifUnit, ifBattleforce {
             if( HasLAAES ) { result += CurLAAES.GetTonnage(); }
             if( HasLegAES ) { result += RLAES.GetTonnage() * 2.0; }
         }
+        if ( CurLoadout.HasBoobyTrap() ) { result += CurLoadout.GetBoobyTrap().GetTonnage(); }
 
         Vector v = CurLoadout.GetNonCore();
         if( v.size() > 0 ) {
