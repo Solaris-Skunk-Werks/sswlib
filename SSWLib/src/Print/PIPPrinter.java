@@ -176,8 +176,20 @@ public class PIPPrinter {
             if ( useCanon && !settings.startingPoint.equals(new Point(0,0)) ) {
                 renderImage(settings);
             } else {
-               for( int i = 0; i < settings.GetArmor(); i++ ) {
-                    graphics.drawOval( settings.points[i].x, settings.points[i].y, 5, 5 );
+
+                // Check for a shield.  Shields are always generated via an image
+                // This prevents a null pointer exception when you try to draw
+                // non-existant armor points.  This only occurs when using
+                // non-canon armor dots.
+                if ( settings.points.length != 0 ) {
+
+                   for( int i = 0; i < settings.GetArmor(); i++ ) {
+                       graphics.drawOval( settings.points[i].x, settings.points[i].y, 5, 5 );
+                    }
+                } else {
+                    // This location is a shield and will always be generated
+                    // with an image.
+                    renderImage(settings);
                 }
             }
         }
@@ -232,7 +244,7 @@ public class PIPPrinter {
     }
 
     public void AddArmor( String Location, Point startingPoint, Point imageSize, int ArmorPoints ) {
-        Armor.put(Armor.size()+1, new PIPSettings(0, false, startingPoint, imageSize, Location, new Point[]{}, ArmorPoints));
+            Armor.put(Armor.size()+1, new PIPSettings(0, false, startingPoint, imageSize, Location, new Point[]{}, ArmorPoints));
     }
 // </editor-fold>
 
