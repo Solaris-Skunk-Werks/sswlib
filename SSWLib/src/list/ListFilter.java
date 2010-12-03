@@ -20,8 +20,8 @@ public class ListFilter {
                    Source = "";
     private int MinTonnage = 0,
                 MaxTonnage = 0,
-                MinYear = 2750,
-                MaxYear = 2750,
+                MinYear = 0,
+                MaxYear = 0,
                 MinBV = 0,
                 MaxBV = 0,
                 MinMP = 0;

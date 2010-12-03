@@ -177,6 +177,9 @@ public class MechList extends AbstractTableModel {
             if ( filter.getMaxTonnage() > 0 ) {
                 if ((filter.getMinTonnage() > mData.getTonnage()) || (mData.getTonnage() > filter.getMaxTonnage())) remove = true;
             }
+            if ( filter.getMaxYear() > 0 ) {
+                if ((filter.getMinYear() > mData.getYear()) || (mData.getYear() > filter.getMaxYear())) remove = true;
+            }
             if ( filter.getMinMP() > 0 ) {
                 if ( !mData.getInfo().isEmpty() ) {
                     String[] parts = mData.getInfo().split(" ");
