@@ -574,6 +574,25 @@ public class PrintMech implements Printable {
             graphics.setFont( PrintConsts.PlainFont );
         }
 
+        if (!CurMech.GetIntStruc().CritName().equals("Standard")) {
+            graphics.setFont( PrintConsts.XtraSmallFont );
+            //if ( CurMech.IsQuad() ) { graphics.setFont( PrintConsts.XtraSmallFont ); }
+
+            int baseX = points.GetInternalInfoPoints()[LocationIndex.MECH_LOC_CT].x;
+            int baseY = points.GetInternalInfoPoints()[LocationIndex.MECH_LOC_CT].y + 15;
+
+            if (CurMech.GetIntStruc().NumCrits() == 0) {
+                String[] parts = PrintConsts.wrapText(CurMech.GetIntStruc().CritName().trim(), 8, true);
+                for (String part: parts) {
+                    if ( !part.trim().isEmpty() ) {
+                        graphics.drawString( part, baseX - part.trim().length(), baseY );
+                        baseY += graphics.getFont().getSize();
+                    }
+                }
+                graphics.setFont( PrintConsts.PlainFont );
+            }
+        }
+
         if ( !TRO ) {
             //Availability Codes
             graphics.drawString(CurMech.GetAvailability().GetBestCombinedCode(), p[PrintConsts.TECH_IS].x, p[PrintConsts.TECH_IS].y+20);
@@ -792,6 +811,15 @@ public class PrintMech implements Printable {
         AmmoList = GetAmmo();
     }
 
+    public void setA4()
+    {
+        UseA4Paper = true;
+    }
+
+    public void setLetter()
+    {
+        UseA4Paper = false;
+    }
     private class AmmoData {
         public String ActualName,
                       ChatName,
