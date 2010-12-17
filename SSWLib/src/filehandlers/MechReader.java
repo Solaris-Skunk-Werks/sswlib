@@ -606,6 +606,8 @@ public class MechReader {
                 } else {
                     throw new Exception( "A turret was specified but no type was given.\nCannot load 'Mech." );
                 }
+            } else if( n.item( i ).getNodeName().equals( "boobytrap" ) ) {
+                m.GetLoadout().SetBoobyTrap( true );
             } else if( n.item( i ).getNodeName().equals( "equipment" ) ) {
                 NodeList nl = n.item( i ).getChildNodes();
                 Vector splitLoc = new Vector();
@@ -1357,6 +1359,8 @@ public class MechReader {
                         } else {
                             throw new Exception( "A turret was specified for loadout \"" + m.GetLoadout().GetName() + "\" but no type was given.\nCannot load 'Mech." );
                         }
+                    } else if( n.item( i ).getNodeName().equals( "boobytrap" ) ) {
+                        m.GetLoadout().SetBoobyTrap( true );
                     } else if( n.item( i ).getNodeName().equals( "equipment" ) ) {
                         NodeList nl = n.item( i ).getChildNodes();
                         Vector splitLoc = new Vector();

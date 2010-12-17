@@ -375,6 +375,10 @@ public class MechWriter {
             FR.write( tab + tab + "<turret type=\"right torso\" index=\"" + CurMech.GetLoadout().FindIndex( CurMech.GetBaseLoadout().GetRTTurret() ).Index + "\"/>" );
             FR.newLine();
         }
+        if ( CurMech.GetBaseLoadout().HasBoobyTrap() ) {
+            FR.write( tab + tab + "<boobytrap index=\"" + CurMech.GetLoadout().FindIndex( CurMech.GetBaseLoadout().GetBoobyTrap() ).Index + "\"/>" );
+            FR.newLine();
+        }
         FR.write( GetEquipmentLines( tab + tab ) );
         if( CurMech.GetRulesLevel() == AvailableCode.RULES_EXPERIMENTAL ) {
             // check for armored components
@@ -454,6 +458,10 @@ public class MechWriter {
                 }
                 if( CurMech.GetLoadout().HasRTTurret() &! CurMech.GetBaseLoadout().HasRTTurret() ) {
                     FR.write( tab + tab + "<turret type=\"right torso\" index=\"" + CurMech.GetLoadout().FindIndex( CurMech.GetLoadout().GetRTTurret() ).Index + "\"/>" );
+                    FR.newLine();
+                }
+                if ( CurMech.GetLoadout().HasBoobyTrap() ) {
+                    FR.write( tab + tab + "<boobytrap index=\"" + CurMech.GetLoadout().FindIndex( CurMech.GetLoadout().GetBoobyTrap() ).Index + "\"/>" );
                     FR.newLine();
                 }
                 FR.write( GetEquipmentLines( tab + tab ) );
