@@ -462,6 +462,12 @@ public class QuadLoadout implements ifMechLoadout {
         Owner.SetChanged( true );
     }
 
+    public void SafeUnallocateHD() {
+        for ( int i = 0; i < 6; i++ ) {
+            UnallocateAll( HDCrits[i], false );
+        }
+    }
+    
     public void SafeMassUnallocate() {
         // this unallocates all non-core and movable items from the loadout
         for( int i = 0; i < 6; i++ ) {
