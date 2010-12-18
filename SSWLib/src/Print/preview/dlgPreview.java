@@ -219,6 +219,19 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
     private void PrinterSetup() {
         WaitCursor();
         printer.Clear();
+        PageFormat pageSize = BFBPrinter.Letter.toPage();
+
+        switch ( cmbPaperSize.getSelectedIndex() ) {
+            case 0:
+                pageSize = BFBPrinter.Letter.toPage();
+                break;
+            case 1:
+                pageSize = BFBPrinter.Legal.toPage();
+                break;
+            case 2:
+                pageSize = BFBPrinter.A4.toPage();
+                break;
+        }
 
         if ( chkImage.isSelected() ) {
             if ( sswPrefs.get("DefaultImagePath", "").trim().isEmpty() ) {
@@ -240,7 +253,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                         index = sheet.CreateForce(f);
                         for ( Group g : f.Groups ) {
                             if ( !sheet.AddGroup(index, g) ) {
-                                printer.Append( BFBPrinter.Letter.toPage(), sheet );
+                                printer.Append( pageSize, sheet );
 
                                 sheet = new ForceListPrinter(imageTracker);
                                 index = sheet.CreateForce(f);
@@ -251,17 +264,17 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                         sheet.SetTotals(index, f);
                     } else {
                         sheet.AddForce(f);
-                        printer.Append( BFBPrinter.Letter.toPage(), sheet );
+                        printer.Append( pageSize, sheet );
                         sheet = new ForceListPrinter(imageTracker);
                         sheet.setPrintLogo(chkLogo.isSelected());
                         sheet.setTitle(scenario.getName());
                     }
                 }
-                printer.Append( BFBPrinter.Letter.toPage(), sheet );
+                printer.Append( pageSize, sheet );
 
             } else {
                 sheet.AddForces(scenario.getForces());
-                printer.Append( BFBPrinter.Letter.toPage(), sheet );
+                printer.Append( pageSize, sheet );
             }
 
             
@@ -270,7 +283,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
 
         if ( chkPrintScenario.isSelected() ) {
             ScenarioPrinter sheet = new ScenarioPrinter(scenario, imageTracker);
-            printer.Append( BFBPrinter.Letter.toPage(), sheet);
+            printer.Append( pageSize, sheet);
         }
 
         if ( chkPrintFireChits.isSelected() ) {
@@ -281,14 +294,14 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                     for ( Unit u : g.getUnits() )
                     {
                         if (fire.IsFull()) {
-                            printer.Append( BFBPrinter.Letter.toPage(), fire );
+                            printer.Append( pageSize, fire );
                             fire = new PrintDeclaration(imageTracker, chkPrintGroup.isSelected(), chkLogo.isSelected());
                         }
                         fire.AddUnit(g, u);
                     }
                 }
             }
-            if ( !fire.IsEmpty()) printer.Append( BFBPrinter.Letter.toPage(), fire );
+            if ( !fire.IsEmpty()) printer.Append( pageSize, fire );
         }
 
         if ( chkPrintBattleforce.isSelected() ) {
@@ -306,21 +319,21 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                             bf.setPrintLogo(chkLogo.isSelected());
                             bf.setPrintMechs(chkImage.isSelected());
                             if ( chkBFTerrainMV.isSelected() ) bf.setTerrain(true);
-                            printer.Append( BFBPrinter.Letter.toPage(), bf);
+                            printer.Append( pageSize, bf);
                         }
                     } else {
                         BattleforcePrinter topBF = new BattleforcePrinter(scenario.getAttackerForce().toBattleForce(), imageTracker);
                         topBF.setPrintLogo(chkLogo.isSelected());
                         topBF.setPrintMechs(chkImage.isSelected());
                         if ( chkBFTerrainMV.isSelected() ) topBF.setTerrain(true);
-                        printer.Append( BFBPrinter.Letter.toPage(), topBF );
+                        printer.Append( pageSize, topBF );
 
                         if ( scenario.getDefenderForce().getUnits().size() > 0 ) {
                             BattleforcePrinter bottomBF = new BattleforcePrinter(scenario.getDefenderForce().toBattleForce(), imageTracker);
                             bottomBF.setPrintLogo(chkLogo.isSelected());
                             bottomBF.setPrintMechs(chkImage.isSelected());
                             if ( chkBFTerrainMV.isSelected() ) bottomBF.setTerrain(true);
-                            printer.Append( BFBPrinter.Letter.toPage(), bottomBF );
+                            printer.Append( pageSize, bottomBF );
                         }
                     }
                     break;
@@ -335,7 +348,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                         hqs.setPrintWarriorData(chkPrintGroup.isSelected());
                         if ( !chkUseColor.isSelected() ) hqs.setBlackAndWhite();
                         if ( chkBFTerrainMV.isSelected() ) hqs.setTerrain(true);
-                        printer.Append( BFBPrinter.FullLetter.toPage(), hqs);
+                        printer.Append( pageSize, hqs);
                     }
                     break;
 
@@ -347,7 +360,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                         bf.setPrintMechs(chkImage.isSelected());
                         bf.setPrintWarriorData(chkPrintGroup.isSelected());
                         if ( chkBFTerrainMV.isSelected() ) bf.setTerrain(true);
-                        printer.Append( BFBPrinter.Letter.toPage(), bf);
+                        printer.Append( pageSize, bf);
                     }
                     break;
 
@@ -375,7 +388,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                         bf.setPrintMechs(chkImage.isSelected());
                         bf.setPrintWarriorData(chkPrintGroup.isSelected());
                         if ( chkBFTerrainMV.isSelected() ) bf.setTerrain(true);
-                        printer.Append( BFBPrinter.Letter.toPage(), bf);
+                        printer.Append( pageSize, bf);
                     }
                     break;
 
@@ -388,18 +401,25 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             for ( Force force : scenario.getForces() ) {
                 for ( Group g : force.Groups ) {
                     for ( Unit u : g.getUnits() ) {
-                        u.LoadMech();
-                        PrintMech pm = new PrintMech(u.m,u.getMechwarrior(), u.getGunnery(), u.getPiloting(), imageTracker);
-                        pm.setCanon(chkCanon.isSelected());
-                        pm.setCharts(chkTables.isSelected());
-                        pm.setPrintMech(chkImage.isSelected());
-                        pm.setPrintLogo(chkLogo.isSelected());
-                        pm.setAmmoGeneric(chkGenericAmmo.isSelected());
-                        if ( chkPrintGroup.isSelected() ) pm.setGroupName( g.getName() + " [" + g.getForce().ForceName + "]" );
-                        if ( chkUseHexConversion.isSelected() ) pm.SetMiniConversion(cmbHexConvFactor.getSelectedIndex()+1);
-                        if ( chkLogo.isSelected() ) pm.setLogoImage(imageTracker.getImage(g.getLogo()));
-                        if ( cmbRSType.getSelectedIndex() == 1 ) pm.setTRO(true);
-                        printer.Append( BFBPrinter.Letter.toPage(), pm);
+                        switch ( u.UnitType ) {
+                                case Constants.BattleMech:
+                                    u.LoadMech();
+                                    if ( u.m != null ) {
+                                        PrintMech pm = new PrintMech(u.m,u.getMechwarrior(), u.getGunnery(), u.getPiloting(), imageTracker);
+                                        pm.setCanon(chkCanon.isSelected());
+                                        pm.setCharts(chkTables.isSelected());
+                                        pm.setPrintMech(chkImage.isSelected());
+                                        pm.setPrintLogo(chkLogo.isSelected());
+                                        pm.setAmmoGeneric(chkGenericAmmo.isSelected());
+                                        if ( cmbPaperSize.getSelectedIndex() == 2 ) pm.setA4();
+                                        if ( chkPrintGroup.isSelected() ) pm.setGroupName( g.getName() + " [" + g.getForce().ForceName + "]" );
+                                        if ( chkUseHexConversion.isSelected() ) pm.SetMiniConversion(cmbHexConvFactor.getSelectedIndex()+1);
+                                        if ( chkLogo.isSelected() ) pm.setLogoImage(imageTracker.getImage(g.getLogo()));
+                                        if ( cmbRSType.getSelectedIndex() == 1 ) pm.setTRO(true);
+                                        printer.Append( pageSize, pm);
+                                    }
+                                    break;
+                        }
                     }
                 }
             }
@@ -437,7 +457,6 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        spnPreview = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         pnlPrintOptions = new javax.swing.JPanel();
         chkPrintForce = new javax.swing.JCheckBox();
@@ -445,28 +464,31 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         chkPrintRecordsheets = new javax.swing.JCheckBox();
         chkPrintBattleforce = new javax.swing.JCheckBox();
         chkPrintScenario = new javax.swing.JCheckBox();
-        pnlHow = new javax.swing.JPanel();
-        chkTables = new javax.swing.JCheckBox();
-        chkCanon = new javax.swing.JCheckBox();
-        chkUseHexConversion = new javax.swing.JCheckBox();
-        jPanel2 = new javax.swing.JPanel();
-        cmbHexConvFactor = new javax.swing.JComboBox();
-        lblInches = new javax.swing.JLabel();
-        lblOneHex = new javax.swing.JLabel();
-        cmbRSType = new javax.swing.JComboBox();
-        jLabel4 = new javax.swing.JLabel();
-        chkGenericAmmo = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         chkLogo = new javax.swing.JCheckBox();
         chkImage = new javax.swing.JCheckBox();
         chkPrintGroup = new javax.swing.JCheckBox();
-        jPanel4 = new javax.swing.JPanel();
-        chkBFOnePerPage = new javax.swing.JCheckBox();
-        cmbBFSheetType = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
-        chkBFTerrainMV = new javax.swing.JCheckBox();
+        jLabel5 = new javax.swing.JLabel();
+        cmbPaperSize = new javax.swing.JComboBox();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel5 = new javax.swing.JPanel();
+        chkUseHexConversion = new javax.swing.JCheckBox();
+        chkCanon = new javax.swing.JCheckBox();
+        jPanel2 = new javax.swing.JPanel();
+        cmbHexConvFactor = new javax.swing.JComboBox();
+        lblInches = new javax.swing.JLabel();
+        lblOneHex = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        chkGenericAmmo = new javax.swing.JCheckBox();
+        chkTables = new javax.swing.JCheckBox();
+        cmbRSType = new javax.swing.JComboBox();
+        jPanel6 = new javax.swing.JPanel();
         chkUseColor = new javax.swing.JCheckBox();
         chkBFBacks = new javax.swing.JCheckBox();
+        jLabel3 = new javax.swing.JLabel();
+        chkBFTerrainMV = new javax.swing.JCheckBox();
+        cmbBFSheetType = new javax.swing.JComboBox();
+        chkBFOnePerPage = new javax.swing.JCheckBox();
         jToolBar1 = new javax.swing.JToolBar();
         btnPreview = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JToolBar.Separator();
@@ -486,6 +508,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         btnSaveOptions = new javax.swing.JButton();
         btnPrint = new javax.swing.JButton();
         btnCloseDialog = new javax.swing.JButton();
+        spnPreview = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 600));
@@ -548,7 +571,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                     .addComponent(chkPrintBattleforce)
                     .addComponent(chkPrintRecordsheets)
                     .addComponent(chkPrintScenario))
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlPrintOptionsLayout.setVerticalGroup(
             pnlPrintOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -561,125 +584,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chkPrintBattleforce)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkPrintRecordsheets)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        pnlHow.setBorder(javax.swing.BorderFactory.createTitledBorder("Recordsheet Options"));
-
-        chkTables.setSelected(true);
-        chkTables.setText("Print Charts and Tables");
-        chkTables.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemChanged(evt);
-            }
-        });
-
-        chkCanon.setSelected(true);
-        chkCanon.setText("Print Canon Dot Patterns");
-        chkCanon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemChanged(evt);
-            }
-        });
-
-        chkUseHexConversion.setText("Use Miniatures Scale");
-        chkUseHexConversion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkUseHexConversionActionPerformed(evt);
-            }
-        });
-
-        cmbHexConvFactor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5" }));
-        cmbHexConvFactor.setEnabled(false);
-        cmbHexConvFactor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbHexConvFactorActionPerformed(evt);
-            }
-        });
-
-        lblInches.setText("Inches");
-        lblInches.setEnabled(false);
-
-        lblOneHex.setText("One Hex equals");
-        lblOneHex.setEnabled(false);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(lblOneHex)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbHexConvFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addComponent(lblInches)
-                .addContainerGap(15, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblOneHex)
-            .addComponent(cmbHexConvFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addComponent(lblInches))
-        );
-
-        cmbRSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Total Warfare", "Recordsheet", "Tactical Operations" }));
-        cmbRSType.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemChanged(evt);
-            }
-        });
-
-        jLabel4.setText("Sheet Type:");
-
-        chkGenericAmmo.setText("Use Generic Ammo");
-        chkGenericAmmo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkGenericAmmoitemChanged(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pnlHowLayout = new javax.swing.GroupLayout(pnlHow);
-        pnlHow.setLayout(pnlHowLayout);
-        pnlHowLayout.setHorizontalGroup(
-            pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel4)
-            .addGroup(pnlHowLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlHowLayout.createSequentialGroup()
-                        .addComponent(chkGenericAmmo)
-                        .addContainerGap())
-                    .addGroup(pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlHowLayout.createSequentialGroup()
-                            .addGroup(pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(chkUseHexConversion)
-                                .addGroup(pnlHowLayout.createSequentialGroup()
-                                    .addGap(11, 11, 11)
-                                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addContainerGap())
-                        .addComponent(chkTables)
-                        .addComponent(chkCanon)
-                        .addComponent(cmbRSType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-        );
-        pnlHowLayout.setVerticalGroup(
-            pnlHowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlHowLayout.createSequentialGroup()
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbRSType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkTables)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkCanon)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkGenericAmmo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1, Short.MAX_VALUE)
-                .addComponent(chkUseHexConversion)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(chkPrintRecordsheets))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("General Options"));
@@ -709,17 +614,29 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             }
         });
 
+        jLabel5.setText("Paper Size:");
+
+        cmbPaperSize.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Letter", "Legal", "A4" }));
+        cmbPaperSize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbPaperSizeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(5, 5, 5)
+                        .addComponent(cmbPaperSize, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(chkLogo)
                     .addComponent(chkImage)
-                    .addComponent(chkPrintGroup))
-                .addContainerGap(42, Short.MAX_VALUE))
+                    .addComponent(chkPrintGroup)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -728,33 +645,133 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chkLogo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkPrintGroup))
+                .addComponent(chkPrintGroup)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(jLabel5))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbPaperSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("BattleForce Options"));
-
-        chkBFOnePerPage.setText("One Unit Per Page");
-        chkBFOnePerPage.addActionListener(new java.awt.event.ActionListener() {
+        chkUseHexConversion.setText("Use Miniatures Scale");
+        chkUseHexConversion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkBFOnePerPageActionPerformed(evt);
+                chkUseHexConversionActionPerformed(evt);
             }
         });
 
-        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "*Strategic Ops", "*QuickStrike Cards", "BattleForce Sheet", "Vertical Cards", "QuickStrike Card Sheet" }));
-        cmbBFSheetType.addActionListener(new java.awt.event.ActionListener() {
+        chkCanon.setSelected(true);
+        chkCanon.setText("Print Canon Dot Patterns");
+        chkCanon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 itemChanged(evt);
             }
         });
 
-        jLabel3.setText("Sheet Type:");
-
-        chkBFTerrainMV.setText("Use Miniatures Scale");
-        chkBFTerrainMV.addActionListener(new java.awt.event.ActionListener() {
+        cmbHexConvFactor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5" }));
+        cmbHexConvFactor.setEnabled(false);
+        cmbHexConvFactor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkBFTerrainMVActionPerformed(evt);
+                cmbHexConvFactorActionPerformed(evt);
             }
         });
+
+        lblInches.setText("Inches");
+        lblInches.setEnabled(false);
+
+        lblOneHex.setText("One Hex equals");
+        lblOneHex.setEnabled(false);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(lblOneHex)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbHexConvFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(lblInches))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblOneHex)
+            .addComponent(cmbHexConvFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addComponent(lblInches))
+        );
+
+        jLabel4.setText("Sheet Type:");
+
+        chkGenericAmmo.setText("Use Generic Ammo");
+        chkGenericAmmo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkGenericAmmoitemChanged(evt);
+            }
+        });
+
+        chkTables.setSelected(true);
+        chkTables.setText("Print Charts and Tables");
+        chkTables.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemChanged(evt);
+            }
+        });
+
+        cmbRSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Total Warfare", "Recordsheet", "Tactical Operations" }));
+        cmbRSType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(chkGenericAmmo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(chkUseHexConversion)
+                            .addComponent(chkTables)
+                            .addComponent(chkCanon)
+                            .addComponent(cmbRSType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jLabel4))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbRSType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chkTables)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chkCanon)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chkGenericAmmo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(chkUseHexConversion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
+        );
+
+        jTabbedPane1.addTab("Recordsheets", jPanel5);
 
         chkUseColor.setText("Print Full Color");
         chkUseColor.addActionListener(new java.awt.event.ActionListener() {
@@ -770,33 +787,51 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             }
         });
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(chkBFTerrainMV))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(chkBFOnePerPage))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(cmbBFSheetType, 0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(chkUseColor))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(chkBFBacks)))
-                .addContainerGap())
+        jLabel3.setText("Sheet Type:");
+
+        chkBFTerrainMV.setText("Use Miniatures Scale");
+        chkBFTerrainMV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkBFTerrainMVActionPerformed(evt);
+            }
+        });
+
+        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "*Strategic Ops", "*QuickStrike Cards", "BattleForce Sheet", "Vertical Cards", "QuickStrike Card Sheet" }));
+        cmbBFSheetType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemChanged(evt);
+            }
+        });
+
+        chkBFOnePerPage.setText("One Unit Per Page");
+        chkBFOnePerPage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkBFOnePerPageActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(chkBFTerrainMV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chkBFOnePerPage)
+                            .addComponent(chkUseColor)
+                            .addComponent(chkBFBacks)
+                            .addComponent(cmbBFSheetType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel3))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbBFSheetType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -807,22 +842,28 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chkUseColor)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkBFBacks))
+                .addComponent(chkBFBacks)
+                .addContainerGap(32, Short.MAX_VALUE))
         );
+
+        jTabbedPane1.addTab("BattleForce", jPanel6);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnlHow, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlPrintOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(10, 10, 10))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(36, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(pnlPrintOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(40, 40, 40))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -830,10 +871,9 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                 .addComponent(pnlPrintOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
-                .addComponent(pnlHow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jToolBar1.setFloatable(false);
@@ -976,22 +1016,24 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spnPreview, javax.swing.GroupLayout.DEFAULT_SIZE, 589, Short.MAX_VALUE)
-                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 589, Short.MAX_VALUE)))
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spnPreview, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spnPreview, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(spnPreview, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         pack();
@@ -1003,6 +1045,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
         setPreferences();
+        PrinterSetup();
         printer.Print();
     }//GEN-LAST:event_btnPrintActionPerformed
 
@@ -1103,6 +1146,10 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         if ( !dir.isEmpty() ) sswPrefs.put("DefaultImagePath", dir);
     }//GEN-LAST:event_btnImageDefaultActionPerformed
 
+    private void cmbPaperSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPaperSizeActionPerformed
+
+}//GEN-LAST:event_cmbPaperSizeActionPerformed
+
     private void WaitCursor() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
@@ -1143,22 +1190,25 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JCheckBox chkUseHexConversion;
     private javax.swing.JComboBox cmbBFSheetType;
     private javax.swing.JComboBox cmbHexConvFactor;
+    private javax.swing.JComboBox cmbPaperSize;
     private javax.swing.JComboBox cmbRSType;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lblInches;
     private javax.swing.JLabel lblOneHex;
-    private javax.swing.JPanel pnlHow;
     private javax.swing.JPanel pnlPrintOptions;
     private javax.swing.JScrollPane spnPreview;
     // End of variables declaration//GEN-END:variables
