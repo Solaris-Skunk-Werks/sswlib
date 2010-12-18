@@ -4046,6 +4046,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if( HasCommandConsole() == set ) { return true; }
         if( set ) {
             try {
+                CurLoadout.SafeUnallocateHD();
                 CurLoadout.AddToHD( CommandConsole );
             } catch( Exception e ) {
                 return false;

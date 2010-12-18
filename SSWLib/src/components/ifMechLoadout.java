@@ -65,6 +65,7 @@ public interface ifMechLoadout {
     public void FullUnallocate();
     public void ClearLoadout();
     public void SafeClearLoadout();
+    public void SafeUnallocateHD();
     public void SafeMassUnallocate();
     public void Transfer( ifMechLoadout l );
     public void AddTo( abPlaceable p, int Loc, int SIndex ) throws Exception;
