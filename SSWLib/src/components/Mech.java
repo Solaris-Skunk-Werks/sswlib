@@ -1951,6 +1951,8 @@ public class Mech implements ifUnit, ifBattleforce {
         if( GetJumpJets().GetNumJJ() > 0 ) {
             jump = (int) ( GetJumpJets().GetNumJJ() * heatperjj + 0.51f );
             if( jump < minjumpheat ) { jump = minjumpheat; }
+
+            if ( GetJumpJets().IsUMU() ) { jump = 1 * CurEngine.JumpingHeatMultiplier(); }
         }
 
         if( jump > walk ) {
