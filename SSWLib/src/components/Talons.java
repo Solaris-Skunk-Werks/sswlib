@@ -127,9 +127,9 @@ public class Talons extends PhysicalWeapon {
     @Override
     public double GetOffensiveBV() {
         if( Owner.GetPhysEnhance().IsTSM() ) {
-            return Owner.GetTonnage() * 0.2;
+            return Math.ceil(Owner.GetTonnage() * 0.2);
         } else {
-            return Owner.GetTonnage() * 0.1;
+            return Math.ceil(Owner.GetTonnage() * 0.1);
         }
     }
 
