@@ -271,8 +271,16 @@ public class Equipment extends abPlaceable {
 
     @Override
     public double GetTonnage() {
-        if( IsArmored() ) {
-            return Tonnage + ( NumCrits() * 0.5 );
+        return GetTonnage(true);
+    }
+
+    public double GetTonnage(boolean IncludeArmored) {
+        if (IncludeArmored) {
+            if ( IsArmored() ) {
+                return Tonnage + ( NumCrits() * 0.5 );
+            } else {
+                return Tonnage;
+            }
         } else {
             return Tonnage;
         }
@@ -303,6 +311,9 @@ public class Equipment extends abPlaceable {
 
     public double GetDefensiveBV() {
         if( IsArmored() ) {
+            //If the total BV is 0 lets just calculate based on the number of armored crits.
+            if ( (OffBV + DefBV) == 0 ) return NumCrits() * 5.0;
+            //Not sure why this line is like this but had to add the line aboves
             return (( OffBV + DefBV ) * 0.5 * NumCrits() ) + DefBV;
         }
         return DefBV;
