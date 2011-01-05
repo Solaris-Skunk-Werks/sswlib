@@ -34,7 +34,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jToolBar1" min="-2" max="-2" attributes="1"/>
-                  <Component id="spnPreview" pref="591" max="32767" attributes="2"/>
+                  <Component id="spnPreview" pref="579" max="32767" attributes="2"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -65,19 +65,11 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jTabbedPane1" min="-2" pref="190" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jPanel3" min="-2" max="-2" attributes="1"/>
-                          <EmptySpace pref="36" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="pnlPrintOptions" max="32767" attributes="1"/>
-                          <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="pnlPrintOptions" alignment="0" max="32767" attributes="1"/>
+                      <Component id="jPanel3" alignment="1" max="32767" attributes="1"/>
+                      <Component id="jTabbedPane1" alignment="0" min="-2" pref="190" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -89,7 +81,7 @@
                   <Component id="jPanel3" min="-2" max="-2" attributes="1"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jTabbedPane1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="16" max="32767" attributes="0"/>
+                  <EmptySpace pref="27" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -116,7 +108,7 @@
                           <Component id="chkPrintRecordsheets" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="chkPrintScenario" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="41" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -193,7 +185,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" alignment="0" attributes="1">
                               <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
@@ -204,6 +196,7 @@
                           <Component id="chkImage" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="chkPrintGroup" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace pref="31" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -216,7 +209,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="chkPrintGroup" min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                               <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -301,10 +294,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="10" pref="10" max="10" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="chkGenericAmmo" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace pref="41" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="chkGenericAmmo" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="chkUseHexConversion" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="chkTables" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="chkCanon" alignment="0" min="-2" max="-2" attributes="0"/>
