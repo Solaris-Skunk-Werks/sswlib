@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
+import common.Constants;
 import java.util.LinkedList;
 import java.util.prefs.Preferences;
 import visitors.ifVisitor;
@@ -150,7 +151,7 @@ public class SupportVehicle {
 	// CONSTRUCTORS
 	public SupportVehicle() {
 		// Load preferences.
-		this.pref = Preferences.userRoot();
+		this.pref = Preferences.userRoot().node( Constants.SSVPrefs );
 		// Turn off all advanced construction options.
 		this.TO_Opt_twoTurrets = false;
 		// Set all chassis modifications false.
