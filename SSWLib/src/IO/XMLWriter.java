@@ -33,10 +33,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-/**
- *
- * @author justin
- */
+
 public class XMLWriter {
     private String Scenario = "";
     private Force leftForce;

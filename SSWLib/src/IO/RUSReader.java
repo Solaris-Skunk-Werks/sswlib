@@ -71,7 +71,8 @@ public class RUSReader {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(RUSReader.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
+            //Logger.getLogger(RUSReader.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
