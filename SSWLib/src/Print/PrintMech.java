@@ -74,7 +74,7 @@ public class PrintMech implements Printable {
                   Grey = new Color( 128, 128, 128 );
     private Media media = new Media();
     private ImageTracker imageTracker;
-    private Preferences Prefs = Preferences.userRoot().node( "/ssw/gui" );
+    private Preferences Prefs = Preferences.userRoot().node( Constants.SSWPrefs );
 
     private Vector<PlaceableInfo> Items;
     private PIPPrinter ap;
@@ -494,6 +494,8 @@ public class PrintMech implements Printable {
             JumpMP += " (" + (CurMech.GetAdjustedBoosterMP(false) * MiniConvRate ) + ")";
 
         if (JumpMP.isEmpty()) JumpMP = "0";
+        if ( CurMech.GetJumpJets().IsImproved() ) JumpMP += " IMP";
+        if ( CurMech.GetJumpJets().IsUMU() ) JumpMP += " UMU";
 
         graphics.drawString( JumpMP, p[PrintConsts.JUMPMP].x, p[PrintConsts.JUMPMP].y );
         
@@ -848,9 +850,9 @@ public class PrintMech implements Printable {
 
         public String Format() {
             if ( !makeGeneric )
-                return ("@%P").replace("%P", CritName).replace("%F", LookupName).replace("%L", "");
+                return ("%P").replace("%P", CritName).replace("%F", LookupName).replace("%L", "");
             else
-                return ("@%P").replace("%P", GenericName).replace("%F", GenericName).replace("%L", "");
+                return ("%P").replace("%P", GenericName).replace("%F", GenericName).replace("%L", "");
         }
     }
 }
