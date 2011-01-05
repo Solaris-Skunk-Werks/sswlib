@@ -125,7 +125,7 @@ public class Mech implements ifUnit, ifBattleforce {
     // Constructors
     public Mech() {
         // no prefs file, create a default.
-        Prefs = Preferences.userRoot().node( "/ssw/gui" );
+        Prefs = Preferences.userRoot().node( Constants.SSWPrefs );
         Load();
     }
 
