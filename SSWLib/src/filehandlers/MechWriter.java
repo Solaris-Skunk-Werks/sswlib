@@ -641,7 +641,7 @@ public class MechWriter {
                 }
                 if( p instanceof Equipment ) {
                     if( ((Equipment) p).IsVariableSize() ) {
-                        retval += prefix + tab + "<tons>" + p.GetTonnage() + "</tons>" + NL;
+                        retval += prefix + tab + "<tons>" + ((Equipment)p).GetTonnage(false) + "</tons>" + NL;
                     }
                 }
                 if( ( p instanceof Ammunition ) && CurMech.UsingFractionalAccounting() ) {
