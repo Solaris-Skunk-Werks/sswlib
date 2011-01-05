@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package filehandlers;
 
+import common.Constants;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 import components.*;
@@ -44,6 +45,7 @@ public class FileCommon {
         s = s.replaceAll( "[{(}]", "%28" );
         s = s.replaceAll( "[{)}]", "%29" );
         s = s.replaceAll( "[{;}]", "%3B" );
+        s = s.replaceAll( "[{:}]", "" );
         s = s.replaceAll( "[{@}]", "%40" );
         s = s.replaceAll( "[{&}]", "%26" );
         s = s.replaceAll( "[{=}]", "%3D" );
@@ -949,7 +951,7 @@ public class FileCommon {
         // defined ammunition filter.
         String retval = "";
         if ( !RSFormat ) {
-            Preferences Prefs = Preferences.userRoot().node( "/ssw/gui" );
+            Preferences Prefs = Preferences.userRoot().node( Constants.SSWPrefs );
             retval = Prefs.get( "AmmoNamePrintFormat", "@%P (%L)" );
         } else {
             retval = "Ammo (%P) %L";
@@ -979,8 +981,7 @@ public class FileCommon {
     public static String FormatAmmoExportName( Ammunition a, int tons ) {
         // this routine returns a user-defined ammunition name based on a user-
         // defined ammunition filter.
-//        Preferences Prefs = Preferences.userNodeForPackage( "/ssw/gui/frmMain".getClass() );
-        Preferences Prefs = Preferences.userRoot().node( "/ssw/gui" );
+        Preferences Prefs = Preferences.userRoot().node( Constants.SSWPrefs );
         String retval = Prefs.get( "AmmoNameExportFormat", "@%P (%L)" );
         retval = retval.replace( "%F", a.ActualName().replace( "@ ", "" ) );
         retval = retval.replace( "%P", a.CritName().replace( "@ ", "" ) );
