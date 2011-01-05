@@ -51,5 +51,22 @@ public class Constants {
                         Format_TerrainModifier = "MiniConversionRate",
                         Format_OneForcePerPage = "OneForcePerPage",
                         Format_BattleForceSheetChoice = "BattleForceSheetIndex",
-                        Format_RecordsheetChoice = "RecordsheetIndex";
+                        Format_RecordsheetChoice = "RecordsheetIndex",
+                        SSWPrefs = "/com/sswsuite/ssw",
+                        BFBPrefs = "/com/sswsuite/bfb",
+                        SGTPrefs = "/com/sswsuite/sgt",
+                        SAWPrefs = "/com/sswsuite/saw",
+                        SSVPrefs = "/com/sswsuite/ssv";
+    public final static int BattleMech = 0,
+                            IndustrialMech = 1,
+                            ProtoMech = 2,
+                            Vehicle = 3,
+                            Infantry = 4,
+                            BattleArmor = 5,
+                            ConvFighter = 6,
+                            AeroFighter = 7,
+                            SmallCraft = 8,
+                            Dropship = 9,
+                            SupportVehicle = 10,
+                            MobileStructure = 11;
 }
