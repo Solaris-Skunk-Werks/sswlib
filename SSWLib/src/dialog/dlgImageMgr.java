@@ -30,6 +30,7 @@ package dialog;
 import filehandlers.Media;
 
 import Force.*;
+import common.Constants;
 import filehandlers.ImageTracker;
 import java.awt.Image;
 import java.io.File;
@@ -49,7 +50,7 @@ public class dlgImageMgr extends javax.swing.JDialog {
     private ImageTracker imageTracker;
     private Hashtable<String, Unit> units = new Hashtable<String, Unit>();
     private DefaultListModel unitList = new DefaultListModel();
-    private Preferences bfbPrefs = Preferences.userNodeForPackage("/bfb/gui/frmBase".getClass());
+    private Preferences bfbPrefs = Preferences.userRoot().node( Constants.BFBPrefs );
 
     /** Creates new form dlgMechImages */
     public dlgImageMgr(java.awt.Frame parent, boolean modal) {

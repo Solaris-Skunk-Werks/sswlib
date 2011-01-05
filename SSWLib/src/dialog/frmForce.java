@@ -45,6 +45,7 @@ import Print.*;
 import IO.*;
 import Print.preview.dlgPreview;
 import battleforce.BattleForce;
+import common.Constants;
 import common.DataFactory;
 import common.DesignForm;
 import components.Mech;
@@ -59,7 +60,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
     private Media media = new Media();
     private ImageTracker imageTracker;
     private DesignForm parent;
-    private Preferences prefs = Preferences.userNodeForPackage("/ssw/gui/frmMain".getClass());
+    private Preferences prefs = Preferences.userRoot().node( Constants.SSWPrefs );
 
     private TableModelListener forceChanged = new TableModelListener() {
         public void tableChanged(TableModelEvent e) {

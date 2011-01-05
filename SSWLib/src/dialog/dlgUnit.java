@@ -57,8 +57,8 @@ public class dlgUnit extends javax.swing.JDialog {
     private Warriors warriors;
     private ImageTracker imageTracker;
     private NameGenerator gen = new NameGenerator();
-    private Preferences Prefs = Preferences.userRoot().node( "/bfb/gui" );
-    private Preferences sswPrefs = Preferences.userRoot().node( "/ssw/gui" );
+    private Preferences Prefs = Preferences.userRoot().node( Constants.BFBPrefs );
+    private Preferences sswPrefs = Preferences.userRoot().node( Constants.SSWPrefs );
 
     public dlgUnit(java.awt.Frame parent, boolean modal, Force f, Unit u, ImageTracker imagetracker) {
         super(parent, modal);
