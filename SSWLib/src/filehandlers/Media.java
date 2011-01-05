@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package filehandlers;
 
+import common.Constants;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -250,7 +251,7 @@ public class Media {
     }
 
     public String FindMatchingImage( String Name, String Model, String DirectoryPath ) {
-        Preferences Prefs = Preferences.userNodeForPackage("/ssw/gui/frmMain".getClass());
+        Preferences Prefs = Preferences.userRoot().node( Constants.SSWPrefs );
         //System.out.println("Checking Image @" + Prefs.get("DefaultImagePath", ""));
         if ( DirectoryPath.isEmpty() ) DirectoryPath = Prefs.get("DefaultImagePath", "");
         if ( DirectoryPath.isEmpty() ) return "";
