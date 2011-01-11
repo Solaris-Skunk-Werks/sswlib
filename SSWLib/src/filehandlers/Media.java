@@ -291,28 +291,6 @@ public class Media {
             if ( !path.isEmpty() ) return path;
         }
 
-        /*
-        //DirectoryPath = DirectoryPath.substring(0, DirectoryPath.lastIndexOf(File.separator) + 1);
-        File d = new File(DirectoryPath);
-        if ( d.isDirectory() ) {
-            String[] fileList = d.list();
-            if( fileList.length == 0 ) { return ""; }
-
-            for ( String nameToCheck : PossibleNames ) {
-                //System.out.println(nameToCheck.trim());
-                return CheckDirectories( nameToCheck, DirectoryPath );
-
-                for ( String f : fileList ) {
-                    if ( !f.isEmpty() && f.contains(".") )
-                        if ( f.substring(0, f.lastIndexOf(".")).toLowerCase().equals( nameToCheck.trim().toLowerCase() ) ) {
-                            //System.out.println("FOUND: " + f);
-                            return DirectoryPath + f;
-                        }
-                }
-            }
-        }
-        */
-
         return "";
     }
 
