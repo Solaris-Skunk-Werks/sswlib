@@ -102,16 +102,22 @@ public class Warchest implements ifSerializable {
         String data = "";
         int counter = 1;
 
-        data += "Warchest" + CommonTools.NL;
-        data += "  Track Cost: " + TrackCost + CommonTools.NL;
-        data += "  Optional Bonuses" + CommonTools.NL;
-        for ( Bonus b : bonuses ) {
-            data += b.SerializeClipboard();
+        data += "Warchest" + CommonTools.NL + CommonTools.NL;
+        data += "  Track Cost: " + TrackCost + CommonTools.NL + CommonTools.NL;
+        if ( bonuses.size() > 0 ) {
+            data += "  Optional Bonuses" + CommonTools.NL;
+            for ( Bonus b : bonuses ) {
+                data += "    " + b.SerializeClipboard();
+            }
+            data += CommonTools.NL;
         }
-        data += "  Objectives" + CommonTools.NL;
-        for ( Objective o : objectives ) {
-            data += counter + ". " + o.SerializeClipboard();
-            counter += 1;
+        
+        if ( objectives.size() > 0 ) {
+            data += "  Objectives" + CommonTools.NL;
+            for ( Objective o : objectives ) {
+                data += "    " + counter + ". " + o.SerializeClipboard();
+                counter += 1;
+            }
         }
         return data;
     }

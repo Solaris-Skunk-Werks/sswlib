@@ -56,7 +56,7 @@ public class Objective extends abWarchestItem implements ifSerializable {
     public String SerializeClipboard() {
         String data = "";
 
-        data += getDescription() + " (Reward:" + getValue() + ")";
+        data += getDescription() + " (Reward:" + getValue() + ")" + CommonTools.NL;
         return data;
     }
 
