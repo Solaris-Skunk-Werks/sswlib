@@ -280,7 +280,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public int GetCurrentBV() {
-        // returns the final battle value of the mech
+        // returns the final battle value of the combat vehicle
         //TODO Fix this!
         return 0;
     }
@@ -294,7 +294,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public double GetCurrentTons() {
-        // returns the current total tonnage of the mech
+        // returns the current total tonnage of the combat vehicle
         return GetTonnage();
     }
 
@@ -420,5 +420,50 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
     public boolean HasFHES() {
         return false;
+    }
+
+    public void SetName( String newname )
+    {
+        Name = newname;
+        SetChanged( true );
+    }
+
+    public void SetModel( String model )
+    {
+        Model = model;
+        SetChanged( true );
+    }
+
+    public void SetYear( int y, boolean specified )
+    {
+        MainLoadout.SetYear( y, specified );
+        SetChanged( true );
+    }
+
+    public void SetRulesLevel( int r )
+    {
+        MainLoadout.SetRulesLevel( r );
+        SetChanged( true );
+    }
+
+    public void SetSource( String s ) {
+        CurLoadout.SetSource( s );
+        SetChanged( true );
+    }
+
+    public void SetCruiseMP( int mp )
+    {
+        CruiseMP = mp;
+        SetChanged( true );
+    }
+
+    public int GetCruiseMP()
+    {
+        return CruiseMP;
+    }
+
+    public int GetFlankMP()
+    {
+        return (int)(CruiseMP * 1.5);
     }
 }
