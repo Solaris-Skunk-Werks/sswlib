@@ -31,15 +31,24 @@ package components;
 public class PartialWing extends abPlaceable {
 
     private Mech Owner;
-    private AvailableCode AC = new AvailableCode( AvailableCode.TECH_CLAN );
+    private AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
     String Manufacturer = "";
+    private boolean Clan;
 
     public PartialWing( Mech m ) {
+        this(m, true);
+    }
+
+    public PartialWing( Mech m, boolean clan ) {
         Owner = m;
+        AC.SetISCodes( 'F', 'X', 'X', 'E' );
+        AC.SetISDates( 3061, 3067, true, 3067, 0, 0, false, false );
+        AC.SetISFactions( "", "", "", "" );
         AC.SetCLCodes( 'F', 'X', 'X', 'E' );
         AC.SetCLDates( 3061, 3067, true, 3067, 0, 0, false, false );
         AC.SetCLFactions( "CJF", "CJF", "", "" );
         AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+        Clan = clan;
         SetLocked( true );
     }
 
@@ -52,7 +61,11 @@ public class PartialWing extends abPlaceable {
     }
 
     public String LookupName() {
-        return "Partial Wing";
+        if( Clan ) {
+            return "(CL) Partial Wing";
+        } else {
+            return "(IS) Partial Wing";
+        }
     }
 
     public String ChatName() {
@@ -67,10 +80,19 @@ public class PartialWing extends abPlaceable {
         return "Tactical Operations";
     }
 
+    public void SetClan( boolean b ) {
+        Clan = b;
+    }
+
+    public boolean IsClan() {
+        return Clan;
+    }
+
     @Override
     public int NumCrits() {
         // like the engine, this will only return the number of crits in one location
-        return 3;
+        if ( Clan ) { return 3; }
+        else { return 4; }
     }
 
     public int NumCVSpaces() {
@@ -79,7 +101,12 @@ public class PartialWing extends abPlaceable {
 
     @Override
     public double GetTonnage() {
-        double result = Math.ceil( Owner.GetTonnage() * 0.1 ) * 0.5;
+        double result = Owner.GetTonnage() * 0.1;
+        if ( Clan ) {
+            result = Math.ceil( result * 0.5 );
+        } else {
+            result = ( Math.ceil( ( result * 0.7 ) * 2 ) * 0.5 );
+        }
         if( IsArmored() ) {
             result += 3.0;
         }
@@ -88,7 +115,12 @@ public class PartialWing extends abPlaceable {
 
     @Override
     public double GetCost() {
-        double retval = 50000.0 * ( Math.ceil( Owner.GetTonnage() * 0.1 ) * 0.5 );
+        double retval;
+        if ( Owner.GetTechBase() == AvailableCode.TECH_CLAN ) {
+            retval = 50000.0 * ( Math.ceil( Owner.GetTonnage() * 0.1 ) * 0.5 );
+        } else {
+            retval = 50000.0 * ( Math.ceil( Owner.GetTonnage() * 0.1 ) * 0.7 );
+        }
         if( IsArmored() ) {
             retval += 900000.0;
         }
