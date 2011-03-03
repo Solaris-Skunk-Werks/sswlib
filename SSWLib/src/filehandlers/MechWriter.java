@@ -335,7 +335,7 @@ public class MechWriter {
             }
             if( ls.Index == 12 ) { ls.Index = -1; }
             if( rs.Index == 12 ) { rs.Index = -1; }
-            FR.write( tab + tab + "<partialwing lsstart=\"" + ls.Index + "\" rsstart=\"" + rs.Index + "\" />" );
+            FR.write( tab + tab + "<partialwing tech=\"" + ( CurMech.GetPartialWing().IsClan() ? AvailableCode.TECH_CLAN : AvailableCode.TECH_INNER_SPHERE ) + "\" lsstart=\"" + ls.Index + "\" rsstart=\"" + rs.Index + "\" />" );
             FR.newLine();
         }
         if( CurMech.UsingJumpBooster() ) {

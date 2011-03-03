@@ -849,7 +849,10 @@ public class MechReader {
                     l.Location = LocationIndex.MECH_LOC_RT;
                     lpw[1] = l;
                 }
-                m.SetPartialWing( true, lpw );
+                int Tech = m.GetTechBase();
+                try { Tech = Integer.parseInt(map.getNamedItem( "tech" ).getTextContent()); } catch( Exception e ) {}
+                m.SetPartialWing( true, ( Tech == AvailableCode.TECH_INNER_SPHERE ? false : true ), lpw );
+                
             } else if( n.item( i ).getNodeName().equals( "jumpbooster" ) ) {
                 map = n.item( i ).getAttributes();
                 int mp = Integer.parseInt( map.getNamedItem( "mp" ).getTextContent() );
