@@ -350,6 +350,11 @@ public class PrintMech implements Printable {
                     } else {
                         graphics.drawString( PrintConsts.GetPrintName( a[i], CurMech, Location ), p[i].x + 3, p[i].y );
                     }
+                    //Add 10 circles for mod armor!
+                    if ( a[i].CritName().equals("Modular Armor") ) {
+                        DrawNonCritable(graphics, "00000", p[i].x+51, p[i].y - 3);
+                        DrawNonCritable(graphics, "00000", p[i].x+51, p[i].y + 3);
+                    }
                 }
             }
         }
