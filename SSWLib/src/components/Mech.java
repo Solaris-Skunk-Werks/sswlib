@@ -1442,7 +1442,7 @@ public class Mech implements ifUnit, ifBattleforce {
     }
 
     public String GetChatInfo() {
-        String info = "";
+        String info = GetFullName() + " ";
         info += GetTonnage() + "T, ";
         // MP
         info += GetWalkingMP();
@@ -1479,7 +1479,7 @@ public class Mech implements ifUnit, ifBattleforce {
         info +=  "; ";
 
         // MechArmor
-        info += GetArmor().GetTonnage() + "T " + GetArmor().ChatName() + "; ";
+        info += GetArmor().GetTonnage() + "T/" + Math.round(GetArmor().GetCoverage()) + "% " + GetArmor().ChatName() + "; ";
 
         // heat sinks
         info += GetHeatSinks().GetNumHS() + " " + GetHeatSinks().ChatName() + "; ";
@@ -3390,7 +3390,36 @@ public class Mech implements ifUnit, ifBattleforce {
         if( Omnimech ) { return; }
         if( HasJumpBooster ) { throw new Exception( "Partial Wing is incompatible with Mechanical Jump Boosters." ); }
         if( b ) {
+            Wing.SetClan( (GetTechBase() == AvailableCode.TECH_CLAN) || (GetTechBase() == AvailableCode.TECH_BOTH) );
             if( ! Wing.Place( MainLoadout ) ) {
+                throw new Exception( "There is no available room for the Partial Wing!\nIt will not be allocated." );
+            }
+        } else {
+            Wing.Remove( MainLoadout );
+        }
+        HasPartialWing = b;
+    }
+
+    public void SetPartialWing( boolean b, boolean useClan ) throws Exception {
+        if( Omnimech ) { return; }
+        if( HasJumpBooster ) { throw new Exception( "Partial Wing is incompatible with Mechanical Jump Boosters." ); }
+        if( b ) {
+            Wing.SetClan( useClan );
+            if( ! Wing.Place( MainLoadout ) ) {
+                throw new Exception( "There is no available room for the Partial Wing!\nIt will not be allocated." );
+            }
+        } else {
+            Wing.Remove( MainLoadout );
+        }
+        HasPartialWing = b;
+    }
+
+    public void SetPartialWing( boolean b, boolean useClan, LocationIndex[] lpw ) throws Exception {
+        if( Omnimech ) { return; }
+        if( HasJumpBooster ) { throw new Exception( "Partial Wing is incompatible with Mechanical Jump Boosters." ); }
+        if( b ) {
+            Wing.SetClan( useClan );
+            if( ! Wing.Place( MainLoadout, lpw ) ) {
                 throw new Exception( "There is no available room for the Partial Wing!\nIt will not be allocated." );
             }
         } else {
@@ -3403,6 +3432,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if( Omnimech ) { return; }
         if( HasJumpBooster ) { throw new Exception( "Partial Wing is incompatible with Mechanical Jump Boosters." ); }
         if( b ) {
+            Wing.SetClan( (GetTechBase() == AvailableCode.TECH_CLAN) || (GetTechBase() == AvailableCode.TECH_BOTH) );
             if( ! Wing.Place( MainLoadout, lpw ) ) {
                 throw new Exception( "There is no available room for the Partial Wing!\nIt will not be allocated." );
             }
