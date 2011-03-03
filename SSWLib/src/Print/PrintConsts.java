@@ -34,6 +34,7 @@ import components.Mech;
 import components.PlaceableInfo;
 import components.RangedWeapon;
 import components.abPlaceable;
+import components.ifMissileGuidance;
 import components.ifWeapon;
 import filehandlers.FileCommon;
 import java.awt.Color;
@@ -334,11 +335,11 @@ public class PrintConsts {
                                 HasAmmoData = true;
                             }
                         } else if ( ((ifWeapon) p.Item).IsFCSCapable() ) {
-                            if ( CurMech.GetLoadout().UsingArtemisIV()) {
+                            if ( ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_ArtemisIV ) {
                                 temp.add(factory.ArtemisIV(p));
-                            } else if ( CurMech.GetLoadout().UsingArtemisV()) {
+                            } else if ( ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_ArtemisV ) {
                                 temp.add(factory.ArtemisV(p));
-                            } else if ( CurMech.GetLoadout().UsingApollo() ) {
+                            } else if ( ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_Apollo ) {
                                 temp.add(factory.Apollo(p));
                             }
                             p.specials = "-";
