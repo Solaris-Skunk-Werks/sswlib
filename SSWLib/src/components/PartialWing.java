@@ -103,7 +103,7 @@ public class PartialWing extends abPlaceable {
     public double GetTonnage() {
         double result = Owner.GetTonnage() * 0.1;
         if ( Clan ) {
-            result = Math.ceil( result * 0.5 );
+            result = ( Math.ceil( ( result * 0.5 ) * 2 ) * 0.5 );
         } else {
             result = ( Math.ceil( ( result * 0.7 ) * 2 ) * 0.5 );
         }
