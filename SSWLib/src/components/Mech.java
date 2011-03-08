@@ -334,6 +334,15 @@ public class Mech implements ifUnit, ifBattleforce {
         SetChanged( true );
     }
 
+    public void SetProductionEra( int e ) {
+        if( Omnimech ) {
+            CurLoadout.SetProductionEra( e );
+        } else {
+            MainLoadout.SetProductionEra( e );
+        }
+        SetChanged( true );
+    }
+
     public void SetRulesLevel( int r ) {
         if( Omnimech ) {
             CurLoadout.SetRulesLevel( r );
@@ -1423,6 +1432,14 @@ public class Mech implements ifUnit, ifBattleforce {
 
     public int GetBaseEra() {
         return MainLoadout.GetEra();
+    }
+
+    public int GetProductionEra() {
+        return CurLoadout.GetProductionEra();
+    }
+
+    public int GetBaseProductionEra() {
+        return MainLoadout.GetProductionEra();
     }
 
     public int GetRulesLevel() {

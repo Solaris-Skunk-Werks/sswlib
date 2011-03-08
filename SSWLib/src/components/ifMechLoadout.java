@@ -47,6 +47,8 @@ public interface ifMechLoadout {
     public void SetTechBase( int NewLevel );
     public int GetEra();
     public boolean SetEra( int era );
+    public int GetProductionEra();
+    public boolean SetProductionEra( int era );
     public int GetYear();
     public void SetYear( int year, boolean specified );
     public boolean YearWasSpecified();

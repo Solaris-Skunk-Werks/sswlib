@@ -11,6 +11,7 @@ public interface ifUnit {
     public int GetTechbase();
     public int GetBaseTechbase();
     public int GetEra();
+    public int GetProductionEra();
     public int GetYear();
     public int GetTonnage();
     public boolean IsYearRestricted();

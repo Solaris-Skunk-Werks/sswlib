@@ -82,6 +82,7 @@ public class QuadLoadout implements ifMechLoadout {
     private int RulesLevel = AvailableCode.RULES_TOURNAMENT,
                 TechBase = AvailableCode.TECH_INNER_SPHERE,
                 Era = AvailableCode.ERA_STAR_LEAGUE,
+                ProductionEra = AvailableCode.PRODUCTION_ERA_AGE_OF_WAR,
                 Year = 2750;
 
     // Fill up and initialize the critical space arrays.  This is where all the
@@ -209,6 +210,15 @@ public class QuadLoadout implements ifMechLoadout {
         }
     }
 
+    public int GetProductionEra() {
+        return ProductionEra;
+    }
+
+    public boolean SetProductionEra( int era ) {
+        ProductionEra = era;
+        return true;
+    }
+    
     public int GetYear() {
         return Year;
     }

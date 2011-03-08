@@ -48,7 +48,15 @@ public class AvailableCode {
                             UNIT_INDUSTRIALMECH = 1,
                             UNIT_COMBATVEHICLE = 2,
                             UNIT_AEROFIGHTER = 3,
-                            UNIT_CONVFIGHTER = 4;
+                            UNIT_CONVFIGHTER = 4,
+                            PRODUCTION_ERA_AGE_OF_WAR = 0,
+                            PRODUCTION_ERA_STAR_LEAGUE = 1,
+                            PRODUCTION_ERA_EARLY_SUCCESSION_WAR = 2,
+                            PRODUCTION_ERA_LATE_SUCCESSION_WAR = 3,
+                            PRODUCTION_ERA_CLAN_INVASION = 4,
+                            PRODUCTION_ERA_CIVIL_WAR = 5,
+                            PRODUCTION_ERA_JIHAD = 6,
+                            PRODUCTION_ERA_DARK_AGES = 7;
     public static String[] TechBaseSTR = {
         "Inner Sphere", "Clan", "Mixed" };
 
