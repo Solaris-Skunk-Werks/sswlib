@@ -280,6 +280,9 @@ public class MechReader {
         }
         m.SetEra( era );
 
+        n = d.getElementsByTagName( "productionera" );
+        if ( n.getLength() > 0 ) { m.SetProductionEra(Integer.parseInt( n.item( 0 ).getTextContent() )); } else { m.SetProductionEra(0); }
+
         if( SaveFileVersion < 2 ) {
             n = d.getElementsByTagName( "source" );
             if( n.getLength() > 0 ) {
@@ -1215,6 +1218,8 @@ public class MechReader {
                         m.SetSource( n.item( i ).getTextContent() );
                     } else if( n.item( i ).getNodeName().equals( "loadout_era" ) ) {
                         m.SetEra( Integer.parseInt( n.item( i ).getTextContent() ) );
+                    } else if( n.item( i ).getNodeName().equals( "loadout_productionera" ) ) {
+                        m.SetProductionEra( Integer.parseInt( n.item( i ).getTextContent() ) );
                     } else if( n.item( i ).getNodeName().equals( "loadout_year" ) ) {
                         m.SetYear( Integer.parseInt( n.item( i ).getTextContent() ), false );
                     } else if( n.item( i ).getNodeName().equals( "techbase" ) ) {

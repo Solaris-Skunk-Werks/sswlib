@@ -94,6 +94,8 @@ public class MechWriter {
 
         FR.write( tab + "<era>" + CurMech.GetBaseEra() + "</era>" );
         FR.newLine();
+        FR.write( tab + "<productionera>" + CurMech.GetBaseProductionEra() + "</productionera>" );
+        FR.newLine();
 /*
         FR.write( tab + "<source>" + FileCommon.EncodeFluff( CurMech.GetSource() ) + "</source>" );
         FR.newLine();
@@ -401,6 +403,8 @@ public class MechWriter {
                 FR.write( tab + tab + "<source>" + FileCommon.EncodeFluff( CurMech.GetSource() ) + "</source>" );
                 FR.newLine();
                 FR.write( tab + tab + "<loadout_era>" + CurMech.GetEra() + "</loadout_era>" );
+                FR.newLine();
+                FR.write( tab + tab + "<loadout_productionera>" + CurMech.GetProductionEra() + "</loadout_productionera>" );
                 FR.newLine();
                 FR.write( tab + tab + "<loadout_year>" + CurMech.GetYear() + "</loadout_year>" );
                 FR.newLine();
