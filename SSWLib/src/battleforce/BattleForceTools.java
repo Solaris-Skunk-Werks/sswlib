@@ -86,9 +86,7 @@ public class BattleForceTools {
             if ( ((abPlaceable)w).CritName().contains("LB") || ((abPlaceable)w).CritName().equals("Silver Bullet Gauss") )
                 dmgModifier = w.GetDamageMedium();
             if ( ((abPlaceable)w).CritName().contains("HAG") )
-            {
                 dmgModifier = w.GetDamageMedium();
-            }
 
             if ( w.GetRangeLong() > 0 ) {
                 if ( w instanceof RangedWeapon )
@@ -102,6 +100,13 @@ public class BattleForceTools {
             }
             if ( w.GetRangeLong() > 24 ) {
                 retval[BFConstants.BF_EXTREME] = w.GetDamageLong() * common.CommonTools.GetAverageClusterHits(w,0) / dmgModifier;
+            }
+
+            if ( ((abPlaceable)w).CritName().contains("Ultra") )
+            {
+                retval[BFConstants.BF_SHORT] *= 1.5;
+                retval[BFConstants.BF_MEDIUM] *= 1.5;
+                retval[BFConstants.BF_LONG] *= 1.5;
             }
 
             if (isBFMML(w))

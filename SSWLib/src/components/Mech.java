@@ -4556,6 +4556,18 @@ public class Mech implements ifUnit, ifBattleforce {
                     BFData.FLK.AddBase(temp);
                 }
                 BFData.AddNote(nc.get(i).toString() + " :: " + temp[BFConstants.BF_SHORT] + "/" + temp[BFConstants.BF_MEDIUM] + "/" + temp[BFConstants.BF_LONG] + "/" + temp[BFConstants.BF_EXTREME] + " [" + temp[BFConstants.BF_OV] + "]" );
+            } else if ( nc.get(i) instanceof Ammunition ) {
+                //Need to know if it is LRM, SRM, or AC ammo
+                Ammunition ammo = ((Ammunition) nc.get(i));
+                if ( ammo.CritName().contains("SRM") ) {
+                    BFData.SRM.AddAmmo(ammo.GetLotSize());
+                }
+                if ( ammo.CritName().contains(("LRM"))) {
+                    BFData.LRM.AddAmmo(ammo.GetLotSize());
+                }
+                if ( ammo.CritName().contains("AC") || ammo.CritName().contains("LB") ) {
+                    BFData.AC.AddAmmo(ammo.GetLotSize());
+                }
             }
         }
         

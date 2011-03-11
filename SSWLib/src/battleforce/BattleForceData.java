@@ -8,14 +8,14 @@ public class BattleForceData {
     public DataSet  AC = new DataSet(true);
     public DataSet  LRM = new DataSet(true);
     public DataSet  SRM = new DataSet(true);
-    public DataSet  IF = new DataSet(true);
-    public DataSet  FLK = new DataSet(true);
+    public DataSet  IF = new DataSet(false);
+    public DataSet  FLK = new DataSet(false);
     private int TotalHeatGenerated = 0;
     private int TotalHeatDissipation = 0;
     private Vector<String> Notes = new Vector<String>();
 
     public BattleForceData() {
-
+        IF.setNormalRound(true);
     }
 
     public void SetHeat( int TotalDiss ) {
@@ -37,18 +37,18 @@ public class BattleForceData {
     }
         
     public int BaseMaxShort() {
-        return Base.BattleForceValue(AdjBase.baseShort) +
-                Base.BattleForceValue(AC.baseShort) +
-                Base.BattleForceValue(SRM.baseShort) +
-                Base.BattleForceValue(LRM.baseShort);
+        return Base.BattleForceValue(AdjBase.baseShort); //+
+                //Base.BattleForceValue(AC.baseShort) +
+                //Base.BattleForceValue(SRM.baseShort) +
+                //Base.BattleForceValue(LRM.baseShort);
     }
 
     public int BaseMaxMedium() {
         //System.out.println(AdjBase.BattleForceValue(AdjBase.baseMedium) + "/" + AC.BattleForceValue(AC.baseMedium) + "/" + SRM.BattleForceValue(SRM.baseMedium) + "/" + LRM.BattleForceValue(LRM.baseMedium));
-        return AdjBase.BattleForceValue(AdjBase.baseMedium) +
-                AC.BattleForceValue(AC.baseMedium) +
-                SRM.BattleForceValue(SRM.baseMedium) +
-                LRM.BattleForceValue(LRM.baseMedium);
+        return Base.BattleForceValue(AdjBase.baseMedium); //+
+                //Base.BattleForceValue(AC.baseMedium) +
+                //Base.BattleForceValue(SRM.baseMedium) +
+                //Base.BattleForceValue(LRM.baseMedium);
     }
 
     public int AdjustedMaxMedium() {
@@ -140,9 +140,13 @@ public class BattleForceData {
         private int BFExtreme = 0;
         private int TotalHeatGenerated = 0;
         private int TotalHeatDissipation = 0;
+        private int LauncherCount = 0;
+        private int AmmoCount = 0;
         private boolean hasOverheat = false,
                         isSpecial = false,
-                        SpecialDamage = false;
+                        SpecialDamage = false,
+                        useNormalRound = false,
+                        NotEnoughAmmo = false;
 
         public DataSet() {
             this(false);
@@ -159,6 +163,12 @@ public class BattleForceData {
                 if ( heatMedium > 9.0 ) retval = true;
             } else {
                 if ( baseMedium > 9.0 ) retval = true;
+            }
+            if ( LauncherCount > 0 ) {
+                if ( AmmoCount - (LauncherCount * 10) <= 0 ) {
+                    NotEnoughAmmo = true;
+                    retval = false;
+                }
             }
             SpecialDamage = retval;
             BattleForceValues();
@@ -181,6 +191,11 @@ public class BattleForceData {
             this.baseLong += vals[BFConstants.BF_LONG];
             this.baseExtreme += vals[BFConstants.BF_EXTREME];
             this.TotalHeatGenerated += (int)vals[BFConstants.BF_OV];
+            LauncherCount += 1;
+        }
+
+        public void AddAmmo( int lotsize ) {
+            this.AmmoCount += lotsize;
         }
 
         public void SetHeat( int TotalHeatGenerated, int TotalHeatDissipation ) {
@@ -207,7 +222,7 @@ public class BattleForceData {
 
         public int BattleForceValue( double base ) {
             if ( base > 9.0 || SpecialDamage || !isSpecial )
-                if ( isSpecial )
+                if ( isSpecial || useNormalRound)
                     return (int) Math.round(base / 10);
                 else
                     return (int) Math.ceil(base / 10);
@@ -235,6 +250,7 @@ public class BattleForceData {
             if ( hasOverheat) data += " Heat: " + String.format( "%1$,.2f", heatShort ) + "/" + String.format( "%1$,.2f", heatMedium ) + "/" + String.format( "%1$,.2f", heatLong ) + "/" + String.format( "%1$,.2f", heatExtreme ) + "\n";
             data += "   BF: " + BFShort + "/" + BFMedium + "/" + BFLong + "/" + BFExtreme + "\n";
             data += " Separate Damage: " + SpecialDamage + "\n";
+            if ( NotEnoughAmmo ) { data += "Not enough ammo for all of the launchers (" + LauncherCount + " launchers with " + AmmoCount + " total ammo; needs " + (LauncherCount * 10) + ")\n"; }
             return data;
         }
 
@@ -378,6 +394,10 @@ public class BattleForceData {
         public void setTotalHeatDissipation(int TotalHeatDissipation) {
             this.TotalHeatDissipation = TotalHeatDissipation;
             HeatAdjustments();
+        }
+
+        public void setNormalRound( boolean useNormal ) {
+            this.useNormalRound = useNormal;
         }
     }
 }
