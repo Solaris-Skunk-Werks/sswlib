@@ -42,6 +42,8 @@ import common.ImageFilter;
 import common.ImagePreview;
 import java.awt.Point;
 import java.net.URL;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
@@ -50,6 +52,7 @@ public class Media {
     MediaTracker Tracker = new MediaTracker(new JLabel());
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     JFileChooser fileChooser = new JFileChooser();
+    LinkedList<File> imageFiles = new LinkedList<File>();
 
     public static final int OK = JOptionPane.OK_OPTION,
                             CANCEL = JOptionPane.CANCEL_OPTION;
@@ -252,13 +255,13 @@ public class Media {
 
     public String FindMatchingImage( String Name, String Model, String DirectoryPath ) {
         Preferences Prefs = Preferences.userRoot().node( Constants.SSWPrefs );
-        //System.out.println("Checking Image @" + Prefs.get("DefaultImagePath", ""));
+        //System.out.println("Checking Images @" + Prefs.get("DefaultImagePath", ""));
         if ( DirectoryPath.isEmpty() ) DirectoryPath = Prefs.get("DefaultImagePath", "");
         if ( DirectoryPath.isEmpty() ) return "";
 
         //Create a list of the names to check first starting with the most accurate and working down
         Name = Name.replace("\"", "").trim();
-        Model = Model.trim();
+        Model = Model.replace("\"", "").trim();
         Vector<String> PossibleNames = new Vector<String>();
         PossibleNames.add(Name + " " + Model);
         PossibleNames.add(Model + " " + Name);
@@ -286,31 +289,45 @@ public class Media {
         if ( !DirectoryPath.endsWith("\\") ) DirectoryPath += "\\";
        
         String path;
+        if ( imageFiles.size() == 0 ) { imageFiles = LoadDirectories(DirectoryPath); }
+
         for ( String nameToCheck : PossibleNames ) {
-            path = CheckDirectories( nameToCheck, DirectoryPath );
+            //System.out.println("Checking " + nameToCheck);
+            //path = CheckDirectories( nameToCheck, DirectoryPath );
+            path = CheckDirectories( nameToCheck, imageFiles );
             if ( !path.isEmpty() ) return path;
         }
 
         return "";
     }
 
-    private String CheckDirectories( String nameToCheck, String DirectoryPath ) {
+    private LinkedList<File> LoadDirectories( String DirectoryPath ) {
+        LinkedList<File> fileList = new LinkedList<File>();
         try
         {
             File d = new File(DirectoryPath);
             if ( d.isDirectory() ) {
                 for ( File f : d.listFiles() ) {
                     if ( f.isDirectory() ) {
-                        String Name = CheckDirectories(nameToCheck, f.getCanonicalPath());
-                        if ( !Name.isEmpty() ) return Name;
+                        fileList.addAll(LoadDirectories(f.getAbsolutePath()));
                     } else {
-                        if ( f.getName().substring(0, f.getName().lastIndexOf(".")).toLowerCase().equals( nameToCheck.trim().toLowerCase() ) )
-                            return f.getCanonicalPath();
+                        fileList.add(f);
                     }
                 }
             }
-        } catch ( Exception e ) { return ""; }
+        } catch ( Exception e ) { return fileList; }
 
+        return fileList;
+    }
+
+    private String CheckDirectories( String nameToCheck, LinkedList<File> files ) {
+        try
+        {
+            for( File f : files ) {
+                if ( f.getName().substring(0, f.getName().lastIndexOf(".")).toLowerCase().equals( nameToCheck.trim().toLowerCase() ) )
+                    return f.getCanonicalPath();
+            }
+        } catch ( Exception e ) { return ""; }
         return "";
     }
 
