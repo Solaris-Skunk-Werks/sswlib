@@ -34,6 +34,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
     private Media media = new Media();
     private Preferences bfbPrefs = Preferences.userRoot().node( Constants.BFBPrefs );
     private Preferences sswPrefs = Preferences.userRoot().node( Constants.SSWPrefs );
+    private boolean hasChanges = false;
 
     public dlgPreview(String title, Component owner, Pageable pageable, double zoom, ImageTracker images) {
         super(title);
@@ -215,6 +216,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                     chkUseColor.setEnabled(true);
             }
         }
+        hasChanges = true;
     }
 
     private void PrinterSetup() {
@@ -1042,7 +1044,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
         setPreferences();
-        PrinterSetup();
+        if ( hasChanges ) { PrinterSetup(); }
         printer.Print();
     }//GEN-LAST:event_btnPrintActionPerformed
 
