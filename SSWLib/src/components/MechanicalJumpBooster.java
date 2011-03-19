@@ -67,7 +67,7 @@ public class MechanicalJumpBooster extends abPlaceable {
 
     @Override
     public String MegaMekName(boolean UseRear) {
-        return "";
+        return "Jump Boosters";
     }
 
     @Override
