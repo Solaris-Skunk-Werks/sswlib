@@ -42,9 +42,7 @@ import common.ImageFilter;
 import common.ImagePreview;
 import java.awt.Point;
 import java.net.URL;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 
@@ -52,7 +50,7 @@ public class Media {
     MediaTracker Tracker = new MediaTracker(new JLabel());
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     JFileChooser fileChooser = new JFileChooser();
-    LinkedList<File> imageFiles = new LinkedList<File>();
+    ArrayList<File> imageFiles = new ArrayList<File>();
 
     public static final int OK = JOptionPane.OK_OPTION,
                             CANCEL = JOptionPane.CANCEL_OPTION;
@@ -262,11 +260,13 @@ public class Media {
         //Create a list of the names to check first starting with the most accurate and working down
         Name = Name.replace("\"", "").trim();
         Model = Model.replace("\"", "").trim();
-        Vector<String> PossibleNames = new Vector<String>();
+        ArrayList<String> PossibleNames = new ArrayList<String>();
         PossibleNames.add(Name + " " + Model);
         PossibleNames.add(Model + " " + Name);
         PossibleNames.add(Name);
+        PossibleNames.add((Name+Model).replace(" ", ""));
         PossibleNames.add(Name.replace(" ", ""));
+        PossibleNames.add(Model.replace(" ", ""));
         if ( Name.contains("(") ) {
             String First = "", Second = "";
             First = Name.split("\\(")[0].trim();
@@ -289,7 +289,7 @@ public class Media {
         if ( !DirectoryPath.endsWith("\\") ) DirectoryPath += "\\";
        
         String path;
-        if ( imageFiles.size() == 0 ) { imageFiles = LoadDirectories(DirectoryPath); }
+        if ( imageFiles.isEmpty() ) { imageFiles = LoadDirectories(DirectoryPath); }
 
         for ( String nameToCheck : PossibleNames ) {
             //System.out.println("Checking " + nameToCheck);
@@ -301,8 +301,8 @@ public class Media {
         return "";
     }
 
-    private LinkedList<File> LoadDirectories( String DirectoryPath ) {
-        LinkedList<File> fileList = new LinkedList<File>();
+    private ArrayList<File> LoadDirectories( String DirectoryPath ) {
+        ArrayList<File> fileList = new ArrayList<File>();
         try
         {
             File d = new File(DirectoryPath);
@@ -320,7 +320,7 @@ public class Media {
         return fileList;
     }
 
-    private String CheckDirectories( String nameToCheck, LinkedList<File> files ) {
+    private String CheckDirectories( String nameToCheck, ArrayList<File> files ) {
         try
         {
             for( File f : files ) {
