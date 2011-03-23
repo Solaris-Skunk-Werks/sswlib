@@ -84,7 +84,8 @@ public class Unit implements ifSerializable {
     public int UnitType = CommonTools.BattleMech;
     public Warrior warrior = new Warrior();
     public boolean UsingC3 = false,
-                    C3Available = false;
+                    C3Available = false,
+                    StatsCalced = false;
     private boolean isOmni = false;
     public Mech m = null;
     private BattleForceStats BFStats = new BattleForceStats();
@@ -158,6 +159,7 @@ public class Unit implements ifSerializable {
                     Eight += 1;
             }
         }
+        StatsCalced = true;
 
         this.m = m;
         Refresh();
@@ -343,6 +345,7 @@ public class Unit implements ifSerializable {
                         Eight += 1;
                 }
             }
+            StatsCalced = true;
         }
         Refresh();
     }
@@ -480,7 +483,7 @@ public class Unit implements ifSerializable {
             }
         }
 
-        if ( m != null ) {
+        if ( m != null && !StatsCalced ) {
             Probe = 0;
             Jump = 0;
             ECM = 0;
@@ -521,6 +524,7 @@ public class Unit implements ifSerializable {
                         Eight += 1;
                 }
             }
+            StatsCalced = true;
         }
     }
 
@@ -528,6 +532,7 @@ public class Unit implements ifSerializable {
         if ( BFStats != null ) {
             BFStats.setName(this.Type);
             BFStats.setModel(this.Model);
+            if ( !this.Configuration.isEmpty() ) BFStats.setModel((Model + " " + Configuration).trim());
             BFStats.setWarrior(warrior.getName());
             BFStats.setGunnery(warrior.getGunnery());
             BFStats.setPiloting(warrior.getPiloting());

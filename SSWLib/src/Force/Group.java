@@ -115,6 +115,7 @@ public class Group {
             BattleForceStats stat = u.getBFStats();  //new BattleForceStats(u.m, getName(), u.getGunnery(),u.getPiloting());
             stat.setWarrior(u.getMechwarrior());
             stat.setForceName( force.ForceName );
+            stat.setUnit( Name );
             bf.BattleForceStats.add(stat);
             if ( bf.BattleForceStats.size() == SizeLimit ) {
                 bforces.add(bf);
