@@ -8,22 +8,21 @@ package filehandlers;
 import IO.JarResources;
 import Print.PrintConsts;
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.HashMap;
 
 public class ImageTracker {
-    private Media media = new Media();
-    private Vector<StoredImage> imageStore = new Vector<StoredImage>();
-    //private Vector<JarResources> resources = new Vector<JarResources>();
-    private Hashtable<String, JarResources> resources = new Hashtable<String, JarResources>();
+    public Media media = new Media();
+    private ArrayList<StoredImage> imageStore = new ArrayList<StoredImage>();
+    private HashMap<String, JarResources> resources = new HashMap<String, JarResources>();
 
     public ImageTracker() {
         addResource( PrintConsts.PATTERNS, false);
     }
 
     public void addResource( JarResources resource ) {
-        if ( !resources.contains(resource) ) {
+        if ( !resources.containsValue(resource) ) {
             resources.put(resource.getJarFileName(), resource);
         }
     }
@@ -34,7 +33,7 @@ public class ImageTracker {
         }
     }
 
-    public void addResource( String zipName, boolean preLoad ) {
+    public final void addResource( String zipName, boolean preLoad ) {
         JarResources resource = new JarResources(zipName);
         addResource(resource);
         

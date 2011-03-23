@@ -65,7 +65,7 @@ public class MechWriter {
 
     public void WriteXML( BufferedWriter FR ) throws IOException {
         // start parsing the mech
-        FR.write( "<mech name=\"" + FileCommon.EncodeFluff( CurMech.GetName() ) + "\" model=\"" + FileCommon.EncodeFluff( CurMech.GetModel() ) + "\" tons=\"" + CurMech.GetTonnage() + "\" omnimech=\"" + GetBoolean( CurMech.IsOmnimech() ) + "\" solaris7id=\"" + CurMech.GetSolaris7ID() + "\" solaris7imageid=\"" + CurMech.GetSolaris7ImageID() + "\" sswimage=\"" + CurMech.GetSSWImage() + "\">" );
+        FR.write( "<mech name=\"" + FileCommon.EncodeFluff( CurMech.GetName() ) + "\" model=\"" + FileCommon.EncodeFluff( CurMech.GetModel() ) + "\" tons=\"" + CurMech.GetTonnage() + "\" omnimech=\"" + FileCommon.GetBoolean( CurMech.IsOmnimech() ) + "\" solaris7id=\"" + CurMech.GetSolaris7ID() + "\" solaris7imageid=\"" + CurMech.GetSolaris7ImageID() + "\" sswimage=\"" + CurMech.GetSSWImage() + "\">" );
         FR.newLine();
 
         // version number for new files
@@ -118,7 +118,7 @@ public class MechWriter {
         FR.write( tab + "<techbase manufacturer=\"" + FileCommon.EncodeFluff( CurMech.GetCompany() ) + "\" location=\"" + FileCommon.EncodeFluff( CurMech.GetLocation() ) + "\">" + GetBaseTechbase() + "</techbase>" );
         FR.newLine();
 
-        FR.write( tab + "<year restricted=\"" + GetBoolean( CurMech.IsYearRestricted() ) + "\">" + CurMech.GetBaseYear() + "</year>" );
+        FR.write( tab + "<year restricted=\"" + FileCommon.GetBoolean( CurMech.IsYearRestricted() ) + "\">" + CurMech.GetBaseYear() + "</year>" );
         FR.newLine();
 
         FR.write( tab + "<motive_type>" + GetMotiveType() + "</motive_type>" );
@@ -165,7 +165,7 @@ public class MechWriter {
             FR.write( GetLocationLines( tab + tab, CurMech.GetCockpit().GetFirstLS() ) );
             FR.write( GetLocationLines( tab + tab, CurMech.GetCockpit().GetSecondLS() ) );
         } else {
-            FR.write( tab + tab + "<type ejectionseat=\"" + GetBoolean( CurMech.HasEjectionSeat() ) + "\" commandconsole=\"" + GetBoolean( CurMech.HasCommandConsole() ) + "\" fhes=\"" + GetBoolean( CurMech.HasFHES() ) + "\">" + CurMech.GetCockpit().LookupName() + "</type>" );
+            FR.write( tab + tab + "<type ejectionseat=\"" + FileCommon.GetBoolean( CurMech.HasEjectionSeat() ) + "\" commandconsole=\"" + FileCommon.GetBoolean( CurMech.HasCommandConsole() ) + "\" fhes=\"" + FileCommon.GetBoolean( CurMech.HasFHES() ) + "\">" + CurMech.GetCockpit().LookupName() + "</type>" );
             FR.newLine();
         }
         FR.write( tab + "</cockpit>" );
@@ -239,7 +239,7 @@ public class MechWriter {
         if( CurMech.IsOmnimech() ) {
             CurMech.SetCurLoadout( common.Constants.BASELOADOUT_NAME );
         }
-        FR.write( tab + "<baseloadout fcsa4=\"" + GetBoolean( CurMech.UsingArtemisIV() ) + "\" fcsa5=\"" + GetBoolean( CurMech.UsingArtemisV() ) + "\" fcsapollo=\"" + GetBoolean( CurMech.UsingApollo() ) + "\">" );
+        FR.write( tab + "<baseloadout fcsa4=\"" + FileCommon.GetBoolean( CurMech.UsingArtemisIV() ) + "\" fcsa5=\"" + FileCommon.GetBoolean( CurMech.UsingArtemisV() ) + "\" fcsapollo=\"" + FileCommon.GetBoolean( CurMech.UsingApollo() ) + "\">" );
         FR.newLine();
 
         FR.write( tab + tab + "<source>" + FileCommon.EncodeFluff( CurMech.GetSource() ) + "</source>" );
@@ -253,9 +253,9 @@ public class MechWriter {
         stat.SerializeXML(FR, 2);
         FR.newLine();
 
-        FR.write( tab + tab + "<actuators lla=\"" + GetBoolean( CurMech.GetActuators().LeftLowerInstalled() ) + "\" lh=\"" + GetBoolean( CurMech.GetActuators().LeftHandInstalled() ) + "\" rla=\"" + GetBoolean( CurMech.GetActuators().RightLowerInstalled() ) + "\" rh=\"" + GetBoolean( CurMech.GetActuators().RightHandInstalled() ) + "\"/>" );
+        FR.write( tab + tab + "<actuators lla=\"" + FileCommon.GetBoolean( CurMech.GetActuators().LeftLowerInstalled() ) + "\" lh=\"" + FileCommon.GetBoolean( CurMech.GetActuators().LeftHandInstalled() ) + "\" rla=\"" + FileCommon.GetBoolean( CurMech.GetActuators().RightLowerInstalled() ) + "\" rh=\"" + FileCommon.GetBoolean( CurMech.GetActuators().RightHandInstalled() ) + "\"/>" );
         FR.newLine();
-        FR.write( tab + tab + "<clancase>" + GetBoolean( CurMech.GetLoadout().IsUsingClanCASE() ) + "</clancase>" );
+        FR.write( tab + tab + "<clancase>" + FileCommon.GetBoolean( CurMech.GetLoadout().IsUsingClanCASE() ) + "</clancase>" );
         FR.newLine();
         if( CurMech.GetJumpJets().GetNumJJ() > 0 ) {
             FR.write( tab + tab + "<jumpjets number=\"" + CurMech.GetJumpJets().GetNumJJ() + "\">" );
@@ -395,9 +395,9 @@ public class MechWriter {
             for( int i = 0; i < v.size(); i++ ) {
                 CurMech.SetCurLoadout( ((ifMechLoadout) v.get( i )).GetName() );
                 if( CurMech.GetBaseRulesLevel() != CurMech.GetLoadout().GetRulesLevel() ) {
-                    FR.write( tab + "<loadout name=\"" + FileCommon.EncodeFluff( CurMech.GetLoadout().GetName() ) + "\" ruleslevel=\"" + CurMech.GetLoadout().GetRulesLevel() + "\" fcsa4=\"" + GetBoolean( CurMech.UsingArtemisIV() ) + "\" fcsa5=\"" + GetBoolean( CurMech.UsingArtemisV() ) + "\" fcsapollo=\"" + GetBoolean( CurMech.UsingApollo() ) + "\">" );
+                    FR.write( tab + "<loadout name=\"" + FileCommon.EncodeFluff( CurMech.GetLoadout().GetName() ) + "\" ruleslevel=\"" + CurMech.GetLoadout().GetRulesLevel() + "\" fcsa4=\"" + FileCommon.GetBoolean( CurMech.UsingArtemisIV() ) + "\" fcsa5=\"" + FileCommon.GetBoolean( CurMech.UsingArtemisV() ) + "\" fcsapollo=\"" + FileCommon.GetBoolean( CurMech.UsingApollo() ) + "\">" );
                 } else {
-                    FR.write( tab + "<loadout name=\"" + FileCommon.EncodeFluff( CurMech.GetLoadout().GetName() ) + "\" fcsa4=\"" + GetBoolean( CurMech.UsingArtemisIV() ) + "\" fcsa5=\"" + GetBoolean( CurMech.UsingArtemisV() ) + "\" fcsapollo=\"" + GetBoolean( CurMech.UsingApollo() ) + "\">" );
+                    FR.write( tab + "<loadout name=\"" + FileCommon.EncodeFluff( CurMech.GetLoadout().GetName() ) + "\" fcsa4=\"" + FileCommon.GetBoolean( CurMech.UsingArtemisIV() ) + "\" fcsa5=\"" + FileCommon.GetBoolean( CurMech.UsingArtemisV() ) + "\" fcsapollo=\"" + FileCommon.GetBoolean( CurMech.UsingApollo() ) + "\">" );
                 }
                 FR.newLine();
                 FR.write( tab + tab + "<source>" + FileCommon.EncodeFluff( CurMech.GetSource() ) + "</source>" );
@@ -426,9 +426,9 @@ public class MechWriter {
                 FR.newLine();
                 FR.write( tab + tab + "<cost>" + CurMech.GetTotalCost() + "</cost>" );
                 FR.newLine();
-                FR.write( tab + tab + "<actuators lla=\"" + GetBoolean( CurMech.GetActuators().LeftLowerInstalled() ) + "\" lh=\"" + GetBoolean( CurMech.GetActuators().LeftHandInstalled() ) + "\" rla=\"" + GetBoolean( CurMech.GetActuators().RightLowerInstalled() ) + "\" rh=\"" + GetBoolean( CurMech.GetActuators().RightHandInstalled() ) + "\"/>" );
+                FR.write( tab + tab + "<actuators lla=\"" + FileCommon.GetBoolean( CurMech.GetActuators().LeftLowerInstalled() ) + "\" lh=\"" + FileCommon.GetBoolean( CurMech.GetActuators().LeftHandInstalled() ) + "\" rla=\"" + FileCommon.GetBoolean( CurMech.GetActuators().RightLowerInstalled() ) + "\" rh=\"" + FileCommon.GetBoolean( CurMech.GetActuators().RightHandInstalled() ) + "\"/>" );
                 FR.newLine();
-                FR.write( tab + tab + "<clancase>" + GetBoolean( CurMech.GetLoadout().IsUsingClanCASE() ) + "</clancase>" );
+                FR.write( tab + tab + "<clancase>" + FileCommon.GetBoolean( CurMech.GetLoadout().IsUsingClanCASE() ) + "</clancase>" );
                 FR.newLine();
                 if( CurMech.GetJumpJets().GetNumJJ() > CurMech.GetJumpJets().GetBaseLoadoutNumJJ() ) {
                     FR.write( tab + tab + "<jumpjets number=\"" + CurMech.GetJumpJets().GetNumJJ() + "\">" );
@@ -510,14 +510,6 @@ public class MechWriter {
 
     public void setMech( Mech m ) {
         this.CurMech = m;
-    }
-
-    private String GetBoolean( boolean b ) {
-        if( b ) {
-            return "TRUE";
-        } else {
-            return "FALSE";
-        }
     }
 
     private String GetBaseTechbase() {
