@@ -115,7 +115,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         chkPrintScenario.setSelected(bfbPrefs.getBoolean(Constants.Print_Scenario, false));
         chkPrintRecordsheets.setSelected(bfbPrefs.getBoolean(Constants.Print_Recordsheet, true));
         chkPrintBattleforce.setSelected(bfbPrefs.getBoolean(Constants.Print_BattleForce, false));
-        cmbPaperSize.setSelectedIndex(bfbPrefs.getInt("PaperSize", 0));
+        try { cmbPaperSize.setSelectedIndex(bfbPrefs.getInt("PaperSize", 0)); } catch ( Exception e ) { }
 
         chkBFOnePerPage.setSelected(bfbPrefs.getBoolean(Constants.Format_OneForcePerPage, false));
         chkBFBacks.setSelected(bfbPrefs.getBoolean("BF_Backs", false));
@@ -427,6 +427,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                 }
             }
         }
+        hasChanges = false;
         refresh();
         DefaultCursor();
     }
