@@ -61,6 +61,10 @@ public class stArmorISLR implements ifArmor, ifState {
         return "LsrRflc Armor";
     }
 
+    public String AbbrevName() {
+        return "LR";
+    }
+
     public String MegaMekName( boolean UseRear ) {
         return "Reflective";
     }

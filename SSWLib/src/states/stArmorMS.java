@@ -64,6 +64,10 @@ public class stArmorMS implements ifArmor, ifState {
         return "Armor";
     }
 
+    public String AbbrevName() {
+        return "SA";
+    }
+
     public String MegaMekName( boolean UseRear ) {
         return "Standard Armor";
     }

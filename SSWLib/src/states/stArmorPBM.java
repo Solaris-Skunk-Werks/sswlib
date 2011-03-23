@@ -63,6 +63,10 @@ public class stArmorPBM implements ifArmor, ifState {
         return "Pr. Armor";
     }
 
+    public String AbbrevName() {
+        return "PR";
+    }
+
     public String MegaMekName( boolean UseRear ) {
         return "Primitive";
     }

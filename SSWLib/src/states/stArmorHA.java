@@ -65,6 +65,10 @@ public class stArmorHA implements ifArmor, ifState {
         return "Hrdnd Armor";
     }
 
+    public String AbbrevName() {
+        return "HD";
+    }
+
     public String MegaMekName( boolean UseRear ) {
         return "Hardened";
     }

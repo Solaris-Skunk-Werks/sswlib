@@ -61,6 +61,10 @@ public class stArmorCLFL implements ifArmor, ifState {
         return "FL Armor";
     }
 
+    public String AbbrevName() {
+        return "FL";
+    }
+
     public String MegaMekName( boolean UseRear ) {
         return "Ferro-Lamellor";
     }

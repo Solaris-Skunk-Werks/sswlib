@@ -61,6 +61,10 @@ public class stArmorCLRE implements ifArmor, ifState {
         return "Rctv Armor";
     }
 
+    public String AbbrevName() {
+        return "RE";
+    }
+
     public String MegaMekName( boolean UseRear ) {
         return "Reactive";
     }

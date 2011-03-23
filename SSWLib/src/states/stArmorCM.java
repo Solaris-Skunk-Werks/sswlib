@@ -65,6 +65,10 @@ public class stArmorCM implements ifArmor, ifState {
         return "Cmrcl Armor";
     }
 
+    public String AbbrevName() {
+        return "CO";
+    }
+
     public String MegaMekName( boolean UseRear ) {
         return "Commercial";
     }

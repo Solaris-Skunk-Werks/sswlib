@@ -64,6 +64,10 @@ public class stArmorPatchwork implements ifArmor, ifState {
         return "Armor";
     }
 
+    public String AbbrevName() {
+        return "PA";
+    }
+
     public String MegaMekName( boolean UseRear ) {
         return "Standard Armor";
     }

@@ -61,6 +61,10 @@ public class stArmorISST implements ifArmor, ifState {
         return "Stlth Armor";
     }
 
+    public String AbbrevName() {
+        return "SA";
+    }
+
     public String MegaMekName( boolean UseRear ) {
         return "Stealth Armor";
     }

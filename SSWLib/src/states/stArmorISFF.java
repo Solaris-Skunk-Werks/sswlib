@@ -61,6 +61,10 @@ public class stArmorISFF implements ifArmor, ifState {
         return "FF Armor";
     }
 
+    public String AbbrevName() {
+        return "FF";
+    }
+
     public String MegaMekName( boolean UseRear ) {
         return "Ferro-Fibrous";
     }

@@ -39,6 +39,7 @@ public interface ifArmor {
     public String CritName();
     public String LookupName();
     public String ChatName();
+    public String AbbrevName();
     public String MegaMekName( boolean UseRear );
     public String BookReference();
     public boolean Place( MechArmor a, ifMechLoadout l );

@@ -64,6 +64,10 @@ public class stArmorIN implements ifArmor, ifState {
         return "Ind. Armor";
     }
 
+    public String AbbrevName() {
+        return "IN";
+    }
+
     public String MegaMekName( boolean UseRear ) {
         return "Industrial";
     }
