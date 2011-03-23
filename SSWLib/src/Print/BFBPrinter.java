@@ -34,7 +34,7 @@ import filehandlers.ImageTracker;
 import java.awt.print.*;
 import java.util.Vector;
 
-public class BFBPrinter {
+public final class BFBPrinter {
     private String jobName = "Battletech Force Balancer",
                     Title = "Battletech Force Balancer";
     private Boolean useDialog = true;

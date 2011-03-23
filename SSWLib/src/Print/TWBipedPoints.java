@@ -386,15 +386,15 @@ public class TWBipedPoints implements ifPrintPoints {
         new Point( 394, 533 ), //ll
         new Point( 512, 534 ) }; //rl
     private final static Point[] ArmorInfo = {
-        new Point( 476, 27 ), //hd
+        new Point( 480, 27 ), //hd
         new Point( 468, 203 ), //ct
-        new Point( 432, 41 ), //lt
+        new Point( 425, 41 ), //lt
         new Point( 499, 41 ), //rt
         new Point( 391, 201 ), //la
         new Point( 541, 201 ), //ra
         new Point( 382, 255 ), //ll
         new Point( 548, 255 ), //rl
-        new Point( 474, 263 ),  //ctr
+        new Point( 476, 263 ),  //ctr
         new Point( 394, 351 ),  //ltr
         new Point( 538, 351 ) }; //rtr
 

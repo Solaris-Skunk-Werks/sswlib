@@ -32,7 +32,6 @@ import common.*;
 import components.*;
 import filehandlers.FileCommon;
 import filehandlers.ImageTracker;
-import filehandlers.Media;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -44,8 +43,13 @@ import java.awt.Point;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Vector;
 import java.util.prefs.Preferences;
+import states.ifArmor;
+import states.stArmorHA;
+import states.stArmorMS;
 
 public class PrintMech implements Printable {
     public Mech CurMech;
@@ -72,13 +76,12 @@ public class PrintMech implements Printable {
     private ifPrintPoints points = null;
     private Color Black = new Color( 0, 0, 0 ),
                   Grey = new Color( 128, 128, 128 );
-    private Media media = new Media();
     private ImageTracker imageTracker;
     private Preferences Prefs = Preferences.userRoot().node( Constants.SSWPrefs );
 
     private Vector<PlaceableInfo> Items;
     private PIPPrinter ap;
-    private Vector<AmmoData> AmmoList;
+    private ArrayList<AmmoData> AmmoList;
 
     // <editor-fold desc="Constructors">
     public PrintMech( Mech m, Image i, boolean adv, boolean A4, ImageTracker images) {
@@ -258,11 +261,11 @@ public class PrintMech implements Printable {
         start.x -= 3;
         start.y -= 6;
         if ( printMech ) {
-            MechImage = media.GetImage(media.DetermineMatchingImage(CurMech.GetName(), CurMech.GetModel(), CurMech.GetSSWImage()));
+            MechImage = imageTracker.media.GetImage(imageTracker.media.DetermineMatchingImage(CurMech.GetName(), CurMech.GetModel(), CurMech.GetSSWImage()));
             if( MechImage != null ) {
                 //graphics.drawRect(start.x, start.y, 150, 210);
-                Dimension d = media.reSize(getMechImage(), 150, 210);
-                Point offset = media.offsetImageCenter( new Dimension(150, 210), d);
+                Dimension d = imageTracker.media.reSize(getMechImage(), 150, 210);
+                Point offset = imageTracker.media.offsetImageCenter( new Dimension(150, 210), d);
                 graphics.drawImage( getMechImage(), start.x + offset.x, start.y + offset.y, d.width, d.height, null );
             }
         }
@@ -523,7 +526,7 @@ public class PrintMech implements Printable {
             graphics.drawString( "Dissipation (" + CurMech.GetHeatSinks().TotalDissipation() + ")", p[PrintConsts.MAX_HEAT].x-1, p[PrintConsts.MAX_HEAT].y+1 );
             //graphics.drawString( "Weapon Heat (" + CurMech.GetWeaponHeat(false, false, true, false) + ")", p[PrintConsts.MAX_HEAT].x-1, p[PrintConsts.MAX_HEAT].y );
             graphics.setFont( PrintConsts.SmallFont );
-            graphics.drawString( "Armor Pts: " + CurMech.GetArmor().GetArmorValue(), p[PrintConsts.TOTAL_ARMOR].x, p[PrintConsts.TOTAL_ARMOR].y );
+            graphics.drawString( "Armor Pts: " + CurMech.GetArmor().GetArmorValue(), p[PrintConsts.TOTAL_ARMOR].x-8, p[PrintConsts.TOTAL_ARMOR].y+16 );
             graphics.setFont( PrintConsts.BoldFont );
         } else {
             graphics.drawString( String.format( "%1$,d", CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
@@ -557,17 +560,38 @@ public class PrintMech implements Printable {
 
         graphics.drawString( CurMech.GetYear() + "", p[PrintConsts.TECH_IS].x, p[PrintConsts.TECH_IS].y + 10 );
 
+        //Armor Information when not Standard
         if ( !CurMech.GetArmor().CritName().contains("Standard") ) {
             //Armor Type
             graphics.setFont( PrintConsts.SmallFont );
             if ( CurMech.IsQuad() ) { graphics.setFont( PrintConsts.XtraSmallFont ); }
 
-            int baseX = points.GetArmorInfoPoints()[LocationIndex.MECH_LOC_CT].x;
-            int baseY = points.GetArmorInfoPoints()[LocationIndex.MECH_LOC_CT].y + 15;
+            int baseX = points.GetArmorInfoPoints()[LocationIndex.MECH_LOC_CT].x-5;
+            int baseY = points.GetArmorInfoPoints()[LocationIndex.MECH_LOC_CT].y + 20;
 
             if ( CurMech.GetArmor().RequiresExtraRules() ) {
                 graphics.setFont( PrintConsts.SmallBoldFont );
                 if ( CurMech.IsQuad() ) { graphics.setFont( PrintConsts.XtraSmallBoldFont ); }
+            }
+
+            //When Patchwork, display the type of armor
+            if ( CurMech.GetArmor().CritName().equals("Patchwork") ) {
+                ArrayList<ifArmor> armorTypes = new ArrayList<ifArmor>();
+                armorTypes.add(LocationIndex.MECH_LOC_HD, CurMech.GetArmor().GetHDArmorType());
+                armorTypes.add(LocationIndex.MECH_LOC_CT, CurMech.GetArmor().GetCTArmorType());
+                armorTypes.add(LocationIndex.MECH_LOC_LT, CurMech.GetArmor().GetLTArmorType());
+                armorTypes.add(LocationIndex.MECH_LOC_RT, CurMech.GetArmor().GetRTArmorType());
+                armorTypes.add(LocationIndex.MECH_LOC_LA, CurMech.GetArmor().GetLAArmorType());
+                armorTypes.add(LocationIndex.MECH_LOC_RA, CurMech.GetArmor().GetRAArmorType());
+                armorTypes.add(LocationIndex.MECH_LOC_LL, CurMech.GetArmor().GetLLArmorType());
+                armorTypes.add(LocationIndex.MECH_LOC_RL, CurMech.GetArmor().GetRLArmorType());
+                armorTypes.add(LocationIndex.MECH_LOC_CTR, CurMech.GetArmor().GetCTArmorType());
+                armorTypes.add(LocationIndex.MECH_LOC_LTR, CurMech.GetArmor().GetLTArmorType());
+                armorTypes.add(LocationIndex.MECH_LOC_RTR, CurMech.GetArmor().GetRTArmorType());
+
+                for ( int index = 0; index <= armorTypes.size()-1; index++ ) {
+                    graphics.drawString(armorTypes.get(index).AbbrevName(), points.GetArmorInfoPoints()[index].x, points.GetArmorInfoPoints()[index].y+7);
+                }
             }
 
             String[] parts = PrintConsts.wrapText(CurMech.GetArmor().CritName().trim(), 8, true); //CurMech.GetArmor().CritName().trim().split(" ");
@@ -581,6 +605,7 @@ public class PrintMech implements Printable {
             graphics.setFont( PrintConsts.PlainFont );
         }
 
+        //Internal Information when not Standard
         if (!CurMech.GetIntStruc().CritName().equals("Standard")) {
             graphics.setFont( PrintConsts.XtraSmallFont );
             //if ( CurMech.IsQuad() ) { graphics.setFont( PrintConsts.XtraSmallFont ); }
@@ -690,8 +715,8 @@ public class PrintMech implements Printable {
         start.y -= 6;
         if( getMechImage() != null ) {
             //graphics.drawRect(start.x, start.y, 160, 200);
-            Dimension d = media.reSize(getMechImage(), 160, 200);
-            Point offset = media.offsetImageCenter( new Dimension(160, 200), d);
+            Dimension d = imageTracker.media.reSize(getMechImage(), 160, 200);
+            Point offset = imageTracker.media.offsetImageCenter( new Dimension(160, 200), d);
             graphics.drawImage( getMechImage(), start.x + offset.x, start.y + offset.y, d.width, d.height, null );
         }
 
@@ -716,10 +741,10 @@ public class PrintMech implements Printable {
         }
     }
 
-    private Vector<AmmoData> GetAmmo() {
+    private ArrayList<AmmoData> GetAmmo() {
         //Output the list of Ammunition
         Vector all = CurMech.GetLoadout().GetNonCore();
-        Vector<AmmoData> AmmoLister = new Vector<AmmoData>();
+        ArrayList<AmmoData> AmmoLister = new ArrayList<AmmoData>();
         for ( int index=0; index < all.size(); index++ ) {
             if(  all.get( index ) instanceof Ammunition ) {
                 AmmoData CurAmmo = new AmmoData((Ammunition) all.get(index));

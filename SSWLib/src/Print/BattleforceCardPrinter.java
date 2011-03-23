@@ -39,13 +39,11 @@ import java.awt.print.PrinterException;
 import battleforce.BattleForce;
 import battleforce.BattleForceStats;
 import filehandlers.ImageTracker;
-import filehandlers.Media;
 import java.awt.Font;
 import java.awt.Point;
 
 public class BattleforceCardPrinter implements Printable {
     private BattleForce battleforce;
-    private Media media = new Media();
     private ImageTracker imageTracker;
     private Graphics2D graphic;
     private Image RecordSheet,
@@ -128,7 +126,7 @@ public class BattleforceCardPrinter implements Printable {
         //Unit Logo
         if ( !battleforce.LogoPath.isEmpty() && printLogo ) {
             icon = imageTracker.getImage(getBattleforce().LogoPath);
-            d = media.reSize(icon, 20, 20);
+            d = imageTracker.media.reSize(icon, 20, 20);
         }
 
         graphic.setFont( PrintConsts.TitleFont );
@@ -157,12 +155,12 @@ public class BattleforceCardPrinter implements Printable {
 
             //Image
             if ( printMechs ) {
-                stats.setImage(media.DetermineMatchingImage(stats.getName(), stats.getModel(), stats.getImage()));
+                stats.setImage(imageTracker.media.DetermineMatchingImage(stats.getName(), stats.getModel(), stats.getImage()));
                 if ( !stats.getImage().isEmpty() ) {
                     Image image = imageTracker.getImage(stats.getImage());
-                    Dimension dim = media.reSize(image, 110d, 130d);
+                    Dimension dim = imageTracker.media.reSize(image, 110d, 130d);
                     image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
-                    Point offset = media.offsetImageBottom( new Dimension(110, 140), dim);
+                    Point offset = imageTracker.media.offsetImageBottom( new Dimension(110, 140), dim);
                     graphic.drawImage(image, x+10+offset.x, y+58+offset.y, dim.width, dim.height, null);
 
                     if ( icon != null && printLogo ) {

@@ -39,12 +39,10 @@ import java.awt.print.PrinterException;
 import battleforce.BattleForce;
 import battleforce.BattleForceStats;
 import filehandlers.ImageTracker;
-import filehandlers.Media;
 import java.awt.Point;
 
 public class BattleforcePrinter implements Printable {
     private BattleForce battleforce;
-    private Media media = new Media();
     private Graphics2D graphic;
     private ImageTracker imageTracker;
     private Image RecordSheet,
@@ -134,7 +132,7 @@ public class BattleforcePrinter implements Printable {
         //Unit Logo
         if ( !battleforce.LogoPath.isEmpty() && printLogo ) {
             Image icon = imageTracker.getImage(getBattleforce().LogoPath);
-            Dimension d = media.reSize(icon, 50, 50);
+            Dimension d = imageTracker.media.reSize(icon, 50, 50);
             graphic.drawImage(icon, 300, 5, d.width, d.height, null);
         }
 
@@ -185,10 +183,10 @@ public class BattleforcePrinter implements Printable {
             //Image
             if ( printMechs ) {
                 if ( stats.getImage().replace("../Images/No_Image.png", "").isEmpty() )
-                    stats.setImage( media.FindMatchingImage(stats.getName(), stats.getModel()));
+                    stats.setImage( imageTracker.media.FindMatchingImage(stats.getName(), stats.getModel()));
                 if ( !stats.getImage().isEmpty() ) {
                     Image image = imageTracker.getImage(stats.getImage());
-                    Dimension d = media.reSize(image, 35d, 33d);
+                    Dimension d = imageTracker.media.reSize(image, 35d, 33d);
                     image.getScaledInstance(d.width, d.height, Image.SCALE_SMOOTH);
                     graphic.drawImage(image, x, y, d.width, d.height, null);
                 }

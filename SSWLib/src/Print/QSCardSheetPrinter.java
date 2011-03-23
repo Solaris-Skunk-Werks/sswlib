@@ -8,9 +8,9 @@ package Print;
 import battleforce.BattleForce;
 import battleforce.BattleForceStats;
 import filehandlers.ImageTracker;
-import filehandlers.Media;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -25,7 +25,6 @@ import java.awt.print.PrinterException;
  */
 public class QSCardSheetPrinter implements Printable {
     private BattleForce battleforce;
-    private Media media = new Media();
     private ImageTracker imageTracker;
     private Graphics2D graphic;
     private Image RecordSheet,
@@ -95,7 +94,7 @@ public class QSCardSheetPrinter implements Printable {
         //Unit Logo
         if ( !battleforce.LogoPath.isEmpty() && printLogo ) {
             icon = imageTracker.getImage(getBattleforce().LogoPath);
-            d = media.reSize(icon, 20, 20);
+            d = imageTracker.media.reSize(icon, 20, 20);
         }
 
         graphic.setFont( PrintConsts.TitleFont );
@@ -106,7 +105,7 @@ public class QSCardSheetPrinter implements Printable {
         y += graphic.getFont().getSize()-10;
 
         //Charts
-        Dimension cdim = media.reSize(Charts, 247d, 548d);
+        Dimension cdim = imageTracker.media.reSize(Charts, 247d, 548d);
         Charts.getScaledInstance(cdim.width, cdim.height, Image.SCALE_SMOOTH);
         graphic.drawImage( Charts, (UnitImageWidth*2)+2, y, cdim.width, cdim.height, null);
 
@@ -129,12 +128,12 @@ public class QSCardSheetPrinter implements Printable {
             //graphic.drawRect(x+15, y+40, 75, 117);
 
             if ( printMechs ) {
-                stats.setImage(media.DetermineMatchingImage(stats.getName(), stats.getModel(), stats.getImage()));
+                stats.setImage(imageTracker.media.DetermineMatchingImage(stats.getName(), stats.getModel(), stats.getImage()));
                 if ( !stats.getImage().isEmpty() ) {
                     Image image = imageTracker.getImage(stats.getImage());
-                    Dimension dim = media.reSize(image, 75d, 117d);
+                    Dimension dim = imageTracker.media.reSize(image, 75d, 117d);
                     image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
-                    Point offset = media.offsetImageCenter( new Dimension(75, 117), dim);
+                    Point offset = imageTracker.media.offsetImageCenter( new Dimension(75, 117), dim);
                     graphic.drawImage(image, x+15+offset.x, y+40+offset.y, dim.width, dim.height, null);
 
                     if ( icon != null && printLogo ) {
@@ -150,25 +149,36 @@ public class QSCardSheetPrinter implements Printable {
             PrintConsts.ShadowText( graphic, PrintConsts.BoldFont, PVColor, DarkShadow, stats.getPointValue()+" POINTS", x+106, y+12);
 
             //Unit Name
-            PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, NameColor, DarkShadow, stats.getModel(), x+2, y+6);
+            PrintConsts.ShadowText( graphic, PrintConsts.SmallBoldFont, NameColor, DarkShadow, stats.getModel(), x+2, y+7);
             p.y = y + 15;
-            for ( String line : PrintConsts.wrapText(stats.getName().toUpperCase(), 14, false) ) {
-                PrintConsts.ShadowText( graphic, PrintConsts.BoldFont, NameColor, DarkShadow, line, x+2, p.y);
-                p.y += graphic.getFont().getSize()-2;
+            int CharLimit = 14;
+            Font nameFont = PrintConsts.BoldFont;
+            if ( PrintConsts.wrapText(stats.getName().toUpperCase(), CharLimit, false).length > 1 ) {
+                nameFont = PrintConsts.SmallBoldFont;
+                p.y -= 2;
+                CharLimit = 18;
+                if ( PrintConsts.wrapText(stats.getName().toUpperCase(), CharLimit, false).length > 1 ) {
+                    nameFont = PrintConsts.XtraSmallBoldFont;
+                    CharLimit = 24;
+                }
+            }
+            for ( String line : PrintConsts.wrapText(stats.getName().toUpperCase(), CharLimit, false) ) {
+                PrintConsts.ShadowText( graphic, nameFont, NameColor, DarkShadow, line, x+2, p.y);
+                p.y += nameFont.getSize();
             }
 
             if ( printWarriorData ) {
                 //Pilot Name
-                String Info = "Pilot [Unit, Force]";
-                if ( !stats.getWarrior().isEmpty() ) Info = Info.replace("Pilot", stats.getWarrior());
+                String Info = "Unit / Force";
+                //if ( !stats.getWarrior().isEmpty() ) Info = Info.replace("Pilot", stats.getWarrior());
                 if ( !stats.getUnit().isEmpty() ) Info = Info.replace("Unit", stats.getUnit());
                 if ( !stats.getForceName().isEmpty() ) Info = Info.replace("Force", stats.getForceName());
                 Info = Info.replace("Pilot", "").replace("Unit", "").replace("Force", "").replace("[, ]", "").trim();
-                if ( Info.trim().startsWith("[, ") )
-                    Info = Info.replace("[, ", "").replace("]", "").trim();
-                else
-                    Info = Info.replace("[, ", "[").replace(", ]", "]").trim();
-                PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallFont, PilotColor, DarkShadow, Info, p.x+2, p.getY()-3);
+                if ( Info.trim().startsWith("/") || Info.trim().endsWith("/") )
+                    Info = Info.replace("/", "").trim();
+                p.y = y + 24;
+                PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallFont, PilotColor, DarkShadow, stats.getWarrior(), p.x+2, p.y);
+                PrintConsts.ShadowText( graphic, PrintConsts.XtraSmallFont, PilotColor, DarkShadow, Info, p.x+2, p.y+5);
 
                 //Skill
                 PrintConsts.ShadowText( graphic, PrintConsts.OVFont, SkillColor, Shadow, stats.getSkill()+"", x+38, y+195);

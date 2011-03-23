@@ -39,12 +39,10 @@ import java.awt.print.PrinterException;
 import battleforce.BattleForce;
 import battleforce.BattleForceStats;
 import filehandlers.ImageTracker;
-import filehandlers.Media;
 import java.awt.Point;
 
 public class QSHorizontalCardPrinter implements Printable {
     private BattleForce battleforce;
-    private Media media = new Media();
     private ImageTracker imageTracker;
     private Graphics2D graphic;
     private Image   Background, CardBack;
@@ -151,8 +149,7 @@ public class QSHorizontalCardPrinter implements Printable {
 
             //Image
             if ( printMechs ) {
-                stats.setImage(media.DetermineMatchingImage(stats.getName(), stats.getModel(), stats.getImage()));
-                //stats.setImage( media.FindMatchingImage(stats.getName(), stats.getModel()));
+                stats.setImage(imageTracker.media.DetermineMatchingImage(stats.getName(), stats.getModel(), stats.getImage()));
                 if ( !stats.getImage().isEmpty() ) {
                     Dimension space = new Dimension(0, 0);
                     if ( isBlackandWhite ) {
@@ -164,9 +161,9 @@ public class QSHorizontalCardPrinter implements Printable {
                     }
 
                     Image image = imageTracker.getImage(stats.getImage());
-                    Dimension dim = media.reSize(image, space.width, space.height);
+                    Dimension dim = imageTracker.media.reSize(image, space.width, space.height);
                     image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
-                    Point offset = media.offsetImageCenter( space, dim );
+                    Point offset = imageTracker.media.offsetImageCenter( space, dim );
 
                     graphic.drawImage(image, x+p.x+offset.x, y+p.y+offset.y , dim.width, dim.height, null);
 

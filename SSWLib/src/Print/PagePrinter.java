@@ -79,6 +79,7 @@ public class PagePrinter {
         job.setJobName(jobName);
 
         //Setting to null so that it will ask the user for now...was having an error when I used the dropdown choice
+        /*
         service = null;
         if ( service != null ) {
             try {
@@ -89,6 +90,8 @@ public class PagePrinter {
         } else {
             DoPrint = job.printDialog();
         }
+        */
+        DoPrint = job.printDialog();
 
         job.setPageable(Preview());
         

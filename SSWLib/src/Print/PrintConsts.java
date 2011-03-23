@@ -335,11 +335,13 @@ public class PrintConsts {
                                 HasAmmoData = true;
                             }
                         } else if ( ((ifWeapon) p.Item).IsFCSCapable() ) {
-                            if ( ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_ArtemisIV ) {
-                                temp.add(factory.ArtemisIV(p));
-                            } else if ( ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_ArtemisV ) {
-                                temp.add(factory.ArtemisV(p));
-                            } else if ( ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_Apollo ) {
+                            if ( ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_ArtemisIV || ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_ArtemisV ) {
+                                if ( CurMech.GetLoadout().UsingArtemisIV() ) {
+                                    temp.add(factory.ArtemisIV(p));
+                                } else if ( CurMech.GetLoadout().UsingArtemisV() ) {
+                                    temp.add(factory.ArtemisV(p));
+                                }
+                            } else if ( ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_Apollo && CurMech.GetLoadout().UsingApollo() ) {
                                 temp.add(factory.Apollo(p));
                             }
                             p.specials = "-";

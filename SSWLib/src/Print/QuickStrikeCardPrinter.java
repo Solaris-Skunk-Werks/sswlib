@@ -39,13 +39,11 @@ import java.awt.print.PrinterException;
 import battleforce.BattleForce;
 import battleforce.BattleForceStats;
 import filehandlers.ImageTracker;
-import filehandlers.Media;
 import java.awt.Font;
 import java.awt.Point;
 
 public class QuickStrikeCardPrinter implements Printable {
     private BattleForce battleforce;
-    private Media media = new Media();
     private ImageTracker imageTracker;
     private Graphics2D graphic;
     private Image Unit;
@@ -95,18 +93,8 @@ public class QuickStrikeCardPrinter implements Printable {
         //Unit Logo
         if ( !battleforce.LogoPath.isEmpty() && printLogo ) {
             icon = imageTracker.getImage(getBattleforce().LogoPath);
-            d = media.reSize(icon, 20, 20);
+            d = imageTracker.media.reSize(icon, 20, 20);
         }
-
-//        graphic.setFont( PrintConsts.TitleFont );
-//        if ( getBattleforce().ForceName.isEmpty() ) { getBattleforce().ForceName = getBattleforce().Type; }
-//        graphic.drawString(getBattleforce().ForceName + " - " + getBattleforce().BattleForceStats.get(0).getUnit(), x, y);
-//        graphic.drawString("PV: " + getBattleforce().PointValue(), (UnitImageWidth*3)-48, y);
-
-//        y += graphic.getFont().getSize()-10;
-
-        //Charts
-//        graphic.drawImage( Charts, (UnitImageWidth*2)+2, y, 194, 562, null);
 
         //Output individual units
         for ( int i=0; i < getBattleforce().BattleForceStats.size(); i++ ) {
@@ -125,9 +113,9 @@ public class QuickStrikeCardPrinter implements Printable {
             //Image
             if ( !stats.getImage().isEmpty() && printMechs ) {
                 Image image = imageTracker.getImage(stats.getImage());
-                Dimension dim = media.reSize(image, 100d, 130d);
+                Dimension dim = imageTracker.media.reSize(image, 100d, 130d);
                 image.getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH);
-                Point offset = media.offsetImageBottom( new Dimension(100, 130), dim);
+                Point offset = imageTracker.media.offsetImageBottom( new Dimension(100, 130), dim);
                 graphic.drawImage(image, x+UnitImageWidth-dim.width-5, y+25, dim.width, dim.height, null);
 
                 if ( icon != null && printLogo ) {
