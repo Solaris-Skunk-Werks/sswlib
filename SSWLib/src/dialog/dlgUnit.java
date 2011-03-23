@@ -1376,8 +1376,7 @@ public class dlgUnit extends javax.swing.JDialog {
 
     private void btnSelectMechActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectMechActionPerformed
         Media media = new Media();
-        //Preferences sswPrefs = Preferences.userNodeForPackage("/ssw/gui/frmMain".getClass());
-        File mech = media.SelectFile(Prefs.get("ListPath", ""), "ssw", "Select Mech File");
+        File mech = media.SelectFile(sswPrefs.get("ListPath", ""), "ssw", "Select Mech File");
 
         if ( mech != null ) {
             try {

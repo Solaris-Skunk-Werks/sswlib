@@ -36,10 +36,11 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import Force.*;
+import Force.Skills.Skill;
 import Force.View.abTable;
 import Force.View.tbBattleForce;
 import Force.View.tbChatInfo;
-import Force.View.tbTotalWarfareSmall;
+import Force.View.tbTotalWarfare;
 import filehandlers.*;
 import Print.*;
 import IO.*;
@@ -61,6 +62,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
     private ImageTracker imageTracker;
     private DesignForm parent;
     private Preferences prefs = Preferences.userRoot().node( Constants.SSWPrefs );
+    public Skills skills = new Skills();
 
     private TableModelListener forceChanged = new TableModelListener() {
         public void tableChanged(TableModelEvent e) {
@@ -79,7 +81,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         this.imageTracker = imageTracker;
 
 
-        force.setCurrentModel(new tbTotalWarfareSmall(force));
+        force.setCurrentModel(new tbTotalWarfare(force));
         force.getCurrentModel().addTableModelListener(forceChanged);
     }
 
@@ -152,17 +154,37 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         lblTotalBV = new javax.swing.JLabel();
         lblTotalTons = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        lblForceName = new javax.swing.JLabel();
-        txtForceName = new javax.swing.JTextField();
         lblLogo = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        cmbUnitType = new javax.swing.JComboBox();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
-        txtGunnery = new javax.swing.JTextField();
-        txtPiloting = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
+        btnFilter = new javax.swing.JButton();
+        spnSkillSeperationLimit = new javax.swing.JSpinner();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        rdoPiloting = new javax.swing.JRadioButton();
+        rdoGunnery = new javax.swing.JRadioButton();
+        txtBVLimit = new javax.swing.JTextField();
+        rdoNeither = new javax.swing.JRadioButton();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        cmbSkillLevel = new javax.swing.JComboBox();
+        btnRandomGen = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel14 = new javax.swing.JLabel();
+        cmbNameFilter = new javax.swing.JComboBox();
+        chkOverwriteName = new javax.swing.JCheckBox();
+        btnRandomName = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        cmbUnitType = new javax.swing.JComboBox();
+        txtForceName = new javax.swing.JTextField();
+        lblForceName = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtGunnery = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        txtPiloting = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
         mnuOpen = new javax.swing.JMenuItem();
@@ -405,7 +427,179 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        lblForceName.setText("Force Name:");
+        lblLogo.setToolTipText("Unit Logo");
+        lblLogo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        lblLogo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblLogoMouseClicked(evt);
+            }
+        });
+
+        btnFilter.setText("Balance");
+        btnFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFilterActionPerformed(evt);
+            }
+        });
+
+        spnSkillSeperationLimit.setModel(new javax.swing.SpinnerNumberModel(3, 0, 7, 1));
+
+        jLabel6.setText("Max BV:");
+
+        jLabel11.setText("Minimize:");
+
+        jLabel7.setText("Max Skill Seperation:");
+
+        rdoPiloting.setText("Piloting");
+
+        rdoGunnery.setText("Gunnery");
+
+        rdoNeither.setSelected(true);
+        rdoNeither.setText("Neither");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rdoNeither)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rdoGunnery))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(jLabel6)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtBVLimit))
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(jLabel7)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(spnSkillSeperationLimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnFilter)
+                    .addComponent(rdoPiloting))
+                .addGap(3, 3, 3))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(txtBVLimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFilter))
+                .addGap(3, 3, 3)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(spnSkillSeperationLimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(rdoNeither)
+                    .addComponent(rdoGunnery)
+                    .addComponent(rdoPiloting))
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("BV Balance", jPanel3);
+
+        jLabel12.setText("Skill Level:");
+
+        cmbSkillLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Random", "Green", "Regular", "Veteran", "Elite" }));
+
+        btnRandomGen.setText("Generate");
+        btnRandomGen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRandomGenActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbSkillLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnRandomGen)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(cmbSkillLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRandomGen))
+                .addContainerGap(38, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Random Skills", jPanel5);
+
+        jLabel14.setText("Filter By:");
+
+        cmbNameFilter.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Random" }));
+
+        chkOverwriteName.setText("Overwrite Existing");
+
+        btnRandomName.setText("Generate");
+        btnRandomName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRandomNameActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(chkOverwriteName)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                        .addComponent(btnRandomName))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cmbNameFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(cmbNameFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chkOverwriteName)
+                    .addComponent(btnRandomName))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Name Generation", jPanel4);
+
+        jLabel5.setText("Unit Type:");
+
+        jLabel3.setText("Override Skills");
+
+        cmbUnitType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Inner Sphere", "Clan", "Comstar / Word of Blake" }));
+        cmbUnitType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbUnitTypeActionPerformed(evt);
+            }
+        });
 
         txtForceName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -418,22 +612,9 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
             }
         });
 
-        lblLogo.setToolTipText("Unit Logo");
-        lblLogo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        lblLogo.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblLogoMouseClicked(evt);
-            }
-        });
+        lblForceName.setText("Force Name:");
 
-        jLabel5.setText("Unit Type:");
-
-        cmbUnitType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Inner Sphere", "Clan", "Comstar / Word of Blake" }));
-        cmbUnitType.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbUnitTypeActionPerformed(evt);
-            }
-        });
+        jLabel2.setText("P");
 
         txtGunnery.setText("4");
         txtGunnery.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -447,6 +628,8 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
             }
         });
 
+        jLabel1.setText("G");
+
         txtPiloting.setText("5");
         txtPiloting.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -459,37 +642,49 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
             }
         });
 
-        jLabel2.setText("P");
-
-        jLabel3.setText("Override Skills");
-
-        jLabel1.setText("G");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtGunnery, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel2)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbUnitType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGunnery, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPiloting, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(lblForceName)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPiloting, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtForceName, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtForceName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblForceName))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(cmbUnitType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
                     .addComponent(txtGunnery, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addComponent(txtPiloting, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -501,39 +696,23 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(lblLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(lblForceName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtForceName, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbUnitType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 210, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(119, 119, 119))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addComponent(lblLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblLogo, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblForceName)
-                    .addComponent(txtForceName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(cmbUnitType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(27, Short.MAX_VALUE))
-            .addComponent(lblLogo, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         mnuFile.setText("File");
@@ -659,8 +838,8 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(spnList, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(spnList, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -670,7 +849,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spnList, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                .addComponent(spnList, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -752,7 +931,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         if ( forceFile != null ) {
             try {
                 force = new Force(reader.ReadNode(forceFile.getCanonicalPath(), "force"));
-                force.setCurrentModel(new tbTotalWarfareSmall(force));
+                force.setCurrentModel(new tbTotalWarfare(force));
                 force.getCurrentModel().addTableModelListener(forceChanged);
                 txtForceName.setText(force.ForceName);
                 if ( force.getType().equals(BattleForce.InnerSphere) ) {
@@ -921,7 +1100,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
 
     private void cmbViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbViewActionPerformed
         switch ( cmbView.getSelectedIndex() ) {
-            case 0: force.setCurrentModel(new tbTotalWarfareSmall(force)); break;
+            case 0: force.setCurrentModel(new tbTotalWarfare(force)); break;
             case 1: force.setCurrentModel(new tbBattleForce(force)); break;
             case 2: force.setCurrentModel(new tbChatInfo(force)); break;
         }
@@ -1013,6 +1192,51 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         }
     }//GEN-LAST:event_tblForceKeyReleased
 
+    private void btnFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilterActionPerformed
+        skills.setMaxBV(Float.parseFloat(txtBVLimit.getText()));
+        skills.setMaxSeperation(Integer.parseInt(spnSkillSeperationLimit.getValue().toString()));
+        if ( rdoGunnery.isSelected() ) { skills.setMaxSkill(Skills.Gunnery); }
+        if ( rdoPiloting.isSelected() ) { skills.setMaxSkill(Skills.Piloting); }
+        if ( tblForce.getSelectedRowCount() == 0 ) { tblForce.selectAll(); }
+
+        for ( int i : tblForce.getSelectedRows() ) {
+            Unit u = (Unit) force.getUnits().get(tblForce.convertRowIndexToModel(i));
+            skills.setBV(u.BaseBV);
+            Skill skill = skills.getBestSkills();
+            u.setGunnery(skill.getGunnery());
+            u.setPiloting(skill.getPiloting());
+            u.Refresh();
+        }
+        force.isDirty = true;
+        force.RefreshBV();
+}//GEN-LAST:event_btnFilterActionPerformed
+
+    private void btnRandomNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRandomNameActionPerformed
+        NameGenerator gen = new NameGenerator();
+        boolean overwrite = chkOverwriteName.isSelected();
+        if ( tblForce.getSelectedRowCount() == 0 ) { tblForce.selectAll(); }
+        for ( int i : tblForce.getSelectedRows() ) {
+            Unit u = (Unit) force.getUnits().get(tblForce.convertRowIndexToModel(i));
+            if ( u.getMechwarrior().isEmpty() || overwrite ) u.setMechwarrior(gen.SimpleGenerate());
+        }
+        force.isDirty = true;
+        force.RefreshBV();
+}//GEN-LAST:event_btnRandomNameActionPerformed
+
+    private void btnRandomGenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRandomGenActionPerformed
+        skills.setSkillLevel(cmbSkillLevel.getSelectedItem().toString());
+        if ( tblForce.getSelectedRowCount() == 0 ) { tblForce.selectAll(); }
+        for ( int i : tblForce.getSelectedRows() ) {
+            Unit u = (Unit) force.getUnits().get(tblForce.convertRowIndexToModel(i));
+            Skill skill = skills.generateRandomSkill();
+            u.setGunnery(skill.getGunnery());
+            u.setPiloting(skill.getPiloting());
+            u.Refresh();
+        }
+        force.isDirty = true;
+        force.RefreshBV();
+}//GEN-LAST:event_btnRandomGenActionPerformed
+
     public void WaitCursor() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
@@ -1027,29 +1251,44 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
     private javax.swing.JButton btnAmmoChooser;
     private javax.swing.JButton btnExportMTFs;
     private javax.swing.JButton btnExportMUL;
+    private javax.swing.JButton btnFilter;
     private javax.swing.JButton btnImages;
     private javax.swing.JButton btnOpen;
     private javax.swing.JButton btnPrintForce;
+    private javax.swing.JButton btnRandomGen;
+    private javax.swing.JButton btnRandomName;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnRemoveUnit;
     private javax.swing.JButton btnSave;
+    private javax.swing.JCheckBox chkOverwriteName;
+    private javax.swing.JComboBox cmbNameFilter;
+    private javax.swing.JComboBox cmbSkillLevel;
     private javax.swing.JComboBox cmbUnitType;
     private javax.swing.JComboBox cmbView;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblForceName;
     private javax.swing.JLabel lblLogo;
     private javax.swing.JLabel lblTotalBV;
@@ -1071,9 +1310,14 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
     private javax.swing.JMenuItem mnuViewBF;
     private javax.swing.JMenuItem mnuViewInf;
     private javax.swing.JMenuItem mnuViewTW;
+    private javax.swing.JRadioButton rdoGunnery;
+    private javax.swing.JRadioButton rdoNeither;
+    private javax.swing.JRadioButton rdoPiloting;
     private javax.swing.JScrollPane spnList;
+    private javax.swing.JSpinner spnSkillSeperationLimit;
     private javax.swing.JTable tblForce;
     private javax.swing.JToolBar tlbActions;
+    private javax.swing.JTextField txtBVLimit;
     private javax.swing.JTextField txtForceName;
     private javax.swing.JTextField txtGunnery;
     private javax.swing.JTextField txtPiloting;
