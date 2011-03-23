@@ -1063,4 +1063,12 @@ public class FileCommon {
     public static String CSVFormat( int data ) {
         return data + ",";
     }
+
+    public static String GetBoolean( boolean b ) {
+        if( b ) {
+            return "TRUE";
+        } else {
+            return "FALSE";
+        }
+    }
 }
