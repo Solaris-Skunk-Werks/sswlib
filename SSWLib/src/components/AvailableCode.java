@@ -56,7 +56,8 @@ public class AvailableCode {
                             PRODUCTION_ERA_CLAN_INVASION = 4,
                             PRODUCTION_ERA_CIVIL_WAR = 5,
                             PRODUCTION_ERA_JIHAD = 6,
-                            PRODUCTION_ERA_DARK_AGES = 7;
+                            PRODUCTION_ERA_REPUBLIC = 7,
+                            PRODUCTION_ERA_DARK_AGES = 8;
     public static String[] TechBaseSTR = {
         "Inner Sphere", "Clan", "Mixed" };
 
