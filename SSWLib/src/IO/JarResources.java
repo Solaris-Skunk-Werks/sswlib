@@ -1,4 +1,10 @@
-
+/*
+ * The following code was taken from
+ * http://www.javaworld.com/javaworld/javatips/jw-javatip49.html
+ * By Arthur Choi, JavaWorld.com, 03/01/98
+ *
+ * http://www.javaworld.com/javaworld/javatips/javatip49/JarResources.java
+*/
 
 package IO;
 
@@ -8,24 +14,24 @@ import java.util.zip.*;
 
 /**
  * JarResources: JarResources maps all resources included in a
- * Zip or Jar file. Additionaly, it provides a method to extract one
+ * Zip or Jar file. Additionally, it provides a method to extract one
  * as a blob.
  */
 public final class JarResources {
 
    // external debug flag
-   public boolean debugOn=false;
+   public boolean debugOn = false;
 
    // jar resource mapping tables
-   private Hashtable htSizes=new Hashtable();
-   private Hashtable<String, byte[]> htJarContents=new Hashtable<String, byte[]>();
+   private HashMap htSizes = new HashMap();
+   private HashMap<String, byte[]> htJarContents=new HashMap<String, byte[]>();
 
    // a jar file
    private String jarFileName;
 
    /**
     * creates a JarResources. It extracts all resources from a Jar
-    * into an internal hashtable, keyed by resource names.
+    * into an internal hash table, keyed by resource names.
     * @param jarFileName a jar or zip file
     */
    public JarResources(String jarFileName) {
@@ -77,6 +83,7 @@ public final class JarResources {
              if (size==-1) {
                 size=((Integer)htSizes.get(ze.getName())).intValue();
              }
+
              byte[] b=new byte[(int)size];
              int rb=0;
              int chunk=0;
@@ -88,7 +95,7 @@ public final class JarResources {
                  rb+=chunk;
              }
              // add to internal resource hashtable
-                htJarContents.put(ze.getName(),b);
+             htJarContents.put(ze.getName(),b);
              if (debugOn) {
                 System.out.println(
                    ze.getName()+"  rb="+rb+
@@ -111,7 +118,7 @@ public final class JarResources {
     * @param ze a ZipEntry
     */
    private String dumpZipEntry(ZipEntry ze) {
-       StringBuffer sb=new StringBuffer();
+       StringBuilder sb=new StringBuilder();
        if (ze.isDirectory()) {
           sb.append("d ");
        } else {
@@ -124,9 +131,9 @@ public final class JarResources {
        }
        sb.append(ze.getName());
        sb.append("\t");
-       sb.append(""+ze.getSize());
+        sb.append("").append(ze.getSize());
        if (ze.getMethod()==ZipEntry.DEFLATED) {
-          sb.append("/"+ze.getCompressedSize());
+            sb.append("/").append(ze.getCompressedSize());
        }
        return (sb.toString());
    }
@@ -141,7 +148,7 @@ public final class JarResources {
     /**
      * @return the htJarContents
      */
-    public Hashtable getContents() {
+    public HashMap<String, byte[]> getContents() {
         return htJarContents;
     }
 

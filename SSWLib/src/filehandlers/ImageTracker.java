@@ -11,6 +11,9 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class ImageTracker {
     public Media media = new Media();
@@ -38,11 +41,8 @@ public class ImageTracker {
         addResource(resource);
         
         if ( preLoad ) {
-            Enumeration keys = resource.getContents().keys();
-            while ( keys.hasMoreElements() ) {
-                String curKey = (String) keys.nextElement();
-                Image temp = media.LoadImage( resource.getResource(curKey) );
-                imageStore.add(new StoredImage(curKey, temp));
+            for ( Map.Entry<String, byte[]> entry : resource.getContents().entrySet() ) {
+                imageStore.add(new StoredImage(entry.getKey(), media.LoadImage(entry.getValue())));
             }
         }
     }
