@@ -42,6 +42,7 @@ public class CVArmor extends abPlaceable {
     // Declares
     private CombatVehicle Owner;
     private int[] ArmorPoints = { 0, 0, 0, 0, 0, 0, 0 };
+    private int[] MaxArmor = { 0, 0, 0, 0, 0, 0, 0 };
     private ifArmor Industrial = new stArmorIN(),
                     Standard = new stArmorMS(),
                     ISFF = new stArmorISFF(),
@@ -640,6 +641,10 @@ public class CVArmor extends abPlaceable {
 
     public int GetLocationArmor( int Loc ) {
         return ArmorPoints[Loc];
+    }
+
+    public int GetLocationMax( int Loc ) {
+        return MaxArmor[Loc];
     }
 
     public int GetMaxArmor() {

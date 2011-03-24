@@ -46,6 +46,102 @@ import states.stCVWiGE;
 import visitors.ifVisitor;
 
 public class CombatVehicle implements ifUnit, ifBattleforce {
+
+    public static ifCombatVehicle getWheeled() {
+        return Wheeled;
+    }
+
+    public static void setWheeled(ifCombatVehicle aWheeled) {
+        Wheeled = aWheeled;
+    }
+
+    public static ifCombatVehicle getTracked() {
+        return Tracked;
+    }
+
+    public static void setTracked(ifCombatVehicle aTracked) {
+        Tracked = aTracked;
+    }
+
+    public static ifCombatVehicle getHover() {
+        return Hover;
+    }
+
+    public static void setHover(ifCombatVehicle aHover) {
+        Hover = aHover;
+    }
+
+    public static ifCombatVehicle getVTOL() {
+        return VTOL;
+    }
+
+    public static void setVTOL(ifCombatVehicle aVTOL) {
+        VTOL = aVTOL;
+    }
+
+    public static ifCombatVehicle getWiGE() {
+        return WiGE;
+    }
+
+    public static void setWiGE(ifCombatVehicle aWiGE) {
+        WiGE = aWiGE;
+    }
+
+    public static ifCombatVehicle getDisplacement() {
+        return Displacement;
+    }
+
+    public static void setDisplacement(ifCombatVehicle aDisplacement) {
+        Displacement = aDisplacement;
+    }
+
+    public static ifCombatVehicle getHydrofoil() {
+        return Hydrofoil;
+    }
+
+    public static void setHydrofoil(ifCombatVehicle aHydrofoil) {
+        Hydrofoil = aHydrofoil;
+    }
+
+    public static ifCombatVehicle getSubmarine() {
+        return Submarine;
+    }
+
+    public static void setSubmarine(ifCombatVehicle aSubmarine) {
+        Submarine = aSubmarine;
+    }
+
+    public static AvailableCode getOmniAC() {
+        return OmniAC;
+    }
+
+    public static void setOmniAC(AvailableCode aOmniAC) {
+        OmniAC = aOmniAC;
+    }
+
+    public static AvailableCode getDualTurretAC() {
+        return DualTurretAC;
+    }
+
+    public static void setDualTurretAC(AvailableCode aDualTurretAC) {
+        DualTurretAC = aDualTurretAC;
+    }
+
+    public static AvailableCode getChinTurretAC() {
+        return ChinTurretAC;
+    }
+
+    public static void setChinTurretAC(AvailableCode aChinTurretAC) {
+        ChinTurretAC = aChinTurretAC;
+    }
+
+    public static AvailableCode getSponsoonAC() {
+        return SponsoonAC;
+    }
+
+    public static void setSponsoonAC(AvailableCode aSponsoonAC) {
+        SponsoonAC = aSponsoonAC;
+    }
     // Declares
     private String Name = "",
                    Model = "",
@@ -66,10 +162,12 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
                    TandTSystem = "",
                    Solaris7ID = "0",
                    Solaris7ImageID = "0",
-                   SSWImage = "";
+                   SSWImage = "",
+                   Source = "";
     private int HeatSinks = 0,
                 Tonnage = 20,
-                CruiseMP;
+                CruiseMP,
+                Year;
     private double JJMult;
     private boolean Omni = false,
                     HasEnviroSealing = false,
@@ -87,8 +185,8 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
                                  Submarine = new stCVSubmarine();
     private Engine CurEngine = new Engine( this );
     private ifCombatVehicle CurConfig = Tracked;
-    private Vector<ifCVLoadout> Loadouts = new Vector<ifCVLoadout>();
-    private ifCVLoadout MainLoadout,
+    private Vector<CVLoadout> Loadouts = new Vector<CVLoadout>();
+    private CVLoadout MainLoadout,
                         CurLoadout;
     private CVArmor CurArmor = new CVArmor( this );
     private Hashtable Lookup = new Hashtable();
@@ -124,6 +222,9 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         SponsoonAC.SetRulesLevels( AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
 
         HeatSinks = CurEngine.FreeHeatSinks();
+
+        CurLoadout = new CVLoadout(this);
+        MainLoadout = CurLoadout;
     }
 
     public void Visit( ifVisitor v ) throws Exception {
@@ -131,152 +232,152 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public void Validate() {
-        if ( Tonnage > CurConfig.GetMaxTonnage() ) {
-            Tonnage = CurConfig.GetMaxTonnage();
+        if ( getTonnage() > getCurConfig().GetMaxTonnage() ) {
+            setTonnage(getCurConfig().GetMaxTonnage());
         }
     }
 
     public void SetWheeled() {
-        CurConfig = Wheeled;
+        setCurConfig(getWheeled());
         SetChanged(true);
     }
 
     public void SetTracked() {
-        CurConfig = Tracked;
+        setCurConfig(getTracked());
         SetChanged(true);
     }
 
     public void SetHover() {
-        CurConfig = Hover;
+        setCurConfig(getHover());
         SetChanged(true);
     }
 
     public void setVTOL() {
-        CurConfig = VTOL;
+        setCurConfig(getVTOL());
         SetChanged(true);
     }
 
     public void SetWiGE() {
-        CurConfig = WiGE;
+        setCurConfig(getWiGE());
         SetChanged(true);
     }
 
     public void SetDisplacement() {
-        CurConfig = Displacement;
+        setCurConfig(getDisplacement());
         SetChanged(true);
     }
 
     public void SetHydrofoil() {
-        CurConfig = Hydrofoil;
+        setCurConfig(getHydrofoil());
         SetChanged(true);
     }
 
     public void SetSubmarine() {
-        CurConfig = Submarine;
+        setCurConfig(getSubmarine());
         SetChanged(true);
     }
 
     public String GetMotiveLookupName() {
-        return CurConfig.GetMotiveLookupName();
+        return getCurConfig().GetMotiveLookupName();
     }
 
     public int GetMaxTonnage() {
-        return CurConfig.GetMaxTonnage();
+        return getCurConfig().GetMaxTonnage();
     }
 
     public int GetTonnage() {
-        return Tonnage;
+        return getTonnage();
     }
 
     public boolean CanUseJump() {
-        return CurConfig.CanUseJumpMP();
+        return getCurConfig().CanUseJumpMP();
     }
 
     public boolean CanBeTrailer() {
-        return CurConfig.CanBeTrailer();
+        return getCurConfig().CanBeTrailer();
     }
 
     public boolean CanBeDuneBuggy() {
-        return CurConfig.CanBeDuneBuggy();
+        return getCurConfig().CanBeDuneBuggy();
     }
 
     public int GetSuspensionFactor( int Tonnage ) {
-        return CurConfig.GetSuspensionFactor( Tonnage );
+        return getCurConfig().GetSuspensionFactor( Tonnage );
     }
 
     public float GetMinEngineWeight( int Tonnage ) {
-        return CurConfig.GetMinEngineWeight( Tonnage );
+        return getCurConfig().GetMinEngineWeight( Tonnage );
     }
 
     public float GetLiftEquipmentCostMultiplier() {
-        return CurConfig.GetLiftEquipmentCostMultiplier();
+        return getCurConfig().GetLiftEquipmentCostMultiplier();
     }
 
     public boolean RequiresLiftEquipment() {
-        return CurConfig.RequiresLiftEquipment();
+        return getCurConfig().RequiresLiftEquipment();
     }
 
     public boolean IsVTOL() {
-        return CurConfig.IsVTOL();
+        return getCurConfig().IsVTOL();
     }
 
     public boolean CanUseTurret() {
-        if( IsVTOL() && CommonTools.IsAllowed( ChinTurretAC, this ) ) { return true; }
-        return CurConfig.CanUseTurret();
+        if( IsVTOL() && CommonTools.IsAllowed( getChinTurretAC(),this) ) { return true; }
+        return getCurConfig().CanUseTurret();
     }
 
     public boolean CanUseDualTurret() {
-        if( CommonTools.IsAllowed( DualTurretAC, this ) ) { return true; }
+        if( CommonTools.IsAllowed( getDualTurretAC(),this) ) { return true; }
         return false;
     }
 
     public boolean CanUseSponsoon() {
-        if( CommonTools.IsAllowed( SponsoonAC, this ) ) { return true; }
+        if( CommonTools.IsAllowed( getSponsoonAC(),this) ) { return true; }
         return false;
     }
 
     public boolean CanUseFlotationHull() {
-        return CurConfig.CanUseFlotationHull();
+        return getCurConfig().CanUseFlotationHull();
     }
 
     public boolean CanUseArmoredMotiveSystem() {
-        return CurConfig.CanUseArmoredMotiveSystem();
+        return getCurConfig().CanUseArmoredMotiveSystem();
     }
 
     public boolean CanUseAmphibious() {
-        return CurConfig.CanUseAmphibious();
+        return getCurConfig().CanUseAmphibious();
     }
 
     public boolean CanUseMinesweeper() {
-        return CurConfig.CanUseMinesweeper();
+        return getCurConfig().CanUseMinesweeper();
     }
 
     public CVArmor GetArmor() {
-        return CurArmor;
+        return getCurArmor();
     }
 
     public ifCVLoadout GetLoadout() {
-        return CurLoadout;
+        return getCurLoadout();
     }
 
     public ifCVLoadout GetMainLoadout() {
-        return MainLoadout;
+        return getMainLoadout();
     }
 
     public boolean IsOmni() {
-        return Omni;
+        return isOmni();
     }
 
     public int GetBaseRulesLevel() {
-        return MainLoadout.GetRulesLevel();
+        return getMainLoadout().GetRulesLevel();
     }
     
     public Engine GetEngine() {
-        return CurEngine;
+        return getCurEngine();
     }
 
     public int GetYear() {
-        return CurLoadout.GetYear();
+        return getCurLoadout().GetYear();
     }
 
     public int GetCurrentBV() {
@@ -299,19 +400,19 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public boolean UsingFractionalAccounting() {
-        return FractionalAccounting;
+        return isFractionalAccounting();
     }
 
     public void SetFractionalAccounting( boolean b ) {
-        FractionalAccounting = b;
+        setFractionalAccounting(b);
     }
 
     public void SetChanged( boolean b ) {
-        Changed = b;
+        setChanged(b);
     }
 
     public boolean HasChanged() {
-        return Changed;
+        return isChanged();
     }
 
     public void AddHeatSinks( int i ) {
@@ -336,11 +437,11 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public boolean UsingTurret1() {
-        return HasTurret1;
+        return isHasTurret1();
     }
 
     public boolean UsingTurret2() {
-        return HasTurret2;
+        return isHasTurret2();
     }
 
     //Battleforce Specific Methods
@@ -399,71 +500,385 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public int GetRulesLevel() {
-        return CurLoadout.GetRulesLevel();
+        return getCurLoadout().GetRulesLevel();
     }
 
     public int GetTechbase() {
-        return CurLoadout.GetTechBase();
+        return getCurLoadout().GetTechBase();
     }
 
     public int GetBaseTechbase() {
-        return MainLoadout.GetTechBase();
+        return getMainLoadout().GetTechBase();
     }
 
     public int GetEra() {
-        return CurLoadout.GetEra();
+        return getCurLoadout().GetEra();
     }
 
     public boolean IsYearRestricted() {
-        return CurLoadout.IsYearRestricted();
+        return getCurLoadout().IsYearRestricted();
     }
 
     public boolean HasFHES() {
         return false;
     }
-
-    public void SetName( String newname )
-    {
-        Name = newname;
-        SetChanged( true );
+    
+    public String GetName() {
+        return Name;
+    }
+    
+    public void setName(String Name) {
+        this.Name = Name;
     }
 
-    public void SetModel( String model )
-    {
-        Model = model;
-        SetChanged( true );
+    public String GetModel() {
+        return Model;
     }
 
-    public void SetYear( int y, boolean specified )
-    {
-        MainLoadout.SetYear( y, specified );
-        SetChanged( true );
+    public void setModel(String Model) {
+        this.Model = Model;
     }
 
-    public void SetRulesLevel( int r )
-    {
-        MainLoadout.SetRulesLevel( r );
-        SetChanged( true );
+    public String getOverview() {
+        return Overview;
     }
 
-    public void SetSource( String s ) {
-        CurLoadout.SetSource( s );
-        SetChanged( true );
+    public void setOverview(String Overview) {
+        this.Overview = Overview;
     }
 
-    public void SetCruiseMP( int mp )
-    {
-        CruiseMP = mp;
-        SetChanged( true );
+    public String getCapabilities() {
+        return Capabilities;
     }
 
-    public int GetCruiseMP()
-    {
+    public void setCapabilities(String Capabilities) {
+        this.Capabilities = Capabilities;
+    }
+
+    public String getHistory() {
+        return History;
+    }
+
+    public void setHistory(String History) {
+        this.History = History;
+    }
+
+    public String getDeployment() {
+        return Deployment;
+    }
+
+    public void setDeployment(String Deployment) {
+        this.Deployment = Deployment;
+    }
+
+    public String getVariants() {
+        return Variants;
+    }
+
+    public void setVariants(String Variants) {
+        this.Variants = Variants;
+    }
+
+    public String getNotables() {
+        return Notables;
+    }
+
+    public void SetNotables(String Notables) {
+        this.Notables = Notables;
+    }
+
+    public String GetAdditional() {
+        return Additional;
+    }
+
+    public void SetAdditional(String Additional) {
+        this.Additional = Additional;
+    }
+
+    public String GetCompany() {
+        return Company;
+    }
+
+    public void SetCompany(String Company) {
+        this.Company = Company;
+    }
+
+    public String GetLocation() {
+        return Location;
+    }
+
+    public void SetLocation(String Location) {
+        this.Location = Location;
+    }
+
+    public String GetEngineManufacturer() {
+        return EngineManufacturer;
+    }
+
+    public void SetEngineManufacturer(String EngineManufacturer) {
+        this.EngineManufacturer = EngineManufacturer;
+    }
+
+    public String GetArmorModel() {
+        return ArmorModel;
+    }
+
+    public void SetArmorModel(String ArmorModel) {
+        this.ArmorModel = ArmorModel;
+    }
+
+    public String GetChassisModel() {
+        return ChassisModel;
+    }
+
+    public void SetChassisModel(String ChassisModel) {
+        this.ChassisModel = ChassisModel;
+    }
+
+    public String GetJJModel() {
+        return JJModel;
+    }
+
+    public void SetJJModel(String JJModel) {
+        this.JJModel = JJModel;
+    }
+
+    public String GetCommSystem() {
+        return CommSystem;
+    }
+
+    public void SetCommSystem(String CommSystem) {
+        this.CommSystem = CommSystem;
+    }
+
+    public String GetTandTSystem() {
+        return TandTSystem;
+    }
+
+    public void SetTandTSystem(String TandTSystem) {
+        this.TandTSystem = TandTSystem;
+    }
+
+    public String GetSolaris7ID() {
+        return Solaris7ID;
+    }
+
+    public void SetSolaris7ID(String Solaris7ID) {
+        this.Solaris7ID = Solaris7ID;
+    }
+
+    public String GetSolaris7ImageID() {
+        return Solaris7ImageID;
+    }
+
+    public void SetSolaris7ImageID(String Solaris7ImageID) {
+        this.Solaris7ImageID = Solaris7ImageID;
+    }
+
+    public String GetSSWImage() {
+        return SSWImage;
+    }
+
+    public void SetSSWImage(String SSWImage) {
+        this.SSWImage = SSWImage;
+    }
+
+    public int getHeatSinks() {
+        return HeatSinks;
+    }
+
+    public void setHeatSinks(int HeatSinks) {
+        this.HeatSinks = HeatSinks;
+    }
+
+    public int getTonnage() {
+        return Tonnage;
+    }
+
+    public void setTonnage(int Tonnage) {
+        this.Tonnage = Tonnage;
+    }
+
+    public int getCruiseMP() {
         return CruiseMP;
     }
 
-    public int GetFlankMP()
-    {
-        return (int)(CruiseMP * 1.5);
+    public void setCruiseMP(int CruiseMP) {
+        this.CruiseMP = CruiseMP;
+    }
+
+    public double getJJMult() {
+        return JJMult;
+    }
+
+    public void setJJMult(double JJMult) {
+        this.JJMult = JJMult;
+    }
+
+    public boolean isOmni() {
+        return Omni;
+    }
+
+    public void setOmni(boolean Omni) {
+        this.Omni = Omni;
+    }
+
+    public boolean isHasEnviroSealing() {
+        return HasEnviroSealing;
+    }
+
+    public void setHasEnviroSealing(boolean HasEnviroSealing) {
+        this.HasEnviroSealing = HasEnviroSealing;
+    }
+
+    public boolean isFractionalAccounting() {
+        return FractionalAccounting;
+    }
+
+    public void setFractionalAccounting(boolean FractionalAccounting) {
+        this.FractionalAccounting = FractionalAccounting;
+    }
+
+    public boolean isChanged() {
+        return Changed;
+    }
+
+    public void setChanged(boolean Changed) {
+        this.Changed = Changed;
+    }
+
+    public boolean isHasTurret1() {
+        return HasTurret1;
+    }
+
+    public void setHasTurret1(boolean HasTurret1) {
+        this.HasTurret1 = HasTurret1;
+    }
+
+    public boolean isHasTurret2() {
+        return HasTurret2;
+    }
+
+    public void setHasTurret2(boolean HasTurret2) {
+        this.HasTurret2 = HasTurret2;
+    }
+
+    public Engine getCurEngine() {
+        return CurEngine;
+    }
+
+    public void setCurEngine(Engine CurEngine) {
+        this.CurEngine = CurEngine;
+    }
+
+    public ifCombatVehicle getCurConfig() {
+        return CurConfig;
+    }
+
+    public void setCurConfig(ifCombatVehicle CurConfig) {
+        this.CurConfig = CurConfig;
+    }
+
+    public Vector<CVLoadout> getLoadouts() {
+        return Loadouts;
+    }
+
+    public void setLoadouts(Vector<CVLoadout> Loadouts) {
+        this.Loadouts = Loadouts;
+    }
+
+    public CVLoadout getMainLoadout() {
+        return MainLoadout;
+    }
+
+    public void setMainLoadout(CVLoadout MainLoadout) {
+        this.MainLoadout = MainLoadout;
+    }
+
+    public CVLoadout getCurLoadout() {
+        return CurLoadout;
+    }
+
+    public void setCurLoadout(CVLoadout CurLoadout) {
+        this.CurLoadout = CurLoadout;
+    }
+
+    public CVArmor getCurArmor() {
+        return CurArmor;
+    }
+
+    public void setCurArmor(CVArmor CurArmor) {
+        this.CurArmor = CurArmor;
+    }
+
+    public Hashtable getLookup() {
+        return Lookup;
+    }
+
+    public void setLookup(Hashtable Lookup) {
+        this.Lookup = Lookup;
+    }
+
+    public int getYear() {
+        return Year;
+    }
+
+    public void setYear(int Year, boolean Something) {
+        this.Year = Year;
+    }
+
+    public String getSource() {
+        return Source;
+    }
+
+    public void setSource(String Source) {
+        this.Source = Source;
+    }
+
+    public int getFlankMP() {
+        return (int) Math.floor( CruiseMP * 1.5 + 0.5 );
+    }
+
+    public void SetRulesLevel( int r ) {
+        if( Omni ) {
+            CurLoadout.SetRulesLevel( r );
+        } else {
+            MainLoadout.SetRulesLevel( r );
+        }
+        SetChanged( true );
+    }
+
+    public int GetBaseEra() {
+        return MainLoadout.GetEra();
+    }
+
+    public int GetProductionEra() {
+        return CurLoadout.GetProductionEra();
+    }
+
+    public int GetBaseProductionEra() {
+        return MainLoadout.GetProductionEra();
+    }
+
+    public int GetTechBase() {
+        return MainLoadout.GetTechBase();
+    }
+
+    public boolean SetTechBase( int t ) {
+        if( Omni ) {
+            if( t != MainLoadout.GetTechBase() && t != AvailableCode.TECH_BOTH ) {
+                return false;
+            } else {
+                CurLoadout.SetTechBase( t );
+            }
+        } else {
+            MainLoadout.SetTechBase( t );
+        }
+        SetChanged( true );
+        return true;
+    }
+
+    public int GetBaseYear() {
+        return MainLoadout.GetYear();
     }
 }
