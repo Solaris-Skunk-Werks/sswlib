@@ -1460,7 +1460,7 @@ public class Mech implements ifUnit, ifBattleforce {
 
     public String GetChatInfo() {
         String info = GetFullName() + " ";
-        info += GetTonnage() + "T, ";
+        info += GetTonnage() + "t, ";
         // MP
         info += GetWalkingMP();
         if( GetWalkingMP() != GetAdjustedWalkingMP( false, true ) ) {
@@ -3423,6 +3423,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if( b ) {
             Wing.SetClan( useClan );
             if( ! Wing.Place( MainLoadout ) ) {
+                HasPartialWing = false;
                 throw new Exception( "There is no available room for the Partial Wing!\nIt will not be allocated." );
             }
         } else {
@@ -3437,6 +3438,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if( b ) {
             Wing.SetClan( useClan );
             if( ! Wing.Place( MainLoadout, lpw ) ) {
+                HasPartialWing = false;
                 throw new Exception( "There is no available room for the Partial Wing!\nIt will not be allocated." );
             }
         } else {
@@ -3451,6 +3453,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if( b ) {
             Wing.SetClan( (GetTechBase() == AvailableCode.TECH_CLAN) || (GetTechBase() == AvailableCode.TECH_BOTH) );
             if( ! Wing.Place( MainLoadout, lpw ) ) {
+                HasPartialWing = false;
                 throw new Exception( "There is no available room for the Partial Wing!\nIt will not be allocated." );
             }
         } else {
