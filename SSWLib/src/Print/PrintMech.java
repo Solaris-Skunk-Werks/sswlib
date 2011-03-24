@@ -44,12 +44,9 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 import states.ifArmor;
-import states.stArmorHA;
-import states.stArmorMS;
 
 public class PrintMech implements Printable {
     public Mech CurMech;
