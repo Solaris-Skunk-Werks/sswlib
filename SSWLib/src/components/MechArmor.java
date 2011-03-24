@@ -1636,7 +1636,7 @@ public class MechArmor  extends abPlaceable {
     }
 
     public boolean RequiresExtraRules() {
-        if (IsHardened() || IsReactive() || IsReflective() || IsStealth() ) {
+        if (IsHardened() || IsReactive() || IsReflective() || IsStealth() || IsPatchwork() ) {
             return true;
         } else {
             return false;
