@@ -875,6 +875,7 @@ public class Mech implements ifUnit, ifBattleforce {
         l.SetTechBase( MainLoadout.GetTechBase() );
         l.SetRulesLevel( MainLoadout.GetRulesLevel() );
         l.SetEra( MainLoadout.GetEra() );
+        l.SetProductionEra( MainLoadout.GetProductionEra() );
         CurLoadout.Transfer( l );
         CurLoadout.ClearLoadout();
 
@@ -1055,6 +1056,7 @@ public class Mech implements ifUnit, ifBattleforce {
         l.SetTechBase( MainLoadout.GetTechBase() );
         l.SetRulesLevel( MainLoadout.GetRulesLevel() );
         l.SetEra( MainLoadout.GetEra() );
+        l.SetProductionEra( MainLoadout.GetProductionEra() );
         CurLoadout.Transfer( l );
         CurLoadout.ClearLoadout();
 
