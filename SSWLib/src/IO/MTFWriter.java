@@ -372,7 +372,9 @@ public class MTFWriter {
         if( retval.contains( "Searchlight" ) ) {
             // do nothing here
         } else if( retval.contains( "ImprovedJump Jet" ) ) {
-            //retval = Prepend + retval;    Removed prepend.s
+            //readded prepend of CL or IS after discussion with Torren on the MM
+            //MTF loader.
+            retval = Prepend + retval;
 
         } else if( ! p.CoreComponent() ) {
             if( p instanceof PhysicalWeapon || p instanceof PartialWing ) {
