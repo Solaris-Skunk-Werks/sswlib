@@ -30,6 +30,7 @@ package common;
 
 import components.Mech;
 import filehandlers.BinaryReader;
+import java.io.File;
 import java.util.Vector;
 
 public class DataFactory {
@@ -43,6 +44,39 @@ public class DataFactory {
         Vector weapons = b.ReadWeapons( Constants.WEAPONSFILE );
         Vector physicals = b.ReadPhysicals( Constants.PHYSICALSFILE );
         Vector equips = b.ReadEquipment( Constants.EQUIPMENTFILE );
+
+        File dataFile;
+        Vector customs;
+        try
+        {
+            dataFile = new File( Constants.CUSTOMWEAPONSFILE );
+            if (dataFile.exists()) {
+                customs = b.ReadWeapons( Constants.CUSTOMWEAPONSFILE );
+                if ( customs.size() > 0 ) weapons.addAll(customs);
+            }
+
+            dataFile = new File( Constants.CUSTOMAMMOFILE );
+            if ( dataFile.exists() ) {
+                customs = b.ReadWeapons( Constants.CUSTOMAMMOFILE );
+                if ( customs.size() > 0 ) ammo.addAll(customs);
+            }
+
+            dataFile = new File( Constants.CUSTOMEQUIPMENTFILE );
+            if ( dataFile.exists() ) {
+                customs = b.ReadWeapons( Constants.CUSTOMEQUIPMENTFILE );
+                if ( customs.size() > 0 ) equips.addAll(customs);
+            }
+
+            dataFile = new File( Constants.CUSTOMPHYSICALSFILE );
+            if ( dataFile.exists() ) {
+                customs = b.ReadWeapons( Constants.CUSTOMPHYSICALSFILE );
+                if ( customs.size() > 0 ) physicals.addAll(customs);
+            }
+        }
+        catch (Exception e)
+        {
+        }
+
         Equips = new EquipmentFactory( weapons, physicals, equips, ammo, m );
     }
 

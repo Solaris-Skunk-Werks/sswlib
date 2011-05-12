@@ -34,7 +34,11 @@ public class Constants {
                                WEAPONSFILE = "Data/Equipment/weapons.dat",
                                PHYSICALSFILE = "Data/Equipment/physicals.dat",
                                EQUIPMENTFILE = "Data/Equipment/equipment.dat",
-                               AMMOFILE = "Data/Equipment/ammunition.dat";
+                               AMMOFILE = "Data/Equipment/ammunition.dat",
+                               CUSTOMWEAPONSFILE = "Data/Equipment/customweapons.dat",
+                               CUSTOMPHYSICALSFILE = "Data/Equipment/customphysicals.dat",
+                               CUSTOMEQUIPMENTFILE = "Data/Equipment/customequipment.dat",
+                               CUSTOMAMMOFILE = "Data/Equipment/customammunition.dat";
 
     public final static String[] Locs = { "Head", "Center Torso", "Left Torso",
         "Right Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg" };
