@@ -4578,7 +4578,7 @@ public class Mech implements ifUnit, ifBattleforce {
         
         // Add in heat for movement
         if ( GetAdjustedJumpingMP(false) > 2 ) {
-            BFData.AddHeat(GetAdjustedJumpingMP(false));
+            BFData.AddHeat(GetJumpingHeat());
         } else {
             BFData.AddHeat(2);
         }
