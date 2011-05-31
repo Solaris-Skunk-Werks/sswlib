@@ -664,6 +664,12 @@ public class PrintMech implements Printable {
         //HS Type
         graphics.drawString( CurMech.GetHeatSinks().LookupName().split( " " )[0], p[PrintConsts.HEATSINK_NUMBER].x+2, p[PrintConsts.HEATSINK_NUMBER].y + 8 );
 
+        //Gyro Circles
+        if ( CurMech.GetGyro().ActualName().equals("Heavy-Duty Gyro")) {
+            //Add another circle
+            graphics.drawOval(229, 587, 6, 6);
+        }
+
         // internal information
         graphics.setFont( PrintConsts.ReallySmallFont );
         p = points.GetInternalInfoPoints();
