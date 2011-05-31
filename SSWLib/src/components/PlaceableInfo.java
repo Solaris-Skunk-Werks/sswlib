@@ -101,7 +101,9 @@ public class PlaceableInfo {
                     this.damage = "[" + e.GetType() + "]";
                 else
                     this.specials = ("[" + e.GetType() + ", " + e.GetSpecials() + "]").replace(", -", "");
-                this.rLong = (e.GetLongRange() * MiniConvRate) + "";
+                this.rShort = ((e.GetShortRange() * MiniConvRate) + "").replace("0", "--");
+                this.rMed = ((e.GetMediumRange() * MiniConvRate) + "").replace("0", "--");
+                this.rLong = ((e.GetLongRange() * MiniConvRate) + "").replace("0", "--");
             } else if( item instanceof ifWeapon ) {
                 ifWeapon weap = (ifWeapon) item;
                 this.heat = weap.GetHeat() + "";
