@@ -334,7 +334,9 @@ public class PrintConsts {
                                 temp.add(factory.MMLSRMAmmo(p));
                                 HasAmmoData = true;
                             }
-                        } else if ( ((ifWeapon) p.Item).IsFCSCapable() ) {
+                        }
+
+                        if ( ((ifWeapon) p.Item).IsFCSCapable() ) {
                             if ( ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_ArtemisIV || ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_ArtemisV ) {
                                 if ( CurMech.GetLoadout().UsingArtemisIV() ) {
                                     temp.add(factory.ArtemisIV(p));
