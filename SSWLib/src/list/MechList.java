@@ -187,9 +187,14 @@ public class MechList extends AbstractTableModel {
                         if ( part.contains("/") ) {
                             String[] mp = part.split("/");
                             if ( mp[0].contains("[") ) { mp[0] = mp[0].substring(mp[0].indexOf("["), mp[0].indexOf("]")).replace("[", "").replace("]", ""); }
-                            int Walk = Integer.parseInt(mp[0]);
-                            if (filter.getMinMP() > Walk) remove = true;
-                            break;
+                            try
+                            {
+                                int Walk = Integer.parseInt(mp[0]);
+                                if (filter.getMinMP() > Walk) remove = true;
+                                break;
+                            } catch ( Exception e ) {
+                                //Wrong field!
+                            }
                         }
                     }
                 } else {
