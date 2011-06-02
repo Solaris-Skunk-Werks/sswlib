@@ -151,7 +151,7 @@ public class stEngineISXXL implements ifEngine, ifState {
     }
 
     public double GetBVMult() {
-        return 0.5f;
+        return 0.25f;
     }
     
     public boolean IsFusion() {
