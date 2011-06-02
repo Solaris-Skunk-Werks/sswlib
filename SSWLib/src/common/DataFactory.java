@@ -57,19 +57,19 @@ public class DataFactory {
 
             dataFile = new File( Constants.CUSTOMAMMOFILE );
             if ( dataFile.exists() ) {
-                customs = b.ReadWeapons( Constants.CUSTOMAMMOFILE );
+                customs = b.ReadAmmo( Constants.CUSTOMAMMOFILE );
                 if ( customs.size() > 0 ) ammo.addAll(customs);
             }
 
             dataFile = new File( Constants.CUSTOMEQUIPMENTFILE );
             if ( dataFile.exists() ) {
-                customs = b.ReadWeapons( Constants.CUSTOMEQUIPMENTFILE );
+                customs = b.ReadEquipment( Constants.CUSTOMEQUIPMENTFILE );
                 if ( customs.size() > 0 ) equips.addAll(customs);
             }
 
             dataFile = new File( Constants.CUSTOMPHYSICALSFILE );
             if ( dataFile.exists() ) {
-                customs = b.ReadWeapons( Constants.CUSTOMPHYSICALSFILE );
+                customs = b.ReadPhysicals( Constants.CUSTOMPHYSICALSFILE );
                 if ( customs.size() > 0 ) physicals.addAll(customs);
             }
         }
