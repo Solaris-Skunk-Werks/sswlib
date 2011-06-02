@@ -41,6 +41,7 @@ import battleforce.BattleForceTools;
 import components.*;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import list.*;
 import utilities.CostBVBreakdown;
 
@@ -49,10 +50,16 @@ public class TXTWriter {
     private Mech CurMech;
     private String NL,
                    tformat = "$6.2f";
+    private ArrayList<Force> forces;
+
     public boolean CurrentLoadoutOnly = false;
 
     public TXTWriter() {
         NL = System.getProperty( "line.separator" );
+    }
+
+    public TXTWriter( ArrayList<Force> forces ) {
+        this.forces = forces;
     }
 
     public TXTWriter( Mech m ) {
@@ -65,13 +72,24 @@ public class TXTWriter {
         }
     }
 
+    public void Write( String filename ) throws IOException {
+        if ( !filename.endsWith(".txt") ) { filename += ".txt"; }
+        BufferedWriter FR = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( filename ), "UTF-8" ) );
+
+        for (Force force : forces) {
+            FR.write(force.SerializeClipboard());
+            FR.newLine();
+        }
+        FR.close();
+    }
+    
     public void WriteForces( String filename, Force force ) throws IOException {
-        Vector<Force> forces = new Vector<Force>();
+        forces = new ArrayList<Force>();
         forces.add(force);
         WriteForces( filename, forces );
     }
 
-    public void WriteForces( String filename, Vector<Force> forces ) throws IOException {
+    public void WriteForces( String filename, ArrayList<Force> forces ) throws IOException {
         if ( !filename.endsWith(".txt") ) { filename += ".txt"; }
         BufferedWriter FR = new BufferedWriter( new FileWriter(filename) );
 
@@ -198,6 +216,10 @@ public class TXTWriter {
         if( ! CurMech.GetNotables().equals( "" ) ) {
             retval += "Notable 'Mechs & MechWarriors: " + NL;
             retval += FormatFluff( CurMech.GetNotables() ) + NL + NL;
+        }
+        if( ! CurMech.GetAdditional().equals( "" ) ) {
+            retval += "Additional: " + NL;
+            retval += FormatFluff( CurMech.GetAdditional() ) + NL + NL;
         }
         retval += "================================================================================" + NL;
         retval += GetMiniTextExport();
