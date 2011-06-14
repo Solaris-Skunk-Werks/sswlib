@@ -255,7 +255,7 @@ public class BattleForceTools {
     {
         if (((abPlaceable)w).CritName().contains("LRM") )
         {
-            if ( ((abPlaceable)w).CritName().contains("Streak") || ((abPlaceable)w).CritName().contains("Enhanced") || ((abPlaceable)w).CritName().contains("Extended") )
+            if ( ((abPlaceable)w).CritName().contains("Streak") || ((abPlaceable)w).CritName().contains("Extended") )
                 return false;
 
             if ( !((RangedWeapon) w).IsUsingFCS() ) {
