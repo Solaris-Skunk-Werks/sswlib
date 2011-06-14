@@ -253,12 +253,17 @@ public class BattleForceTools {
 
     public static boolean isBFLRM(ifWeapon w)
     {
-        if (((abPlaceable)w).CritName().contains("LRM"))
+        if (((abPlaceable)w).CritName().contains("LRM") )
+        {
+            if ( ((abPlaceable)w).CritName().contains("Streak") || ((abPlaceable)w).CritName().contains("Enhanced") || ((abPlaceable)w).CritName().contains("Extended") )
+                return false;
+
             if ( !((RangedWeapon) w).IsUsingFCS() ) {
                 return true;
             } else {
                 return false;
             }
+        }
         else
             return false;
     }
