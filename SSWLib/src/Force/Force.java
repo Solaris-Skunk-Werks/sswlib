@@ -39,6 +39,7 @@ import filehandlers.ImageTracker;
 import java.awt.Image;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
@@ -210,7 +211,9 @@ public class Force extends AbstractTableModel implements ifSerializable {
         if (TotalC3BV > 1) TotalC3BV *= .05;
 
         for ( Unit u : getUnits() ) {
-            u.setForceC3BV(TotalC3BV);
+            if ( u.UsingC3 )
+                u.setForceC3BV(TotalC3BV);
+            
             TotalBaseBV += u.BaseBV;
             TotalModifier += u.MiscMod;
             TotalTonnage += u.Tonnage;
@@ -595,12 +598,12 @@ public class Force extends AbstractTableModel implements ifSerializable {
         return bf;
     }
 
-    public Vector<BattleForce> toBattleForceByGroup( int SizeLimit ) {
+    public ArrayList<BattleForce> toBattleForceByGroup( int SizeLimit ) {
         sortForPrinting();
-        Vector<BattleForce> Forces = new Vector<BattleForce>();
+        ArrayList<BattleForce> Forces = new ArrayList<BattleForce>();
 
         for ( Group g : Groups ) {
-            Vector<BattleForce> groupForces = g.toBattleForce(SizeLimit);
+            ArrayList<BattleForce> groupForces = g.toBattleForce(SizeLimit);
             for ( BattleForce bf : groupForces ) {
                 Forces.add(bf);
             }
