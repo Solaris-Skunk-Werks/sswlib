@@ -1059,7 +1059,7 @@ public class TXTWriter {
             if( ((RangedWeapon) p).IsUsingFCS() ) {
                 abPlaceable a = (abPlaceable) ((RangedWeapon) p).GetFCS();
                 tons -= a.GetTonnage();
-                add += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5" + tformat, FileCommon.GetExportName( CurMech, a ), loc, "-", a.NumCrits(), a.GetTonnage() * numthisloc ) + NL;
+                add += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5" + tformat, FileCommon.GetExportName( CurMech, a ), loc, "-", a.NumCrits() * numthisloc, a.GetTonnage() * numthisloc ) + NL;
             }
             if( ((RangedWeapon) p).IsUsingCapacitor() ) {
                 tons -= 1.0f;
@@ -1276,6 +1276,7 @@ public class TXTWriter {
         FR.write( CSVFormat("source") );
         FR.write( CSVFormat("date") );
         FR.write( CSVFormat("era") );
+        FR.write( CSVFormat("cost") );
         FR.write( "PV,Wt,MV,S,M,L,E,OV,Armor,Internal,Special Abilities" );
         FR.newLine();
 
@@ -1295,6 +1296,7 @@ public class TXTWriter {
             FR.write( CSVFormat(data.getSource()) );
             FR.write( CSVFormat(data.getYear()+"") );
             FR.write( CSVFormat(data.getEra()) );
+            FR.write( CSVFormat(data.getCost()+"") );
             FR.write( data.getBattleForceStats().SerializeCSV( false ) );
             FR.newLine();
         }
