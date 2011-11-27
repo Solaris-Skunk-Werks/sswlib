@@ -1044,6 +1044,7 @@ public class Mech implements ifUnit, ifBattleforce {
         boolean llcase2clan = CurLoadout.GetLLCaseII().IsClan();
         boolean rlcase2 = CurLoadout.HasRLCASEII();
         boolean rlcase2clan = CurLoadout.GetRLCaseII().IsClan();
+        boolean useClanCase = CurLoadout.IsUsingClanCASE();
         String Jumps = GetJumpJets().LookupName();
         String HeatSinks = GetHeatSinks().LookupName();
 
@@ -1162,7 +1163,11 @@ public class Mech implements ifUnit, ifBattleforce {
             if( rlcase2 ) {
                 CurLoadout.SetRLCASEII( true, -1, rlcase2clan );
             }
-            
+
+            if (useClanCase){
+                CurLoadout.SetClanCASE(false);
+                CurLoadout.SetClanCASE(true);
+            }
             // replace fixed-slot equipment
             if(HasBlueShield){
                 SetBlueShield(false);
