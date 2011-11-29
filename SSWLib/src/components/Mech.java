@@ -2416,7 +2416,7 @@ public class Mech implements ifUnit, ifBattleforce {
             jump = DefensiveFactor[JumpMP] + 0.1;
         }
         if( UsingJumpBooster() ) {
-            int boostMP = GetJumpBoosterMP();
+            int boostMP = GetAdjustedBoosterMP( true ) - 1;
             if( boostMP > JumpMP ) {
                 JumpMP = boostMP;
                 jump = Mech.DefensiveFactor[JumpMP] + 0.1f;
