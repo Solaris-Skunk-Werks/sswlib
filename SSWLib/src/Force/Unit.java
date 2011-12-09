@@ -35,14 +35,17 @@ import filehandlers.MechReader;
 import Print.ForceListPrinter;
 
 import Print.PrintConsts;
+import common.Constants;
 import components.PhysicalWeapon;
 import components.RangedWeapon;
 import filehandlers.FileCommon;
 import filehandlers.MechWriter;
 import filehandlers.Media;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.prefs.Preferences;
 import list.view.Column;
 import org.w3c.dom.Node;
 
@@ -89,11 +92,14 @@ public class Unit implements ifSerializable {
     private boolean isOmni = false;
     public Mech m = null;
     private BattleForceStats BFStats = new BattleForceStats();
+    private Preferences Prefs;
 
     public Unit(){
+        Prefs = Preferences.userRoot().node( Constants.BFBPrefs );
     }
 
     public Unit( MechListData m ) {
+        this();
         this.Type = m.getName();
         this.Model = m.getModel();
         this.TypeModel = m.getFullName();
@@ -113,6 +119,7 @@ public class Unit implements ifSerializable {
     }
 
     public Unit( Mech m ) {
+        this();
         Type = m.GetName();
         Model = m.GetModel();
         TypeModel = m.GetFullName();
@@ -166,6 +173,7 @@ public class Unit implements ifSerializable {
     }
 
     public Unit( BattleForceStats stat ) {
+        this();
         Type = stat.getName();
         Model = stat.getModel();
         TypeModel = stat.getElement();
@@ -191,6 +199,7 @@ public class Unit implements ifSerializable {
     }
 
     public Unit( Node n ) throws Exception {
+        this();
         for (int i=0; i < n.getChildNodes().getLength(); i++) {
             String nodeName = n.getChildNodes().item(i).getNodeName();
 
@@ -222,6 +231,7 @@ public class Unit implements ifSerializable {
     }
 
     public Unit(Node n, int Version) throws Exception {
+        this();
         try {
             this.Type = FileCommon.DecodeFluff(n.getAttributes().getNamedItem("type").getTextContent().trim());
             this.Model = FileCommon.DecodeFluff(n.getAttributes().getNamedItem("model").getTextContent().trim());
@@ -471,7 +481,7 @@ public class Unit implements ifSerializable {
         if ( m == null ) {
             try {
                 MechReader reader = new MechReader();
-                this.m = reader.ReadMech( this.Filename );
+                this.m = reader.ReadMech( Prefs.get("ListPath", "") + this.Filename );
                 if ( ! this.Configuration.isEmpty() ) {
                     this.m.SetCurLoadout(this.Configuration.trim());
                 }
