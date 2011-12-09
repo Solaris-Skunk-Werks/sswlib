@@ -252,6 +252,18 @@ public class PrintMech implements Printable {
         
         graphics.drawImage( RecordSheet, 0, 0, 576, 756, null );
         //graphics.drawImage( RecordSheet, 0, 0, 560, 757, null );
+
+        //Remove old copyright and add new
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 740, 576, 50);
+        graphics.setColor(Color.BLACK);
+        graphics.setFont(PrintConsts.TinyFont);
+        int line = 747;
+        for (String item : PrintConsts.getCopyright()) {
+            graphics.drawString(item, 70, line);
+            line += graphics.getFont().getSize();
+        }
+        
         CheckShields( graphics );
         
         Point start = points.GetMechImageLoc();

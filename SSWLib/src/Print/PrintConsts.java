@@ -224,8 +224,8 @@ public class PrintConsts {
 
     public static String[] getCopyright() {
         return new String[]{
-            "Copyright " + (Calendar.getInstance()).get(Calendar.YEAR) + " WizKids, Inc.  Classic Battletech, 'Mech and BattleMech are trademarks of WizKids, Inc.  All Rights reserved.",
-            "Catalyst Game Labs and the Catalyst Game Labs logo are trademarks of InMediaRes Productions, LLC. Permission to photocopy for personal use."};
+            "Copyright " + (Calendar.getInstance()).get(Calendar.YEAR) + " The Topps Company, Inc. Battletech, 'Mech and BattleMech are trademarks of The Topps Company, Inc.  All Rights reserved.",
+            "  Catalyst Game Labs and the Catalyst Game Labs logo are trademarks of InMediaRes Productions, LLC. Permission to photocopy for personal use."};
     }
     
     public static String GetPrintName( abPlaceable a, Mech CurMech, int Loc ) {
