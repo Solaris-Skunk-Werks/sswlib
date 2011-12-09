@@ -103,9 +103,9 @@ public class MechReader {
  * @throws java.lang.Exception Throws a variety of exceptions that should explain
  *                             what went wrong while loading the 'Mech data.
  */
-    public MechListData ReadMechData( String filename ) throws Exception {
+    public MechListData ReadMechData( String filename, String basePath ) throws Exception {
        MechListData mData = new MechListData();
-        mData.setFilename(filename);
+        mData.setFilename(filename.replace(basePath, ""));
         filename = CommonTools.GetSafeFilename( filename );
         load = db.parse( filename );
 
