@@ -469,7 +469,9 @@ public class Engine extends abPlaceable {
 
     public double GetDefensiveBV() {
         if( IsArmored() ) {
-            return 5.0 * NumCrits();
+            //needs to include ALL crits, not just a single location.
+            return 5.0 * ReportCrits();
+            //return 5.0 * ( (GetCTCrits()*2) + (GetSideTorsoCrits()*2) );
         }
         return 0.0;
     }
@@ -529,5 +531,10 @@ public class Engine extends abPlaceable {
     @Override
     public String toString() {
         return CurConfig.toString();
+    }
+   
+    public boolean IsLarge() {
+        if ( EngineRating > 400  ) return true;
+        return false;
     }
 }
