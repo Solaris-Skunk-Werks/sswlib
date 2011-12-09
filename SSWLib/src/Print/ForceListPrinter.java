@@ -38,13 +38,14 @@ import java.awt.Image;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 
 public class ForceListPrinter implements Printable {
     public Graphics2D Graphic;
     //private Force[] forces;
-    private Vector<Force> forces = new Vector<Force>();
+    private ArrayList<Force> forces = new ArrayList<Force>();
     private PageFormat format = null;
     private String Title = "Battletech Force Balancer";
     private ImageTracker imageTracker;
@@ -53,7 +54,7 @@ public class ForceListPrinter implements Printable {
     public int currentX = 0;
     public int currentY = 0;
 
-    public ForceListPrinter(Vector<Force> forces, ImageTracker imageTracker){
+    public ForceListPrinter(ArrayList<Force> forces, ImageTracker imageTracker){
         this.forces = forces;
         this.imageTracker = imageTracker;
     }
@@ -62,7 +63,7 @@ public class ForceListPrinter implements Printable {
         this.imageTracker = imageTracker;
     }
 
-    public void AddForces( Vector<Force> forces ) {
+    public void AddForces( ArrayList<Force> forces ) {
         this.forces = forces;
     }
 

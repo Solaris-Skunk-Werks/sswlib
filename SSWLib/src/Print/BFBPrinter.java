@@ -32,6 +32,7 @@ import Force.*;
 
 import filehandlers.ImageTracker;
 import java.awt.print.*;
+import java.util.ArrayList;
 import java.util.Vector;
 
 public final class BFBPrinter {
@@ -40,7 +41,7 @@ public final class BFBPrinter {
     private Boolean useDialog = true;
     private ForceListPrinter sheet;
     private PrintDeclaration chits;
-    private Vector<Force> forces = new Vector<Force>();
+    private ArrayList<Force> forces = new ArrayList<Force>();
     private ImageTracker imageTracker;
     private int unitSize = 0;
 
@@ -63,7 +64,7 @@ public final class BFBPrinter {
         chits = new PrintDeclaration(imageTracker);
     }
 
-    public BFBPrinter( Vector<Force> forces, ImageTracker imageTracker ) {
+    public BFBPrinter( ArrayList<Force> forces, ImageTracker imageTracker ) {
         this(imageTracker);
         this.forces = forces;
         for ( Force force : forces ) {

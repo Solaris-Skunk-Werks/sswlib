@@ -35,12 +35,13 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.print.*;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class PrintDeclaration implements Printable {
     public Graphics2D Graphic;
-    private Vector<Force> forces = new Vector<Force>();
-    private Vector<FireChit> units = new Vector<FireChit>();
+    private ArrayList<Force> forces = new ArrayList<Force>();
+    private ArrayList<FireChit> units = new ArrayList<FireChit>();
     private PageFormat format = null;
     private ImageTracker imageTracker;
     private String[] Types = new String[]{"  Primary", "Secondary", "Secondary"};
@@ -55,7 +56,7 @@ public class PrintDeclaration implements Printable {
         this.imageTracker = imageTracker;
     }
 
-    public PrintDeclaration( Vector<Force> forces, ImageTracker imageTracker ) {
+    public PrintDeclaration( ArrayList<Force> forces, ImageTracker imageTracker ) {
         this(imageTracker);
         this.forces = forces;
     }
@@ -92,7 +93,7 @@ public class PrintDeclaration implements Printable {
         units.add(new FireChit(g, u));
     }
 
-    public void AddForces( Vector<Force> forces ) {
+    public void AddForces( ArrayList<Force> forces ) {
         for (Force f : forces)
         {
             AddForce(f);
