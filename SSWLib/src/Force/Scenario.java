@@ -36,6 +36,7 @@ import battleforce.BattleForceStats;
 import filehandlers.FileCommon;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
@@ -55,7 +56,7 @@ public class Scenario implements ifSerializable {
                     VictoryConditions = "",
                     SpecialRules = "",
                     Aftermath = "";
-    private Vector<Force> forces = new Vector<Force>();
+    private ArrayList<Force> forces = new ArrayList<Force>();
     private Warchest warchest = new Warchest();
     private abTable currentModel;
 
@@ -69,7 +70,7 @@ public class Scenario implements ifSerializable {
         forces.add(new Force());
     }
 
-    public Scenario( Vector<Force> forces ) {
+    public Scenario( ArrayList<Force> forces ) {
         this.forces = forces;
     }
 
@@ -213,12 +214,12 @@ public class Scenario implements ifSerializable {
         return BattleForces;
     }
 
-    public Vector<BattleForce> toBattleForceByGroup( int SizeLimit ) {
-        Vector<BattleForce> Forces = new Vector<BattleForce>();
+    public ArrayList<BattleForce> toBattleForceByGroup( int SizeLimit ) {
+        ArrayList<BattleForce> Forces = new ArrayList<BattleForce>();
         for ( Force f : forces ) {
             f.sortForPrinting();
             for ( Group g : f.Groups ) {
-                Vector<BattleForce> groupForces = g.toBattleForce(SizeLimit);
+                ArrayList<BattleForce> groupForces = g.toBattleForce(SizeLimit);
                 for ( BattleForce bf : groupForces ) {
                     Forces.add(bf);
                 }
@@ -361,16 +362,16 @@ public class Scenario implements ifSerializable {
         this.Aftermath = Aftermath;
     }
 
-    public Vector<Force> getForces() {
+    public ArrayList<Force> getForces() {
         return forces;
     }
 
-    public void setForces(Vector<Force> forces) {
+    public void setForces(ArrayList<Force> forces) {
         this.forces = forces;
     }
 
-    public Vector<Group> getGroups() {
-        Vector<Group> groups = new Vector<Group>();
+    public ArrayList<Group> getGroups() {
+        ArrayList<Group> groups = new ArrayList<Group>();
         for ( Force f : forces ) {
             for ( Group g : f.Groups ) {
                 groups.add(g);
@@ -379,8 +380,8 @@ public class Scenario implements ifSerializable {
         return groups;
     }
 
-    public Vector<Unit> getUnits() {
-        Vector<Unit> units = new Vector<Unit>();
+    public ArrayList<Unit> getUnits() {
+        ArrayList<Unit> units = new ArrayList<Unit>();
         for ( Force f : forces ) {
             for ( Unit u : f.getUnits() ) {
                 units.add(u);

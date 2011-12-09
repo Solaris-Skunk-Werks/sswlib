@@ -29,16 +29,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package Force;
 
 import IO.RUSReader;
-import Force.RUS;
 import common.CommonTools;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.DefaultListModel;
 
 public class Skills {
-    private Vector List = new Vector();
-    private Vector filtered = new Vector();
+    private ArrayList<Skill> List = new ArrayList<Skill>();
+    private ArrayList<Skill> filtered = new ArrayList<Skill>();
     private int MaxSeperation = 3;
     private float MaxBV = 9999999;
     private String MaxSkill = "";
@@ -59,8 +59,8 @@ public class Skills {
         SetSkills();
     }
 
-    public void SetSkills() {
-        List.removeAllElements();
+    public final void SetSkills() {
+        List.clear();
         for ( int G=0; G<=7; G++ ) {
             for ( int P=0; P<=7; P++ ) {
                 List.add(new Skill(G, P, CommonTools.GetSkillBV(BV, G, P)));
@@ -71,7 +71,7 @@ public class Skills {
 
     public void sortByBV() {
         int i = 1, j = 2;
-        Object swap;
+        Skill swap;
         while( i < List.size() ) {
             // get the two items we'll be comparing
             if( ((Skill) List.get( i - 1 )).getBV() >= ((Skill) List.get( i )).getBV() ) {
@@ -79,8 +79,8 @@ public class Skills {
                 j += 1;
             } else {
                 swap = List.get( i - 1 );
-                List.setElementAt( List.get( i ), i - 1 );
-                List.setElementAt( swap, i );
+                List.set( i - 1, List.get( i ) );
+                List.set( i, swap );
                 i -= 1;
                 if( i == 0 ) {
                     i = 1;
@@ -90,7 +90,7 @@ public class Skills {
     }
 
     public Skill getBestSkills() {
-        Vector oList = filter();
+        ArrayList<Skill> oList = filter();
         if ( oList.size() > 0 ) {
             return (Skill) oList.get(0);
         } else {
@@ -98,9 +98,9 @@ public class Skills {
         }
     }
 
-    public Vector filter() {
+    public ArrayList<Skill> filter() {
         Boolean Include = false;
-        filtered.removeAllElements();
+        filtered.clear();
 
         for (int i=0; i<List.size(); i++) {
             Skill data = (Skill) List.get(i);
@@ -120,7 +120,7 @@ public class Skills {
         }
 
         int i = 1, j = 2;
-        Object swap;
+        Skill swap;
         while( i < filtered.size() ) {
             // get the two items we'll be comparing
             if( ((Skill) filtered.get( i - 1 )).getBV() >= ((Skill) filtered.get( i )).getBV() ) {
@@ -128,8 +128,8 @@ public class Skills {
                 j += 1;
             } else {
                 swap = filtered.get( i - 1 );
-                filtered.setElementAt( filtered.get( i ), i - 1 );
-                filtered.setElementAt( swap, i );
+                filtered.set( i - 1, filtered.get( i ) );
+                filtered.set( i, swap );
                 i -= 1;
                 if( i == 0 ) {
                     i = 1;
