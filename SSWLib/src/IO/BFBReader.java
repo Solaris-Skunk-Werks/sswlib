@@ -53,7 +53,7 @@ public class BFBReader {
                 NodeList nl = load.getElementsByTagName("force");
                 Node n = load.getFirstChild();
                 scenario.setName(n.getAttributes().getNamedItem("scenario").getTextContent().trim());
-                scenario.getForces().removeAllElements();
+                scenario.getForces().clear();
                 scenario.AddForce( new Force(nl.item(0)) );
                 scenario.AddForce( new Force(nl.item(1)) );
             } catch ( Exception e ) {
