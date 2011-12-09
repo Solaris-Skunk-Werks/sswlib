@@ -54,7 +54,8 @@ public abstract class abUnitData implements ifUnitData {
             MinMP = 1;
     double Cost = 0.0d;
     boolean Omni = false;
-    String filename = "";
+    String basePath = "",
+           filename = "";
     public Vector Configurations = new Vector();
     public BattleForceStats bfstat = new BattleForceStats();
     private String[] indexFields = new String[]{"Name", "Model", "Level", "Era",

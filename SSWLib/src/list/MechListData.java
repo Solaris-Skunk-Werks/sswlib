@@ -62,12 +62,12 @@ public class MechListData extends abUnitData {
         this(m.Name, m.Model, m.Configuration, m.Level, m.Era, m.Tech, m.Source, m.Type, m.Motive, m.Info, m.Tonnage, m.Year, m.BV, m.Cost, m.filename, m.bfstat);
     }
 
-    public MechListData( String filename ) throws Exception {
+    public MechListData( String filename, String basePath ) throws Exception {
         MechReader read = new MechReader();
         MechListData tempData = new MechListData();
         try
         {
-            tempData = read.ReadMechData(filename);
+            tempData = read.ReadMechData(filename, basePath);
             this.Name = tempData.getName();
             this.Model = tempData.getModel();
             this.Configuration = tempData.getConfig();
@@ -84,7 +84,7 @@ public class MechListData extends abUnitData {
             this.BV = tempData.getBV();
             this.Cost = tempData.getCost();
             this.Omni = tempData.isOmni();
-            this.filename = tempData.getFilename();
+            this.filename = tempData.getFilename().replace(basePath, "");
             this.Config = tempData.getConfig();
             for ( int i=0; i < tempData.Configurations.size(); i++ ){
                 this.Configurations.add(tempData.Configurations.get(i));

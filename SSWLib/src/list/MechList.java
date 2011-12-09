@@ -43,7 +43,7 @@ import list.view.tbTotalWarfareView;
 public class MechList extends AbstractTableModel {
     private Vector<MechListData> List = new Vector<MechListData>();
     private String Directory = "";
-    private int IndexVersion = 7;
+    private int IndexVersion = 8;
     private abView currentModel = new tbTotalWarfareView(this);
 
     public MechList() {
@@ -99,7 +99,7 @@ public class MechList extends AbstractTableModel {
     public void Add( File f ) {
         try
         {
-            MechListData mData = new MechListData( f.getCanonicalPath() );
+            MechListData mData = new MechListData( f.getCanonicalPath(), getDirectory());
             if (mData.isOmni()) {
                 for ( int d=0; d < mData.Configurations.size(); d++ ) {
                     List.add((MechListData) mData.Configurations.get(d));
@@ -218,7 +218,7 @@ public class MechList extends AbstractTableModel {
     
     public void Write() throws IOException {
         if (List.size() > 0) {
-            BufferedWriter FR = new BufferedWriter( new FileWriter( Directory + File.separator + "index.ssi" ) );
+            BufferedWriter FR = new BufferedWriter( new FileWriter( getDirectory() + File.separator + "index.ssi" ) );
             FR.write("version:" + IndexVersion);
             FR.newLine();
             for (int i=0; i < List.size(); i++ ) {
@@ -233,7 +233,7 @@ public class MechList extends AbstractTableModel {
 
     public boolean Read() {
         try {
-            BufferedReader FR = new BufferedReader( new FileReader( Directory + File.separator + "index.ssi" ) );
+            BufferedReader FR = new BufferedReader( new FileReader( getDirectory() + File.separator + "index.ssi" ) );
             boolean EOF = false,
                     hasData = false;
             String read = "";
@@ -385,5 +385,9 @@ public class MechList extends AbstractTableModel {
      */
     public void setCurrentModel(abView currentModel) {
         this.currentModel = currentModel;
+    }
+
+    public String getDirectory() {
+        return Directory;
     }
 }
