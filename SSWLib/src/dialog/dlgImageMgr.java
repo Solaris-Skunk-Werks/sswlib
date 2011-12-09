@@ -39,11 +39,12 @@ import java.util.Hashtable;
 import javax.swing.DefaultListModel;
 import javax.swing.border.TitledBorder;
 import filehandlers.MechWriter;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 
 public class dlgImageMgr extends javax.swing.JDialog {
-    public Vector<Force> forces = new Vector<Force>();
+    public ArrayList<Force> forces = new ArrayList<Force>();
     public boolean hasWork = false;
 
     private Unit curUnit;
@@ -65,7 +66,7 @@ public class dlgImageMgr extends javax.swing.JDialog {
         Load();
     }
 
-    public dlgImageMgr( java.awt.Frame parent, Vector<Force> forces, ImageTracker imageTracker ) {
+    public dlgImageMgr( java.awt.Frame parent, ArrayList<Force> forces, ImageTracker imageTracker ) {
         this(parent, true);
         this.forces = forces;
         this.imageTracker = imageTracker;
