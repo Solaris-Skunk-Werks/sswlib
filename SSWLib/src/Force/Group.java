@@ -9,13 +9,14 @@ import java.util.Vector;
 import org.w3c.dom.Node;
 import battleforce.BattleForce;
 import battleforce.BattleForceStats;
+import java.util.ArrayList;
 import list.view.Column;
 
 public class Group {
     private String Name = "",
                    Type = BattleForce.InnerSphere,
                    Logo = "";
-    private Vector<Unit> Units = new Vector<Unit>();
+    private ArrayList<Unit> Units = new ArrayList<Unit>();
     private Force force;
     public float TotalBV = 0.0f;
     public int TotalPV = 0;
@@ -93,8 +94,8 @@ public class Group {
 
             if ( doSwap ) {
                 swap = Units.get( i - 1 );
-                Units.setElementAt( Units.get( i ), i - 1 );
-                Units.setElementAt( swap, i );
+                Units.set( i-1, Units.get( i ) );
+                Units.set( i, swap );
                 i -= 1;
                 if( i == 0 ) {
                     i = 1;
@@ -104,8 +105,8 @@ public class Group {
         }
     }
 
-    public Vector<BattleForce> toBattleForce( int SizeLimit ) {
-        Vector<BattleForce> bforces = new Vector<BattleForce>();
+    public ArrayList<BattleForce> toBattleForce( int SizeLimit ) {
+        ArrayList<BattleForce> bforces = new ArrayList<BattleForce>();
         BattleForce bf = new BattleForce();
         bf.Type = getType();
         bf.ForceName = force.ForceName;
@@ -169,7 +170,7 @@ public class Group {
         return data;
     }
 
-    public Vector<Unit> getUnits() {
+    public ArrayList<Unit> getUnits() {
         return Units;
     }
 
@@ -226,7 +227,7 @@ public class Group {
         return TotalPV;
     }
 
-    public void setUnits(Vector<Unit> Units) {
+    public void setUnits(ArrayList<Unit> Units) {
         this.Units = Units;
     }
 
