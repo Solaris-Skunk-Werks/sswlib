@@ -4458,6 +4458,7 @@ public class Mech implements ifUnit, ifBattleforce {
     public String GetBFPrimeMovementMode(){
         int walkMP = GetAdjustedWalkingMP(false, false);
         int jumpMP = GetAdjustedJumpingMP(false);
+        if ( GetJumpBoosterMP() > jumpMP ) jumpMP = GetJumpBoosterMP();
 
         if ( walkMP == jumpMP && GetBFPrimeMovement() == jumpMP ){
             if ( GetBFSecondaryMovementMode().isEmpty() ) {
@@ -4474,6 +4475,7 @@ public class Mech implements ifUnit, ifBattleforce {
         int baseMP = GetAdjustedWalkingMP(false, false);
         int walkMP = GetBFPrimeMovement();
         int jumpMP = GetAdjustedJumpingMP(false);
+        if ( GetJumpBoosterMP() > jumpMP ) jumpMP = GetJumpBoosterMP();
 
         if ( jumpMP > 0 && walkMP != jumpMP ){
             if ( baseMP > jumpMP )
@@ -4491,6 +4493,7 @@ public class Mech implements ifUnit, ifBattleforce {
     public String GetBFSecondaryMovementMode(){
         int walkMP = GetBFPrimeMovement();
         int jumpMP = GetAdjustedJumpingMP(false);
+        if ( GetJumpBoosterMP() > jumpMP ) jumpMP = GetJumpBoosterMP();
 
         if ( jumpMP > 0 && walkMP != jumpMP )
             return "j";
@@ -4523,11 +4526,18 @@ public class Mech implements ifUnit, ifBattleforce {
     public int GetBFStructure() {
         Engine e = GetEngine();
         int t = GetTonnage();
-        return e.GetBFStructure(t);
+        int retval = e.GetBFStructure(t);
+        if ( GetIntStruc().CritName().contains("Reinforced") )
+            retval *=2;
+        else if ( GetIntStruc().CritName().contains("Composite") )
+            retval /= 2;
+
+        return retval;
     }
 
     public int[] GetBFDamage( BattleForceStats bfs ) {
         int[] retval = {0,0,0,0,0};
+        int CoolantPods = 0;
 
         // Loop through all weapons in non-core
         // and convert all weapon dmg
@@ -4539,44 +4549,85 @@ public class Mech implements ifUnit, ifBattleforce {
                 double [] temp = BattleForceTools.GetDamage((ifWeapon)nc.get(i), (ifBattleforce)this);
 
                 BFData.AddBase(temp);
+                if ( nc.get(i) instanceof RangedWeapon )
+                        BFData.Base.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
         
                 if ( BattleForceTools.isBFAutocannon((ifWeapon)nc.get(i)) )
                 {
                     BFData.AC.AddBase(temp);
+                    if ( nc.get(i) instanceof RangedWeapon )
+                        BFData.AC.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
                 }
                 else if ( BattleForceTools.isBFLRM((ifWeapon)nc.get(i)) )
                 {
                     BFData.LRM.AddBase(temp);
+                    if ( nc.get(i) instanceof RangedWeapon )
+                        BFData.LRM.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
                 }
                 else if ( BattleForceTools.isBFSRM((ifWeapon)nc.get(i)) )
                 {
                     BFData.SRM.AddBase(temp);
+                    if ( nc.get(i) instanceof RangedWeapon )
+                        BFData.SRM.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                }
+                else if ( BattleForceTools.isBFSRT((ifWeapon)nc.get(i)) ||
+                            BattleForceTools.isBFLRT((ifWeapon)nc.get(i)) )
+                {
+                    BFData.TOR.AddBase(temp);
+                    if ( nc.get(i) instanceof RangedWeapon )
+                        BFData.TOR.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
                 }
                 else if ( BattleForceTools.isBFMML((ifWeapon)nc.get(i)) )
                 {
                     BFData.SRM.AddBase(new double[]{temp[BFConstants.BF_SHORT], temp[BFConstants.BF_MEDIUM]/2.0, 0.0, 0.0, temp[BFConstants.BF_OV]});
                     BFData.LRM.AddBase(new double[]{0.0, temp[BFConstants.BF_MEDIUM]/2.0, temp[BFConstants.BF_LONG], 0.0, temp[BFConstants.BF_OV]} );
+                    if ( nc.get(i) instanceof RangedWeapon ){
+                        BFData.SRM.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                        BFData.LRM.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    }
+
                 }
                 if ( BattleForceTools.isBFIF((ifWeapon)nc.get(i)) )
                 {
                     BFData.IF.AddBase(temp);
+                    if ( nc.get(i) instanceof RangedWeapon )
+                        BFData.IF.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
                 }
                 if ( BattleForceTools.isBFFLK((ifWeapon)nc.get(i)) )
                 {
                     BFData.FLK.AddBase(temp);
+                    if ( nc.get(i) instanceof RangedWeapon )
+                        BFData.FLK.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
                 }
                 BFData.AddNote(nc.get(i).toString() + " :: " + temp[BFConstants.BF_SHORT] + "/" + temp[BFConstants.BF_MEDIUM] + "/" + temp[BFConstants.BF_LONG] + "/" + temp[BFConstants.BF_EXTREME] + " [" + temp[BFConstants.BF_OV] + "]" );
             } else if ( nc.get(i) instanceof Ammunition ) {
                 //Need to know if it is LRM, SRM, or AC ammo
+                /*
                 Ammunition ammo = ((Ammunition) nc.get(i));
+
+                BFData.Base.AddAmmo(ammo.GetLotSize()); //Trying out adding ammo to the base...
+
                 if ( ammo.CritName().contains("SRM") ) {
                     BFData.SRM.AddAmmo(ammo.GetLotSize());
                 }
-                if ( ammo.CritName().contains(("LRM"))) {
+                if ( ammo.CritName().contains("LRM") ) {
                     BFData.LRM.AddAmmo(ammo.GetLotSize());
                 }
                 if ( ammo.CritName().contains("AC") || ammo.CritName().contains("LB") ) {
                     BFData.AC.AddAmmo(ammo.GetLotSize());
+                    BFData.FLK.AddAmmo(ammo.GetLotSize());
+                }
+                if ( ammo.CritName().contains("SRT") ) {
+                    BFData.TOR.AddAmmo(ammo.GetLotSize());
+                }
+                if ( ammo.CritName().contains("LRT") ) {
+                    BFData.TOR.AddAmmo(ammo.GetLotSize());
+                }
+                 */
+            } else if ( nc.get(i) instanceof Equipment ) {
+                Equipment equip = ((Equipment) nc.get(i));
+                if ( equip.CritName().contains("Coolant Pod")) {
+                    CoolantPods++;
                 }
             }
         }
@@ -4597,7 +4648,7 @@ public class Mech implements ifUnit, ifBattleforce {
             BFData.AddHeat(10);
         }
 
-        BFData.SetHeat(this.GetHeatSinks().TotalDissipation());
+        BFData.SetHeat(this.GetHeatSinks().TotalDissipation() + CoolantPods);
         BFData.CheckSpecials();
         
         // Convert all damage to BF scale
@@ -4610,6 +4661,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if ( BFData.AC.CheckSpecial() ) bfs.addAbility("AC " + BFData.AC.GetAbility() );
         if ( BFData.SRM.CheckSpecial() ) bfs.addAbility("SRM " + BFData.SRM.GetAbility() );
         if ( BFData.LRM.CheckSpecial() ) bfs.addAbility("LRM " + BFData.LRM.GetAbility() );
+        if ( BFData.TOR.CheckSpecial() ) bfs.addAbility("TOR " + BFData.TOR.GetAbility() );
         if ( BFData.IF.getBFLong() > 0 )  bfs.addAbility("IF " + BFData.IF.getBFLong() );
         if ( BFData.FLK.getBaseMedium() > 5 ) bfs.addAbility("FLK " + BFData.FLK.GetAbility() );
 
@@ -4764,9 +4816,10 @@ public class Mech implements ifUnit, ifBattleforce {
         //Remove a - that is a result of the file needing data
         retval.remove("-");
 
-        // Remove extra base LRM, SRM, and AC if included
+        // Remove extra base LRM, SRM, TRO, and AC if included
         retval.remove("LRM");
         retval.remove("SRM");
+        retval.remove("TOR");
         retval.remove("AC");
         retval.remove("IF");
         retval.remove("FLK");
@@ -4839,6 +4892,7 @@ public class Mech implements ifUnit, ifBattleforce {
         Lookup.put( "Standard Cockpit", new VCockpitSetStandard() );
         Lookup.put( "Industrial Cockpit", new VCockpitSetIndustrial() );
         Lookup.put( "Industrial w/ Adv. FC", new VCockpitSetIndustrialAFC() );
+        Lookup.put( "Interface Cockpit", new VCockpitSetInterface() );
         Lookup.put( "Small Cockpit", new VCockpitSetSmall() );
         Lookup.put( "Torso-Mounted Cockpit", new VCockpitSetTorsoMount() );
         Lookup.put( "Fuel-Cell Engine", new VEngineSetFuelCell() );
