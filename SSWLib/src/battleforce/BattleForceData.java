@@ -1,6 +1,6 @@
 package battleforce;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class BattleForceData {
     public DataSet  Base = new DataSet(false);
@@ -8,14 +8,16 @@ public class BattleForceData {
     public DataSet  AC = new DataSet(true);
     public DataSet  LRM = new DataSet(true);
     public DataSet  SRM = new DataSet(true);
+    public DataSet  TOR = new DataSet(true);
     public DataSet  IF = new DataSet(false);
     public DataSet  FLK = new DataSet(false);
     private int TotalHeatGenerated = 0;
     private int TotalHeatDissipation = 0;
-    private Vector<String> Notes = new Vector<String>();
+    private ArrayList<String> Notes = new ArrayList<String>();
 
     public BattleForceData() {
         IF.setNormalRound(true);
+        FLK.setNormalRound(true);
     }
 
     public void SetHeat( int TotalDiss ) {
@@ -24,6 +26,7 @@ public class BattleForceData {
         AC.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
         LRM.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
         SRM.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
+        TOR.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
         IF.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
         FLK.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
         AdjBase.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
@@ -64,6 +67,7 @@ public class BattleForceData {
         if ( AC.CheckSpecial() ) Adjust(AC);
         if ( SRM.CheckSpecial() ) Adjust(SRM);
         if ( LRM.CheckSpecial() ) Adjust(LRM);
+        if ( TOR.CheckSpecial() ) Adjust(TOR);
         
         AdjBase.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
         AdjBase.BattleForceValues();
@@ -100,6 +104,7 @@ public class BattleForceData {
         data += "AC\n" + AC.toString();
         data += "LRM\n" + LRM.toString();
         data += "SRM\n" + SRM.toString();
+        data += "TOR\n" + TOR.toString();
         data += "IF\n" + IF.toString();
         data += "FLK\n" + FLK.toString();
         data += "Heat: Dissipation (" + TotalHeatDissipation + ") < Max (" + TotalHeatGenerated + ") [Max-4]";
@@ -156,6 +161,16 @@ public class BattleForceData {
             this.isSpecial = isSpecial;
         }
 
+        public boolean EnoughAmmo() {
+            if ( LauncherCount > 0 ) {
+                if ( AmmoCount - (LauncherCount * 10) < 0 ) {
+                    NotEnoughAmmo = true;
+                    return false;
+                }
+            }
+            NotEnoughAmmo = false;
+            return true;
+        }
         public boolean CheckSpecial() {
             boolean retval = false;
             if ( TotalHeatDissipation < TotalHeatGenerated ) {
@@ -164,12 +179,9 @@ public class BattleForceData {
             } else {
                 if ( baseMedium > 9.0 ) retval = true;
             }
-            if ( LauncherCount > 0 ) {
-                if ( AmmoCount - (LauncherCount * 10) <= 0 ) {
-                    NotEnoughAmmo = true;
-                    retval = false;
-                }
-            }
+            //if ( !EnoughAmmo() )
+            //    retval = false;
+            
             SpecialDamage = retval;
             BattleForceValues();
             return retval;
@@ -207,8 +219,9 @@ public class BattleForceData {
         }
 
         public double HeatAdjustment( double base ) {
+            //if (!EnoughAmmo()) { base *= .75; }
             if ( TotalHeatGenerated > 0 && TotalHeatDissipation > 0 && base > 0 ) {
-                return (base * TotalHeatDissipation) / TotalHeatGenerated;
+                return Math.ceil((base * TotalHeatDissipation) / TotalHeatGenerated);
             }
             return 0.0;
         }
@@ -221,6 +234,7 @@ public class BattleForceData {
         }
 
         public int BattleForceValue( double base ) {
+            if (!EnoughAmmo()) { base *= .75; }
             if ( base > 9.0 || SpecialDamage || !isSpecial )
                 if ( isSpecial || useNormalRound)
                     return (int) Math.round(base / 10);

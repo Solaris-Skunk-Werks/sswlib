@@ -88,8 +88,8 @@ public class BattleForceTools {
             if ( ((abPlaceable)w).CritName().contains("HAG") )
                 dmgModifier = w.GetDamageMedium();
 
-            if ( w.GetRangeLong() > 0 ) {
-                if ( w instanceof RangedWeapon )
+            if ( w.GetRangeLong() >= 0 ) {
+                if ( w instanceof RangedWeapon || w instanceof MGArray )
                     retval[BFConstants.BF_SHORT] = w.GetDamageShort() * common.CommonTools.GetAverageClusterHits(w,w.ClusterModShort()) / dmgModifier;
             }
             if ( w.GetRangeLong() > 3 ) {
@@ -117,9 +117,9 @@ public class BattleForceTools {
 
             if ( isBFATM(w))
             {
-                retval[BFConstants.BF_SHORT] = common.CommonTools.GetAverageClusterHits(w,0) * 3;
-                retval[BFConstants.BF_MEDIUM] = common.CommonTools.GetAverageClusterHits(w,0) * 2;
-                retval[BFConstants.BF_LONG] = common.CommonTools.GetAverageClusterHits(w,0);
+                retval[BFConstants.BF_SHORT] = common.CommonTools.GetAverageClusterHits(w,2) * 3;
+                retval[BFConstants.BF_MEDIUM] = common.CommonTools.GetAverageClusterHits(w,2) * 2;
+                retval[BFConstants.BF_LONG] = common.CommonTools.GetAverageClusterHits(w,2);
             }
         }
         else
@@ -153,7 +153,7 @@ public class BattleForceTools {
         //Adjust for variable damage weapons that do not reach long range
         // added 4/7/10 per conversation with nckestrel
         if ( isBFVariable(w) && w.GetRangeLong() <= 15 ) {
-            retval[BFConstants.BF_MEDIUM] = ((w.GetDamageMedium() + w.GetDamageLong()) / 2);
+            retval[BFConstants.BF_MEDIUM] = ((w.GetDamageMedium() + w.GetDamageLong()) / 2.0f);
         }
 
         // Adjust for minimum range
@@ -188,7 +188,7 @@ public class BattleForceTools {
             }
 
             // Adjust for Targeting Computer
-            if ( ((Mech)b).UsingTC() ) {
+            if ( ((Mech)b).UsingTC() && !(isBFATM(w) || isBFSRM(w) || isBFSRT(w) || isBFLRM(w) || isBFLRT(w) ) ) {
                 retval[BFConstants.BF_SHORT] *= 1.1;
                 retval[BFConstants.BF_MEDIUM] *= 1.1;
                 retval[BFConstants.BF_LONG] *= 1.1;
@@ -251,9 +251,39 @@ public class BattleForceTools {
             return false;
     }
 
+    public static boolean isBFSRT(ifWeapon w)
+    {
+        if (((abPlaceable)w).CritName().contains("SRT"))
+            if ( w.IsStreak() )
+                return false;
+            else if ( ((RangedWeapon) w).IsUsingFCS() )
+                return false;
+            else
+                return true;
+        else
+            return false;
+    }
+
     public static boolean isBFLRM(ifWeapon w)
     {
         if (((abPlaceable)w).CritName().contains("LRM") )
+        {
+            if ( ((abPlaceable)w).CritName().contains("Streak") || ((abPlaceable)w).CritName().contains("Extended") )
+                return false;
+
+            if ( !((RangedWeapon) w).IsUsingFCS() ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else
+            return false;
+    }
+
+    public static boolean isBFLRT(ifWeapon w)
+    {
+        if (((abPlaceable)w).CritName().contains("LRT") )
         {
             if ( ((abPlaceable)w).CritName().contains("Streak") || ((abPlaceable)w).CritName().contains("Extended") )
                 return false;
