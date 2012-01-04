@@ -2103,6 +2103,7 @@ public class Mech implements ifUnit, ifBattleforce {
         defresult += CurGyro.GetDefensiveBV();
         defresult += CurArmor.GetDefensiveBV();
         defresult += GetDefensiveEquipBV();
+        defresult += GetDefensiveExcessiveAmmoPenalty();
         defresult += GetExplosiveAmmoPenalty();
         defresult += GetExplosiveWeaponPenalty();
         if( defresult < 1.0 ) {
@@ -2157,6 +2158,70 @@ public class Mech implements ifUnit, ifBattleforce {
                 result += CurLoadout.GetSupercharger().GetDefensiveBV();
             }
         }
+        return result;
+    }
+
+    public double GetDefensiveExcessiveAmmoPenalty() {
+        double result = 0.0;
+        Vector v = CurLoadout.GetNonCore();
+        Vector Ammo = new Vector(),
+               Wep = new Vector();
+
+        // do we even need to do this?
+        if( v.size() <= 0 ) { return result; }
+
+        // seperate out the ammo-using weapons and their ammunition
+        for( int i = 0; i < v.size(); i++ ) {
+            if( v.get( i ) instanceof Ammunition ) {
+                Ammo.add( v.get( i ) );
+            }
+            if( v.get(i) instanceof Equipment ) {
+                if( ((Equipment) v.get( i )).HasAmmo() ) {
+                    Wep.add( v.get( i ) );
+                }
+            }
+        }
+
+        // do we need to continue?
+        if( Ammo.size() <= 0 ) { return result; }
+
+        // for each weapon that uses ammo, total it's ammo BV and ensure it's
+        // not excessive.  Add the BV to the running total.
+        while( Wep.size() > 0 ) {
+            // get the first item and check if anything else uses the same ammo
+            Equipment test = (Equipment) Wep.get( 0 );
+            Wep.remove( test );
+            Ammunition ammo = null;
+            int NumWeps = 1;
+            int NumAmmos = 0;
+            for( int i = Wep.size() - 1; i >= 0; i-- ) {
+                if( ((Equipment) Wep.get( i )).GetAmmoIndex() == test.GetAmmoIndex() ) {
+                    NumWeps++;
+                    Wep.remove( i );
+                }
+            }
+
+            // now check the number of ammunitions that this weapon uses
+            for( int i = 0; i < Ammo.size(); i++ ) {
+                if( ((Ammunition) Ammo.get(i)).GetAmmoIndex() == test.GetAmmoIndex() ) {
+                    ammo = (Ammunition) Ammo.get( i );
+                    NumAmmos++;
+                }
+            }
+
+            // now find out if the ammo is excessive
+            if( NumAmmos != 0 && ammo != null ) {
+                double ammoBV = ( NumAmmos * ammo.GetOffensiveBV() );
+                if( ammoBV <= 0.0 ) {
+                    ammoBV = ( NumAmmos * ammo.GetDefensiveBV() );
+                }
+                double wepBV = ( NumWeps * ((abPlaceable) test).GetDefensiveBV() );
+                if( ammoBV > wepBV ) {
+                    result -= ammoBV - wepBV;
+                }
+            }
+        }
+
         return result;
     }
 

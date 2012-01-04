@@ -185,6 +185,7 @@ public class CostBVBreakdown {
         retval += String.format( "%1$-71s %2$,8.2f", "    * Engine Type Modifier (" + CurMech.GetEngine().GetBVMult() + ") * 1.5", CurMech.GetIntStruc().GetDefensiveBV() ) + NL;
         retval += String.format( "%1$-71s %2$,8.2f", "Mech Tonnage (" + CurMech.GetTonnage() + ") * Gyro Type Modifer (" + CurMech.GetGyro().GetBVTypeMult() + ")", CurMech.GetGyro().GetDefensiveBV() ) + NL;
         retval += String.format( "%1$-71s %2$,8.2f", "Total Defensive BV of all Equipment", CurMech.GetDefensiveEquipBV() ) + NL;
+        retval += String.format( "%1$-71s %2$,8.2f", "Excessive Ammunition Penalty", CurMech.GetDefensiveExcessiveAmmoPenalty() ) + NL;
         retval += String.format( "%1$-71s %2$,8.2f", "Explosive Ammunition Penalty", CurMech.GetExplosiveAmmoPenalty() ) + NL;
         retval += String.format( "%1$-71s %2$,8.2f", "Explosive Item Penalty  ", CurMech.GetExplosiveWeaponPenalty() ) + NL;
         retval += String.format( "%1$-71s %2$,8.2f", "Subtotal", CurMech.GetUnmodifiedDefensiveBV() ) + NL;
