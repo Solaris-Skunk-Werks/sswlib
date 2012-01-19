@@ -4899,10 +4899,14 @@ public class Mech implements ifUnit, ifBattleforce {
                 retval.add("ES");       //Ejection Seat
             }
             if( HasEnviroSealing() ) {
-                retval.add("SOA");      //Space Operations Adaptation
+                retval.add("SEAL");     //Environmental Sealing
+                if (CurEngine.IsFusion() || CurEngine.IsNuclear() || CurEngine.isFuelCell()) {
+                    retval.add("SOA");      //Space Operations Adaptation
+                }
             }
         } else {
             retval.add("ES");       //Ejection Seat
+            retval.add("SEAL");     //Environmental Sealing
             retval.add("SOA");      //Space Operations Adaptation
         }
 
