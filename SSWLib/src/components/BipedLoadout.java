@@ -305,7 +305,10 @@ public class BipedLoadout implements ifMechLoadout {
 
         // if the component has a modifier, add it to the 'Mech
         if( p.GetMechModifier() != null ) {
-            Owner.AddMechModifier( p.GetMechModifier() );
+            if (!p.GetMechModifier().ModifyConfigOnly())
+                Owner.AddMechModifier( p.GetMechModifier() );
+            else
+                AddMechModifier(p.GetMechModifier());
         }
 
         Owner.SetChanged( true );

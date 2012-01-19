@@ -43,7 +43,8 @@ public class MechModifier {
                   RunMult = 0.0;
     private boolean BVMovement,
                     BVHeatMod,
-                    CanJump = true;
+                    CanJump = true,
+                    ConfigOnly = false; //Sets whether or not the MechMod applies only to a single configuration (added for Modular Armor on Omni Configs)
 
 /**
  * Creates a new MechModifier for miscellaneous statistics not covered elsewhere
@@ -62,6 +63,10 @@ public class MechModifier {
  * @param BVMove Whether this MechMod counts towards BV Movement (add for Modular Armor)
  */
     public MechModifier( int wadd, int radd, int jadd, double rmult, int gmod, int pmod, int heat, double def, double mindef, double amult, double imult, boolean BVMove, boolean BVHeat ) {
+        this(wadd, radd, jadd, rmult, gmod, pmod, heat, def, mindef, amult, imult, BVMove, BVHeat, false);
+    }
+
+    public MechModifier( int wadd, int radd, int jadd, double rmult, int gmod, int pmod, int heat, double def, double mindef, double amult, double imult, boolean BVMove, boolean BVHeat, boolean Config_Only ) {
         WalkAdd = wadd;
         RunAdd = radd;
         JumpAdd = jadd;
@@ -75,6 +80,7 @@ public class MechModifier {
         IntMult = imult;
         BVMovement = BVMove;
         BVHeatMod = BVHeat;
+        ConfigOnly = Config_Only;
     }
 
     public void SetCanJump(boolean j) {
@@ -83,6 +89,10 @@ public class MechModifier {
 
     public boolean CanJump () {
         return CanJump;
+    }
+
+    public boolean ModifyConfigOnly() {
+        return ConfigOnly;
     }
 
     public int WalkingAdder() {

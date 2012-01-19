@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package components;
 
 public class ModularArmor extends abPlaceable {
-    private final static MechModifier Modifier = new MechModifier( -1, 0, -1, 0.0, 0, 1, 0, 0.0, 0.0, 0.0, 0.0, false, false );
+    private final static MechModifier Modifier = new MechModifier( -1, 0, -1, 0.0, 0, 1, 0, 0.0, 0.0, 0.0, 0.0, false, false, true );
     private String Manufacturer = "";
     private AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
     private boolean Rear = false;
