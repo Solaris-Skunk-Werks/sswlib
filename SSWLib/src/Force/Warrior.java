@@ -29,6 +29,7 @@ package Force;
 
 import Force.Advantages.Enhancement;
 import common.CommonTools;
+import filehandlers.FileCommon;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Vector;
@@ -73,7 +74,7 @@ public class Warrior {
      */
     public Warrior( Node n ) throws Exception {
         NamedNodeMap map = n.getAttributes();
-        Name = map.getNamedItem("name").getTextContent().trim();
+        Name = FileCommon.DecodeFluff(map.getNamedItem("name").getTextContent().trim());
         Status = map.getNamedItem("status").getTextContent().trim();
 
         for (int i=0; i < n.getChildNodes().getLength(); i++) {
@@ -123,15 +124,15 @@ public class Warrior {
      * @throws java.io.IOException
      */
     public void SerializeXML(BufferedWriter file) throws IOException {
-        file.write(CommonTools.Tabs(5) + "<warrior name=\"" + this.Name.trim() + "\" status=\"" + this.Status.trim() + "\">");
+        file.write(CommonTools.Tabs(5) + "<warrior name=\"" + FileCommon.EncodeFluff(this.Name.trim()) + "\" status=\"" + this.Status.trim() + "\">");
         file.newLine();
         file.write(CommonTools.Tabs(6) + "<affiliation faction=\"" + this.Faction.trim() + "\" rank=\"" + this.getRank().trim() + "\" />");
         file.newLine();
         file.write(CommonTools.Tabs(6) + "<skills gunnery=\"" + this.Gunnery + "\" piloting=\"" + this.Piloting + "\" mod=\"" + this.getManeiDomini() + "\" />");
         file.newLine();
-        file.write(CommonTools.Tabs(6) + "<quirks>" + this.Quirks.trim() + "</quirks>");
+        file.write(CommonTools.Tabs(6) + "<quirks><![CDATA[" + this.Quirks.trim() + "]]></quirks>");
         file.newLine();
-        file.write(CommonTools.Tabs(6) + "<notes>" + this.Notes + "</notes>");
+        file.write(CommonTools.Tabs(6) + "<notes><![CDATA[" + this.Notes + "]]></notes>");
         file.newLine();
         if ( Enhancements.size() > 0 ) {
             file.write(CommonTools.Tabs(6) + "<enhancements>");
