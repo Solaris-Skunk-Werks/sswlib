@@ -33,21 +33,21 @@ import components.LocationIndex;
 import components.MechModifier;
 import components.SimplePlaceable;
 
-public class stCockpitIndustrialAFC implements ifCockpit, ifState {
-    private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
+public class stCockpitInterface implements ifCockpit, ifState {
+    private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
     private SimplePlaceable Sensors = new SimplePlaceable( "Sensors", "Sensors", "Sensors", "Sensors", "Tech Manual", 1, true, AC );
     private SimplePlaceable LifeSupport = new SimplePlaceable( "Life Support", "Life Support", "Life Support", "Life Support", "Tech Manual", 1, true, AC );
     private SimplePlaceable SecondSensors = new SimplePlaceable( "Sensors", "Sensors", "Sensors", "Sensors", "Tech Manual", 1, true, AC );
     private SimplePlaceable SecondLifeSupport = new SimplePlaceable( "Life Support", "Life Support", "Life Support", "Life Support", "Tech Manual", 1, true, AC );
 
-    public stCockpitIndustrialAFC() {
-        AC.SetISCodes( 'D', 'D', 'E', 'E' );
+    public stCockpitInterface() {
+        AC.SetISCodes( 'E', 'X', 'X', 'F' );
         AC.SetISDates( 0, 0, false, 2300, 0, 0, false, false );
-        AC.SetISFactions( "", "", "TH", "" );
-        AC.SetCLCodes( 'D', 'X', 'D', 'D' );
-        AC.SetCLDates( 0, 0, false, 2300, 0, 0, false, false );
-        AC.SetCLFactions( "", "", "TH", "" );
-        AC.SetRulesLevels( AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+        AC.SetISFactions( "", "", "WB", "" );
+        //AC.SetCLCodes( 'D', 'X', 'B', 'B' );
+        //AC.SetCLDates( 0, 0, false, 2300, 0, 0, false, false );
+        //AC.SetCLFactions( "", "", "TH", "" );
+        AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 
     public boolean HasCounterpart() {
@@ -55,7 +55,7 @@ public class stCockpitIndustrialAFC implements ifCockpit, ifState {
     }
 
     public double GetTonnage() {
-        double result = 3.0f;
+        double result = 4.0f;
         result += Sensors.GetTonnage();
         result += SecondSensors.GetTonnage();
         result += LifeSupport.GetTonnage();
@@ -66,11 +66,11 @@ public class stCockpitIndustrialAFC implements ifCockpit, ifState {
     public boolean HasSecondLSLoc() {
         return true;
     }
-    
+
     public SimplePlaceable GetLifeSupport() {
         return LifeSupport;
     }
-    
+
     public SimplePlaceable GetSensors() {
         return Sensors;
     }
@@ -78,45 +78,41 @@ public class stCockpitIndustrialAFC implements ifCockpit, ifState {
     public SimplePlaceable GetSecondLifeSupport() {
         return SecondLifeSupport;
     }
-    
+
     public SimplePlaceable GetSecondSensors() {
         return SecondSensors;
     }
 
     public String ActualName() {
-        return "Industrial w/ Advanced Fire Control";
+        return "BattleMech Interface";
     }
 
     public String CritName() {
-        return "Industrial Cockpit (AFC)";
+        return "Interface Cockpit";
     }
 
     public String LookupName() {
-        return "Industrial w/ Adv. FC";
+        return "Interface Cockpit";
     }
 
     public String ChatName() {
-        return "IndAFC Cockpit";
+        return "";
     }
 
     public String MegaMekName( boolean UseRear ) {
-        return "Cockpit";
+        return "Interface";
     }
 
     public String BookReference() {
-        return "Tech Manual";
+        return "Jihad Final Reckoning";
     }
 
     public String GetReportName() {
-        return "Industrial w/ Adv. Fire Control";
+        return "Interface";
     }
 
     public double GetCost( int Tonnage, int year ) {
-        double result = 250000.0f + ( 2000.0f * Tonnage );
-        result += Sensors.GetCost();
-        result += LifeSupport.GetCost();
-        result += SecondSensors.GetCost();
-        result += SecondLifeSupport.GetCost();
+        double result = 1500000.0f;
         return result;
     }
 
@@ -125,15 +121,15 @@ public class stCockpitIndustrialAFC implements ifCockpit, ifState {
     }
 
     public double BVMod() {
-        return 1.0f;
+        return 1.3f;
     }
 
     public AvailableCode GetAvailability() {
         return AC;
     }
-    
+
     public int ReportCrits() {
-        return 5;
+        return 6;
     }
 
     public MechModifier GetMechModifier() {
@@ -142,11 +138,11 @@ public class stCockpitIndustrialAFC implements ifCockpit, ifState {
 
     @Override
     public String toString() {
-        return "Industrial Cockpit (AFC)";
+        return "Interface Cockpit";
     }
 
     public LocationIndex GetCockpitLoc() {
-        return new LocationIndex( 2, LocationIndex.MECH_LOC_HD, -1 );
+        return new LocationIndex( 2, LocationIndex.MECH_LOC_HD, 2 );
     }
 
     public LocationIndex GetFirstSensorLoc() {
@@ -166,7 +162,7 @@ public class stCockpitIndustrialAFC implements ifCockpit, ifState {
     }
 
     public boolean CanUseCommandConsole() {
-        return true;
+        return false;
     }
 
     public boolean HasThirdSensors() {
@@ -186,6 +182,6 @@ public class stCockpitIndustrialAFC implements ifCockpit, ifState {
     }
 
     public boolean RequiresGyro() {
-        return true;
+        return false;
     }
 }

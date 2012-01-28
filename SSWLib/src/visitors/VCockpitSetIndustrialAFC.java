@@ -40,7 +40,7 @@ public class VCockpitSetIndustrialAFC implements ifVisitor {
         // does nothing here, but may later.
     }
 
-    public void Visit(Mech m) {
+    public void Visit(Mech m) throws Exception {
         // Pass us off to the cockpit
         CurMech = m;
         Cockpit c = CurMech.GetCockpit();
@@ -51,6 +51,9 @@ public class VCockpitSetIndustrialAFC implements ifVisitor {
 
         // now set the correct type
         c.SetIndustrialAFCCockpit();
+
+        if ( c.RequiresGyro() && CurMech.GetGyro().NumCrits() == 0 )
+            m.Visit(new VGyroSetStandard());
 
         // replace the cockpit
         c.Place(l);

@@ -27,40 +27,75 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 package states;
-import components.AvailableCode;
-import components.LocationIndex;
-import components.MechModifier;
-import components.SimplePlaceable;
 
-public interface ifCockpit {
-    public String ActualName();
-    public String CritName();
-    public String LookupName();
-    public String ChatName();
-    public String MegaMekName( boolean UseRear );
-    public String BookReference();
-    public String GetReportName();
-    public double GetTonnage();
-    public LocationIndex GetCockpitLoc();
-    public LocationIndex GetFirstSensorLoc();
-    public LocationIndex GetSecondSensorLoc();
-    public LocationIndex GetThirdSensorLoc();
-    public LocationIndex GetFirstLSLoc();
-    public LocationIndex GetSecondLSLoc();
-    public boolean HasSecondLSLoc();
-    public boolean HasThirdSensors();
-    public boolean CanUseCommandConsole();
-    public SimplePlaceable GetLifeSupport();
-    public SimplePlaceable GetSensors();
-    public SimplePlaceable GetSecondLifeSupport();
-    public SimplePlaceable GetSecondSensors();
-    public SimplePlaceable GetThirdSensors();
-    public double GetCost( int Tonnage, int year );
-    public double BVMod();
-    public boolean HasFireControl();
-    public boolean IsTorsoMounted();
-    public AvailableCode GetAvailability();
-    public MechModifier GetMechModifier();
-    public int ReportCrits();
-    public boolean RequiresGyro();
+import components.AvailableCode;
+import components.MechModifier;
+
+public class stGyroNone implements ifGyro, ifState {
+    private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
+
+    public stGyroNone() {
+        AC.SetISCodes( 'E', 'X', 'X', 'F' );
+        AC.SetISDates( 0, 0, false, 2300, 0, 0, false, false );
+        AC.SetISFactions( "", "", "WB", "" );
+        AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+
+    }
+
+    public String ActualName() {
+        return "None";
+    }
+
+    public String CritName() {
+        return "None";
+    }
+
+    public String LookupName() {
+        return "No Gyro";
+    }
+
+    public String ChatName() {
+        return "NA";
+    }
+
+    public String MegaMekName(boolean UseRear) {
+        return "";
+    }
+
+    public String BookReference() {
+        return "Jihad Final Reckoning";
+    }
+
+    public String GetReportName() {
+        return "";
+    }
+
+    public double GetTonnage(int rating) {
+        return 0;
+    }
+
+    public int GetCrits() {
+        return 0;
+    }
+
+    public double GetBVMult() {
+        return 0;
+    }
+
+    public double GetCostMult() {
+        return 0;
+    }
+
+    public AvailableCode GetAvailability() {
+        return AC;
+    }
+
+    public MechModifier GetMechModifier() {
+        return null;
+    }
+
+    public boolean HasCounterpart() {
+        return false;
+    }
+
 }

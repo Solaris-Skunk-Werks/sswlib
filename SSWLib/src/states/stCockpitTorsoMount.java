@@ -187,4 +187,8 @@ public class stCockpitTorsoMount implements ifCockpit, ifState {
     public boolean IsTorsoMounted() {
         return true;
     }
+
+    public boolean RequiresGyro() {
+        return true;
+    }
 }

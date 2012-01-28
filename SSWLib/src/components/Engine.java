@@ -285,79 +285,8 @@ public class Engine extends abPlaceable {
 
     @Override
     public boolean Place( ifMechLoadout l ) {
-        // Override the placement method for the superclass.
-        // First, ensure we're fooling the loadout for CT placement.
-        FoolLoadoutCT = true;
-
-        // reset the large placement in case it's still set to true.
-        UseLargePlacement = false;
-
-        // Place the first block.  This is the easy one.
-        try {
-            l.AddToCT( this, 0 );
-        } catch ( Exception e ) {
-            // something is taking the engine's spot.
-            return false;
-        }
-
-        // if we are large, tell the loadout so.
-        if( EngineRating > 400 ) {
-            UseLargePlacement = true;
-        }
-
-        // Figure out how many times to place this engine in the CT and do it.
-        if( CurConfig.NumCTBlocks() == 2 ) {
-            // try the first block, used when we have a compact gyro
-            try {
-                l.AddToCT( this, 5 );
-            } catch ( Exception e1 ) {
-                // Move on to the next index, which is for standard gyros
-                if( ! ( l.GetCTCrits()[5] instanceof Gyro ) ) {
-                    return false;
-                } else {
-                    try {
-                        l.AddToCT( this, 7 );
-                    } catch ( Exception e2 ) {
-                        if( ! ( l.GetCTCrits()[7] instanceof Gyro ) ) {
-                            return false;
-                        } else {
-                            // Move on to the next index, which is for extra-light gyros
-                            try {
-                                l.AddToCT( this, 9 );
-                            } catch ( Exception e3 ) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // reset the large placement anyway.
-        UseLargePlacement = false;
-
-        // CT slots have been placed, time to do the side torsos, if any.
-        if( CurConfig.GetSideTorsoCrits() > 0 ) {
-            // Fool the loadout
-            FoolLoadoutCT = false;
-            
-            // Allocate the RT engine crits.
-            try {
-                l.AddTo( this, LocationIndex.MECH_LOC_RT, -1 );
-            } catch ( Exception e ) {
-                return false;
-            }
-
-            // Now allocate the LT engine crits
-            try {
-                l.AddTo( this, LocationIndex.MECH_LOC_LT, -1 );
-            } catch ( Exception e ) {
-                return false;
-            }
-        }
-
-        // looks like everything worked out fine
-        return true;
+        LocationIndex[] lengine = { null, null };
+        return Place( l, lengine );
     }
 
     @Override
@@ -380,25 +309,34 @@ public class Engine extends abPlaceable {
 
         // Figure out how many times to place this engine in the CT and do it.
         if( CurConfig.NumCTBlocks() == 2 ) {
-            // try the first block, used when we have a compact gyro
+            // Let's try the first place we THINK there shouldn't be a Gyro
             try {
-                l.AddToCT( this, 5 );
-            } catch ( Exception e1 ) {
-                // Move on to the next index, which is for standard gyros
-                if( ! ( l.GetCTCrits()[5] instanceof Gyro ) ) {
+                l.AddToCT( this, CurConfig.GetCTCrits() + l.GetMech().GetGyro().NumCrits() );
+            } catch ( Exception e99 ) {
+                // try the next block, used when we have a compact gyro
+                if( ! ( l.GetCTCrits()[3] instanceof Gyro ) ) {
                     return false;
                 } else {
                     try {
-                        l.AddToCT( this, 7 );
-                    } catch ( Exception e2 ) {
-                        if( ! ( l.GetCTCrits()[7] instanceof Gyro ) ) {
+                        l.AddToCT( this, 5 );
+                    } catch ( Exception e1 ) {
+                        // Move on to the next index, which is for standard gyros
+                        if( ! ( l.GetCTCrits()[5] instanceof Gyro ) ) {
                             return false;
                         } else {
-                            // Move on to the next index, which is for extra-light gyros
                             try {
-                                l.AddToCT( this, 9 );
-                            } catch ( Exception e3 ) {
-                                return false;
+                                l.AddToCT( this, 7 );
+                            } catch ( Exception e2 ) {
+                                if( ! ( l.GetCTCrits()[7] instanceof Gyro ) ) {
+                                    return false;
+                                } else {
+                                    // Move on to the next index, which is for extra-light gyros
+                                    try {
+                                        l.AddToCT( this, 9 );
+                                    } catch ( Exception e3 ) {
+                                        return false;
+                                    }
+                                }
                             }
                         }
                     }

@@ -186,4 +186,8 @@ public class stCockpitISPrimitive implements ifCockpit, ifState {
     public boolean IsTorsoMounted() {
         return false;
     }
+
+    public boolean RequiresGyro() {
+        return true;
+    }
 }

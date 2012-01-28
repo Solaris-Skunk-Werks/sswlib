@@ -64,6 +64,9 @@ public class VCockpitSetTorsoMount implements ifVisitor {
         // now set the correct type
         c.SetTorsoMount();
 
+        if ( c.RequiresGyro() && CurMech.GetGyro().NumCrits() == 0 )
+            m.Visit(new VGyroSetStandard());
+
         // replace the cockpit
         if( Locs == null ) {
             // standard placement

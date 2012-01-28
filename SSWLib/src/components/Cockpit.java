@@ -32,6 +32,7 @@ import states.*;
 
 public class Cockpit extends abPlaceable {
     private final ifCockpit StandardCockpit = new stCockpitStandard(),
+                            InterfaceCockpit = new stCockpitInterface(),
                             SmallCockpit = new stCockpitISSmall(),
                             TorsoCockpit = new stCockpitTorsoMount(),
                             Primitive = new stCockpitISPrimitive(),
@@ -76,6 +77,10 @@ public class Cockpit extends abPlaceable {
 
     public void SetIndustrialAFCCockpit() {
         CurConfig = IndusAFCCockpit;
+    }
+
+    public void SetInterfaceCockpit() {
+        CurConfig = InterfaceCockpit;
     }
 
     public void SetTorsoMount() {
@@ -277,6 +282,10 @@ public class Cockpit extends abPlaceable {
     public int NumCrits() {
         // A cockpit is only ever one crit in size.  Granted, it also encompasses
         // life support and sensors, but the actual cockpit is only one crit.
+        // GKB - Not anymore, the Interface Cockpit is 2 crits
+        if ( CurConfig instanceof stCockpitInterface )
+            return 2;
+
         return 1;
     }
 
@@ -355,7 +364,7 @@ public class Cockpit extends abPlaceable {
     public ifState[] GetStates() {
         ifState[] retval = { (ifState) StandardCockpit, (ifState) SmallCockpit,
             (ifState) TorsoCockpit, (ifState) IndustrialCockpit, (ifState) IndusAFCCockpit,
-            (ifState) Primitive, (ifState) PrimIndustrial, (ifState) PrimIndusAFC };
+            (ifState) InterfaceCockpit, (ifState) Primitive, (ifState) PrimIndustrial, (ifState) PrimIndusAFC };
         return retval;
     }
 
@@ -400,6 +409,15 @@ public class Cockpit extends abPlaceable {
             retval.Combine( ArmoredAC );
         }
         return retval;
+    }
+
+    /**
+     * Does this Cockpit type require a Gyro
+     * True for all but Interface Cockpit at this time.
+     * @return
+     */
+    public boolean RequiresGyro() {
+        return CurConfig.RequiresGyro();
     }
 
     @Override

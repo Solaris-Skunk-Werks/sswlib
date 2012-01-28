@@ -4984,6 +4984,7 @@ public class Mech implements ifUnit, ifBattleforce {
         Lookup.put( "Heavy-Duty Gyro", new VGyroSetHD() );
         Lookup.put( "Extra-Light Gyro", new VGyroSetXL() );
         Lookup.put( "Compact Gyro", new VGyroSetCompact() );
+        Lookup.put( "No Gyro", new VGyroSetNone() );
         Lookup.put( "No Enhancement", new VEnhanceSetNone() );
         Lookup.put( "MASC", new VEnhanceSetMASC() );
         Lookup.put( "(IS) MASC", new VEnhanceSetMASC() );

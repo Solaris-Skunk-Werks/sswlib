@@ -30,7 +30,7 @@ package visitors;
 
 import components.*;
 
-public class VCockpitSetPrimitive implements ifVisitor {
+public class VCockpitSetInterface implements ifVisitor {
     private Mech CurMech;
 
     public void SetClan( boolean clan ) {
@@ -40,7 +40,7 @@ public class VCockpitSetPrimitive implements ifVisitor {
         // does nothing here, but may later.
     }
 
-    public void Visit(Mech m) throws Exception {
+    public void Visit(Mech m) {
         // Pass us off to the cockpit
         CurMech = m;
         Cockpit c = CurMech.GetCockpit();
@@ -50,10 +50,7 @@ public class VCockpitSetPrimitive implements ifVisitor {
         c.Remove(l);
 
         // now set the correct type
-        c.SetPrimitiveCockpit();
-
-        if ( c.RequiresGyro() && CurMech.GetGyro().NumCrits() == 0 )
-            m.Visit(new VGyroSetStandard());
+        c.SetInterfaceCockpit();
 
         // replace the cockpit
         c.Place(l);

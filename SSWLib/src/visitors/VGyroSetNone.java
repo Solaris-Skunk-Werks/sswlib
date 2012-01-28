@@ -29,8 +29,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package visitors;
 
 import components.*;
+import states.stCockpitInterface;
 
-public class VCockpitSetPrimitive implements ifVisitor {
+public class VGyroSetNone implements ifVisitor {
     private Mech CurMech;
 
     public void SetClan( boolean clan ) {
@@ -40,23 +41,70 @@ public class VCockpitSetPrimitive implements ifVisitor {
         // does nothing here, but may later.
     }
 
-    public void Visit(Mech m) throws Exception {
-        // Pass us off to the cockpit
+    public void Visit( Mech m ) throws Exception {
         CurMech = m;
-        Cockpit c = CurMech.GetCockpit();
-
-        // first, we have to remove it from the loadout
+        boolean CASEInstalled = false;
+        boolean SChargerInstalled = false;
+        Gyro g = CurMech.GetGyro();
         ifMechLoadout l = CurMech.GetLoadout();
-        c.Remove(l);
 
-        // now set the correct type
-        c.SetPrimitiveCockpit();
+        //if (!(CurMech.GetCockpit().GetCurrentState() instanceof stCockpitInterface))
+        //    throw new Exception( "The selected cockpit requires a gyro." );
 
-        if ( c.RequiresGyro() && CurMech.GetGyro().NumCrits() == 0 )
-            m.Visit(new VGyroSetStandard());
+        // see if we have CASE installed in the CT
+        if( CurMech.HasCTCase() ) {
+            // remove it.  We may not be able to replace it, but we'll try
+            CASEInstalled = true;
+            CurMech.RemoveCTCase();
+        }
 
-        // replace the cockpit
-        c.Place(l);
+        // see if we have a supercharger installed
+        if( CurMech.GetLoadout().HasSupercharger() ) {
+            if( CurMech.GetLoadout().Find( CurMech.GetLoadout().GetSupercharger() ) == LocationIndex.MECH_LOC_CT ) {
+                SChargerInstalled = true;
+                try {
+                    CurMech.GetLoadout().SetSupercharger( false, -1, -1 );
+                } catch ( Exception e ) {
+                    // wow, a problem removing it.  Log it for later.
+                    System.err.println( e.getMessage() );
+                }
+            }
+        }
+
+        // We have to remove the engine as well as mess with the gyro here
+        m.GetEngine().Remove(l);
+
+        // remove the gyro crits
+        g.Remove(l);
+
+        // change the gyro
+        g.SetNone();
+
+        // now replace the engine criticals
+        if( ! m.GetEngine().Place(l) ) {
+            throw new Exception( m.GetEngine().LookupName() + " cannot be allocated!" );
+        }
+
+        // if we had CASE installed, try to replace it
+        if( CASEInstalled ) {
+            // at this point, we don't care whether it happened or not since the
+            // primary inhabitants of the CT are taken care of.
+            try {
+                CurMech.AddCTCase();
+            } catch( Exception e ) {
+                // unhandled at this time.  write out a system error
+                System.err.println( e.getMessage() );
+            }
+        }
+
+        // try to reinstall the Supercharger
+        if( SChargerInstalled ) {
+            try {
+                CurMech.GetLoadout().SetSupercharger( true, LocationIndex.MECH_LOC_CT, -1 );
+            } catch ( Exception e ) {
+                System.err.println( e.getMessage() );
+            }
+        }
     }
 
     public void Visit( CombatVehicle v ) throws Exception {

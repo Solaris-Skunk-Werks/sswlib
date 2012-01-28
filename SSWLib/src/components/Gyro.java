@@ -35,7 +35,8 @@ public class Gyro extends abPlaceable {
     private final static ifGyro Standard = new stGyroStandard(),
                                 ISCompact = new stGyroISCompact(),
                                 ISHeavy = new stGyroISHeavy(),
-                                ISXL = new stGyroISXL();
+                                ISXL = new stGyroISXL(),
+                                None = new stGyroNone();
     private ifGyro CurConfig = Standard;
 
     public Gyro( Mech m ) {
@@ -60,6 +61,10 @@ public class Gyro extends abPlaceable {
         CurConfig = ISXL;
     }
 
+    public void SetNone() {
+        CurConfig = None;
+    }
+
     public int GetTechBase() {
         return CurConfig.GetAvailability().GetTechBase();
     }
@@ -80,6 +85,17 @@ public class Gyro extends abPlaceable {
         }
 
         return true;
+    }
+
+    @Override
+    public void Remove( ifMechLoadout l )
+    {
+        // Only used by Interface cockpit
+        try {
+            ((ifMechLoadout) l).Remove(this);
+        } catch ( Exception e ) {
+            
+        }
     }
 
     @Override
@@ -163,7 +179,7 @@ public class Gyro extends abPlaceable {
 
     public ifState[] GetStates() {
         ifState[] retval = { (ifState) Standard,
-            (ifState) ISCompact, (ifState) ISHeavy, (ifState) ISXL };
+            (ifState) ISCompact, (ifState) ISHeavy, (ifState) ISXL, (ifState) None };
         return retval;
     }
 
