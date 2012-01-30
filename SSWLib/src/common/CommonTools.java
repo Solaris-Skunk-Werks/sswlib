@@ -30,6 +30,9 @@ package common;
 
 import components.*;
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public class CommonTools {
@@ -790,6 +793,20 @@ public class CommonTools {
 
     public static double RoundFractionalCost( double d ) {
         return Double.valueOf( dfc.format( d ) );
+    }
+
+    public static double RoundHalfDown( double d ) {
+        BigDecimal value = new BigDecimal(d);
+        value.setScale(1, RoundingMode.HALF_DOWN);
+        return value.doubleValue();
+    }
+
+    public static double RoundHalfUp( double d ) {
+        return .5 * Math.round(d/.5);
+
+        //BigDecimal value = new BigDecimal(d);
+        //value.setScale(1, RoundingMode.HALF_UP);
+        //return value.doubleValue();
     }
 
     public static String FormatSpeed( double d ) {

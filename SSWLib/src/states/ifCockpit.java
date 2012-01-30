@@ -40,7 +40,7 @@ public interface ifCockpit {
     public String MegaMekName( boolean UseRear );
     public String BookReference();
     public String GetReportName();
-    public double GetTonnage();
+    public double GetTonnage( int MechTonnage );
     public LocationIndex GetCockpitLoc();
     public LocationIndex GetFirstSensorLoc();
     public LocationIndex GetSecondSensorLoc();
@@ -63,4 +63,5 @@ public interface ifCockpit {
     public MechModifier GetMechModifier();
     public int ReportCrits();
     public boolean RequiresGyro();
+    public boolean CanArmor();
 }

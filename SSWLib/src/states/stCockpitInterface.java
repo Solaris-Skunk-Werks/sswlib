@@ -54,7 +54,7 @@ public class stCockpitInterface implements ifCockpit, ifState {
         return false;
     }
 
-    public double GetTonnage() {
+    public double GetTonnage(int MechTonnage) {
         double result = 4.0f;
         result += Sensors.GetTonnage();
         result += SecondSensors.GetTonnage();
@@ -182,6 +182,10 @@ public class stCockpitInterface implements ifCockpit, ifState {
     }
 
     public boolean RequiresGyro() {
+        return false;
+    }
+
+    public boolean CanArmor() {
         return false;
     }
 }

@@ -28,24 +28,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
+import common.CommonTools;
 import components.AvailableCode;
+import components.Exclusion;
 import components.LocationIndex;
 import components.MechModifier;
 import components.SimplePlaceable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-public class stCockpitISSmall implements ifCockpit, ifState {
-    private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
+public class stCockpitRobotic implements ifCockpit, ifState {
+    private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
     private SimplePlaceable Sensors = new SimplePlaceable( "Sensors", "Sensors", "Sensors", "Sensors", "Tech Manual", 1, true, AC );
     private SimplePlaceable LifeSupport = new SimplePlaceable( "Life Support", "Life Support", "Life Support", "Life Support", "Tech Manual", 1, true, AC );
     private SimplePlaceable SecondSensors = new SimplePlaceable( "Sensors", "Sensors", "Sensors", "Sensors", "Tech Manual", 1, true, AC );
     private SimplePlaceable SecondLifeSupport = new SimplePlaceable( "Life Support", "Life Support", "Life Support", "Life Support", "Tech Manual", 1, true, AC );
-    private final MechModifier MechMod = new MechModifier( 0, 0, 0, 0.0f, 1, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, true, false );
 
-    public stCockpitISSmall() {
-        AC.SetISCodes( 'E', 'X', 'X', 'E' );
-        AC.SetISDates( 0, 0, false, 3067, 0, 0, false, false );
-        AC.SetISFactions( "", "", "FS", "" );
-        AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+    public stCockpitRobotic() {
+        AC.SetISCodes( 'C', 'E', 'X', 'F' );
+        AC.SetISDates( 0, 0, false, 2300, 0, 0, false, false );
+        AC.SetISFactions( "", "", "TH", "" );
+        AC.SetCLCodes( 'C', 'X', 'D', 'E' );
+        AC.SetCLDates( 0, 0, false, 2300, 0, 0, false, false );
+        AC.SetCLFactions( "", "", "TH", "" );
+        AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL );
     }
 
     public boolean HasCounterpart() {
@@ -53,17 +59,21 @@ public class stCockpitISSmall implements ifCockpit, ifState {
     }
 
     public double GetTonnage(int MechTonnage) {
-        double result = 2.0f;
+        double result = 3.0f;
+        if ( MechTonnage > 10 )
+            result += CommonTools.RoundHalfUp(MechTonnage * .05f);
         result += Sensors.GetTonnage();
         result += SecondSensors.GetTonnage();
         result += LifeSupport.GetTonnage();
+        result += SecondLifeSupport.GetTonnage();
+
         return result;
     }
 
     public boolean HasSecondLSLoc() {
-        return false;
+        return true;
     }
-
+    
     public SimplePlaceable GetLifeSupport() {
         return LifeSupport;
     }
@@ -81,35 +91,35 @@ public class stCockpitISSmall implements ifCockpit, ifState {
     }
 
     public String ActualName() {
-        return "Small Cockpit";
+        return "Robotic Cockpit";
     }
 
     public String CritName() {
-        return "Small Cockpit";
+        return "Robotic Cockpit";
     }
 
     public String LookupName() {
-        return "Small Cockpit";
+        return "Robotic Cockpit";
     }
 
     public String ChatName() {
-        return "Sml Cockpit";
+        return "Robo";
     }
 
     public String MegaMekName( boolean UseRear ) {
-        return "Cockpit";
+        return "Robotic Cockpit";
     }
 
     public String BookReference() {
-        return "Tech Manual";
+        return "Jihad Final Reckoning";
     }
 
     public String GetReportName() {
-        return "Small";
+        return "Robotic";
     }
 
     public double GetCost( int Tonnage, int year ) {
-        double result = 225000.0f + ( 2000.0f * Tonnage );
+        double result = 5000.0f + ( 10000.0f * GetTonnage(Tonnage) );
         result += Sensors.GetCost();
         result += LifeSupport.GetCost();
         result += SecondSensors.GetCost();
@@ -122,24 +132,24 @@ public class stCockpitISSmall implements ifCockpit, ifState {
     }
 
     public double BVMod() {
-        return 0.95f;
+        return .95f;
     }
 
     public AvailableCode GetAvailability() {
         return AC;
     }
-
+    
     public int ReportCrits() {
-        return 4;
+        return 5;
     }
 
     public MechModifier GetMechModifier() {
-        return MechMod;
+        return null;
     }
 
     @Override
     public String toString() {
-        return "Small Cockpit";
+        return "Robotic Cockpit";
     }
 
     public LocationIndex GetCockpitLoc() {
@@ -151,7 +161,7 @@ public class stCockpitISSmall implements ifCockpit, ifState {
     }
 
     public LocationIndex GetSecondSensorLoc() {
-        return new LocationIndex( 3, LocationIndex.MECH_LOC_HD, -1 );
+        return new LocationIndex( 4, LocationIndex.MECH_LOC_HD, -1 );
     }
 
     public LocationIndex GetFirstLSLoc() {
@@ -159,11 +169,11 @@ public class stCockpitISSmall implements ifCockpit, ifState {
     }
 
     public LocationIndex GetSecondLSLoc() {
-        return null;
+        return new LocationIndex( 5, LocationIndex.MECH_LOC_HD, -1 );
     }
 
     public boolean CanUseCommandConsole() {
-        return true;
+        return false;
     }
 
     public boolean HasThirdSensors() {

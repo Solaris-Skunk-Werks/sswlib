@@ -39,7 +39,8 @@ public class Cockpit extends abPlaceable {
                             IndustrialCockpit = new stCockpitIndustrial(),
                             IndusAFCCockpit = new stCockpitIndustrialAFC(),
                             PrimIndustrial = new stCockpitPrimIndustrial(),
-                            PrimIndusAFC = new stCockpitPrimIndustrialAFC();
+                            PrimIndusAFC = new stCockpitPrimIndustrialAFC(),
+                            RoboticCockpit = new stCockpitRobotic();
     private ifCockpit CurConfig = StandardCockpit;
     private ifUnit Owner;
 
@@ -87,15 +88,25 @@ public class Cockpit extends abPlaceable {
         CurConfig = TorsoCockpit;
     }
 
+    public void SetRobotic() {
+        CurConfig = RoboticCockpit;
+    }
+
     public ifState GetCurrentState() {
         return (ifState) CurConfig;
     }
 
+    @Override
+    public boolean CanArmor()
+    {
+        return CurConfig.CanArmor();
+    }
+
     public double GetTonnage() {
         if( IsArmored() ) {
-            return CurConfig.GetTonnage() + 1.0;
+            return CurConfig.GetTonnage(Owner.GetTonnage()) + 1.0;
         } else {
-            return CurConfig.GetTonnage();
+            return CurConfig.GetTonnage(Owner.GetTonnage());
         }
     }
 
@@ -364,7 +375,7 @@ public class Cockpit extends abPlaceable {
     public ifState[] GetStates() {
         ifState[] retval = { (ifState) StandardCockpit, (ifState) SmallCockpit,
             (ifState) TorsoCockpit, (ifState) IndustrialCockpit, (ifState) IndusAFCCockpit,
-            (ifState) InterfaceCockpit, (ifState) Primitive, (ifState) PrimIndustrial, (ifState) PrimIndusAFC };
+            (ifState) InterfaceCockpit, (ifState) Primitive, (ifState) PrimIndustrial, (ifState) PrimIndusAFC, (ifState) RoboticCockpit };
         return retval;
     }
 

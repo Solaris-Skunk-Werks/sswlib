@@ -55,7 +55,7 @@ public class stCockpitTorsoMount implements ifCockpit, ifState {
         return false;
     }
 
-    public double GetTonnage() {
+    public double GetTonnage(int MechTonnage) {
         double result = 4.0f;
         result += Sensors.GetTonnage();
         result += SecondSensors.GetTonnage();
@@ -189,6 +189,10 @@ public class stCockpitTorsoMount implements ifCockpit, ifState {
     }
 
     public boolean RequiresGyro() {
+        return true;
+    }
+
+    public boolean CanArmor() {
         return true;
     }
 }
