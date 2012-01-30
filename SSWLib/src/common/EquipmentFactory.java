@@ -48,6 +48,7 @@ public class EquipmentFactory {
             BuildPhysicals( (Mech) m );
             PhysicalWeapons.add( new Talons( (Mech) m ) );
             Equipment.add( new ExtendedFuelTank( (Mech) m ) );
+            Equipment.add( new DroneOperatingSystem( (Mech) m ) );
         }
         BuildMGArrays();
     }
@@ -57,6 +58,8 @@ public class EquipmentFactory {
         abPlaceable retval = null;
         if( p instanceof ExtendedFuelTank ) {
             retval = new ExtendedFuelTank( (Mech) m );
+        } else if( p instanceof DroneOperatingSystem ) {
+            retval = new DroneOperatingSystem( (Mech) m );
         } else if( p instanceof Equipment ) {
             retval = ((Equipment) p).Clone();
         } else if( p instanceof ModularArmor ) {
