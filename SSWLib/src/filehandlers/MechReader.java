@@ -1377,6 +1377,7 @@ public class MechReader {
                         String eName = "";
                         int VGLArc = 0;
                         int VGLAmmo = 0;
+                        int lotsize = 0;
                         double vtons = 0.0;
                         l = new LocationIndex();
                         for( int j = 0; j < nl.getLength(); j++ ) {
@@ -1396,6 +1397,8 @@ public class MechReader {
                                 VGLAmmo = Integer.parseInt( nl.item( j ).getTextContent() );
                             } else if( nl.item( j ).getNodeName().equals( "tons" ) ) {
                                 vtons = Double.parseDouble( nl.item( j ).getTextContent() );
+                            } else if( nl.item( j ).getNodeName().equals( "lot" ) ) {
+                                lotsize = Integer.parseInt( nl.item( j ).getTextContent() );
                             }
                         }
                         if( eType.equals( "TargetingComputer" ) || eType.equals( "CASE" ) || eType.equals( "CASEII" ) || eType.equals( "Supercharger" ) ) {
@@ -1474,6 +1477,9 @@ public class MechReader {
                                 if( ((Equipment) p).IsVariableSize() ) {
                                     ((Equipment) p).SetTonnage( vtons );
                                 }
+                            }
+                            if( ( p instanceof Ammunition ) && lotsize > 0 ) {
+                                ((Ammunition) p).SetLotSize( lotsize );
                             }
                             if( p.CanSplit() ) {
                                 if( splitLoc.size() > 0 ) {
