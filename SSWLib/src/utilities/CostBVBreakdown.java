@@ -411,7 +411,8 @@ public class CostBVBreakdown {
             boolean DoRear = UseRear;
             a = sorted[i];
             int loc = CurMech.GetLoadout().Find( a );
-            if( loc == LocationIndex.MECH_LOC_LA || loc == LocationIndex.MECH_LOC_RA ) { DoRear = !DoRear; }
+            //changed below to DoRear = false because it would set Rear to true if it was false to begin with.
+            if( loc == LocationIndex.MECH_LOC_LA || loc == LocationIndex.MECH_LOC_RA ) { DoRear = false; } //!DoRear; }
             UseAESMod = CurMech.UseAESModifier( a );
             if( curheat < heff ) {
                 retval += String.format( "%1$-71s %2$,8.2f", "    -> " + a.CritName(), a.GetCurOffensiveBV( DoRear, TC, UseAESMod ) ) + NL;
