@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package IO;
 
+import common.CommonTools;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -379,6 +380,8 @@ public class MTFWriter {
         } else if( ! p.CoreComponent() ) {
             if( p instanceof PhysicalWeapon || p instanceof PartialWing ) {
                 // do nothing here
+            } else if ( retval.contains("Artemis-capable") && !retval.contains("(Clan)") && CurMech.GetTechBase() != AvailableCode.TECH_INNER_SPHERE ) {
+                retval = Prepend + retval.replace("Artemis-capable", "(Clan) Artemis-capable");
             } else if( ( ! retval.contains( "IS" ) ) && ( ! retval.contains( "CL" ) ) && ( ! retval.contains( "Clan" ) ) ) {
                 retval = Prepend + retval;
             }
