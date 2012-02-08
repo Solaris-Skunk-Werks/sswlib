@@ -190,6 +190,10 @@ public interface ifMechLoadout {
     public boolean UsingArtemisIV();
     public boolean UsingArtemisV();
     public boolean UsingApollo();
+    public boolean UsingDumper();
+    public Dumper GetDumper();
+    public void UseDumper( boolean use, String dumpDirection);
+    public void CheckDumper();
     public boolean UsingTC();
     public TargetingComputer GetTC();
     public void UseTC( boolean use, boolean clan );

@@ -863,6 +863,7 @@ public class Mech implements ifUnit, ifBattleforce {
         boolean llcase2clan = CurLoadout.GetLLCaseII().IsClan();
         boolean rlcase2 = CurLoadout.HasRLCASEII();
         boolean rlcase2clan = CurLoadout.GetRLCaseII().IsClan();
+        boolean useClanCase = CurLoadout.IsUsingClanCASE();
         String Jumps = GetJumpJets().LookupName();
         String HeatSinks = GetHeatSinks().LookupName();
 
@@ -979,6 +980,11 @@ public class Mech implements ifUnit, ifBattleforce {
             }
             if( rlcase2 ) {
                 CurLoadout.SetRLCASEII( true, -1, rlcase2clan );
+            }
+
+             if (useClanCase){
+                CurLoadout.SetClanCASE(false);
+                CurLoadout.SetClanCASE(true);
             }
 
             // replace fixed-slot equipment
@@ -1790,6 +1796,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if( CurLoadout.HasLTTurret() ) { result += CurLoadout.GetLTTurret().GetTonnage(); }
         if( CurLoadout.HasRTTurret() ) { result += CurLoadout.GetRTTurret().GetTonnage(); }
         if( CurLoadout.UsingTC() ) { result += GetTC().GetTonnage(); }
+        if( CurLoadout.UsingDumper() ) {result += GetDumper().GetTonnage(); }
         if( ! CurEngine.IsNuclear() ) { result += CurLoadout.GetPowerAmplifier().GetTonnage(); }
         if( HasBlueShield ) { result += BlueShield.GetTonnage(); }
         if( HasVoidSig ) { result += VoidSig.GetTonnage(); }
@@ -3075,6 +3082,22 @@ public class Mech implements ifUnit, ifBattleforce {
 
     public boolean UsingApollo() {
         return CurLoadout.UsingApollo();
+    }
+
+    public boolean UsingDumper(){
+        return CurLoadout.UsingDumper();
+    }
+    
+    public void UseDumper (boolean use, String dumpDir){
+        CurLoadout.UseDumper(use, dumpDir);
+    }
+
+    public Dumper GetDumper() {
+        return CurLoadout.GetDumper();
+    }
+
+    public void CheckDumper(){
+        CurLoadout.CheckDumper();
     }
 
     public void UseTC( boolean use, boolean clan ) {

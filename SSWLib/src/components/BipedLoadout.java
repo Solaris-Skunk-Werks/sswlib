@@ -73,8 +73,10 @@ public class BipedLoadout implements ifMechLoadout {
                     Use_TC = false,
                     UsingClanCASE = false,
                     YearSpecified = false,
-                    YearRestricted = false;
+                    YearRestricted = false,
+                    Use_Dumper = false;
     private TargetingComputer CurTC = new TargetingComputer( this, false );
+    private Dumper CurDumper = new Dumper(this);
     private ifMechLoadout BaseLoadout = null;
     private PowerAmplifier PowerAmp = new PowerAmplifier( this );
     private Supercharger SCharger = new Supercharger( this );
@@ -4349,6 +4351,46 @@ public class BipedLoadout implements ifMechLoadout {
 
     public TargetingComputer GetTC() {
         return CurTC;
+    }
+
+    public boolean UsingDumper(){
+        return Use_Dumper;
+    }
+
+    public Dumper GetDumper(){
+        return CurDumper;
+    }
+
+    public void UseDumper (boolean use, String dumpDirection)
+    {
+        if (use == Use_Dumper){
+            return;
+        }
+        else {
+            Use_Dumper = use;
+        }
+        CurDumper.SetDumpDirection(dumpDirection);
+        CheckDumper();
+        Owner.SetChanged(true);
+    }
+
+    public void CheckDumper(){
+        if( ! Use_Dumper ) {
+            // remove the TC from the loadout
+            Remove( CurDumper );
+            return;
+        }
+
+        if( ! QueueContains( CurDumper ) ) {
+            if( ! IsAllocated( CurDumper ) ) {
+                // dumper not allocated or in the queue, let's see if we can add it
+                if( CurDumper.NumCrits() > 0 ) {
+                    AddToQueue( CurDumper );
+                } else {
+                    Remove( CurDumper );
+                }
+            }
+        }
     }
 
     public void UseTC( boolean use, boolean clan ) {
