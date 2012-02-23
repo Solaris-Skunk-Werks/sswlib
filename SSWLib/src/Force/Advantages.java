@@ -27,12 +27,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package Force;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 
 
 public class Advantages {
-    private Vector<Enhancement> Advantage = new Vector<Enhancement>();
+    private ArrayList<Enhancement> Advantage = new ArrayList<Enhancement>();
 
     public Advantages() {
         Advantage.add(new Enhancement("hot_dog", "HotDog", "Hot Dog", "P<4", "", "Reduce heat-related rolls by 1", "AToW", 0));
@@ -98,8 +98,8 @@ public class Advantages {
         return null;
     }
 
-    public Vector<Enhancement> getMDMods() {
-        Vector<Enhancement> ret = new Vector<Enhancement>();
+    public ArrayList<Enhancement> getMDMods() {
+        ArrayList<Enhancement> ret = new ArrayList<Enhancement>();
         for ( Enhancement e : Advantage ) {
             if ( e.Source.startsWith("JHS") ) ret.add(e);
         }
@@ -114,8 +114,8 @@ public class Advantages {
         return m;
     }
 
-    public Vector<Enhancement> getMMChoices() {
-        Vector<Enhancement> ret = new Vector<Enhancement>();
+    public ArrayList<Enhancement> getMMChoices() {
+        ArrayList<Enhancement> ret = new ArrayList<Enhancement>();
         for ( Enhancement e : Advantage ) {
             if ( !e.MMName.isEmpty() ) ret.add(e);
         }

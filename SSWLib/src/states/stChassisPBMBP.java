@@ -159,4 +159,8 @@ public class stChassisPBMBP implements ifChassis, ifState {
     public String toString() {
         return "Primitive";
     }
+
+    public int GetCVPoints(int Tonnage) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

@@ -55,7 +55,7 @@ public class stCVDisplacement implements ifCombatVehicle {
     }
 
     public String GetMotiveLookupName() {
-        return "Displacement Hull";
+        return "Naval (Displacement)";
     }
 
     public boolean CanUseJumpMP() {
@@ -88,5 +88,13 @@ public class stCVDisplacement implements ifCombatVehicle {
 
     public boolean CanUseMinesweeper() {
         return true;
+    }
+    
+    public boolean CanUseEnviroSealing() {
+        return true;
+    }
+
+    public int GetCostMultiplier() {
+        return 200;
     }
 }

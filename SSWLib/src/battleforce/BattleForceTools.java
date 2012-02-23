@@ -188,7 +188,7 @@ public class BattleForceTools {
             }
 
             // Adjust for Targeting Computer
-            if ( ((Mech)b).UsingTC() && !(isBFATM(w) || isBFSRM(w) || isBFSRT(w) || isBFLRM(w) || isBFLRT(w) ) ) {
+            if ( ((ifUnit)b).UsingTC() && !(isBFATM(w) || isBFSRM(w) || isBFSRT(w) || isBFLRM(w) || isBFLRT(w) ) ) {
                 retval[BFConstants.BF_SHORT] *= 1.1;
                 retval[BFConstants.BF_MEDIUM] *= 1.1;
                 retval[BFConstants.BF_LONG] *= 1.1;
@@ -209,13 +209,15 @@ public class BattleForceTools {
         // TODO add AES if applicable to the to-hit modifier
         int aes = 0;
 
-        int location = ((Mech)b).GetLoadout().Find((abPlaceable)w);
-        if ( location == LocationIndex.MECH_LOC_RA && ((Mech)b).HasRAAES() ) {
-            aes = -1;
-        } else if ( ( location == LocationIndex.MECH_LOC_LA && ((Mech)b).HasLAAES() ) ) {
-            aes = -1;
-        } else if ( ( location == LocationIndex.MECH_LOC_LL || location == LocationIndex.MECH_LOC_RL ) && ((Mech)b).HasLegAES() ) {
-            aes = -1;
+        if ( b instanceof Mech ) {
+            int location = ((Mech)b).GetLoadout().Find((abPlaceable)w);
+            if ( location == LocationIndex.MECH_LOC_RA && ((Mech)b).HasRAAES() ) {
+                aes = -1;
+            } else if ( ( location == LocationIndex.MECH_LOC_LA && ((Mech)b).HasLAAES() ) ) {
+                aes = -1;
+            } else if ( ( location == LocationIndex.MECH_LOC_LL || location == LocationIndex.MECH_LOC_RL ) && ((Mech)b).HasLegAES() ) {
+                aes = -1;
+            }
         }
 
 

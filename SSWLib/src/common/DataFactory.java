@@ -28,25 +28,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package common;
 
+import components.CombatVehicle;
 import components.Mech;
+import components.Quirk;
 import filehandlers.BinaryReader;
 import java.io.File;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.ArrayList;
 
 public class DataFactory {
     // Class file to make data lookups easier and disconnected from the GUI
     Object[][] Equipment = { { null }, { null }, { null }, { null }, { null }, { null }, { null }, { null } };
     EquipmentFactory Equips;
+    ArrayList quirks;
+    ArrayList ammo,
+            weapons,
+            physicals,
+            equips,
+            customs;
 
-    public DataFactory( Mech m ) throws Exception {
+
+    public DataFactory() throws Exception
+    {
         BinaryReader b = new BinaryReader();
-        Vector ammo = b.ReadAmmo( Constants.AMMOFILE );
-        Vector weapons = b.ReadWeapons( Constants.WEAPONSFILE );
-        Vector physicals = b.ReadPhysicals( Constants.PHYSICALSFILE );
-        Vector equips = b.ReadEquipment( Constants.EQUIPMENTFILE );
+        ammo = b.ReadAmmo( Constants.AMMOFILE );
+        weapons = b.ReadWeapons( Constants.WEAPONSFILE );
+        physicals = b.ReadPhysicals( Constants.PHYSICALSFILE );
+        equips = b.ReadEquipment( Constants.EQUIPMENTFILE );
+        quirks = b.ReadQuirks( Constants.QUIRKSFILE );
 
         File dataFile;
-        Vector customs;
         try
         {
             dataFile = new File( Constants.CUSTOMWEAPONSFILE );
@@ -72,19 +83,41 @@ public class DataFactory {
                 customs = b.ReadPhysicals( Constants.CUSTOMPHYSICALSFILE );
                 if ( customs.size() > 0 ) physicals.addAll(customs);
             }
+
+            dataFile = new File( Constants.CUSTOMQUIRKSFILE );
+            if ( dataFile.exists() ) {
+                ArrayList<Quirk> c = b.ReadQuirks( Constants.CUSTOMQUIRKSFILE );
+                if ( c.size() > 0 ) quirks.addAll(c);
+            }
         }
         catch (Exception e)
         {
         }
+    }
 
+    public DataFactory( Mech m ) throws Exception {
+        this();
         Equips = new EquipmentFactory( weapons, physicals, equips, ammo, m );
+    }
+
+    public DataFactory( CombatVehicle v ) throws Exception {
+        this();
+        Equips = new EquipmentFactory( weapons, physicals, equips, ammo, v );
     }
 
     public EquipmentFactory GetEquipment() {
         return Equips;
     }
 
+    public ArrayList<Quirk> GetQuirks() {
+        return quirks;
+    }
+
     public void Rebuild( Mech m ) {
         Equips.BuildPhysicals( m );
+    }
+
+    public void Rebuild( CombatVehicle v ) {
+        Equips.BuildPhysicals( v );
     }
 }

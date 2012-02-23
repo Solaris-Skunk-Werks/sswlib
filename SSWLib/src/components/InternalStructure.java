@@ -35,7 +35,7 @@ public class InternalStructure extends abPlaceable {
     // configuration.
     
     // Declares
-    private Mech Owner;
+    private ifUnit Owner;
     private ifChassis Config;
     private static ifChassis MSBP = new stChassisMSBP(),
                              MSQD = new stChassisMSQD(),
@@ -56,7 +56,8 @@ public class InternalStructure extends abPlaceable {
                              CLESBP = new stChassisCLESBP(),
                              CLESQD = new stChassisCLESQD(),
                              CLECBP = new stChassisCLECBP(),
-                             CLECQD = new stChassisCLECQD();
+                             CLECQD = new stChassisCLECQD(),
+                             CVIS = new stChassisCVIS();
     private int Placed = 0;
     
     // Constructor
@@ -64,6 +65,11 @@ public class InternalStructure extends abPlaceable {
         // We'll assume an Inner Sphere standard military bipedal chassis to start.
         Owner = m;
         Config = MSBP;
+    }
+
+    public InternalStructure( CombatVehicle v ) {
+        Owner = v;
+        Config = CVIS;
     }
 
     // Public Methods
@@ -167,6 +173,12 @@ public class InternalStructure extends abPlaceable {
         Config = CLECQD;
     }
 
+    public void SetCVIS()
+    {
+        // Set this chassis to Combat Vehicle standard structure
+        Config = CVIS;
+    }
+
     public int GetTechBase() {
         return Config.GetAvailability().GetTechBase();
     }
@@ -180,7 +192,7 @@ public class InternalStructure extends abPlaceable {
     }
     
     public int NumCVSpaces() {
-        return 0;
+        return (int)Math.round(Owner.GetTonnage() / 10.0);
     }
 
     public String ActualName() {
@@ -266,6 +278,11 @@ public class InternalStructure extends abPlaceable {
     public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES ) {
         // BV will not change for this item, so just return the normal value
         return 0.0;
+    }
+
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
     }
 
     public double GetDefensiveBV() {

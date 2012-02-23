@@ -41,8 +41,8 @@ public class CVArmor extends abPlaceable {
 
     // Declares
     private CombatVehicle Owner;
-    private int[] ArmorPoints = { 0, 0, 0, 0, 0, 0, 0 };
-    private int[] MaxArmor = { 0, 0, 0, 0, 0, 0, 0 };
+    private int[] ArmorPoints = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    private int[] MaxArmor = { 390, 390, 390, 390, 390, 390, 2, 390 };
     private ifArmor Industrial = new stArmorIN(),
                     Standard = new stArmorMS(),
                     ISFF = new stArmorISFF(),
@@ -70,6 +70,28 @@ public class CVArmor extends abPlaceable {
 
     public CVArmor( CombatVehicle c ) {
         Owner = c;
+
+        SetMaxArmor(4);
+    }
+
+    public final void SetMaxArmor(int locations) {
+        // this sets the maximum array when tonnage changes.
+        int Percentage = ((!Owner.IsVTOL()) ? GetMaxArmor() : GetMaxArmor()-2) / locations;
+
+        MaxArmor[LocationIndex.CV_LOC_BODY] = 0;
+        MaxArmor[LocationIndex.CV_LOC_FRONT] = Percentage;
+        MaxArmor[LocationIndex.CV_LOC_LEFT] = Percentage;
+        MaxArmor[LocationIndex.CV_LOC_RIGHT] = Percentage;
+        MaxArmor[LocationIndex.CV_LOC_REAR] = Percentage;
+        
+        if ( Owner.isHasTurret1() )
+            MaxArmor[LocationIndex.CV_LOC_TURRET1] = Percentage;
+        
+        if ( Owner.isHasTurret2() )
+            MaxArmor[LocationIndex.CV_LOC_TURRET2] = Percentage;
+        
+        if ( Owner.IsVTOL() )
+            MaxArmor[LocationIndex.CV_LOC_ROTOR] = 2;
     }
 
     public ifState GetCurrentState() {
@@ -102,6 +124,7 @@ public class CVArmor extends abPlaceable {
         Config = Patchwork;
     }
 
+    //<editor-fold defaultstate="collapseed" desc="Armor Type Setters">
     public void SetIndustrial() {
         // set the armor to Inner Sphere Industrial
         Config = Industrial;
@@ -574,7 +597,8 @@ public class CVArmor extends abPlaceable {
                 return;
         }
     }
-
+    //</editor-fold>
+    
     private void CheckPatchworkSpace( ifArmor test, int loc ) throws Exception {
         if( test.PatchworkSpaces() > Owner.GetLoadout().FreeItems() ) {
             throw new Exception( "Cannot change " + LocationIndex.CVLocs[loc] + " armor to " + test.CritName() + "\nbecause there is not enough space." );
@@ -628,8 +652,8 @@ public class CVArmor extends abPlaceable {
 
     private void SetSingle( int Loc, int av ) {
         // make sure we're within bounds
-        if( GetArmorValue() + av >= GetMaxArmor() ) {
-            av = GetMaxArmor() - GetArmorValue();
+        if( (GetArmorValue()-GetLocationArmor(Loc)) + av >= GetMaxArmor() ) {
+            av = Math.abs(GetMaxArmor() - GetArmorValue() - GetLocationArmor(Loc));
             ArmorPoints[Loc] = av;
         } else if( av < 0 ) {
             ArmorPoints[Loc] = 0;
@@ -669,6 +693,7 @@ public class CVArmor extends abPlaceable {
         return result;
     }
 
+    //<editor-fold desc="Return Types">
     public boolean IsCommercial() {
         if ( Config == Commercial )
             return true;
@@ -708,7 +733,13 @@ public class CVArmor extends abPlaceable {
         if( Config == Patchwork ) { return true; }
         return false;
     }
+    
+    public boolean IsStealth() {
+        return Config.IsStealth();
+    }
 
+//</editor-fold>
+    
     public boolean RequiresExtraRules() {
         if ( IsHardened() || IsReactive() || IsReflective() || IsStealth() ) {
             return true;
@@ -719,10 +750,6 @@ public class CVArmor extends abPlaceable {
 
     public int GetTechBase() {
         return Config.GetAvailability().GetTechBase();
-    }
-
-    public boolean IsStealth() {
-        return Config.IsStealth();
     }
 
     @Override
@@ -827,7 +854,7 @@ public class CVArmor extends abPlaceable {
     }
 
     public double GetMaxTonnage() {
-        // returns the maximum armor tonnage supported by this mech.
+        // returns the maximum armor tonnage supported by this vehicle.
         if( Owner.UsingFractionalAccounting() ) {
             return CommonTools.RoundFractionalTons( GetMaxArmor() * Config.GetPointsPerTon() );
 //            return Math.ceil( GetMaxArmor() * Config.GetPointsPerTon() * 1000 ) * 0.001;
@@ -872,6 +899,11 @@ public class CVArmor extends abPlaceable {
     }
 
     public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES ) {
+        return GetOffensiveBV();
+    }
+
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
         return GetOffensiveBV();
     }
 
@@ -924,5 +956,42 @@ public class CVArmor extends abPlaceable {
     @Override
     public String toString() {
         return Config.CritName();
+    }
+
+    public ifArmor GetFrontArmorType()
+    {
+        return FrontConfig;
+    }
+
+    public ifArmor GetRearArmorType()
+    {
+        return RearConfig;
+    }
+
+    public ifArmor GetLeftArmorType()
+    {
+        return LeftConfig;
+    }
+
+    public ifArmor GetRightArmorType()
+    {
+        return RightConfig;
+    }
+
+    public ifArmor GetTurret1ArmorType()
+    {
+        return Turret1Config;
+    }
+    public ifArmor GetTurret2ArmorType()
+    {
+        return Turret2Config;
+    }
+    public ifArmor GetRotorArmorType()
+    {
+        return RotorConfig;
+    }
+
+    public CombatVehicle GetOwner() {
+        return Owner;
     }
 }

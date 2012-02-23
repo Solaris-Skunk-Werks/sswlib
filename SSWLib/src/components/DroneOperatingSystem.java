@@ -96,4 +96,9 @@ public class DroneOperatingSystem extends Equipment {
     public AvailableCode GetAvailability() {
         return AC;
     }
+
+    @Override
+    public boolean RequiresQuad(){
+        return true;
+    }
 }

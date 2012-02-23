@@ -97,8 +97,18 @@ public abstract class abPlaceable {
         return true;
     }
 
-    public boolean Place( ifCVLoadout l, LocationIndex[] locs ) {
-        return Place( l );
+    public boolean Place( ifCVLoadout l, LocationIndex[] locs) {
+        return Place(l);
+    }
+    
+    public boolean Place( ifCVLoadout l, int loc ) {
+        try {
+            l.AddTo(this, loc);
+            return true;
+        } catch ( Exception e )
+        {
+            return false;
+        }
     }
 
     public void Remove( ifCVLoadout l ) {
@@ -340,6 +350,10 @@ public abstract class abPlaceable {
     // return the current offensive battle value of the item.  This is useful
     // for weapons since they may be mounted to the rear.
     public abstract double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES );
+
+    // return the current offensive battle value of the item.  This is useful for weapons since they may be mounted
+    // to the rear or with TC or with AES or with Robotic equip.
+    public abstract double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic );
 
     // return the defensive battle value of the item
     public abstract double GetDefensiveBV();

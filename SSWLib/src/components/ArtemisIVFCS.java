@@ -112,6 +112,11 @@ public class ArtemisIVFCS extends abPlaceable implements ifMissileGuidance {
         return GetOffensiveBV();
     }
 
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
+    }
+
     public double GetDefensiveBV() {
         return 0.0;
     }

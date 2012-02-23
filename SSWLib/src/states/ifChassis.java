@@ -52,4 +52,5 @@ public interface ifChassis {
     public boolean DecrementPlaced();
     public MechModifier GetMechModifier();
     public AvailableCode GetAvailability();
+    public int GetCVPoints( int Tonnage );
 }

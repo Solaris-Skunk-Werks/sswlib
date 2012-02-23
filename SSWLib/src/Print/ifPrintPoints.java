@@ -66,4 +66,19 @@ public interface ifPrintPoints {
     public Point[] GetHeatSinkPoints();
     public Point GetMechImageLoc();
     public Point GetLogoImageLoc();
+    
+    public Point[] GetArmorFrontPoints();
+    public Point[] GetArmorLeftPoints();
+    public Point[] GetArmorRightPoints();
+    public Point[] GetArmorRearPoints();
+    public Point[] GetArmorTurretPoints();
+    public Point[] GetArmorTurret2Points();
+    public Point[] GetArmorRotorPoints();
+    public Point[] GetInternalFrontPoints();
+    public Point[] GetInternalLeftPoints();
+    public Point[] GetInternalRightPoints();
+    public Point[] GetInternalRearPoints();
+    public Point[] GetInternalTurretPoints();
+    public Point[] GetInternalTurret2Points();
+    public Point[] GetInternalRotorPoints();
 }

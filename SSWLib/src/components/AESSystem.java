@@ -145,6 +145,11 @@ public class AESSystem extends abPlaceable {
         // AES modifies BV, but doesn't have one of its own
         return 0.0;
     }
+    @Override
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // AES modifies BV, but doesn't have one of its own
+        return 0.0;
+    }
 
     @Override
     public double GetDefensiveBV() {

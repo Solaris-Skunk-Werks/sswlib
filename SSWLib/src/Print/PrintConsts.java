@@ -28,21 +28,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package Print;
 
-import components.Ammunition;
-import components.AvailableCode;
-import components.Mech;
-import components.PlaceableInfo;
-import components.RangedWeapon;
-import components.abPlaceable;
-import components.ifMissileGuidance;
-import components.ifWeapon;
+import components.*;
 import filehandlers.FileCommon;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.Calendar;
 import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class PrintConsts {
     public final static int MECHNAME = 0,
@@ -67,8 +61,13 @@ public class PrintConsts {
                                RS_TW_QD = "./Data/Printing/RS_TW_QD.png",
                                RS_TO_BP = "./Data/Printing/RS_TO_BP.png",
                                RS_TO_QD = "./Data/Printing/RS_TO_QD.png",
+                               RS_TW_GROUND = "./Data/Printing/RS_TW_GROUND.png",
+                               RS_TW_NAVAL = "./Data/Printing/RS_TW_NAVAL.png",
+                               RS_TW_VTOL = "./Data/Printing/RS_TW_VTOL.png",
                                BP_ChartImage = "./Data/Printing/Charts.png",
                                QD_ChartImage = "./Data/Printing/ChartsQD.png",
+                               BP_ChartImage_Minimal = "./Data/Printing/charts-minimal.png",
+                               QD_ChartImage_Minimal = "./Data/Printing/charts-minimalQD.png",
                                BF_BG = "./Data/Printing/BF_BG.png",
                                BF_IS_Unit = "./Data/Printing/BF_IS_Unit.png",
                                BF_CS_Unit = "./Data/Printing/BF_CS_Unit.png",
@@ -174,7 +173,7 @@ public class PrintConsts {
         }
 
         char [] chars = text.toCharArray();
-        Vector lines = new Vector();
+        ArrayList<String> lines = new ArrayList<String>();
         StringBuffer line = new StringBuffer();
         StringBuffer word = new StringBuffer();
 
@@ -212,14 +211,10 @@ public class PrintConsts {
         if (line.length() > 0) {
             lines.add(line.toString());
         }
-
-        String [] ret = new String[lines.size()];
-        int c = 0; // counter
-        for (Enumeration e = lines.elements(); e.hasMoreElements(); c++) {
-            ret[c] = (String) e.nextElement();
-        }
-
-        return ret;
+        
+        String[] ret = new String[lines.size()];
+        
+        return lines.toArray(ret);
     }
 
     public static String[] getCopyright() {
@@ -228,11 +223,11 @@ public class PrintConsts {
             "  Catalyst Game Labs and the Catalyst Game Labs logo are trademarks of InMediaRes Productions, LLC. Permission to photocopy for personal use."};
     }
     
-    public static String GetPrintName( abPlaceable a, Mech CurMech, int Loc ) {
+    public static String GetPrintName( abPlaceable a, int Techbase, int Loc ) {
         // returns a modified PrintName, useful for special situations such as
         // mixed-tech mechs.
         String retval = a.CritName( Loc );
-        if( a instanceof RangedWeapon && CurMech.GetLoadout().GetTechBase() == AvailableCode.TECH_BOTH ) {
+        if( a instanceof RangedWeapon && Techbase == AvailableCode.TECH_BOTH ) {
             switch( ((RangedWeapon) a).GetTechBase() ) {
                 case AvailableCode.TECH_INNER_SPHERE:
                     retval = retval + " (IS)";
@@ -244,11 +239,11 @@ public class PrintConsts {
         }
         return retval;
     }
-
-    public static Vector<PlaceableInfo> SortEquipmentByLocation( Mech CurMech, int MiniConvRate ) {
+    
+    public static ArrayList<PlaceableInfo> SortEquipmentByLocation( Mech CurMech, int MiniConvRate ) {
         boolean HasAmmoData = false;
 
-        Vector v = (Vector) CurMech.GetLoadout().GetNonCore().clone();
+        ArrayList v = (ArrayList) CurMech.GetLoadout().GetNonCore().clone();
                 // add in MASC and the targeting computer if needed.
         if( CurMech.GetPhysEnhance().IsMASC() ) v.add( CurMech.GetPhysEnhance() );
         if( CurMech.UsingTC() ) v.add( CurMech.GetTC() );
@@ -270,8 +265,8 @@ public class PrintConsts {
                 v.add( CurMech.GetLLAES() );
             }
         }
-        Vector Equip = CurMech.SortLoadout(v);
-        Vector<abPlaceable> sorted = FileCommon.SortEquipmentForStats(CurMech, Equip, true, false);
+        ArrayList Equip = CurMech.SortLoadout(v);
+        ArrayList<abPlaceable> sorted = FileCommon.SortEquipmentForStats(CurMech, Equip, true, false);
 
         abPlaceable[] a = new abPlaceable[sorted.size()];
         for( int i = 0; i < sorted.size(); i++ ) {
@@ -283,7 +278,7 @@ public class PrintConsts {
         // now group them by location
         int count = 0;
         PlaceableInfo p = null;
-        Vector<PlaceableInfo> temp = new Vector<PlaceableInfo>();
+        ArrayList<PlaceableInfo> temp = new ArrayList<PlaceableInfo>();
         for( int i = 0; i < a.length; i++ ) {
             if( a[i] != null ) {
                 p = new PlaceableInfo(CurMech, MiniConvRate, a[i], CurMech.GetLoadout().Find( a[i] ));
@@ -304,7 +299,7 @@ public class PrintConsts {
                 if ( p.name.equals("Targeting Computer") ||
                      p.name.equals("AES") ) count = 1;
 
-                // set the weapon count and add it to the temp vector
+                // set the weapon count and add it to the temp ArrayList
                 p.Count = count + "";
                 temp.add( p );
                 count = 0;
@@ -315,7 +310,7 @@ public class PrintConsts {
                 if ( p.Item instanceof ifWeapon ) {
                     if( ((ifWeapon) p.Item).GetWeaponClass() == ifWeapon.W_MISSILE ) {
                         if ( ((ifWeapon) p.Item).CritName().contains("ATM") ) {
-                            Vector<PlaceableInfo> t = new Vector<PlaceableInfo>();
+                            ArrayList<PlaceableInfo> t = new ArrayList<PlaceableInfo>();
                             if ( !HasAmmoData ) {
                                 t.add(factory.ATMERAmmo(p));
                                 t.add(factory.ATMHEAmmo(p));
@@ -361,5 +356,111 @@ public class PrintConsts {
         if ( CurMech.HasBlueShield() ) temp.add(new PlaceableInfo( CurMech, MiniConvRate, CurMech.GetBlueShield() ));
 
         return temp;
+    }
+    
+    public static ArrayList<PlaceableInfo> SortEquipmentByLocation( CombatVehicle CurUnit, int MiniConvRate ) {
+        ArrayList<PlaceableInfo> Data = new ArrayList<PlaceableInfo>();
+
+        abPlaceable a[] = new abPlaceable[0];
+        a = CurUnit.GetLoadout().GetFrontItems().toArray(a);
+        Data.addAll(HandleLocation( CurUnit, MiniConvRate, a, LocationIndex.CV_LOC_FRONT));
+        a = CurUnit.GetLoadout().GetLeftItems().toArray(a);
+        Data.addAll(HandleLocation( CurUnit, MiniConvRate, a, LocationIndex.CV_LOC_LEFT));
+        a = CurUnit.GetLoadout().GetRightItems().toArray(a);
+        Data.addAll(HandleLocation( CurUnit, MiniConvRate, a, LocationIndex.CV_LOC_RIGHT));
+        a = CurUnit.GetLoadout().GetRearItems().toArray(a);
+        Data.addAll(HandleLocation( CurUnit, MiniConvRate, a, LocationIndex.CV_LOC_REAR));
+        a = CurUnit.GetLoadout().GetBodyItems().toArray(a);
+        Data.addAll(HandleLocation( CurUnit, MiniConvRate, a, LocationIndex.CV_LOC_BODY));
+        a = CurUnit.GetLoadout().GetTurret1Items().toArray(a);
+        Data.addAll(HandleLocation( CurUnit, MiniConvRate, a, LocationIndex.CV_LOC_TURRET1));
+        a = CurUnit.GetLoadout().GetTurret2Items().toArray(a);
+        Data.addAll(HandleLocation( CurUnit, MiniConvRate, a, LocationIndex.CV_LOC_TURRET2));
+        
+        return Data;
+    }
+    
+    private static ArrayList<PlaceableInfo> HandleLocation( CombatVehicle CurUnit, int MiniConvRate, abPlaceable[] items, int Location ) {
+        ArrayList<PlaceableInfo> Data = new ArrayList<PlaceableInfo>();
+        PlaceableInfo p = null;
+        int count = 0;
+        boolean HasAmmoData = false;
+        
+        for (int i = 0; i < items.length; i++) {
+            if ( items[i] != null ) {
+                if ( items[i] instanceof Ammunition ) continue;
+                p = new PlaceableInfo(MiniConvRate, items[i], Location, CurUnit.GetLoadout().GetTechBase(), false, common.Constants.Vehicle);
+                items[i] = null;
+                count++;
+                // search for other matching weapons in the same location
+                for( int j = 0; j < items.length; j++ ) {
+                    if( items[j] != null ) {
+                        if( items[j].CritName().equals( p.Item.CritName() ) ) {
+                            count++;
+                            items[j] = null;
+                        }
+                    }
+                }
+                
+                if ( p.name.equals("Targeting Computer") ||
+                     p.name.equals("AES") ) count = 1;
+
+                // set the weapon count and add it to the items ArrayList
+                p.Count = count + "";
+                Data.add( p );
+                count = 0;
+
+                // Parse the items and add extra line items as necessary
+                // ATM, MML, Artemis, TC, etc
+                PlaceableInfo factory = new PlaceableInfo(MiniConvRate, common.Constants.Vehicle);
+                if ( p.Item instanceof ifWeapon ) {
+                    if( ((ifWeapon) p.Item).GetWeaponClass() == ifWeapon.W_MISSILE ) {
+                        if ( ((ifWeapon) p.Item).CritName().contains("ATM") ) {
+                            ArrayList<PlaceableInfo> t = new ArrayList<PlaceableInfo>();
+                            if ( !HasAmmoData ) {
+                                t.add(factory.ATMERAmmo(p));
+                                t.add(factory.ATMHEAmmo(p));
+                                HasAmmoData = true;
+                            }
+
+                            if ( t.size() > 0 ) p.specials = "-";
+                            if ( t.size() == 2 ) t.get(0).specials = "-";
+                            for ( PlaceableInfo am : t ) {
+                                Data.add(am);
+                            }
+                        } else if ( ((ifWeapon) p.Item).CritName().contains("MML") ) {
+                            p.Clean();
+                            if ( !HasAmmoData ) {
+                                Data.add(factory.MMLLRMAmmo(p));
+                                Data.add(factory.MMLSRMAmmo(p));
+                                HasAmmoData = true;
+                            }
+                        }
+
+                        if ( ((ifWeapon) p.Item).IsFCSCapable() ) {
+                            if ( ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_ArtemisIV || ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_ArtemisV ) {
+                                if ( CurUnit.GetLoadout().UsingArtemisIV() ) {
+                                    Data.add(factory.ArtemisIV(p));
+                                } else if ( CurUnit.GetLoadout().UsingArtemisV() ) {
+                                    Data.add(factory.ArtemisV(p));
+                                }
+                            } else if ( ((ifWeapon) p.Item).GetFCSType() == ifMissileGuidance.FCS_Apollo && CurUnit.GetLoadout().UsingApollo() ) {
+                                Data.add(factory.Apollo(p));
+                            }
+                            p.specials = "-";
+                        }
+                    } else if ( ((ifWeapon) p.Item).GetWeaponClass() == ifWeapon.W_ENERGY ) {
+                        if ( ((RangedWeapon) p.Item).IsUsingCapacitor() ) {
+                            p.name.replace(" + PPC Capacitor", "");
+                            p.name2.replace(" + PPC Capacitor", "");
+                            Data.add( new PlaceableInfo( MiniConvRate, (abPlaceable)((RangedWeapon) p.Item).GetCapacitor(), p.Location, CurUnit.GetLoadout().GetTechBase(), false, common.Constants.Vehicle ) );
+                        }
+                    }
+                }
+                
+            }
+        }
+        
+        return Data;
     }
 }

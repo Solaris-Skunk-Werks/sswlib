@@ -31,7 +31,7 @@ package filehandlers;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.FileInputStream;
-import java.util.Vector;
+import java.util.ArrayList;
 import components.Ammunition;
 import components.AvailableCode;
 import components.Equipment;
@@ -39,11 +39,13 @@ import components.Exclusion;
 import components.Mech;
 import components.MechModifier;
 import components.PhysicalWeapon;
+import components.Quirk;
 import components.RangedWeapon;
+import java.util.ArrayList;
 
 public class BinaryReader {
-    public Vector ReadWeapons( String inputfile ) throws Exception {
-        Vector finished = new Vector();
+    public ArrayList ReadWeapons( String inputfile ) throws Exception {
+        ArrayList finished = new ArrayList();
         DataInputStream FR;
         try {
             FR = new DataInputStream( new FileInputStream( inputfile ) );
@@ -95,10 +97,9 @@ public class BinaryReader {
         return finished;
     }
 
-    public Vector ReadPhysicals( String inputfile ) throws Exception {
-        Vector finished = new Vector();
+    public ArrayList ReadPhysicals( String inputfile ) throws Exception {
+        ArrayList finished = new ArrayList();
         DataInputStream FR;
-        Mech m = new Mech();
         try {
             FR = new DataInputStream( new FileInputStream( inputfile ) );
             String lname = "";
@@ -118,7 +119,7 @@ public class BinaryReader {
                     type = FR.readUTF();
                     special = FR.readUTF();
                     AvailableCode AC = GetAvailability( FR );
-                    PhysicalWeapon pw = new PhysicalWeapon( aname, lname, cname, mname, chat, m, AC );
+                    PhysicalWeapon pw = new PhysicalWeapon( aname, lname, cname, mname, chat, AC );
                     pw.SetType( type, special );
                     pw.SetTonnage( FR.readDouble(), FR.readDouble(), FR.readBoolean() );
                     pw.SetCost( FR.readDouble(), FR.readDouble() );
@@ -153,10 +154,9 @@ public class BinaryReader {
         return finished;
     }
 
-    public Vector ReadEquipment( String inputfile ) throws Exception {
-        Vector finished = new Vector();
+    public ArrayList ReadEquipment( String inputfile ) throws Exception {
+        ArrayList finished = new ArrayList();
         DataInputStream FR;
-        Mech m = new Mech();
         try {
             FR = new DataInputStream( new FileInputStream( inputfile ) );
             String lname = "";
@@ -193,7 +193,7 @@ public class BinaryReader {
                     e.SetBattleForceAbilities( FR.readUTF().split(",") );
                     int numexceptions = FR.readInt();
                     if( numexceptions > 0 ) {
-                        Vector<String> excep = new Vector<String>();
+                        ArrayList<String> excep = new ArrayList<String>();
                         for( int i = 0; i < numexceptions; i++ ) {
                             excep.add( FR.readUTF() );
                         }
@@ -213,8 +213,8 @@ public class BinaryReader {
         return finished;
     }
 
-    public Vector ReadAmmo( String inputfile ) throws Exception {
-        Vector finished = new Vector();
+    public ArrayList ReadAmmo( String inputfile ) throws Exception {
+        ArrayList finished = new ArrayList();
         DataInputStream FR;
         try {
             FR = new DataInputStream( new FileInputStream( inputfile ) );
@@ -240,6 +240,43 @@ public class BinaryReader {
                     a.SetAmmo( FR.readInt(), FR.readBoolean(), FR.readInt(), FR.readInt() );
                     a.SetBookReference( FR.readUTF() );
                     finished.add( a );
+                } catch( EOFException e1 ) {
+                    break;
+                }
+            }
+            FR.close();
+        } catch( Exception e ) {
+            e.printStackTrace();
+            throw e;
+        }
+        return finished;
+    }
+
+    public ArrayList<Quirk> ReadQuirks( String inputfile ) throws Exception {
+        ArrayList<Quirk> finished = new ArrayList<Quirk>();
+        DataInputStream FR;
+        try {
+            FR = new DataInputStream( new FileInputStream( inputfile ) );
+            AvailableCode AC;
+            while( true ) {
+                try {
+                    Quirk q = new Quirk( FR.readUTF(), 
+                                         FR.readBoolean(),
+                                         FR.readInt(),
+                                         FR.readBoolean(), 
+                                         FR.readBoolean(), 
+                                         FR.readBoolean(), 
+                                         FR.readBoolean(), 
+                                         FR.readBoolean(), 
+                                         FR.readBoolean(), 
+                                         FR.readBoolean(), 
+                                         FR.readBoolean(), 
+                                         FR.readBoolean(), 
+                                         FR.readBoolean(), 
+                                         FR.readBoolean(), 
+                                         FR.readBoolean(),
+                                         FR.readUTF());
+                    finished.add( q );
                 } catch( EOFException e1 ) {
                     break;
                 }

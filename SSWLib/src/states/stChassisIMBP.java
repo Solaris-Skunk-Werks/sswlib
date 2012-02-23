@@ -160,4 +160,8 @@ public class stChassisIMBP implements ifChassis, ifState {
     public String toString() {
         return "Industrial";
     }
+
+    public int GetCVPoints(int Tonnage) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

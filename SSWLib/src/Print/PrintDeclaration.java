@@ -115,7 +115,7 @@ public class PrintDeclaration implements Printable {
     }
 
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-        if( units.size() == 0 ) { return Printable.NO_SUCH_PAGE; }
+        if( units.isEmpty() ) { return Printable.NO_SUCH_PAGE; }
         Graphic = (Graphics2D) graphics;
         format = pageFormat;
         Reset();

@@ -62,7 +62,7 @@ public class VArmorSetStandard implements ifVisitor {
     }
 
     public void Visit( CombatVehicle v ) throws Exception {
-        // does nothing at the moment
+        v.GetArmor().SetStandard();
     }
 
     public void Visit( Infantry i ) throws Exception {

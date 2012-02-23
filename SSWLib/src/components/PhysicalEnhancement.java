@@ -37,7 +37,7 @@ public class PhysicalEnhancement extends abPlaceable {
                                        ISITSM = new stPEISITSM(),
                                        CLMASC = new stPECLMASC();
     private ifPhysEnhance CurConfig = None;
-    private Mech Owner;
+    private ifUnit Owner;
     private int Placed = 0;
 
     public PhysicalEnhancement( Mech m ) {
@@ -45,6 +45,11 @@ public class PhysicalEnhancement extends abPlaceable {
         Owner = m;
     }
 
+    public PhysicalEnhancement( CombatVehicle m ) {
+        // We pass in the owning mech because calculations are done from tonnage
+        Owner = m;
+    }
+    
     public void SetNone() {
         CurConfig = None;
     }
@@ -75,11 +80,13 @@ public class PhysicalEnhancement extends abPlaceable {
 
     public void Recalculate() {
         // recalculates the physical enhancement if something changed
-        ifMechLoadout l = Owner.GetLoadout();
+        if ( Owner instanceof Mech ) {
+            ifMechLoadout l = ((Mech)Owner).GetLoadout();
 
-        // if it needs to be placed, do it.
-        if( IsMASC() || IsTSM() ) {
-            Place( l );
+            // if it needs to be placed, do it.
+            if( IsMASC() || IsTSM() ) {
+                Place( l );
+            }
         }
     }
 
@@ -133,6 +140,11 @@ public class PhysicalEnhancement extends abPlaceable {
     }
 
     public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
+    }
+
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
         // BV will not change for this item, so just return the normal value
         return GetOffensiveBV();
     }

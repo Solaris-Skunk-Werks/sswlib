@@ -33,6 +33,7 @@ import java.util.Vector;
 
 public class PlaceableInfo {
         public int Location,
+                    UnitType = common.Constants.BattleMech,
                     NameLength = 20;
         public String   Count = "",
                         name = "",
@@ -52,6 +53,11 @@ public class PlaceableInfo {
         public PlaceableInfo( Mech m, int MiniConvRate ) {
             CurMech = m;
             this.MiniConvRate = MiniConvRate;
+        }
+        
+        public PlaceableInfo( int MiniConvRate, int UnitType ) {
+            this.MiniConvRate = MiniConvRate;
+            this.UnitType = UnitType;
         }
 
         public PlaceableInfo( Mech m, int MiniConvRate, String Count, int Location, String LocationName, String Name, String Heat, String Damage, String Min, String Short, String Medium, String Long, String Specials) {
@@ -78,10 +84,15 @@ public class PlaceableInfo {
         }
 
         public PlaceableInfo( Mech m, int MiniConvRate, abPlaceable item, int Location ) {
+            this(MiniConvRate, item, Location, m.GetLoadout().GetTechBase(), m.IsQuad(), common.Constants.BattleMech);
             this.CurMech = m;
+        }
+        
+        public PlaceableInfo( int MiniConvRate, abPlaceable item, int Location, int Techbase, boolean IsQuad, int UnitType ) {
             this.MiniConvRate = MiniConvRate;
             this.Item = item;
-            this.name = PrintConsts.GetPrintName( item, CurMech, Location ).trim();
+            this.UnitType = UnitType;
+            this.name = PrintConsts.GetPrintName( item, Techbase, Location ).trim();
                     //.replace("Medium Pulse", "Med. Pulse")
                     //.replace("Beagle Active Probe", "Beagle Active Prb")
                     //.replace("Guardian ECM Suite", "Guardian ECM")
@@ -92,7 +103,7 @@ public class PlaceableInfo {
                 name2 = names[1];
             }
             this.Location = Location;
-            this.locName = FileCommon.EncodeLocation( Location, CurMech.IsQuad() );
+            this.locName = FileCommon.EncodeLocation( Location, IsQuad, this.UnitType );
 
             if( item instanceof Equipment ) {
                 Equipment e = (Equipment) item;

@@ -40,15 +40,15 @@ import java.awt.Image;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import list.view.Column;
 import org.w3c.dom.Node;
 
 public class Force extends AbstractTableModel implements ifSerializable {
-    public Vector<Unit> Units = new Vector<Unit>();
-    public Vector<Group> Groups = new Vector<Group>();
+    public ArrayList<Unit> Units = new ArrayList<Unit>();
+    public ArrayList<Group> Groups = new ArrayList<Group>();
     public String ForceName = "",
                   LogoPath = "";
     private String Type = BattleForce.InnerSphere;
@@ -87,8 +87,8 @@ public class Force extends AbstractTableModel implements ifSerializable {
     private abTable currentModel = new tbTotalWarfare(this);
 
 
-    public static Vector<Column> ScenarioClipboardColumns() {
-        Vector<Column> cols = new Vector<Column>();
+    public static ArrayList<Column> ScenarioClipboardColumns() {
+        ArrayList<Column> cols = new ArrayList<Column>();
         cols.add(new Column(0, "Unit", "Unit", 30));
         cols.add(new Column(0, "Tons", "Tons", 6));
         cols.add(new Column(0, "BV", "BV", 6));
@@ -316,7 +316,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
     }
 
     public void clearEmptyGroups() {
-        Vector<Group> remove = new Vector<Group>();
+        ArrayList<Group> remove = new ArrayList<Group>();
 
         for ( Group g : Groups ) {
             if ( g.getUnits().size() == 0 ) { remove.add(g); }
@@ -495,8 +495,8 @@ public class Force extends AbstractTableModel implements ifSerializable {
     }
 
     public void Clear() {
-        Units.removeAllElements();
-        Groups.removeAllElements();
+        Units.clear();
+        Groups.clear();
         ForceName = "";
         LogoPath = "";
         TotalBaseBV = 0.0f;
@@ -563,8 +563,8 @@ public class Force extends AbstractTableModel implements ifSerializable {
                 j += 1;
             } else {
                 swap = Groups.get( i - 1 );
-                Groups.setElementAt( Groups.get( i ), i - 1 );
-                Groups.setElementAt( swap, i );
+                Groups.set( i - 1, Groups.get( i ) );
+                Groups.set( i, swap );
                 i -= 1;
                 if( i == 0 ) {
                     i = 1;
@@ -584,13 +584,25 @@ public class Force extends AbstractTableModel implements ifSerializable {
         bf.LogoPath = this.LogoPath;
         for ( int i=0; i < Units.size(); i++ ) {
             Unit u = (Unit) Units.get(i);
-            u.LoadMech();
-            if ( u.m != null ) {
-                BattleForceStats stat = new BattleForceStats(u.m,u.getGroup(), u.getGunnery(),u.getPiloting());
-                stat.setWarrior(u.getMechwarrior());
-                bf.BattleForceStats.add(stat);
-            } else {
-                error += "Could not load " + u.TypeModel + ".  The filename is most likely blank.\n";
+            u.LoadUnit();
+            switch(u.UnitType) {
+                case common.CommonTools.BattleMech:
+                    if ( u.m != null ) {
+                        BattleForceStats stat = new BattleForceStats(u.m,u.getGroup(), u.getGunnery(),u.getPiloting());
+                        stat.setWarrior(u.getMechwarrior());
+                        bf.BattleForceStats.add(stat);
+                    } else {
+                        error += "Could not load " + u.TypeModel + ".  The filename is most likely blank.\n";
+                    }
+                    break;
+                case common.CommonTools.Vehicle:
+                    if ( u.v != null ) {
+                        BattleForceStats stat = new BattleForceStats(u.v, u.getGroup(), u.getGunnery(),u.getPiloting());
+                        stat.setWarrior(u.getMechwarrior());
+                        bf.BattleForceStats.add(stat);
+                    } else {
+                        error += "Could not load " + u.TypeModel + ".  The filename is most likely blank.\n";
+                    }
             }
         }
 
@@ -768,7 +780,7 @@ public class Force extends AbstractTableModel implements ifSerializable {
         RefreshBV();
     }
 
-    public Vector<Unit> getUnits() {
+    public ArrayList<Unit> getUnits() {
         if ( unitsChanged ) {
             Units.clear();
             for ( Group g : Groups ) {

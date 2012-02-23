@@ -163,6 +163,11 @@ public class Gyro extends abPlaceable {
         return 0.0f;
     }
 
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
+    }
+
     public double GetDefensiveBV() {
         if( IsArmored() ) {
             double result = Owner.GetTonnage() * CurConfig.GetBVMult();

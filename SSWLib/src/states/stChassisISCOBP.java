@@ -161,4 +161,8 @@ public class stChassisISCOBP implements ifChassis, ifState {
     public String toString() {
         return "Composite";
     }
+
+    public int GetCVPoints(int Tonnage) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

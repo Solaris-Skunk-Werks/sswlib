@@ -32,7 +32,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
@@ -47,7 +47,7 @@ import org.w3c.dom.*;
  * @author George Blouin
  */
 public class Warriors extends AbstractTableModel {
-    private Vector<Warrior> list = new Vector<Warrior>();
+    private ArrayList<Warrior> list = new ArrayList<Warrior>();
     private String defaultPath = "data/Personnel/WarriorList.psn",
                     Title = "",
                     PersonnelFile = "";
@@ -115,7 +115,7 @@ public class Warriors extends AbstractTableModel {
     }
 
     public void Clear() {
-        list.removeAllElements();
+        list.clear();
         fireTableDataChanged();
     }
 

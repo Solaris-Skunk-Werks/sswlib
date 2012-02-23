@@ -128,7 +128,8 @@ public class QSCardSheetPrinter implements Printable {
             //graphic.drawRect(x+15, y+40, 75, 117);
 
             if ( printMechs ) {
-                stats.setImage(imageTracker.media.DetermineMatchingImage(stats.getName(), stats.getModel(), stats.getImage()));
+                if ( stats.getImage().replace("../Images/No_Image.png", "").isEmpty() )
+                    stats.setImage(imageTracker.media.DetermineMatchingImage(stats.getName(), stats.getModel(), stats.getImage()));
                 if ( !stats.getImage().isEmpty() ) {
                     Image image = imageTracker.getImage(stats.getImage());
                     Dimension dim = imageTracker.media.reSize(image, 75d, 117d);

@@ -46,7 +46,7 @@ public class MultiSlotSystem extends abPlaceable {
                    MegaMekName,
                    ChatName ="",
                    BookReference ="";
-    protected Mech Owner;
+    protected ifUnit Owner;
 
     public MultiSlotSystem( Mech owner, String actualname, String lookupname, String critname, String mname, double tons, boolean xct, boolean xhd, double cost, boolean costtons, AvailableCode a ) {
         Owner = owner;
@@ -61,7 +61,20 @@ public class MultiSlotSystem extends abPlaceable {
         CostTons = costtons;
         AC = a;
     }
-
+    public MultiSlotSystem( CombatVehicle owner, String actualname, String lookupname, String critname, String mname, double tons, boolean xct, boolean xhd, double cost, boolean costtons, AvailableCode a ) {
+        Owner = owner;
+        ActualName = actualname;
+        CritName = critname;
+        MegaMekName = mname;
+        LookupName = lookupname;
+        Tonnage = tons;
+        ExcludeCT = xct;
+        ExcludeHD = xhd;
+        Cost = cost;
+        CostTons = costtons;
+        AC = a;
+    }
+    
     public void SetChatName( String s ) {
         ChatName = s;
     }
@@ -160,6 +173,12 @@ public class MultiSlotSystem extends abPlaceable {
     @Override
     public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES ) {
         return 0.0;
+    }
+
+    @Override
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
     }
 
     @Override

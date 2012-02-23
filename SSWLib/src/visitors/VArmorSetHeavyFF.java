@@ -62,7 +62,7 @@ public class VArmorSetHeavyFF implements ifVisitor {
     }
 
     public void Visit( CombatVehicle v ) throws Exception {
-        // does nothing at the moment
+        v.GetArmor().SetISHF();
     }
 
     public void Visit( Infantry i ) throws Exception {

@@ -27,34 +27,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package Force;
 
-import common.CommonTools;
-import battleforce.BattleForceStats;
-import components.Mech;
-import list.MechListData;
-import filehandlers.MechReader;
 import Print.ForceListPrinter;
-
 import Print.PrintConsts;
+import battleforce.BattleForceStats;
+import common.CommonTools;
 import common.Constants;
-import components.PhysicalWeapon;
-import components.RangedWeapon;
-import filehandlers.FileCommon;
-import filehandlers.MechWriter;
-import filehandlers.Media;
+import components.*;
+import filehandlers.*;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.prefs.Preferences;
+import list.UnitListData;
 import list.view.Column;
 import org.w3c.dom.Node;
 
 public class Unit implements ifSerializable {
     public String TypeModel = "",
-                  Type = "",
+                  Name = "",
                   Model = "",
                   Info = "",
-                  C3Type = "";
+                  C3Type = "",
+                    UnitImage = "";
     private String Mechwarrior = "";
     public String Filename = "",
                   Configuration = "";
@@ -91,6 +85,7 @@ public class Unit implements ifSerializable {
                     StatsCalced = false;
     private boolean isOmni = false;
     public Mech m = null;
+    public CombatVehicle v = null;
     private BattleForceStats BFStats = new BattleForceStats();
     private Preferences Prefs;
 
@@ -98,9 +93,9 @@ public class Unit implements ifSerializable {
         Prefs = Preferences.userRoot().node( Constants.BFBPrefs );
     }
 
-    public Unit( MechListData m ) {
+    public Unit( UnitListData m ) {
         this();
-        this.Type = m.getName();
+        this.Name = m.getName();
         this.Model = m.getModel();
         this.TypeModel = m.getFullName();
         this.Tonnage = m.getTonnage();
@@ -109,6 +104,7 @@ public class Unit implements ifSerializable {
         this.Configuration = m.getConfig();
         this.Info = m.getInfo();
         this.BFStats = m.getBattleForceStats();
+        this.UnitType = m.getUnitType();
         if ( Info.contains("C3") ) {
             C3Available = true;
             for ( String Item : Info.split(" ") ) {
@@ -120,7 +116,7 @@ public class Unit implements ifSerializable {
 
     public Unit( Mech m ) {
         this();
-        Type = m.GetName();
+        Name = m.GetName();
         Model = m.GetModel();
         TypeModel = m.GetFullName();
         Tonnage = m.GetTonnage();
@@ -138,6 +134,10 @@ public class Unit implements ifSerializable {
             setOmni(true);
             Configuration = m.GetLoadout().GetName();
         }
+        
+        if ( !m.GetSSWImage().isEmpty()) {
+            UnitImage = m.GetSSWImage();
+        }
 
         //Calc Fields
         if ( m.HasECM() ) ECM = 1;
@@ -148,7 +148,7 @@ public class Unit implements ifSerializable {
         Speed = m.GetAdjustedRunningMP(false, true);
         if ( m.UsingTC() ) TC = 1;
 
-        Vector v = (Vector) m.GetLoadout().GetNonCore().clone();
+        ArrayList v = (ArrayList) m.GetLoadout().GetNonCore().clone();
         for (int i=0; i < v.size(); i++)
         {
             if ( v.get(i) instanceof PhysicalWeapon ) {
@@ -172,12 +172,71 @@ public class Unit implements ifSerializable {
         Refresh();
     }
 
+    public Unit( CombatVehicle vee ) {
+        this();
+        Name = vee.GetName();
+        Model = vee.GetModel();
+        TypeModel = vee.GetFullName();
+        Tonnage = vee.GetTonnage();
+        BaseBV = vee.GetCurrentBV();
+        Info = vee.GetChatInfo();
+
+        if ( vee.HasC3() ) {
+            C3Available = true;
+            for ( String Item : Info.split(",") ) {
+                if ( Item.contains("C3") ) C3Type = Item.trim();
+            }
+        }
+
+        if ( vee.IsOmni() ) {
+            setOmni(true);
+            Configuration = vee.GetLoadout().GetName();
+        }
+        
+        if ( !vee.GetSSWImage().isEmpty() ) {
+            UnitImage = vee.GetSSWImage();
+        }
+
+        //Calc Fields
+        if ( vee.HasECM() ) ECM = 1;
+        //if ( vee.HasProbe() ) Probe = 1;
+        if ( vee.GetJumpJets().GetNumJJ() > 0 ) Jump = 1;
+        Armor = vee.GetArmor().GetArmorValue();
+        TSM = vee.GetPhysEnhance().IsTSM() ? 1 : 0;
+        Speed = vee.getFlankMP();
+        if ( vee.UsingTC() ) TC = 1;
+
+        ArrayList v = (ArrayList) vee.GetLoadout().GetNonCore().clone();
+        for (int i=0; i < v.size(); i++)
+        {
+            if ( v.get(i) instanceof PhysicalWeapon ) {
+                Physical += 1;
+            }
+
+            if ( v.get(i) instanceof RangedWeapon ) {
+                RangedWeapon w = (RangedWeapon)v.get(i);
+                Damage += w.GetDamageShort();
+                if ( w.GetDamageShort() >= 12 )
+                    HeadCap += 1;
+                if ( w.GetDamageShort() >= 10 )
+                    Ten += 1;
+                if ( w.GetDamageShort() >= 8 )
+                    Eight += 1;
+            }
+        }
+        StatsCalced = true;
+
+        this.v = vee;
+        Refresh();
+    }
+    
     public Unit( BattleForceStats stat ) {
         this();
-        Type = stat.getName();
+        Name = stat.getName();
         Model = stat.getModel();
         TypeModel = stat.getElement();
         BaseBV = stat.getBasePV() * 100;
+        UnitImage = stat.getImage();
         this.BFStats = stat;
 
         if ( stat.getType().equals("Combat Vehicle") || stat.getType().equals("Naval Vessel") ) this.UnitType = CommonTools.Vehicle;
@@ -205,7 +264,7 @@ public class Unit implements ifSerializable {
 
             if ( !nodeName.equals("#text") ) {
                 //Previous File structure
-                if (nodeName.equals("type")) {Type = FileCommon.DecodeFluff(n.getChildNodes().item(i).getTextContent().trim());}
+                if (nodeName.equals("type")) {Name = FileCommon.DecodeFluff(n.getChildNodes().item(i).getTextContent().trim());}
                 if (nodeName.equals("model")) {Model = FileCommon.DecodeFluff(n.getChildNodes().item(i).getTextContent().trim());}
                 if (nodeName.equals("config")) {Configuration = n.getChildNodes().item(i).getTextContent().trim();}
                 if (nodeName.equals("tonnage")) {Tonnage = Float.parseFloat(n.getChildNodes().item(i).getTextContent());}
@@ -223,7 +282,7 @@ public class Unit implements ifSerializable {
             }
         }
         this.Refresh();
-        TypeModel = (Type + " " + Model + " " + Configuration).replace("  ", " ").trim();
+        TypeModel = (Name + " " + Model + " " + Configuration).replace("  ", " ").trim();
         this.warrior.setGunnery(Gunnery);
         this.warrior.setPiloting(Piloting);
         this.warrior.setName(Mechwarrior);
@@ -233,10 +292,10 @@ public class Unit implements ifSerializable {
     public Unit(Node n, int Version) throws Exception {
         this();
         try {
-            this.Type = FileCommon.DecodeFluff(n.getAttributes().getNamedItem("type").getTextContent().trim());
+            this.Name = FileCommon.DecodeFluff(n.getAttributes().getNamedItem("type").getTextContent().trim());
             this.Model = FileCommon.DecodeFluff(n.getAttributes().getNamedItem("model").getTextContent().trim());
             this.Configuration = n.getAttributes().getNamedItem("config").getTextContent().trim();
-            TypeModel = (Type + " " + Model + " " + Configuration).replace("  ", " ").trim();
+            TypeModel = (Name + " " + Model + " " + Configuration).replace("  ", " ").trim();
             if ( !Configuration.isEmpty() ) isOmni = true;
             this.Tonnage = Float.parseFloat(n.getAttributes().getNamedItem("tonnage").getTextContent().trim());
             this.BaseBV = Float.parseFloat(n.getAttributes().getNamedItem("bv").getTextContent().trim());
@@ -269,7 +328,7 @@ public class Unit implements ifSerializable {
                     this.BFStats.setPiloting(Piloting);
                     this.BFStats.setGunnery(Gunnery);
                     this.BFStats.setWarrior(warrior.getName());
-                    this.BFStats.setName(this.Type);
+                    this.BFStats.setName(this.Name);
                     this.BFStats.setModel(this.Model);
                 }
                 if (node.getNodeName().equals("info")) {
@@ -300,7 +359,7 @@ public class Unit implements ifSerializable {
         }
     }
 
-    public void Refresh() {
+    public final void Refresh() {
         SkillsBV = 0;
         ModifierBV = 0;
         TotalBV = 0;
@@ -311,10 +370,78 @@ public class Unit implements ifSerializable {
         TotalBV = CommonTools.GetFullAdjustedBV((BaseBV + ForceC3BV), getGunnery(), getPiloting(), MiscMod);
     }
 
+    public void UpdateByUnit() {
+        switch(UnitType) {
+            case CommonTools.BattleMech:
+                UpdateByMech();
+                break;
+            case CommonTools.Vehicle:
+                UpdateByVehicle();
+                break;
+        }
+    }
+    
+    public void UpdateByVehicle() {
+        LoadUnit();
+        if ( v != null ) {
+            Name = v.GetName();
+            Model = v.GetModel();
+            TypeModel = v.GetFullName();
+            Tonnage = v.GetTonnage();
+            BaseBV = v.GetCurrentBV();
+            Info = v.GetChatInfo();
+
+            if ( v.HasC3() ) {
+                C3Available = true;
+                for ( String Item : Info.split(",") ) {
+                    if ( Item.contains("C3") ) C3Type = Item.trim();
+                }
+            }
+
+            if ( v.IsOmni() ) {
+                setOmni(true);
+                Configuration = v.GetLoadout().GetName();
+            }
+
+            if ( !v.GetSSWImage().isEmpty() ) {
+                UnitImage = v.GetSSWImage();
+            }
+
+            //Calc Fields
+            if ( v.HasECM() ) ECM = 1;
+            //if ( vee.HasProbe() ) Probe = 1;
+            if ( v.GetJumpJets().GetNumJJ() > 0 ) Jump = 1;
+            Armor = v.GetArmor().GetArmorValue();
+            TSM = v.GetPhysEnhance().IsTSM() ? 1 : 0;
+            Speed = v.getFlankMP();
+            if ( v.UsingTC() ) TC = 1;
+
+            ArrayList w = (ArrayList) v.GetLoadout().GetNonCore().clone();
+            for (int i=0; i < w.size(); i++)
+            {
+                if ( w.get(i) instanceof PhysicalWeapon ) {
+                    Physical += 1;
+                }
+
+                if ( w.get(i) instanceof RangedWeapon ) {
+                    RangedWeapon wea = (RangedWeapon)w.get(i);
+                    Damage += wea.GetDamageShort();
+                    if ( wea.GetDamageShort() >= 12 )
+                        HeadCap += 1;
+                    if ( wea.GetDamageShort() >= 10 )
+                        Ten += 1;
+                    if ( wea.GetDamageShort() >= 8 )
+                        Eight += 1;
+                }
+            }
+            StatsCalced = true;
+        }
+    }
+    
     public void UpdateByMech() {
-        LoadMech();
+        LoadUnit();
         if ( m != null ) {
-            Type = m.GetName();
+            Name = m.GetName();
             Model = m.GetModel();
             TypeModel = m.GetFullName();
             Configuration = m.GetLoadout().GetName();
@@ -337,7 +464,7 @@ public class Unit implements ifSerializable {
             Speed = m.GetAdjustedRunningMP(false, true);
             if ( m.UsingTC() ) TC = 1;
 
-            Vector v = (Vector) m.GetLoadout().GetNonCore().clone();
+            ArrayList v = (ArrayList) m.GetLoadout().GetNonCore().clone();
             for (int i=0; i < v.size(); i++)
             {
                 if ( v.get(i) instanceof PhysicalWeapon ) {
@@ -379,8 +506,8 @@ public class Unit implements ifSerializable {
     }
 
     public void SerializeXML(BufferedWriter file) throws IOException {
-        LoadMech();
-        file.write(CommonTools.Tabs(4) + "<unit type=\"" + FileCommon.EncodeFluff(this.Type) + "\" model=\"" + FileCommon.EncodeFluff(this.Model) + "\" config=\"" + this.Configuration + "\" tonnage=\"" + this.Tonnage + "\" bv=\"" + this.BaseBV + "\" design=\"" + this.UnitType + "\" file=\"" + this.Filename + "\" c3status=\"" + this.UsingC3 + "\">");
+        LoadUnit();
+        file.write(CommonTools.Tabs(4) + "<unit type=\"" + FileCommon.EncodeFluff(this.Name) + "\" model=\"" + FileCommon.EncodeFluff(this.Model) + "\" config=\"" + this.Configuration + "\" tonnage=\"" + this.Tonnage + "\" bv=\"" + this.BaseBV + "\" design=\"" + this.UnitType + "\" file=\"" + this.Filename + "\" c3status=\"" + this.UsingC3 + "\">");
         file.newLine();
         BFStats.SerializeXML(file, 5);
         file.newLine();
@@ -399,8 +526,8 @@ public class Unit implements ifSerializable {
     }
 
     public void SerializeMUL(BufferedWriter file) throws IOException {
-        if ( this.Type.contains("(") && this.Type.contains(")") ) {
-            this.Type = this.Type.substring(0, this.Type.indexOf(" (")).trim();
+        if ( this.Name.contains("(") && this.Name.contains(")") ) {
+            this.Name = this.Name.substring(0, this.Name.indexOf(" (")).trim();
         }
 
         this.Model.replace("Alternate Configuration", "");
@@ -408,7 +535,7 @@ public class Unit implements ifSerializable {
         this.Model.replace("Alt", "");
         this.Model.trim();
 
-        file.write(CommonTools.tab + "<entity chassis=\"" + this.Type + "\" model=\"" + this.Model + "\">");
+        file.write(CommonTools.tab + "<entity chassis=\"" + this.Name + "\" model=\"" + this.Model + "\">");
         file.newLine();
         file.write(CommonTools.tab + CommonTools.tab + "<pilot name=\"" + this.getMechwarrior() + "\" gunnery=\"" + this.getGunnery() + "\" piloting=\"" + this.getPiloting() + "\" />");
         file.newLine();
@@ -477,22 +604,37 @@ public class Unit implements ifSerializable {
         return TypeModel + " (" + warrior.getName() + " " + warrior.getGunnery() + "/" + warrior.getPiloting() + ")";
     }
 
-    public void LoadMech() {
-        if ( m == null ) {
-            try {
-                MechReader reader = new MechReader();
-                this.m = reader.ReadMech( Prefs.get("ListPath", "") + this.Filename );
-                if ( ! this.Configuration.isEmpty() ) {
-                    this.m.SetCurLoadout(this.Configuration.trim());
+    public void LoadUnit() {
+        switch(UnitType) {
+            case CommonTools.BattleMech:
+                if ( m == null ) {
+                    try {
+                        LoadMech();
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
                 }
-                if ( BFStats.getPointValue() == 0 ) {
-                    BFStats = new BattleForceStats(m);
+                break;
+            case CommonTools.Vehicle:
+                if ( v == null ) {
+                    try {
+                        LoadVehicle();
+                    } catch ( Exception ex ) {
+                        System.out.println(ex.getMessage());
+                    }
                 }
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-            }
         }
+    }
 
+    private void LoadMech() throws Exception {
+        MechReader reader = new MechReader();
+        this.m = reader.ReadMech( Prefs.get("ListPath", Prefs.get( "LastOpenDirectory", "" ) ) + this.Filename );
+        if ( ! this.Configuration.isEmpty() ) {
+            this.m.SetCurLoadout(this.Configuration.trim());
+        }
+        if ( BFStats.getPointValue() == 0 ) {
+            BFStats = new BattleForceStats(m);
+        }
         if ( m != null && !StatsCalced ) {
             Probe = 0;
             Jump = 0;
@@ -516,7 +658,7 @@ public class Unit implements ifSerializable {
             Speed = m.GetAdjustedRunningMP(false, true);
             if ( m.UsingTC() ) TC = 1;
 
-            Vector v = (Vector) m.GetLoadout().GetNonCore().clone();
+            ArrayList v = (ArrayList) m.GetLoadout().GetNonCore().clone();
             for (int i=0; i < v.size(); i++)
             {
                 if ( v.get(i) instanceof PhysicalWeapon ) {
@@ -537,19 +679,77 @@ public class Unit implements ifSerializable {
             StatsCalced = true;
         }
     }
+    
+    private void LoadVehicle() throws Exception {
+        CVReader reader = new CVReader();
+        this.v = reader.ReadUnit( Prefs.get("ListPath", Prefs.get( "LastOpenDirectory", "" ) ) + this.Filename );
+        if ( ! this.Configuration.isEmpty() ) {
+            this.v.SetCurLoadout(this.Configuration.trim());
+        }
+        if ( !v.GetSSWImage().isEmpty() )
+            this.UnitImage = v.GetSSWImage();
+        
+        if ( BFStats.getPointValue() == 0 ) {
+            BFStats = new BattleForceStats(v);
+        }
+        if ( v != null && !StatsCalced ) {
+            Probe = 0;
+            Jump = 0;
+            ECM = 0;
+            HeadCap = 0;
+            Eight = 0;
+            Ten = 0;
+            Physical = 0;
+            TSM = 0;
+            Speed = 0;
+            Armor = 0;
+            TC = 0;
+            Damage = 0;
 
+            //Calc Fields
+            if ( v.HasECM() ) ECM = 1;
+            if ( v.HasProbe() ) Probe = 1;
+            if ( v.GetJumpJets().GetNumJJ() > 0 ) Jump = 1;
+            Armor = v.GetArmor().GetArmorValue();
+            TSM = v.GetPhysEnhance().IsTSM() ? 1 : 0;
+            Speed = v.getFlankMP();
+            if ( v.UsingTC() ) TC = 1;
+
+            ArrayList d = (ArrayList) m.GetLoadout().GetNonCore().clone();
+            for (int i=0; i < d.size(); i++)
+            {
+                if ( d.get(i) instanceof PhysicalWeapon ) {
+                    Physical += 1;
+                }
+
+                if ( d.get(i) instanceof RangedWeapon ) {
+                    RangedWeapon w = (RangedWeapon)d.get(i);
+                    Damage += w.GetDamageShort();
+                    if ( w.GetDamageShort() >= 12 )
+                        HeadCap += 1;
+                    if ( w.GetDamageShort() >= 10 )
+                        Ten += 1;
+                    if ( w.GetDamageShort() >= 8 )
+                        Eight += 1;
+                }
+            }
+            StatsCalced = true;
+        }
+    }
+    
     public BattleForceStats getBFStats() {
         if ( BFStats != null ) {
-            BFStats.setName(this.Type);
+            BFStats.setName(this.Name);
             BFStats.setModel(this.Model);
             if ( !this.Configuration.isEmpty() ) BFStats.setModel((Model + " " + Configuration).trim());
             BFStats.setWarrior(warrior.getName());
             BFStats.setGunnery(warrior.getGunnery());
             BFStats.setPiloting(warrior.getPiloting());
+            BFStats.setImage(this.UnitImage);
             return BFStats;
         }
 
-        LoadMech();
+        LoadUnit();
         if ( m != null ) {
             BFStats = new BattleForceStats(m, Group, getGunnery(), getPiloting());
             BFStats.setWarrior(warrior.getName());
@@ -606,7 +806,7 @@ public class Unit implements ifSerializable {
         return isOmni;
     }
 
-    public void setOmni(boolean isOmni) {
+    public final void setOmni(boolean isOmni) {
         this.isOmni = isOmni;
     }
     
@@ -639,6 +839,10 @@ public class Unit implements ifSerializable {
         }
         return val;
     }
+    
+    public boolean HasC3() {
+        return C3Available;
+    }
 
     public float getForceC3BV() {
         return ForceC3BV;
@@ -650,6 +854,52 @@ public class Unit implements ifSerializable {
     }
 
     public String getFullName() {
-        return (Type + " " + Model + " " + Configuration).replace("  ", " ").trim();
+        return (Name + " " + Model + " " + Configuration).replace("  ", " ").trim();
+    }
+    
+    public String getImage() {
+        return UnitImage;
+    }
+    
+    public void SetCurLoadout( String loadout) {
+        switch(UnitType) {
+            case CommonTools.BattleMech:
+                m.SetCurLoadout(loadout);
+                break;
+            case CommonTools.Vehicle:
+                v.SetCurLoadout(loadout);
+        }
+    }
+    
+    public void SetUnitImage( String image ) {
+        UnitImage = image;
+        switch(UnitType) {
+            case CommonTools.BattleMech:
+                m.SetSSWImage(image);
+                break;
+            case CommonTools.Vehicle:
+                v.SetSSWImage(image);
+                break;
+        }
+    }
+    
+    public void SaveUnit() {
+        try
+        {
+            switch(UnitType) {
+                case CommonTools.BattleMech:
+                    MechWriter writer = new MechWriter();
+                    writer.setMech(m);
+                    writer.WriteXML(Filename);
+                    break;
+                case CommonTools.Vehicle:
+                    CVWriter cwriter = new CVWriter();
+                    cwriter.setUnit(v);
+                    cwriter.WriteXML(Filename);
+                    break;
+            }
+        } catch ( IOException io ) {
+            System.err.println(io.getMessage());
+        }
     }
 }

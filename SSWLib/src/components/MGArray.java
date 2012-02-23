@@ -208,6 +208,11 @@ public class MGArray extends abPlaceable implements ifWeapon {
         return (double) Math.floor( ( 67.0 * NumMGs * MGType.GetOffensiveBV() ) ) * 0.01 + NumMGs * MGType.GetCurOffensiveBV( UseRear, UseTC, UseAES );
     }
 
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
+    }
+
     public double GetDefensiveBV() {
         double result = 0.0f;
         if( IsArmored() ) {

@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import common.CommonTools;
 
 /**
@@ -104,7 +104,7 @@ public class Dumper extends abPlaceable {
         //TODO: Add dumper calculation based on location
         double tonnage = 0.0;
         LocationIndex location = Owner.FindIndex(this);
-        Vector equipment = Owner.GetEquipment();
+        ArrayList equipment = Owner.GetEquipment();
         for (int i = 0; i < equipment.size(); i++)
         {
              abPlaceable currentItem = (abPlaceable) equipment.get( i );
@@ -143,6 +143,11 @@ public class Dumper extends abPlaceable {
         return 0.0;
     }
 
+    @Override
+    public double GetCurOffensiveBV(boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic) {
+        return 0.0;
+    }
+    
     public double GetDefensiveBV() {
         return 0.0;
     }
@@ -162,6 +167,7 @@ public class Dumper extends abPlaceable {
     public String toString() {
         return CritName();
     }
+
 //    @Override
 //    public boolean Place( ifMechLoadout l, LocationIndex[] locs ) {
 //        boolean ret = super.Place( l );

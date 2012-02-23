@@ -35,13 +35,14 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
 import battleforce.BattleForceStats;
 import battleforce.BattleForceTools;
 import components.*;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import list.*;
 import utilities.CostBVBreakdown;
 
@@ -385,7 +386,7 @@ public class TXTWriter {
             }
         }
         if( CurMech.IsOmnimech() ) {
-            Vector l = CurMech.GetLoadouts();
+            ArrayList l = CurMech.GetLoadouts();
             if ( !CurrentLoadoutOnly ) {
                 CurMech.SetCurLoadout( common.Constants.BASELOADOUT_NAME );
                 retval += NL;
@@ -409,9 +410,9 @@ public class TXTWriter {
     }
 
     private String GetArmament() {
-        Vector v = CurMech.GetLoadout().GetNonCore();
-        Vector w = new Vector();
-        Vector EQ = new Vector();
+        ArrayList v = CurMech.GetLoadout().GetNonCore();
+        ArrayList w = new ArrayList();
+        ArrayList EQ = new ArrayList();
         String Armament = "";
 
         // find only the armaments
@@ -434,7 +435,7 @@ public class TXTWriter {
 
         // sort the weapons according to current BV, assuming front facing
         abPlaceable[] weapons = CurMech.SortWeapons( w, false );
-        Vector Temp = new Vector();
+        ArrayList Temp = new ArrayList();
 
         // add in the rest of the equipment
         for( int i = 0; i < weapons.length; i++ ) {
@@ -594,7 +595,7 @@ public class TXTWriter {
 //        String retval = "Equipment                                        Location     Critical    Mass  " + NL;
         String loc = "";
         String crits = "";
-        Vector v = (Vector) CurMech.GetLoadout().GetNonCore().clone();
+        ArrayList v = (ArrayList) CurMech.GetLoadout().GetNonCore().clone();
 
         // add in MASC and the targeting computer if needed.
         if( CurMech.GetPhysEnhance().IsMASC() ) {
@@ -809,7 +810,7 @@ public class TXTWriter {
         String retval = "";
         String loc = "";
         String crits = "";
-        Vector v = (Vector) CurMech.GetLoadout().GetNonCore().clone();
+        ArrayList v = (ArrayList) CurMech.GetLoadout().GetNonCore().clone();
 
         retval += String.format( "Loadout Name: %1$-46s Cost: %2$,.0f", CurMech.GetLoadout().GetName(), Math.floor( CurMech.GetTotalCost() + 0.5 ) ) + NL;
         retval += String.format( "Tech Rating/Era Availability: %1$-31s BV2: %2$,d", CurMech.GetAvailability().GetBestCombinedCode(), CurMech.GetCurrentBV() ) + NL;
@@ -1118,7 +1119,7 @@ public class TXTWriter {
         text = text.replace( "\t", "    " );
 
         char [] chars = text.toCharArray();
-        Vector lines = new Vector();
+        ArrayList lines = new ArrayList();
         StringBuffer line = new StringBuffer();
         StringBuffer word = new StringBuffer();
 
@@ -1152,8 +1153,9 @@ public class TXTWriter {
 
         String [] ret = new String[lines.size()];
         int c = 0; // counter
-        for (Enumeration e = lines.elements(); e.hasMoreElements(); c++) {
-            ret[c] = (String) e.nextElement();
+        Iterator itr = lines.iterator();
+        while(itr.hasNext()) {
+            ret[c] = (String) itr.next();
         }
 
         return ret;
@@ -1246,7 +1248,7 @@ public class TXTWriter {
             datum = "BattleMech";
             if ( u.IsOmni() ) { datum = "OmniMech"; }
             FR.write( CSVFormat(datum) );
-            FR.write( CSVFormat(u.Type ));
+            FR.write( CSVFormat(u.Name ));
             FR.write( CSVFormat((u.Model + " " + u.Configuration).trim()) );
             FR.write( CSVFormat(u.Tonnage+"") );
             FR.write( CSVFormat(u.BaseBV+"") );
@@ -1261,7 +1263,7 @@ public class TXTWriter {
         FR.close();
     }
 
-    public void WriteList(String filename, MechList list) throws IOException {
+    public void WriteList(String filename, UnitList list) throws IOException {
         if ( !filename.endsWith(".csv") ) { filename += ".csv"; }
         BufferedWriter FR = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( filename ), "UTF-8" ) );
 
@@ -1282,7 +1284,7 @@ public class TXTWriter {
 
         String datum = "";
         for (int i=0; i < list.Size(); i++) {
-            MechListData data = (MechListData) list.Get(i);
+            UnitListData data = (UnitListData) list.Get(i);
             FR.write( CSVFormat("BattleMech") );
             datum = "BattleMech";
             if ( data.isOmni() ) { datum = "OmniMech"; }
@@ -1313,14 +1315,14 @@ public class TXTWriter {
         FR.close();
     }
 
-    public void WriteBFList(String filename, MechList list) throws IOException {
+    public void WriteBFList(String filename, UnitList list) throws IOException {
         if ( !filename.endsWith(".csv") ) { filename += ".csv"; }
         BufferedWriter FR = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( filename ), "UTF-8" ) );
 
         String message = "";
         FR.write("Element,PV,Wt,MV,S,M,L,E,OV,Armor,Internal,Special Abilities");
         FR.newLine();
-        for ( MechListData mech : list.getList() ) {
+        for ( UnitListData mech : list.getList() ) {
             FR.write(mech.getBattleForceStats().SerializeCSV( true ));
             FR.newLine();
         }

@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package filehandlers;
 
 import common.Constants;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.prefs.Preferences;
 import components.*;
 
@@ -198,6 +198,9 @@ public class FileCommon {
             retval = retval.substring( 2 );
         }
         return retval;
+    }
+    public static String GetJumpJetLocations( CombatVehicle v ) {
+        return "";
     }
 
     public static String GetTSMLocations( Mech m ) {
@@ -446,7 +449,7 @@ public class FileCommon {
 
     public static abPlaceable HasECM( Mech m ) {
         ifMechLoadout l = m.GetLoadout();
-        Vector v = l.GetNonCore();
+        ArrayList v = l.GetNonCore();
         for( int i = 0; i < v.size(); i++ ) {
             if( ((abPlaceable) v.get( i )).LookupName().contains( "ECM Suite" ) || ((abPlaceable) v.get( i )).LookupName().contains( "CEWS" ) ) {
                 return (abPlaceable) v.get( i );
@@ -457,7 +460,7 @@ public class FileCommon {
 
     public static abPlaceable HasBAP( Mech m ) {
         ifMechLoadout l = m.GetLoadout();
-        Vector v = l.GetNonCore();
+        ArrayList v = l.GetNonCore();
         for( int i = 0; i < v.size(); i++ ) {
             if( ((abPlaceable) v.get( i )).LookupName().contains( "Probe" ) || ((abPlaceable) v.get( i )).LookupName().contains( "CEWS" ) ) {
                 return (abPlaceable) v.get( i );
@@ -469,8 +472,8 @@ public class FileCommon {
     public static Object[] HasC3( Mech m ) {
         // this one returns a full array because a mech may have more than one
         // C3 computer in it.
-        Vector retval = new Vector();
-        Vector v = m.GetLoadout().GetNonCore();
+        ArrayList retval = new ArrayList();
+        ArrayList v = m.GetLoadout().GetNonCore();
         for( int i = 0; i < v.size(); i++ ) {
             if( ((abPlaceable) v.get( i )).LookupName().contains( "C3" ) ) {
                 retval.add( v.get( i ) );
@@ -646,46 +649,143 @@ public class FileCommon {
             return retval;
         }
     }
-
-    public static String EncodeLocation( int loc, boolean quad ) {
-        switch( loc ) {
-        case LocationIndex.MECH_LOC_HD:
-            return "HD";
-        case LocationIndex.MECH_LOC_CT:
-            return "CT";
-        case LocationIndex.MECH_LOC_LT:
-            return "LT";
-        case LocationIndex.MECH_LOC_RT:
-            return "RT";
-        case LocationIndex.MECH_LOC_LA:
-            if( quad ) {
-                return "FLL";
-            } else {
-                return "LA";
+    
+    public static String EncodeLocation( int loc, boolean quad, ifUnit u ) {
+        if ( u instanceof Mech )
+        {
+            switch( loc ) {
+                case LocationIndex.MECH_LOC_HD:
+                    return "HD";
+                case LocationIndex.MECH_LOC_CT:
+                    return "CT";
+                case LocationIndex.MECH_LOC_LT:
+                    return "LT";
+                case LocationIndex.MECH_LOC_RT:
+                    return "RT";
+                case LocationIndex.MECH_LOC_LA:
+                    if( quad ) {
+                        return "FLL";
+                    } else {
+                        return "LA";
+                    }
+                case LocationIndex.MECH_LOC_RA:
+                    if( quad ) {
+                        return "FRL";
+                    } else {
+                        return "RA";
+                    }
+                case LocationIndex.MECH_LOC_LL:
+                    if( quad ) {
+                        return "RLL";
+                    } else {
+                        return "LL";
+                    }
+                case LocationIndex.MECH_LOC_RL:
+                    if( quad ) {
+                        return "RRL";
+                    } else {
+                        return "RL";
+                    }
+                default:
+                    return "??";
             }
-        case LocationIndex.MECH_LOC_RA:
-            if( quad ) {
-                return "FRL";
-            } else {
-                return "RA";
-            }
-        case LocationIndex.MECH_LOC_LL:
-            if( quad ) {
-                return "RLL";
-            } else {
-                return "LL";
-            }
-        case LocationIndex.MECH_LOC_RL:
-            if( quad ) {
-                return "RRL";
-            } else {
-                return "RL";
-            }
-        default:
-            return "??";
         }
+
+        if ( u instanceof CombatVehicle )
+        {
+            switch ( loc ) {
+                case LocationIndex.CV_LOC_BODY:
+                    return "Body";
+                case LocationIndex.CV_LOC_FRONT:
+                    return "Front";
+                case LocationIndex.CV_LOC_LEFT:
+                    return "Left";
+                case LocationIndex.CV_LOC_REAR:
+                    return "Rear";
+                case LocationIndex.CV_LOC_RIGHT:
+                    return "Right";
+                case LocationIndex.CV_LOC_ROTOR:
+                    return "Rotor";
+                case LocationIndex.CV_LOC_TURRET1:
+                    return "Turret";
+                case LocationIndex.CV_LOC_TURRET2:
+                    return "Rear Turret";
+                default:
+                    return "??";
+            }
+        }
+        return "??";
     }
 
+    public static String EncodeLocation( int loc, boolean quad ) {
+        return EncodeLocation(loc, quad, common.Constants.BattleMech);
+    }
+
+    public static String EncodeLocation( int loc, boolean quad, int UnitType ) {
+        switch ( UnitType ) {
+            case common.Constants.BattleMech:
+                switch( loc ) {
+                    case LocationIndex.MECH_LOC_HD:
+                        return "HD";
+                    case LocationIndex.MECH_LOC_CT:
+                        return "CT";
+                    case LocationIndex.MECH_LOC_LT:
+                        return "LT";
+                    case LocationIndex.MECH_LOC_RT:
+                        return "RT";
+                    case LocationIndex.MECH_LOC_LA:
+                        if( quad ) {
+                            return "FLL";
+                        } else {
+                            return "LA";
+                        }
+                    case LocationIndex.MECH_LOC_RA:
+                        if( quad ) {
+                            return "FRL";
+                        } else {
+                            return "RA";
+                        }
+                    case LocationIndex.MECH_LOC_LL:
+                        if( quad ) {
+                            return "RLL";
+                        } else {
+                            return "LL";
+                        }
+                    case LocationIndex.MECH_LOC_RL:
+                        if( quad ) {
+                            return "RRL";
+                        } else {
+                            return "RL";
+                        }
+                    default:
+                        return "??";
+                   }
+            case common.Constants.Vehicle:
+                switch (loc) {
+                    case LocationIndex.CV_LOC_BODY:
+                        return "BD";
+                    case LocationIndex.CV_LOC_FRONT:
+                        return "FR";
+                    case LocationIndex.CV_LOC_LEFT:
+                        return "LS";
+                    case LocationIndex.CV_LOC_RIGHT:
+                        return "RS";
+                    case LocationIndex.CV_LOC_REAR:
+                        return "R";
+                    case LocationIndex.CV_LOC_ROTOR:
+                        return "RT";
+                    case LocationIndex.CV_LOC_TURRET1:
+                        return "T";
+                    case LocationIndex.CV_LOC_TURRET2:
+                        return "ST";
+                    default:
+                        return "??";
+                }
+            default:
+                return "??";
+        }
+    }
+    
     public static String EncodeLocations( int[] check, boolean quad ) {
         // this will work initializing to 0 since you cannot split into the head
         // and no contiguous item can be split into more than two locations.
@@ -741,33 +841,47 @@ public class FileCommon {
         return retval;
     }
 
-    public static Vector<abPlaceable> SortEquipmentForStats( Mech m, Vector v ) {
+    public static ArrayList<abPlaceable> SortEquipmentForStats( Mech m, ArrayList v ) {
         boolean ExportOut = m.GetPrefs().getBoolean( "ExportSortOut", true );
         boolean AmmoEnd = m.GetPrefs().getBoolean( "AmmoGroupAtBottom", true );
 
         return SortEquipmentForStats(m, v, ExportOut, AmmoEnd);
     }
-    
-    public static Vector<abPlaceable> SortEquipmentForStats( Mech m, Vector v, boolean ExportOut, boolean AmmoEnd ) {
-        // this routine takes the given vector of equipment and sorts it by
-        // location, starting with the head and working down to legs.
-        Vector[] sort = { new Vector<abPlaceable>(), new Vector<abPlaceable>(), new Vector<abPlaceable>(), new Vector<abPlaceable>(),
-            new Vector<abPlaceable>(), new Vector<abPlaceable>(), new Vector<abPlaceable>(), new Vector<abPlaceable>() };
-        Vector retval = new Vector<abPlaceable>();
 
-        // for each item in the given vector, find it's innermost location and
-        // place it into the appropriate vector
+    public static ArrayList<abPlaceable> SortEquipmentForStats( CombatVehicle m, ArrayList v ) {
+        boolean ExportOut = true;
+        boolean AmmoEnd = true;
+
+        return SortEquipmentForStats((ifLoadout)m.GetLoadout(), v, ExportOut, AmmoEnd);
+    }
+    
+    public static ArrayList<abPlaceable> SortEquipmentForStats( Mech m, ArrayList v, boolean ExportOut, boolean AmmoEnd ) {
+        // this routine takes the given ArrayList of equipment and sorts it by
+        // location, starting with the head and working down to legs.
+
+        return SortEquipmentForStats((ifLoadout)m.GetLoadout(), v, ExportOut, AmmoEnd);
+    }
+
+    public static ArrayList<abPlaceable> SortEquipmentForStats( ifLoadout m, ArrayList v, boolean ExportOut, boolean AmmoEnd ) {
+        // this routine takes the given ArrayList of equipment and sorts it by
+        // location, starting with the head and working down to legs.
+        ArrayList[] sort = { new ArrayList<abPlaceable>(), new ArrayList<abPlaceable>(), new ArrayList<abPlaceable>(), new ArrayList<abPlaceable>(),
+            new ArrayList<abPlaceable>(), new ArrayList<abPlaceable>(), new ArrayList<abPlaceable>(), new ArrayList<abPlaceable>() };
+        ArrayList retval = new ArrayList<abPlaceable>();
+
+        // for each item in the given ArrayList, find it's innermost location and
+        // place it into the appropriate ArrayList
         int index = 0;
         abPlaceable a;
         for( int i = 0; i < v.size(); i++ ) {
             a = (abPlaceable) v.get( i );
-            index = m.GetLoadout().Find( a );
+            index = m.Find( a );
             if( ! ( index < 0 || index > 7 ) ) {
                 sort[index].add( a );
             }
         }
 
-        // for each vector that has items, add them to the return vector in
+        // for each ArrayList that has items, add them to the return ArrayList in
         // the correct order, based on options.
         if( ExportOut ) {
             if( sort[LocationIndex.MECH_LOC_HD].size() > 0 ) {
@@ -855,7 +969,7 @@ public class FileCommon {
 
         // if we need to put ammunition at the end, do it now.
         if( AmmoEnd ) {
-            Vector Ammo = new Vector();
+            ArrayList Ammo = new ArrayList();
             for( int i = retval.size() - 1; i >= 0; i-- ) {
                 if( retval.get( i ) instanceof Ammunition ) {
                     Ammo.add( retval.remove( i ) );
@@ -863,7 +977,7 @@ public class FileCommon {
             }
 
             // add the ammunition back in.  Do it in reverse order since that
-            // was how the vector was built.
+            // was how the ArrayList was built.
             for( int i = Ammo.size() - 1; i >= 0; i-- ) {
                 retval.add( Ammo.remove( i ) );
             }
@@ -871,7 +985,6 @@ public class FileCommon {
 
         return retval;
     }
-
 
     public static String EncodeFluff( String s ) {
         String retval = s.replaceAll( "&", "&amp;" );
@@ -933,6 +1046,22 @@ public class FileCommon {
             return LocationIndex.MECH_LOC_LL;
         } else if( s.equals( "RRL" ) ) {
             return LocationIndex.MECH_LOC_RL;
+        } else if( s.equals( "Front" ) ) {
+            return LocationIndex.CV_LOC_FRONT;
+        } else if( s.equals( "Left" ) ) {
+            return LocationIndex.CV_LOC_LEFT;
+        } else if( s.equals( "Right" ) ) {
+            return LocationIndex.CV_LOC_RIGHT;
+        } else if( s.equals( "Rear" ) ) {
+            return LocationIndex.CV_LOC_REAR;
+        } else if( s.equals( "Body" ) ) {
+            return LocationIndex.CV_LOC_BODY;
+        } else if( s.equals( "Turret" ) ) {
+            return LocationIndex.CV_LOC_TURRET1;
+        } else if( s.equals( "Rear Turret" ) ) {
+            return LocationIndex.CV_LOC_TURRET2;
+        } else if( s.equals( "Rotor" ) ) {
+            return LocationIndex.CV_LOC_ROTOR;
         } else {
             return -1;
         }
@@ -1005,7 +1134,7 @@ public class FileCommon {
         return s;
     }
 
-    public static String GetExportName( Mech m, abPlaceable p ) {
+    public static String GetExportName( ifUnit m, abPlaceable p ) {
         String retval;
         if( m.GetTechBase() == AvailableCode.TECH_BOTH ) {
             if( p instanceof Equipment ) {
@@ -1035,7 +1164,7 @@ public class FileCommon {
         return retval;
     }
 
-    public static String GetFluffName( Mech m, abPlaceable p ) {
+    public static String GetFluffName( ifUnit m, abPlaceable p ) {
         String retval;
         if( m.GetTechBase() == AvailableCode.TECH_BOTH ) {
             if( p instanceof Equipment ) {

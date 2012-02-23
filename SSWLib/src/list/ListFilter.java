@@ -17,14 +17,16 @@ public class ListFilter {
                    Level = "",
                    Type = "",
                    Motive = "",
-                   Source = "";
+                   Source = "",
+                   Extension = "";
     private int MinTonnage = 0,
                 MaxTonnage = 0,
                 MinYear = 0,
                 MaxYear = 0,
                 MinBV = 0,
                 MaxBV = 0,
-                MinMP = 0;
+                MinMP = 0,
+                UnitType = 99;
     private double MinCost = 0.0,
                   MaxCost = 0.0;
     private boolean isOmni = false;
@@ -156,5 +158,17 @@ public class ListFilter {
     }
     public void setMinMP(int MinMP) {
         this.MinMP = MinMP;
+    }
+    public void setExtension(String extension) {
+        this.Extension = extension;
+    }
+    public String getExtension() {
+        return this.Extension;
+    }
+    public void setUnitType(int type ) {
+        this.UnitType = type;
+    }
+    public int getUnitType() {
+        return this.UnitType;
     }
 }

@@ -51,15 +51,14 @@ public class VCockpitSetTorsoMount implements ifVisitor {
         }
 
         Cockpit c = CurMech.GetCockpit();
+        boolean console = m.HasCommandConsole();
+
+        if ( console )
+            m.SetCommandConsole(false);
 
         // first, we have to remove it from the loadout
         ifMechLoadout l = CurMech.GetLoadout();
         c.Remove( l );
-
-        // ensure we don't have a command console allocated
-        if( CurMech.HasCommandConsole() ) {
-            CurMech.SetCommandConsole( false );
-        }
 
         // now set the correct type
         c.SetTorsoMount();
@@ -79,6 +78,9 @@ public class VCockpitSetTorsoMount implements ifVisitor {
                 throw new Exception( "Cannot allocate the Torso-Mounted Cockpit!" );
             }
         }
+
+        if ( console )
+            m.SetCommandConsole(true);
     }
 
     public void Visit( CombatVehicle v ) throws Exception {

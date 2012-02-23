@@ -78,7 +78,22 @@ public class VArmorSetRE implements ifVisitor {
     }
 
     public void Visit( CombatVehicle v ) throws Exception {
-        // does nothing at the moment
+        // set the armor type
+        switch( v.GetBaseTechbase() ) {
+            case AvailableCode.TECH_INNER_SPHERE:
+                v.GetArmor().SetISRE();
+                break;
+            case AvailableCode.TECH_CLAN:
+                v.GetArmor().SetCLRE();
+                break;
+            case AvailableCode.TECH_BOTH:
+                if( Clan ) {
+                    v.GetArmor().SetCLRE();
+                } else {
+                    v.GetArmor().SetISRE();
+                }
+                break;
+        }
     }
 
     public void Visit( Infantry i ) throws Exception {

@@ -218,6 +218,11 @@ public class Ammunition extends abPlaceable {
         return GetOffensiveBV();
     }
 
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
+    }
+
     public double GetDefensiveBV() {
         return DefBV;
     }

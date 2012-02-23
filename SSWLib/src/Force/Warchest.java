@@ -30,7 +30,7 @@ package Force;
 import common.CommonTools;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.table.AbstractTableModel;
 import org.w3c.dom.Node;
@@ -44,8 +44,8 @@ import org.w3c.dom.Node;
  */
 public class Warchest implements ifSerializable {
     private int TrackCost = 0;
-    private Vector<Bonus> bonuses = new Vector<Bonus>();
-    private Vector<Objective> objectives = new Vector<Objective>();
+    private ArrayList<Bonus> bonuses = new ArrayList<Bonus>();
+    private ArrayList<Objective> objectives = new ArrayList<Objective>();
 
     public Warchest() {
         
@@ -142,19 +142,19 @@ public class Warchest implements ifSerializable {
         this.TrackCost = TrackCost;
     }
 
-    public Vector<Bonus> getBonuses() {
+    public ArrayList<Bonus> getBonuses() {
         return bonuses;
     }
 
-    public void setBonuses(Vector<Bonus> bonuses) {
+    public void setBonuses(ArrayList<Bonus> bonuses) {
         this.bonuses = bonuses;
     }
 
-    public Vector<Objective> getObjectives() {
+    public ArrayList<Objective> getObjectives() {
         return objectives;
     }
 
-    public void setObjectives(Vector<Objective> objectives) {
+    public void setObjectives(ArrayList<Objective> objectives) {
         this.objectives = objectives;
     }
 

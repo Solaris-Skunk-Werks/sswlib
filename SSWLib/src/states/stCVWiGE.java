@@ -97,4 +97,12 @@ public class stCVWiGE implements ifCombatVehicle {
     public boolean CanUseMinesweeper() {
         return false;
     }
+    
+    public boolean CanUseEnviroSealing() {
+        return true;
+    }
+
+    public int GetCostMultiplier() {
+        return 25;
+    }
 }

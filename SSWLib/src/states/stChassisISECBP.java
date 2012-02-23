@@ -161,4 +161,8 @@ public class stChassisISECBP implements ifChassis, ifState {
     public String toString() {
         return "Endo Composite";
     }
+
+    public int GetCVPoints(int Tonnage) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

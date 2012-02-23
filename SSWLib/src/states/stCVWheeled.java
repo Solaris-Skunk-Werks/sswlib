@@ -89,4 +89,12 @@ public class stCVWheeled implements ifCombatVehicle {
     public boolean CanUseMinesweeper() {
         return true;
     }
+    
+    public boolean CanUseEnviroSealing() {
+        return true;
+    }
+
+    public int GetCostMultiplier() {
+        return 200;
+    }
 }

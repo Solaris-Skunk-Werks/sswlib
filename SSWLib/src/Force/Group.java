@@ -5,7 +5,7 @@ import common.CommonTools;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.w3c.dom.Node;
 import battleforce.BattleForce;
 import battleforce.BattleForceStats;

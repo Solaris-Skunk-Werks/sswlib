@@ -34,27 +34,28 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 import list.view.abView;
 import list.view.tbTotalWarfareView;
 
 
-public class MechList extends AbstractTableModel {
-    private Vector<MechListData> List = new Vector<MechListData>();
+public class UnitList extends AbstractTableModel {
+    private ArrayList<UnitListData> List = new ArrayList<UnitListData>();
     private String Directory = "";
     private int IndexVersion = 8;
     private abView currentModel = new tbTotalWarfareView(this);
+    String[] Extensions = { ".ssw", ".saw" };
 
-    public MechList() {
+    public UnitList() {
 
     }
     
-    public MechList(String directory) {
+    public UnitList(String directory) {
         this(directory, true);
     }
-    
-    public MechList( String directory, boolean useIndex ) {
+
+    public UnitList( String directory, boolean useIndex ) {
         this();
         Directory = directory;
 
@@ -80,13 +81,13 @@ public class MechList extends AbstractTableModel {
             }
         }
     }
-
-    void Load( String Directory ) {
+    
+    final void Load( String Directory ) {
         File d = new File(Directory);
         if ( d.isDirectory() ) {
             if( d.listFiles() == null ) { return; }
             for ( File f : d.listFiles() ) {
-                if ( f.isFile() && f.getPath().endsWith(".ssw") ) {
+                if ( f.isFile() && EditorFile(f) ) {
                     Add(f);
                 }
                 if ( f.isDirectory() ) {
@@ -95,14 +96,21 @@ public class MechList extends AbstractTableModel {
             }
         }
     }
+    
+    boolean EditorFile(File f) {
+        for ( String ext : Extensions ) {
+            if ( f.getPath().endsWith(ext) ) return true;
+        }
+        return false;
+    }
 
     public void Add( File f ) {
         try
         {
-            MechListData mData = new MechListData( f.getCanonicalPath(), getDirectory());
+            UnitListData mData = new UnitListData( f.getCanonicalPath(), getDirectory());
             if (mData.isOmni()) {
                 for ( int d=0; d < mData.Configurations.size(); d++ ) {
-                    List.add((MechListData) mData.Configurations.get(d));
+                    List.add((UnitListData) mData.Configurations.get(d));
                 }
             } else {
                 List.add(mData);
@@ -112,44 +120,50 @@ public class MechList extends AbstractTableModel {
         }
     }
 
-    public void Add( MechListData m ) {
+    public void Add( UnitListData m ) {
         List.add(m);
     }
 
-    public MechListData Get( int row ) {
-        return (MechListData) List.get(row);
+    public UnitListData Get( int row ) {
+        return (UnitListData) List.get(row);
     }
 
-    public void Remove(MechListData m) {
+    public void Remove(UnitListData m) {
         List.remove(m);
     }
 
     public void RemoveAll() {
-        List.removeAllElements();
+        List.clear();
     }
 
     public int Size() {
         return List.size();
     }
 
-    public Vector<MechListData> getList() {
+    public ArrayList<UnitListData> getList() {
         return List;
     }
 
-    public void setList(Vector<MechListData> l) {
+    public void setList(ArrayList<UnitListData> l) {
         this.List = l;
     }
 
-    public MechList Filter(ListFilter filter) {
-        MechList m = new MechList();
-        for ( MechListData mech : List ) {
+    public UnitList Filter(ListFilter filter) {
+        UnitList m = new UnitList();
+        for ( UnitListData mech : List ) {
             m.Add(mech);
         }
 
         boolean remove = false;
-        for ( MechListData mData : List ) {
+        for ( UnitListData mData : List ) {
             remove = false;
 
+            if ( filter.getUnitType() < 99 ) {
+                if ( mData.getUnitType() != filter.getUnitType() ) remove = true;
+            }
+            if ( !filter.getExtension().isEmpty() ) {
+                if (! mData.getFilename().endsWith(filter.getExtension())) remove = true;
+            }
             if ( filter.getIsOmni() ) {
                 if (! mData.isOmni() ) remove = true;
             }
@@ -216,13 +230,13 @@ public class MechList extends AbstractTableModel {
         return m;
     }
     
-    public void Write() throws IOException {
+    public final void Write() throws IOException {
         if (List.size() > 0) {
             BufferedWriter FR = new BufferedWriter( new FileWriter( getDirectory() + File.separator + "index.ssi" ) );
             FR.write("version:" + IndexVersion);
             FR.newLine();
             for (int i=0; i < List.size(); i++ ) {
-                MechListData m = (MechListData) List.get(i);
+                UnitListData m = (UnitListData) List.get(i);
                 FR.write(m.SerializeIndex());
                 FR.newLine();
             }
@@ -231,7 +245,7 @@ public class MechList extends AbstractTableModel {
         }
     }
 
-    public boolean Read() {
+    public final boolean Read() {
         try {
             BufferedReader FR = new BufferedReader( new FileReader( getDirectory() + File.separator + "index.ssi" ) );
             boolean EOF = false,
@@ -256,7 +270,7 @@ public class MechList extends AbstractTableModel {
                             hasData = true;
                             String[] Items = read.split(",");
                             if (Items.length >= 11) {
-                                List.add(new MechListData(Items));
+                                List.add(new UnitListData(Items));
                             }
                         }
                     }
@@ -311,7 +325,7 @@ public class MechList extends AbstractTableModel {
     }
 
     public Object getClassOf( int c ) {
-        MechListData m = (MechListData) List.get( 0 );
+        UnitListData m = (UnitListData) List.get( 0 );
         switch( c ) {
             case 0:
                 return m.getTonnage();
@@ -341,7 +355,7 @@ public class MechList extends AbstractTableModel {
     }
     
     public Object getValueAt( int row, int col ) {
-        MechListData m = (MechListData) List.get( row );
+        UnitListData m = (UnitListData) List.get( row );
         switch( col ) {
             case 0:
                 return m.getTonnage();
@@ -370,7 +384,6 @@ public class MechList extends AbstractTableModel {
     }
     @Override
     public void setValueAt( Object value, int row, int col ) {
-        return;
     }
 
     /**

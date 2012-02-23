@@ -111,7 +111,25 @@ public class VEngineSetFusionXXL implements ifVisitor {
     }
 
     public void Visit( CombatVehicle v ) throws Exception {
-        // does nothing at the moment
+        Engine e = v.GetEngine();
+
+        // change the engine type
+        switch( v.GetBaseTechbase() ) {
+            case AvailableCode.TECH_INNER_SPHERE:
+                e.SetISXXLEngine();
+                break;
+            case AvailableCode.TECH_CLAN:
+                e.SetCLXXLEngine();
+                break;
+            case AvailableCode.TECH_BOTH:
+                if( Clan ) {
+                    e.SetCLXXLEngine();
+                } else {
+                    e.SetISXXLEngine();
+                }
+                break;
+        }
+        v.SetEngine(e);
     }
 
     public void Visit( Infantry i ) throws Exception {

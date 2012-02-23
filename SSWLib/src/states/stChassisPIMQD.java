@@ -160,4 +160,8 @@ public class stChassisPIMQD implements ifChassis, ifState {
     public String toString() {
         return "Primitive Industrial";
     }
+
+    public int GetCVPoints(int Tonnage) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

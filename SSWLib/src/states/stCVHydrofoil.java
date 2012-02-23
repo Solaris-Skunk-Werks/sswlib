@@ -75,7 +75,7 @@ public class stCVHydrofoil implements ifCombatVehicle {
     }
 
     public String GetMotiveLookupName() {
-        return "Hydrofoil";
+        return "Naval (Hydrofoil)";
     }
 
     public boolean CanUseJumpMP() {
@@ -108,5 +108,13 @@ public class stCVHydrofoil implements ifCombatVehicle {
 
     public boolean CanUseMinesweeper() {
         return true;
+    }
+    
+    public boolean CanUseEnviroSealing() {
+        return true;
+    }
+
+    public int GetCostMultiplier() {
+        return 75;
     }
 }

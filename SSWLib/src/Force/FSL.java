@@ -30,12 +30,12 @@ package Force;
 import common.CommonTools;
 
 import java.io.*;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.AbstractTableModel;
 
 public class FSL extends AbstractTableModel {
-    private Vector Items = new Vector();
+    private ArrayList Items = new ArrayList();
 
     public void Add( FSLItem item ) {
         Items.add( item );
@@ -69,7 +69,7 @@ public class FSL extends AbstractTableModel {
     }
 
     public DefaultComboBoxModel getFactions() {
-        Vector storage = new Vector();
+        ArrayList storage = new ArrayList();
         DefaultComboBoxModel list = new DefaultComboBoxModel();
         for ( int i=0; i < Items.size(); i++ ) {
             FSLItem item = (FSLItem) Items.get(i);
@@ -82,7 +82,7 @@ public class FSL extends AbstractTableModel {
     }
 
     public DefaultComboBoxModel getTypes() {
-        Vector storage = new Vector();
+        ArrayList storage = new ArrayList();
         DefaultComboBoxModel list = new DefaultComboBoxModel();
         for ( int i=0; i < Items.size(); i++ ) {
             FSLItem item = (FSLItem) Items.get(i);
@@ -95,7 +95,7 @@ public class FSL extends AbstractTableModel {
     }
 
     public DefaultComboBoxModel getSources() {
-        Vector storage = new Vector();
+        ArrayList storage = new ArrayList();
         DefaultComboBoxModel list = new DefaultComboBoxModel();
         for ( int i=0; i < Items.size(); i++ ) {
             FSLItem item = (FSLItem) Items.get(i);
@@ -108,7 +108,7 @@ public class FSL extends AbstractTableModel {
     }
 
     public DefaultComboBoxModel getEras() {
-        Vector storage = new Vector();
+        ArrayList storage = new ArrayList();
         DefaultComboBoxModel list = new DefaultComboBoxModel();
         for ( int i=0; i < Items.size(); i++ ) {
             FSLItem item = (FSLItem) Items.get(i);

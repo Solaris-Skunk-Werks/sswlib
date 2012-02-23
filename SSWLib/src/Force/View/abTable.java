@@ -28,9 +28,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package Force.View;
 
 import Force.Force;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.table.AbstractTableModel;
@@ -38,8 +37,8 @@ import javax.swing.table.TableRowSorter;
 import list.view.Column;
 
 public abstract class abTable extends AbstractTableModel {
-    public Vector<Column> Columns = new Vector<Column>();
-    public Vector<Column> SortFields = new Vector<Column>();
+    public ArrayList<Column> Columns = new ArrayList<Column>();
+    public ArrayList<Column> SortFields = new ArrayList<Column>();
     public Force force;
     private TableRowSorter sorter;
 

@@ -169,7 +169,7 @@ public class stCockpitTorsoMount implements ifCockpit, ifState {
     }
 
     public boolean CanUseCommandConsole() {
-        return false;
+        return true;
     }
 
     public boolean HasThirdSensors() {

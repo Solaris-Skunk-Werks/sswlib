@@ -285,7 +285,8 @@ public class Media {
         if ( DirectoryPath.endsWith(".jpg") || 
              DirectoryPath.endsWith(".png") || 
              DirectoryPath.endsWith(".gif") ||
-             DirectoryPath.endsWith(".ssw") ) DirectoryPath = DirectoryPath.substring(0, DirectoryPath.lastIndexOf("\\")+1);
+             DirectoryPath.endsWith(".ssw") ||
+             DirectoryPath.endsWith(".saw") ) DirectoryPath = DirectoryPath.substring(0, DirectoryPath.lastIndexOf("\\")+1);
         if ( !DirectoryPath.endsWith("\\") ) DirectoryPath += "\\";
        
         String path;

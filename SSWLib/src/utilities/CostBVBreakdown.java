@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package utilities;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import common.*;
 import components.*;
 
@@ -224,7 +224,7 @@ public class CostBVBreakdown {
     private String GetEquipmentCostLines() {
         // returns a block of lines for the cost breakdown
         String retval = "";
-        Vector v = CurMech.GetLoadout().GetNonCore();
+        ArrayList v = CurMech.GetLoadout().GetNonCore();
         abPlaceable a;
         for( int i = 0; i < v.size(); i++ ) {
             a = (abPlaceable) v.get( i );
@@ -329,7 +329,7 @@ public class CostBVBreakdown {
 
     public String PrintNonHeatEquipBV() {
         // return the BV of all offensive equipment
-        Vector v = CurMech.GetLoadout().GetNonCore();
+        ArrayList v = CurMech.GetLoadout().GetNonCore();
         abPlaceable a = null;
         String retval = "";
 
@@ -343,9 +343,9 @@ public class CostBVBreakdown {
     }
 
     public String PrintHeatAdjustedWeaponBV() {
-        Vector v = CurMech.GetLoadout().GetNonCore(), wep = new Vector();
+        ArrayList v = CurMech.GetLoadout().GetNonCore(), wep = new ArrayList();
         double foreBV = 0.0, rearBV = 0.0;
-        boolean UseRear = false, TC = CurMech.UsingTC(), UseAESMod = false;
+        boolean UseRear = false, TC = CurMech.UsingTC(), UseAESMod = false, Robotic = CurMech.UsingRoboticCockpit();
         String retval = "";
         abPlaceable a;
 
@@ -378,9 +378,9 @@ public class CostBVBreakdown {
             if( loc != LocationIndex.MECH_LOC_LA && loc != LocationIndex.MECH_LOC_RA ) {
                 UseAESMod = CurMech.UseAESModifier( a );
                 if( a.IsMountedRear() ) {
-                    rearBV += a.GetCurOffensiveBV( true, TC, UseAESMod );
+                    rearBV += a.GetCurOffensiveBV( true, TC, UseAESMod, Robotic );
                 } else {
-                    foreBV += a.GetCurOffensiveBV( false, TC, UseAESMod );
+                    foreBV += a.GetCurOffensiveBV( false, TC, UseAESMod, Robotic );
                 }
             }
         }
@@ -495,7 +495,7 @@ public class CostBVBreakdown {
     }
 
     private boolean HasBonusFromCP() {
-        Vector v = CurMech.GetLoadout().GetNonCore();
+        ArrayList v = CurMech.GetLoadout().GetNonCore();
         abPlaceable a;
         if( CurMech.GetRulesLevel() == AvailableCode.RULES_EXPERIMENTAL ) {
             // check for coolant pods
@@ -514,7 +514,7 @@ public class CostBVBreakdown {
     private int GetBonusFromCP() {
         int BonusFromCP, retval = 0;
         int NumHS = CurMech.GetHeatSinks().GetNumHS(), MaxHSBonus = NumHS * 2, NumPods = 0;
-        Vector v = CurMech.GetLoadout().GetNonCore();
+        ArrayList v = CurMech.GetLoadout().GetNonCore();
         abPlaceable a;
 
         if( CurMech.GetRulesLevel() == AvailableCode.RULES_EXPERIMENTAL ) {

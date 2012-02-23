@@ -109,6 +109,48 @@ public class VSetArmorTonnage implements ifVisitor {
         }
     }
 
+    public void Visit(CombatVehicle v) {
+        // only the armor changes, so pass us off
+        CTRPerc = Prefs.getInt( "ArmorFrontPercent", CVArmor.DEFAULT_FRONT_ARMOR_PERCENT );
+        STRPerc = Prefs.getInt( "ArmorTurretPercent", CVArmor.DEFAULT_TURRET_ARMOR_PERCENT );
+        ArmorPriority = Prefs.getInt( "ArmorPriority", CVArmor.ARMOR_PRIORITY_FRONT );
+        CVArmor a = v.GetArmor();
+
+        // set the armor tonnage
+        // zero out the armor to begin with.
+        a.SetArmor( LocationIndex.CV_LOC_FRONT, 0 );
+        a.SetArmor( LocationIndex.CV_LOC_LEFT, 0 );
+        a.SetArmor( LocationIndex.CV_LOC_RIGHT, 0 );
+        a.SetArmor( LocationIndex.CV_LOC_REAR, 0 );
+        a.SetArmor( LocationIndex.CV_LOC_TURRET1, 0 );
+        a.SetArmor( LocationIndex.CV_LOC_TURRET2, 0 );
+
+        if( ArmorTons >= a.GetMaxTonnage() ) {
+            // assume the user simply wanted to maximize the armor
+            a.SetArmor( LocationIndex.CV_LOC_FRONT, a.GetLocationMax( LocationIndex.CV_LOC_FRONT ) );
+            a.SetArmor( LocationIndex.CV_LOC_LEFT, a.GetLocationMax( LocationIndex.CV_LOC_LEFT ) );
+            a.SetArmor( LocationIndex.CV_LOC_RIGHT, a.GetLocationMax( LocationIndex.CV_LOC_RIGHT ) );
+            a.SetArmor( LocationIndex.CV_LOC_REAR, a.GetLocationMax( LocationIndex.CV_LOC_REAR ) );
+            a.SetArmor( LocationIndex.CV_LOC_TURRET1, a.GetLocationMax( LocationIndex.CV_LOC_TURRET1 ) );
+            a.SetArmor( LocationIndex.CV_LOC_TURRET2, a.GetLocationMax( LocationIndex.CV_LOC_TURRET2 ) );
+        } else if( ArmorTons <= 0 ) {
+            // assume the user wants to zero the armor
+            // since we've already zero'd the armor, just return
+            return;
+        } else {
+            // zero the armor array
+            for( int i = 0; i < 11; i++ ) {
+                ArmorPoints[i] = 0;
+            }
+
+            // allocate the armor
+            AllocateArmor( a );
+
+            // fix the armor
+            FixArmor( a );
+        }
+    }
+
     private void AllocateArmor( MechArmor a ) {
         // testing out a new allocation routine
         // round the armor tonnage up to the nearest half ton
@@ -155,6 +197,37 @@ public class VSetArmorTonnage implements ifVisitor {
             ArmorPoints[LocationIndex.MECH_LOC_RL] = (int) Math.floor( AV * 0.13f );
             break;
         }
+        AV -= CurrentArmorAV();
+
+        // check for maximums and return a new AV for round-robin allocation
+        AV = CheckMaximums( a, AV );
+
+        // allocate the extra round-robin fashion
+        AllocateExtra( a, AV );
+
+        // finish up with a bit of symmetry
+        Symmetrize( a );
+    }
+
+    private void AllocateArmor( CVArmor a ) {
+        // testing out a new allocation routine
+        // round the armor tonnage up to the nearest half ton
+        double MidTons = ( (double) Math.floor( ArmorTons * 2.0f ) ) * 0.5f;
+
+        // find the AV we get from this tonnage amount
+        int AV = (int) ( Math.floor( MidTons * 16 * a.GetAVMult() ) );
+
+        float Multiplier = 0.25f;
+        if ( a.GetOwner().isHasTurret1() ) Multiplier = 0.20f;
+        if ( a.GetOwner().isHasTurret2() ) Multiplier = 0.16f;
+
+        ArmorPoints[LocationIndex.CV_LOC_FRONT] = (int) Math.floor( AV * Multiplier );
+        ArmorPoints[LocationIndex.CV_LOC_REAR] = (int) Math.floor( AV * Multiplier );
+        ArmorPoints[LocationIndex.CV_LOC_LEFT] = (int) Math.floor( AV * Multiplier );
+        ArmorPoints[LocationIndex.CV_LOC_RIGHT] = (int) Math.floor( AV * Multiplier );
+        if ( a.GetOwner().isHasTurret1() ) ArmorPoints[LocationIndex.CV_LOC_TURRET1] = (int) Math.floor( AV * Multiplier );
+        if ( a.GetOwner().isHasTurret2() ) ArmorPoints[LocationIndex.CV_LOC_TURRET2] = (int) Math.floor( AV * Multiplier );
+        
         AV -= CurrentArmorAV();
 
         // check for maximums and return a new AV for round-robin allocation
@@ -237,6 +310,55 @@ public class VSetArmorTonnage implements ifVisitor {
             // find out how much we are over, correct, and then add the excess to the AV
             int mid = ArmorPoints[LocationIndex.MECH_LOC_RL] - a.GetLocationMax( LocationIndex.MECH_LOC_RL );
             ArmorPoints[LocationIndex.MECH_LOC_RL] = a.GetLocationMax( LocationIndex.MECH_LOC_RL );
+            result += mid;
+        }
+
+        return result;
+    }
+
+    private int CheckMaximums( CVArmor a, int AV ) {
+        int result = AV;
+
+        // head check
+        if( ArmorPoints[LocationIndex.CV_LOC_FRONT] > a.GetLocationMax( LocationIndex.CV_LOC_FRONT ) ) {
+            // find out how much we are over, correct, and then add the excess to the AV
+            int mid = ArmorPoints[LocationIndex.CV_LOC_FRONT] - a.GetLocationMax( LocationIndex.CV_LOC_FRONT );
+            ArmorPoints[LocationIndex.CV_LOC_FRONT] = a.GetLocationMax( LocationIndex.CV_LOC_FRONT );
+            result += mid;
+        }
+
+        if( ArmorPoints[LocationIndex.CV_LOC_LEFT] > a.GetLocationMax( LocationIndex.CV_LOC_LEFT ) ) {
+            // find out how much we are over, correct, and then add the excess to the AV
+            int mid = ArmorPoints[LocationIndex.CV_LOC_LEFT] - a.GetLocationMax( LocationIndex.CV_LOC_LEFT );
+            ArmorPoints[LocationIndex.CV_LOC_LEFT] = a.GetLocationMax( LocationIndex.CV_LOC_LEFT );
+            result += mid;
+        }
+
+        if( ArmorPoints[LocationIndex.CV_LOC_RIGHT] > a.GetLocationMax( LocationIndex.CV_LOC_RIGHT ) ) {
+            // find out how much we are over, correct, and then add the excess to the AV
+            int mid = ArmorPoints[LocationIndex.CV_LOC_RIGHT] - a.GetLocationMax( LocationIndex.CV_LOC_RIGHT );
+            ArmorPoints[LocationIndex.CV_LOC_RIGHT] = a.GetLocationMax( LocationIndex.CV_LOC_RIGHT );
+            result += mid;
+        }
+
+        if( ArmorPoints[LocationIndex.CV_LOC_REAR] > a.GetLocationMax( LocationIndex.CV_LOC_REAR ) ) {
+            // find out how much we are over, correct, and then add the excess to the AV
+            int mid = ArmorPoints[LocationIndex.CV_LOC_REAR] - a.GetLocationMax( LocationIndex.CV_LOC_REAR );
+            ArmorPoints[LocationIndex.CV_LOC_REAR] = a.GetLocationMax( LocationIndex.CV_LOC_REAR );
+            result += mid;
+        }
+
+        if( a.GetOwner().isHasTurret1() && ArmorPoints[LocationIndex.CV_LOC_TURRET1] > a.GetLocationMax( LocationIndex.CV_LOC_TURRET1 ) ) {
+            // find out how much we are over, correct, and then add the excess to the AV
+            int mid = ArmorPoints[LocationIndex.CV_LOC_TURRET1] - a.GetLocationMax( LocationIndex.CV_LOC_TURRET1 );
+            ArmorPoints[LocationIndex.CV_LOC_TURRET1] = a.GetLocationMax( LocationIndex.CV_LOC_TURRET1 );
+            result += mid;
+        }
+
+        if( a.GetOwner().isHasTurret2() && ArmorPoints[LocationIndex.CV_LOC_TURRET2] > a.GetLocationMax( LocationIndex.CV_LOC_TURRET2 ) ) {
+            // find out how much we are over, correct, and then add the excess to the AV
+            int mid = ArmorPoints[LocationIndex.CV_LOC_TURRET2] - a.GetLocationMax( LocationIndex.CV_LOC_TURRET2 );
+            ArmorPoints[LocationIndex.CV_LOC_TURRET2] = a.GetLocationMax( LocationIndex.CV_LOC_TURRET2 );
             result += mid;
         }
 
@@ -388,6 +510,79 @@ public class VSetArmorTonnage implements ifVisitor {
         }
     }
 
+    private void AllocateExtra( CVArmor a, int AV ) {
+        if( ArmorPoints[LocationIndex.CV_LOC_FRONT] < a.GetLocationMax( LocationIndex.CV_LOC_FRONT ) ) {
+            // haven't exceeded the maximum yet
+            if( AV > 0 ) {
+                // some AV to distribute.  See who deserves it on this round
+                ArmorPoints[LocationIndex.CV_LOC_FRONT]++;
+                AV--;
+            } else {
+                // all done
+                return;
+            }
+        }
+        if( ArmorPoints[LocationIndex.CV_LOC_LEFT] < a.GetLocationMax( LocationIndex.CV_LOC_LEFT ) ) {
+            // haven't exceeded the maximum yet
+            if( AV > 0 ) {
+                // some AV to distribute.
+                ArmorPoints[LocationIndex.CV_LOC_LEFT]++;
+                AV--;
+            } else {
+                // all done
+                return;
+            }
+        }
+        if( ArmorPoints[LocationIndex.CV_LOC_RIGHT] < a.GetLocationMax( LocationIndex.CV_LOC_RIGHT ) ) {
+            // haven't exceeded the maximum yet
+            if( AV > 0 ) {
+                // some AV to distribute.  See who deserves it on this round
+                ArmorPoints[LocationIndex.CV_LOC_RIGHT]++;
+                AV--;
+            } else {
+                // all done
+                return;
+            }
+        }
+        if( ArmorPoints[LocationIndex.CV_LOC_REAR] < a.GetLocationMax( LocationIndex.CV_LOC_REAR ) ) {
+            // haven't exceeded the maximum yet
+            if( AV > 0 ) {
+                // some AV to distribute.  See who deserves it on this round
+                ArmorPoints[LocationIndex.CV_LOC_REAR]++;
+                AV--;
+            } else {
+                // all done
+                return;
+            }
+        }
+        if( a.GetOwner().isHasTurret1() && ArmorPoints[LocationIndex.CV_LOC_TURRET1] < a.GetLocationMax( LocationIndex.CV_LOC_TURRET1 ) ) {
+            // haven't exceeded the maximum yet
+            if( AV > 0 ) {
+                // some AV to distribute.  See who deserves it on this round
+                ArmorPoints[LocationIndex.CV_LOC_TURRET1]++;
+                AV--;
+            } else {
+                // all done
+                return;
+            }
+        }
+        if( a.GetOwner().isHasTurret2() && ArmorPoints[LocationIndex.CV_LOC_TURRET2] < a.GetLocationMax( LocationIndex.CV_LOC_TURRET2 ) ) {
+            // haven't exceeded the maximum yet
+            if( AV > 0 ) {
+                // some AV to distribute.  See who deserves it on this round
+                ArmorPoints[LocationIndex.CV_LOC_TURRET2]++;
+                AV--;
+            } else {
+                // all done
+                return;
+            }
+        }
+        // if there's any AV left, call this method again
+        if( AV > 0 && CurrentArmorAV() < a.GetMaxArmor() ) {
+            AllocateExtra( a, AV );
+        }
+    }
+
     private void Symmetrize( MechArmor a ) {
         // this method attempts to fix any non-symmetrical allocations in a
         // graceful manner.  To simplify, we're taking a point or two from the CT.
@@ -451,6 +646,34 @@ public class VSetArmorTonnage implements ifVisitor {
         }
     }
 
+    private void Symmetrize( CVArmor a ) {
+        if( ArmorPoints[LocationIndex.CV_LOC_LEFT] > ArmorPoints[LocationIndex.CV_LOC_RIGHT] || ArmorPoints[LocationIndex.CV_LOC_LEFT] < ArmorPoints[LocationIndex.CV_LOC_RIGHT] ) {
+            if( ArmorPoints[LocationIndex.CV_LOC_LEFT] > ArmorPoints[LocationIndex.CV_LOC_RIGHT] ) {
+                // left is bigger than right
+                ArmorPoints[LocationIndex.CV_LOC_TURRET1]--;
+                ArmorPoints[LocationIndex.CV_LOC_RIGHT]++;
+            } else {
+                // right is bigger than left
+                ArmorPoints[LocationIndex.CV_LOC_TURRET1]--;
+                ArmorPoints[LocationIndex.CV_LOC_LEFT]++;
+            }
+        }
+
+        if( ArmorPoints[LocationIndex.CV_LOC_FRONT] > ArmorPoints[LocationIndex.CV_LOC_REAR] || ArmorPoints[LocationIndex.CV_LOC_FRONT] < ArmorPoints[LocationIndex.CV_LOC_REAR] ) {
+            // legs are out of alignment
+            if( ArmorPoints[LocationIndex.CV_LOC_FRONT] > ArmorPoints[LocationIndex.CV_LOC_REAR] ) {
+                // left is bigger than right
+                ArmorPoints[LocationIndex.CV_LOC_TURRET1]--;
+                ArmorPoints[LocationIndex.CV_LOC_FRONT]++;
+            } else {
+                // right is bigger than left
+                ArmorPoints[LocationIndex.CV_LOC_TURRET1]--;
+                ArmorPoints[LocationIndex.CV_LOC_REAR]++;
+            }
+        }
+
+    }
+
     private void FixArmor( MechArmor a ) {
         // fixes the armor values to the mech
         a.SetArmor( LocationIndex.MECH_LOC_HD, ArmorPoints[LocationIndex.MECH_LOC_HD] );
@@ -466,6 +689,15 @@ public class VSetArmorTonnage implements ifVisitor {
         a.SetArmor( LocationIndex.MECH_LOC_RTR, ArmorPoints[LocationIndex.MECH_LOC_RTR] );
     }
 
+    private void FixArmor( CVArmor a ) {
+        a.SetArmor( LocationIndex.CV_LOC_FRONT, ArmorPoints[LocationIndex.CV_LOC_FRONT] );
+        a.SetArmor( LocationIndex.CV_LOC_LEFT, ArmorPoints[LocationIndex.CV_LOC_LEFT] );
+        a.SetArmor( LocationIndex.CV_LOC_RIGHT, ArmorPoints[LocationIndex.CV_LOC_RIGHT] );
+        a.SetArmor( LocationIndex.CV_LOC_REAR, ArmorPoints[LocationIndex.CV_LOC_REAR] );
+        if ( a.GetOwner().isHasTurret1() ) a.SetArmor( LocationIndex.CV_LOC_TURRET1, ArmorPoints[LocationIndex.CV_LOC_TURRET1] );
+        if ( a.GetOwner().isHasTurret2() ) a.SetArmor( LocationIndex.CV_LOC_TURRET2, ArmorPoints[LocationIndex.CV_LOC_TURRET2] );
+    }
+
     private int CurrentArmorAV() {
         // totals the current armor AV
         int result = 0;
@@ -473,10 +705,6 @@ public class VSetArmorTonnage implements ifVisitor {
             result += ArmorPoints[i];
         }
         return result;
-    }
-
-    public void Visit( CombatVehicle v ) throws Exception {
-        // does nothing at the moment
     }
 
     public void Visit( Infantry i ) throws Exception {

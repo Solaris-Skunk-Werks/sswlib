@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class Equipment extends abPlaceable {
     private String ActualName,
@@ -309,6 +309,11 @@ public class Equipment extends abPlaceable {
         return GetOffensiveBV();
     }
 
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
+    }
+
     public double GetDefensiveBV() {
         if( IsArmored() ) {
             //If the total BV is 0 lets just calculate based on the number of armored crits.
@@ -480,7 +485,7 @@ public class Equipment extends abPlaceable {
 
     public boolean Validate( Mech m ) {
         if( MaxAllowed > 0 ) {
-            Vector currentEquipment = m.GetLoadout().GetEquipment();
+            ArrayList currentEquipment = m.GetLoadout().GetEquipment();
             for( int i = 0, c = 0; i < currentEquipment.size(); ++i ) {
                 abPlaceable currentItem = (abPlaceable) currentEquipment.get( i );
                 if( currentItem.LookupName().equals( LookupName ) ) {
@@ -493,6 +498,27 @@ public class Equipment extends abPlaceable {
             return true;
         } else if( RequiresQuad ) {
             return m.IsQuad();
+        } else {
+            return true;
+        }
+    }
+
+    public boolean Validate( CombatVehicle v )
+    {
+        if( MaxAllowed > 0 ) {
+            ArrayList currentEquipment = v.GetLoadout().GetEquipment();
+            for( int i = 0, c = 0; i < currentEquipment.size(); ++i ) {
+                abPlaceable currentItem = (abPlaceable) currentEquipment.get( i );
+                if( currentItem.LookupName().equals( LookupName ) ) {
+                    ++c;
+                    if( c == MaxAllowed ) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        } else if( RequiresQuad ) {
+            return false;
         } else {
             return true;
         }

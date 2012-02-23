@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package dialog;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import components.Ammunition;
 import common.DataFactory;
 import components.LocationIndex;
@@ -38,7 +38,7 @@ import filehandlers.Media;
 public class dlgAmmoChooser extends javax.swing.JDialog {
 
     private Mech CurMech;
-    private Vector Ammo = new Vector();
+    private ArrayList Ammo = new ArrayList();
     private DataFactory Data;
 
     /** Creates new form dlgAmmoChooser */
@@ -71,14 +71,14 @@ public class dlgAmmoChooser extends javax.swing.JDialog {
     }
 
     private void BuildInstalledAmmoList() {
-        Vector v = CurMech.GetLoadout().GetNonCore();
+        ArrayList v = CurMech.GetLoadout().GetNonCore();
         Ammo.clear();
         for( int i = 0; i < v.size(); i++ ) {
             if( v.get( i ) instanceof Ammunition ) {
                 Ammo.add( v.get( i ) );
             }
         }
-        lstInstalledAmmo.setListData( Ammo );
+        lstInstalledAmmo.setListData( Ammo.toArray() );
         lstInstalledAmmo.repaint();
     }
 

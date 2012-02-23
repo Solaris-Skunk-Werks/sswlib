@@ -161,4 +161,8 @@ public class stChassisMSQD implements ifChassis, ifState {
     public String toString() {
         return "Standard";
     }
+
+    public int GetCVPoints(int Tonnage) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

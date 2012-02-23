@@ -95,4 +95,12 @@ public class stCVVTOL implements ifCombatVehicle {
     public boolean CanUseMinesweeper() {
         return false;
     }
+    
+    public boolean CanUseEnviroSealing() {
+        return true;
+    }
+
+    public int GetCostMultiplier() {
+        return 30;
+    }
 }

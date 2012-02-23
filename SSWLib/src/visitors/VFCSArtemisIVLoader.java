@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package visitors;
 
 import components.*;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class VFCSArtemisIVLoader implements ifVisitor {
     // this is normally set to true since we simply unallocate items that can't
@@ -45,7 +45,7 @@ public class VFCSArtemisIVLoader implements ifVisitor {
     }
 
     public void Visit( Mech m ) {
-        Vector test = m.GetLoadout().GetNonCore();
+        ArrayList test = m.GetLoadout().GetNonCore();
         abPlaceable p;
         abPlaceable FCS;
         for( int i = 0; i < test.size(); i++ ) {

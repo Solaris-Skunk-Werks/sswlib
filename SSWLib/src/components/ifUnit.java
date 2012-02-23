@@ -18,4 +18,11 @@ public interface ifUnit {
     public boolean UsingFractionalAccounting();
     public void SetChanged( boolean b );
     public boolean HasFHES();
+    public int GetTechBase();
+    public Engine GetEngine();
+    public boolean IsQuad();
+    public MechModifier GetTotalModifiers( boolean BV, boolean MASCTSM );
+    public PhysicalEnhancement GetPhysEnhance();
+    public boolean UsingTC();
+    public TargetingComputer GetTC();
 }

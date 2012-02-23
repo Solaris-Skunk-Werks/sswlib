@@ -45,6 +45,9 @@ public class VCockpitSetRobotic implements ifVisitor {
         CurMech = m;
         Cockpit c = CurMech.GetCockpit();
 
+        if( CurMech.HasCommandConsole() )
+            CurMech.SetCommandConsole( false );
+
         //Check for quad before moving on
         if ( !m.IsQuad() )
             throw new Exception("Robotic Cockpits can only be added to Quad BattleMechs or IndustrialMechs");

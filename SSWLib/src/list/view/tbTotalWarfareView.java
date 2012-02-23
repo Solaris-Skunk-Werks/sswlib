@@ -27,13 +27,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package list.view;
 
-import java.text.DecimalFormat;
 import javax.swing.SortOrder;
-import list.MechList;
-import list.MechListData;
+import list.UnitList;
+import list.UnitListData;
 
 public class tbTotalWarfareView extends abView {
-    public tbTotalWarfareView( MechList list ) {
+    public tbTotalWarfareView( UnitList list ) {
         this.list = list;
 
         Columns.add(new Column( 0, "Tons", "Tonnage", false, 20, Integer.class, true, SortOrder.ASCENDING ));
@@ -52,7 +51,7 @@ public class tbTotalWarfareView extends abView {
     }
 
     public Object getValueAt( int row, int col ) {
-        MechListData m = (MechListData) list.Get( row );
+        UnitListData m = (UnitListData) list.Get( row );
         switch( col ) {
             case 0:
                 return (int) m.getTonnage();

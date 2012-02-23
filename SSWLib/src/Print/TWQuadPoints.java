@@ -453,4 +453,60 @@ public class TWQuadPoints implements ifPrintPoints {
     public Point GetLogoImageLoc() {
         return new Point( 300, 160 );
     }
+
+    public Point[] GetArmorFrontPoints() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Point[] GetArmorLeftPoints() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Point[] GetArmorRightPoints() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Point[] GetArmorRearPoints() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Point[] GetArmorTurretPoints() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Point[] GetArmorTurret2Points() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Point[] GetArmorRotorPoints() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Point[] GetInternalFrontPoints() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Point[] GetInternalLeftPoints() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Point[] GetInternalRightPoints() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Point[] GetInternalRearPoints() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Point[] GetInternalTurretPoints() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Point[] GetInternalTurret2Points() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Point[] GetInternalRotorPoints() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

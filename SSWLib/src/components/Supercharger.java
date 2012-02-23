@@ -29,10 +29,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package components;
 
 public class Supercharger extends abPlaceable {
-    private ifMechLoadout Owner;
+    private ifLoadout Owner;
     private AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
 
-    public Supercharger( ifMechLoadout l ) {
+    public Supercharger( ifLoadout l ) {
         AC.SetISCodes( 'C', 'F', 'F', 'F' );
         AC.SetISDates( 0, 0, false, 1950, 0, 0, false, false );
         AC.SetISFactions( "", "", "ES", "" );
@@ -40,7 +40,7 @@ public class Supercharger extends abPlaceable {
         AC.SetCLDates( 0, 0, false, 1950, 0, 0, false, false );
         AC.SetCLFactions( "", "", "ES", "" );
         AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
-        Owner = l;
+        Owner = (ifLoadout)l;
         AddMechModifier( new MechModifier( 0, 0, 0, 0.5, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, true, false ) );
     }
 
@@ -85,10 +85,10 @@ public class Supercharger extends abPlaceable {
     @Override
     public double GetTonnage() {
         double retval = 0.0;
-        if( Owner.GetMech().UsingFractionalAccounting() ) {
-            retval = Math.ceil( Owner.GetMech().GetEngine().GetTonnage() * 100 ) * 0.001;
+        if( Owner.UsingFractionalAccounting() ) {
+            retval = Math.ceil( Owner.GetEngine().GetTonnage() * 100 ) * 0.001;
         } else {
-            retval = ((int) ( Math.ceil( Owner.GetMech().GetEngine().GetTonnage() * 0.1 * 2 ))) * 0.5;
+            retval = ((int) ( Math.ceil( Owner.GetEngine().GetTonnage() * 0.1 * 2 ))) * 0.5;
         }
         if( IsArmored() ) {
             retval += 0.5;
@@ -98,7 +98,7 @@ public class Supercharger extends abPlaceable {
 
     @Override
     public double GetCost() {
-        double retval = Owner.GetMech().GetEngine().GetRating() * 10000.0;
+        double retval = Owner.GetEngine().GetRating() * 10000.0;
         if( IsArmored() ) {
             retval += 150000.;
         }
@@ -113,6 +113,12 @@ public class Supercharger extends abPlaceable {
     @Override
     public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES ) {
         return 0.0;
+    }
+
+    @Override
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
     }
 
     @Override

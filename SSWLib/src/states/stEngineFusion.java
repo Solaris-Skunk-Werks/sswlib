@@ -57,7 +57,7 @@ public class stEngineFusion implements ifEngine, ifState {
         AC.SetCLCodes( 'D', 'X', 'B', 'C' );
         AC.SetCLDates( 0, 0, false, 2021, 0, 0, false, false );
         AC.SetCLFactions( "", "", "WA", "" );
-        AC.SetRulesLevels( AvailableCode.RULES_INTRODUCTORY, AvailableCode.RULES_INTRODUCTORY, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT );
+        AC.SetRulesLevels( AvailableCode.RULES_INTRODUCTORY, AvailableCode.RULES_INTRODUCTORY, AvailableCode.RULES_INTRODUCTORY, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT );
         LARGE_AC.SetISCodes( 'D', 'C', 'E', 'D' );
         LARGE_AC.SetISDates( 2550, 2630, true, 2630, 0, 0, false, false );
         LARGE_AC.SetISFactions( "WA", "TH", "", "" );
@@ -170,7 +170,7 @@ public class stEngineFusion implements ifEngine, ifState {
     }
 
     private int GetBFIndex( int tonnage ) {
-        return (tonnage - 10) / 5;
+        return Math.abs((tonnage - 10) / 5);
     }
 
     public int GetBFStructure( int tonnage ) {

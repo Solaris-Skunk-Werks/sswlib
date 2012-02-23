@@ -120,6 +120,12 @@ public class PPCCapacitor extends abPlaceable {
     }
 
     @Override
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
+    }
+
+    @Override
     public double GetDefensiveBV() {
         return 0.0;
     }

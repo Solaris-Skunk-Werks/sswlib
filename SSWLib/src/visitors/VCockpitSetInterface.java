@@ -44,6 +44,9 @@ public class VCockpitSetInterface implements ifVisitor {
         // Pass us off to the cockpit
         CurMech = m;
         Cockpit c = CurMech.GetCockpit();
+        
+        if( CurMech.HasCommandConsole() )
+            CurMech.SetCommandConsole( false );
 
         // first, we have to remove it from the loadout
         ifMechLoadout l = CurMech.GetLoadout();

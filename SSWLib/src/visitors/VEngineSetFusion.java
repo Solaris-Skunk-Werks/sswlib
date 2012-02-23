@@ -86,7 +86,37 @@ public class VEngineSetFusion implements ifVisitor {
     }
 
     public void Visit( CombatVehicle v ) throws Exception {
-        // does nothing at the moment
+        Engine e = v.GetEngine();
+        boolean SChargerInstalled = false;
+
+        // see if we have a supercharger installed
+        if( v.GetLoadout().HasSupercharger() ) {
+            SChargerInstalled = true;
+            try {
+                v.GetLoadout().SetSupercharger( false );
+            } catch ( Exception ex ) {
+                // wow, a problem removing it.  Log it for later.
+                System.err.println( ex.getMessage() );
+            }
+        }
+
+        // change the engine type
+        e.SetFUEngine();
+        v.SetEngine(e);
+
+        // flush illegal equipment
+        v.GetLoadout().FlushIllegal();
+
+        // try to reinstall the Supercharger
+        if( SChargerInstalled ) {
+            try {
+                // we're not interested in where the suypercharger was since it
+                // can only go in the same spot as an engine.
+                v.GetLoadout().SetSupercharger( true );
+            } catch ( Exception ex ) {
+                System.err.println( ex.getMessage() );
+            }
+        }
     }
 
     public void Visit( Infantry i ) throws Exception {

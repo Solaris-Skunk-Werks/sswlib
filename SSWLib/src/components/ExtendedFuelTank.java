@@ -29,10 +29,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package components;
 
 public class ExtendedFuelTank extends Equipment {
-    private Mech Owner;
+    private ifUnit Owner;
     private AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
 
-    public ExtendedFuelTank( Mech m ) {
+    public ExtendedFuelTank( ifUnit m ) {
         Owner = m;
         AC.SetRulesLevels( AvailableCode.RULES_ADVANCED, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
         AC.SetISCodes( 'C', 'C', 'D', 'C' );
@@ -45,7 +45,7 @@ public class ExtendedFuelTank extends Equipment {
         AC.SetPBMAllowed( true );
     }
 
-    public void SetOwner( Mech m ) {
+    public void SetOwner( ifUnit m ) {
         Owner = m;
     }
 

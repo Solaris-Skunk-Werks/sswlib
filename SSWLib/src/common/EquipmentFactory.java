@@ -28,24 +28,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package common;
 
 import components.*;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class EquipmentFactory {
     // big class for holding and farming out equipment
-    private Vector Equipment = new Vector(),
-                   PhysicalWeapons = new Vector(),
+    private ArrayList Equipment = new ArrayList(),
+                   PhysicalWeapons = new ArrayList(),
                    Ammo,
                    RangedWeapons;
 
-    public EquipmentFactory( Vector rweapons, Vector pweapons, Vector equips, Vector ammo, ifUnit m ) {
+    public EquipmentFactory( ArrayList rweapons, ArrayList pweapons, ArrayList equips, ArrayList ammo, ifUnit m ) {
         Ammo = ammo;
         RangedWeapons = rweapons;
         PhysicalWeapons = pweapons;
         Equipment = equips;
         RangedWeapons.add( new VehicularGrenadeLauncher() );
         Equipment.add( new ModularArmor() );
+        BuildPhysicals( m );
         if (( m.GetUnitType() == AvailableCode.UNIT_BATTLEMECH ) && ( m instanceof Mech) ) {
-            BuildPhysicals( (Mech) m );
             PhysicalWeapons.add( new Talons( (Mech) m ) );
             Equipment.add( new ExtendedFuelTank( (Mech) m ) );
             Equipment.add( new DroneOperatingSystem( (Mech) m ) );
@@ -96,7 +96,7 @@ public class EquipmentFactory {
     public Object[] GetAllAmmo( int key, int RulesLevel ) {
         // returns an array containing all the ammunition for the specified
         // weapon key regardless of whether it is available (for printing)
-        Vector v = new Vector(),
+        ArrayList v = new ArrayList(),
                 test;
 
         // find the ammunition
@@ -114,7 +114,7 @@ public class EquipmentFactory {
     public Object[] GetAmmoByYear( int key, int Year, int RulesLevel, ifUnit m ) {
         // returns an array containing all the ammunition for the specified
         // weapon key regardless of whether it is available (for printing)
-        Vector v = new Vector(),
+        ArrayList v = new ArrayList(),
                 test;
 
         // find the ammunition
@@ -133,7 +133,7 @@ public class EquipmentFactory {
     public Object[] GetAmmo( int key, ifUnit m ) {
         // returns an array containing all the ammunition for the specified 
         // weapon key.
-        Vector v = new Vector(),
+        ArrayList v = new ArrayList(),
                 test;
 
         // find the ammunition
@@ -155,7 +155,7 @@ public class EquipmentFactory {
     public Object[] GetAmmo( int[] key, ifUnit m ) {
         // returns an array containing all the ammunition for the specified 
         // weapon keys.  The keys are the weapon's lookup names
-        Vector v = new Vector(),
+        ArrayList v = new ArrayList(),
                 test;
         Object o;
 
@@ -180,7 +180,7 @@ public class EquipmentFactory {
 
     public Object[] GetArtillery( ifUnit m ) {
         // returns an array based on the given specifications of era and year
-        Vector RetVal = new Vector();
+        ArrayList RetVal = new ArrayList();
         abPlaceable p;
         AvailableCode AC;
 
@@ -209,7 +209,7 @@ public class EquipmentFactory {
     }
 
     public Object[] GetBallisticWeapons( ifUnit m ) {
-        Vector RetVal = new Vector();
+        ArrayList RetVal = new ArrayList();
         abPlaceable p;
         AvailableCode AC;
 
@@ -239,7 +239,7 @@ public class EquipmentFactory {
 
     public Object[] GetEnergyWeapons( ifUnit m ) {
         // returns an array based on the given specifications of era and year
-        Vector RetVal = new Vector();
+        ArrayList RetVal = new ArrayList();
         abPlaceable p;
         AvailableCode AC;
 
@@ -264,7 +264,7 @@ public class EquipmentFactory {
 
     public Object[] GetMissileWeapons( ifUnit m ) {
         // returns an array based on the given specifications of era and year
-        Vector RetVal = new Vector();
+        ArrayList RetVal = new ArrayList();
         abPlaceable p;
         AvailableCode AC;
 
@@ -289,7 +289,7 @@ public class EquipmentFactory {
 
     public Object[] GetPhysicalWeapons( ifUnit m ) {
         // returns an array based on the given specifications of era and year
-        Vector RetVal = new Vector();
+        ArrayList RetVal = new ArrayList();
         abPlaceable hatchet = null;
 
         // do this a little differently.
@@ -317,16 +317,18 @@ public class EquipmentFactory {
         }
 
         if( m.GetEra() >= AvailableCode.ERA_SUCCESSION ) {
-            if( ((Mech) m).GetLoadout().GetTechBase() == AvailableCode.TECH_BOTH || ((Mech) m).GetLoadout().GetTechBase() == AvailableCode.TECH_INNER_SPHERE ) {
-                if( m.IsYearRestricted() ) {
-                    if( m.GetYear() > 3021 ) {
+            if( m instanceof Mech ) {
+                if( ((Mech)m).GetLoadout().GetTechBase() == AvailableCode.TECH_BOTH || ((Mech)m).GetLoadout().GetTechBase() == AvailableCode.TECH_INNER_SPHERE ) {
+                    if( m.IsYearRestricted() ) {
+                        if( m.GetYear() > 3021 ) {
+                            if( ! RetVal.contains( hatchet ) ) {
+                                RetVal.add( hatchet );
+                            }
+                        }
+                    } else {
                         if( ! RetVal.contains( hatchet ) ) {
                             RetVal.add( hatchet );
                         }
-                    }
-                } else {
-                    if( ! RetVal.contains( hatchet ) ) {
-                        RetVal.add( hatchet );
                     }
                 }
             }
@@ -340,7 +342,7 @@ public class EquipmentFactory {
 
     public Object[] GetEquipment( ifUnit m ) {
         // returns an array based on the given specifications of era and year
-        Vector RetVal = new Vector();
+        ArrayList RetVal = new ArrayList();
         abPlaceable p;
         AvailableCode AC;
 
@@ -379,7 +381,7 @@ public class EquipmentFactory {
         return null;
     }
 
-    public PhysicalWeapon GetPhysicalWeaponByName( String name, Mech m ) {
+    public PhysicalWeapon GetPhysicalWeaponByName( String name, ifUnit m ) {
         for( int i = 0; i < PhysicalWeapons.size(); i++ ) {
             if( ((abPlaceable) PhysicalWeapons.get( i )).LookupName().equals( name ) ) {
                 PhysicalWeapon p = (PhysicalWeapon) GetCopy( (abPlaceable) PhysicalWeapons.get( i ), m );
@@ -448,7 +450,7 @@ public class EquipmentFactory {
         return null;
     }
 
-    public void BuildMGArrays() {
+    public final void BuildMGArrays() {
         abPlaceable addBW;
         MGArray addMGA;
         AvailableCode a;
@@ -560,14 +562,14 @@ public class EquipmentFactory {
         RangedWeapons.add( addMGA );
     }
 
-    public void BuildPhysicals( ifUnit m ) {
+    public final void BuildPhysicals( ifUnit m ) {
         // this method rebuilds the physical weapons if the form's CurMech changes
         for( int i = 0; i < PhysicalWeapons.size(); i++ ) {
-            ((PhysicalWeapon) PhysicalWeapons.get( i )).SetOwner( (Mech) m );
+            ((PhysicalWeapon) PhysicalWeapons.get( i )).SetOwner( m );
         }
         for( int i = 0; i < Equipment.size(); i++ ) {
             if( Equipment.get( i ) instanceof ExtendedFuelTank ) {
-                ((ExtendedFuelTank) Equipment.get( i )).SetOwner( (Mech) m );
+                ((ExtendedFuelTank) Equipment.get( i )).SetOwner( m );
             }
         }
     }

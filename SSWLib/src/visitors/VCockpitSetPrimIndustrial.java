@@ -44,6 +44,10 @@ public class VCockpitSetPrimIndustrial implements ifVisitor {
         // Pass us off to the cockpit
         CurMech = m;
         Cockpit c = CurMech.GetCockpit();
+        boolean console = m.HasCommandConsole();
+
+        if ( console )
+            m.SetCommandConsole(false);
 
         // first, we have to remove it from the loadout
         ifMechLoadout l = CurMech.GetLoadout();
@@ -57,6 +61,9 @@ public class VCockpitSetPrimIndustrial implements ifVisitor {
 
         // replace the cockpit
         c.Place(l);
+
+        if ( console)
+            m.SetCommandConsole(true);
     }
 
     public void Visit( CombatVehicle v ) throws Exception {

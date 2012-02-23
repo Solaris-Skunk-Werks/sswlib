@@ -29,7 +29,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package battleforce;
 
 import common.*;
-import java.util.Vector;
+import components.CombatVehicle;
+import java.util.ArrayList;
 import org.w3c.dom.Node;
 import components.Mech;
 import filehandlers.FileCommon;
@@ -52,8 +53,8 @@ public class BattleForceStats {
     private double[] Mods = {2.63, 2.24, 1.82, 1.38, 1.00, 0.86, 0.77, 0.68};
 
     private boolean isTerrainModified = false;
-    private Vector<String> Abilities = new Vector<String>();
-    private Vector<String> AltMunitions = new Vector<String>();
+    private ArrayList<String> Abilities = new ArrayList<String>();
+    private ArrayList<String> AltMunitions = new ArrayList<String>();
     private BattleForceData BFData = new BattleForceData();
 
     private int S = 0,
@@ -106,6 +107,39 @@ public class BattleForceStats {
         BFData = m.getBFData();
     }
 
+    public BattleForceStats(CombatVehicle m) {
+        Element = m.GetFullName();
+        Name = m.GetName();
+        Model = m.GetModel();
+        if ( m.IsOmni() ) { Model = m.GetLoadout().GetName(); }
+        Abilities = m.GetBFAbilities();
+        int[] Data = m.GetBFDamage( this );
+        S = Data[BFConstants.BF_SHORT];
+        M = Data[BFConstants.BF_MEDIUM];
+        L = Data[BFConstants.BF_LONG];
+        E = Data[BFConstants.BF_EXTREME];
+        OV = Data[BFConstants.BF_OV];
+        BasePV = m.GetBFPoints();
+        PV = BasePV;
+
+        Wt = m.GetBFSize();
+        Armor = m.GetBFArmor();
+        Internal = m.GetBFStructure();
+
+        MV = m.GetBFPrimeMovement() + m.GetBFPrimeMovementMode();
+        TerrainMV = (m.GetBFPrimeMovement() * 2) + m.GetBFPrimeMovementMode();
+        if ( m.GetBFSecondaryMovement() != 0 ) {
+            if ( !m.GetBFSecondaryMovementMode().isEmpty() &&
+                 !m.GetBFSecondaryMovementMode().isEmpty() ) { MV = m.GetBFPrimeMovement() + ""; }
+            MV += "/" + m.GetBFSecondaryMovement() + m.GetBFSecondaryMovementMode();
+            TerrainMV += "/" + ( m.GetBFSecondaryMovement() * 2 ) + m.GetBFSecondaryMovementMode();
+        }
+
+        Image = m.GetSSWImage();
+        BFData = m.getBFData();
+    }
+
+
     public BattleForceStats( Mech m, String Unit, int Gunnery, int Piloting ) {
         this(m);
         this.Unit = Unit;
@@ -113,6 +147,13 @@ public class BattleForceStats {
         setPiloting(Piloting);
     }
 
+    public BattleForceStats( CombatVehicle m, String Unit, int Gunnery, int Piloting ) {
+        this(m);
+        this.Unit = Unit;
+        setGunnery(Gunnery);
+        setPiloting(Piloting);
+    }
+    
     public BattleForceStats( Node n ) throws Exception {
         try {
             BasePV = Integer.parseInt(n.getAttributes().getNamedItem("pv").getTextContent());
@@ -291,7 +332,7 @@ public class BattleForceStats {
         return data.substring(0, data.length()-2);
     }
 
-    public Vector<String> getAbilities() {
+    public ArrayList<String> getAbilities() {
         return Abilities;
     }
 
@@ -309,8 +350,8 @@ public class BattleForceStats {
         return retval.replace("[", "").replace("]", "");
     }
 
-    public Vector<String> getFilteredAbilities() {
-        Vector<String> filtered = new Vector<String>();
+    public ArrayList<String> getFilteredAbilities() {
+        ArrayList<String> filtered = new ArrayList<String>();
          for ( String ability : Abilities ) {
             if ( !ability.contains("AC") && !ability.contains("SRM") && !ability.contains("LRM") && !ability.contains("TUR") ) {
                 filtered.add(ability);
@@ -319,8 +360,8 @@ public class BattleForceStats {
          return filtered;
     }
 
-    public Vector<String[]> getDamageAbilities() {
-        Vector<String[]> list = new Vector<String[]>();
+    public ArrayList<String[]> getDamageAbilities() {
+        ArrayList<String[]> list = new ArrayList<String[]>();
         for ( String ability : Abilities ) {
             if ( ability.contains("AC") || ability.contains("SRM") || ability.contains("LRM") || ability.contains("TUR") ) {
                 String[] info = new String[5];
@@ -349,7 +390,7 @@ public class BattleForceStats {
         if ( !Abilities.contains(s) ) { Abilities.add(s); }
     }
 
-    public Vector<String> getAltMunitions() {
+    public ArrayList<String> getAltMunitions() {
         return AltMunitions;
     }
 
@@ -475,7 +516,7 @@ public class BattleForceStats {
         return Gunnery;
     }
 
-    public void setGunnery(int Gunnery) {
+    public final void setGunnery(int Gunnery) {
         this.Gunnery = Gunnery;
         updateSkill();
     }
@@ -484,7 +525,7 @@ public class BattleForceStats {
         return Piloting;
     }
 
-    public void setPiloting(int Piloting) {
+    public final void setPiloting(int Piloting) {
         this.Piloting = Piloting;
         updateSkill();
     }

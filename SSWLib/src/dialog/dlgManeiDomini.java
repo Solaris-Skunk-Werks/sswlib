@@ -2,12 +2,12 @@ package dialog;
 
 import Force.Advantages;
 import Force.Advantages.Enhancement;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.JDialog;
 
 public class dlgManeiDomini extends javax.swing.JDialog {
     public double Modifier = 1.0;
-    public Vector<Enhancement> Enhancements = new Vector<Enhancement>();
+    public ArrayList<Enhancement> Enhancements = new ArrayList<Enhancement>();
 
     /** Creates new form dlgManeiDomini */
     public dlgManeiDomini(JDialog parent, boolean modal) {
@@ -18,7 +18,7 @@ public class dlgManeiDomini extends javax.swing.JDialog {
         lstMods.setModel(a.getMDModsModel());
     }
 
-    public void setEnhancements(Vector<Enhancement> List ) {
+    public void setEnhancements(ArrayList<Enhancement> List ) {
         Enhancements = List;
         for ( Enhancement e : Enhancements ) {
             lstMods.setSelectedValue(e, false);
@@ -133,7 +133,7 @@ public class dlgManeiDomini extends javax.swing.JDialog {
     private void lstModsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstModsValueChanged
         int curMax = 0;
         if ( lstMods.getSelectedIndices().length > 0 ) {
-            Enhancements.removeAllElements();
+            Enhancements.clear();
             for ( int index : lstMods.getSelectedIndices() ) {
                 Enhancement e = (Enhancement) lstMods.getModel().getElementAt(index);
                 Enhancements.add(e);

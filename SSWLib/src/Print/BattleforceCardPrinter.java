@@ -155,7 +155,8 @@ public class BattleforceCardPrinter implements Printable {
 
             //Image
             if ( printMechs ) {
-                stats.setImage(imageTracker.media.DetermineMatchingImage(stats.getName(), stats.getModel(), stats.getImage()));
+                if ( stats.getImage().replace("../Images/No_Image.png", "").isEmpty() )
+                    stats.setImage(imageTracker.media.DetermineMatchingImage(stats.getName(), stats.getModel(), stats.getImage()));
                 if ( !stats.getImage().isEmpty() ) {
                     Image image = imageTracker.getImage(stats.getImage());
                     Dimension dim = imageTracker.media.reSize(image, 110d, 130d);

@@ -160,4 +160,8 @@ public class stChassisREBP implements ifChassis, ifState {
     public String toString() {
         return "Reinforced Structure";
     }
+
+    public int GetCVPoints(int Tonnage) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

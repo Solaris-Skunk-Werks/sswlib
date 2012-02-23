@@ -33,7 +33,7 @@ import common.CommonTools;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 
 public class Skills {

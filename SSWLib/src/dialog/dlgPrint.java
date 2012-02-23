@@ -254,7 +254,7 @@ public class dlgPrint extends javax.swing.JDialog {
             for ( Force force : scenario.getForces() ) {
                 for ( Group g : force.Groups ) {
                     for ( Unit u : g.getUnits() ) {
-                        u.LoadMech();
+                        u.LoadUnit();
                         PrintMech pm = new PrintMech(u.m,u.getMechwarrior(), u.getGunnery(), u.getPiloting(), imageTracker);
                         pm.setCanon(chkCanon.isSelected());
                         pm.setCharts(chkTables.isSelected());
@@ -879,7 +879,7 @@ public class dlgPrint extends javax.swing.JDialog {
             for ( Group g : scenario.getGroups() ) {
                 for ( Unit u : g.getUnits() ) {
                     try {
-                        u.LoadMech();
+                        u.LoadUnit();
                         u.m.SetSSWImage("../Images/No_Image.png");
                         writer.setMech(u.m);
                         writer.WriteXML(u.Filename);

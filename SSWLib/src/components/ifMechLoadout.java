@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public interface ifMechLoadout {
     public void SetName( String s );
@@ -59,10 +59,9 @@ public interface ifMechLoadout {
     public abPlaceable GetFromQueueByIndex( int Index );
     public boolean QueueContains( abPlaceable p );
     public EquipmentCollection GetCollection( abPlaceable p );
-    public Vector GetQueue();
-    public Vector GetNonCore();
-    public Vector GetEquipment();
-    public Vector GetTCList();
+    public ArrayList GetQueue();
+    public ArrayList GetNonCore();
+    public ArrayList GetEquipment();
     public void ClearQueue(); // unused
     public void FullUnallocate();
     public void ClearLoadout();
@@ -99,9 +98,9 @@ public interface ifMechLoadout {
     public abPlaceable[] GetCrits( int Loc );
     public int Find( abPlaceable p );
     public LocationIndex FindIndex( abPlaceable p );
-    public Vector FindSplitIndex( abPlaceable p );
+    public ArrayList FindSplitIndex( abPlaceable p );
     public int[] FindInstances( abPlaceable p );
-    public Vector FindIndexes( abPlaceable p );
+    public ArrayList FindIndexes( abPlaceable p );
     public int[] FindHeatSinks();
     public int[] FindJumpJets( boolean IJJ );
     public int[] FindModularArmor();
@@ -134,9 +133,9 @@ public interface ifMechLoadout {
     public void SetRACrits( abPlaceable[] c );
     public void SetLLCrits( abPlaceable[] c );
     public void SetRLCrits( abPlaceable[] c );
-    public void SetNonCore( Vector v );
-    public void SetTCList( Vector v );
-    public void SetEquipment( Vector v );
+    public void SetNonCore( ArrayList v );
+    public void SetTCList( ArrayList v );
+    public void SetEquipment( ArrayList v );
     public boolean CanUseClanCASE();
     public boolean IsUsingClanCASE();
     public void SetClanCASE( boolean b );
@@ -223,7 +222,7 @@ public interface ifMechLoadout {
     public void CheckExclusions( abPlaceable a ) throws Exception;
     public void AddMechModifier( MechModifier m );
     public void RemoveMechMod( MechModifier m );
-    public Vector GetMechMods();
+    public ArrayList GetMechMods();
     public void SetBoobyTrap( boolean b ) throws Exception;
     public boolean HasBoobyTrap();
     public BoobyTrap GetBoobyTrap();

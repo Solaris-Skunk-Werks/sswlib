@@ -27,7 +27,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package Print;
 
-import common.CommonTools;
 import Force.*;
 import filehandlers.ImageTracker;
 
@@ -39,7 +38,6 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.util.ArrayList;
-import java.util.Vector;
 
 
 public class ForceListPrinter implements Printable {

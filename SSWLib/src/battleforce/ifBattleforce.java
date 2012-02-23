@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package battleforce;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 
 public interface ifBattleforce {
@@ -41,7 +41,7 @@ public interface ifBattleforce {
     public int GetBFArmor();
     public int GetBFStructure();
     public int [] GetBFDamage( BattleForceStats bfs );
-    public Vector GetBFAbilities();
+    public ArrayList GetBFAbilities();
     public String GetBFConversionStr( );
     public int GetBFPoints();
     public int GetAmmoCount( int ammoIndex );

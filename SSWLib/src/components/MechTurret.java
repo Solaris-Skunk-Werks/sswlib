@@ -194,6 +194,12 @@ public class MechTurret extends abPlaceable implements ifTurret {
     }
 
     @Override
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
+    }
+
+    @Override
     public double GetDefensiveBV() {
         if( IsArmored() ) {
             return 5.0;

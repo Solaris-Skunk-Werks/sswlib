@@ -81,7 +81,7 @@ public class VArmorSetStealth implements ifVisitor {
     }
 
     public void Visit( CombatVehicle v ) throws Exception {
-        // does nothing at the moment
+        v.GetArmor().SetISST();
     }
 
     public void Visit( Infantry i ) throws Exception {

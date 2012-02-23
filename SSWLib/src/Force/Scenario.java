@@ -37,7 +37,7 @@ import filehandlers.FileCommon;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 import org.w3c.dom.Node;
@@ -174,7 +174,7 @@ public class Scenario implements ifSerializable {
     public void setFactors() {
         for ( Force force : getForces() ) {
             for ( Unit u : force.getUnits() ) {
-                u.LoadMech();
+                u.LoadUnit();
             }
             force.RefreshBV();
         }
@@ -186,8 +186,8 @@ public class Scenario implements ifSerializable {
         }
     }
 
-    public Vector<BattleForce> toBattleForceBySize( int SizeLimit ) {
-        Vector<BattleForce> BattleForces = new Vector<BattleForce>();
+    public ArrayList<BattleForce> toBattleForceBySize( int SizeLimit ) {
+        ArrayList<BattleForce> BattleForces = new ArrayList<BattleForce>();
         BattleForce bf = new BattleForce();
         for ( Force f : forces ) {
             bf.ForceName = f.ForceName;

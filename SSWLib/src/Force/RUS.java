@@ -31,12 +31,12 @@ import IO.RUSReader;
 import filehandlers.Media;
 import java.io.FileNotFoundException;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 
 public class RUS {
     private DefaultListModel DisplayList = new DefaultListModel();
-    private Vector Choices = new Vector();
+    private ArrayList Choices = new ArrayList();
     private DefaultListModel Selection = new DefaultListModel();
 
     public final static String ParseDesignName( String selection ) {
@@ -112,7 +112,7 @@ public class RUS {
 
     public void ClearItems() {
         DisplayList = new DefaultListModel();
-        Choices.removeAllElements();
+        Choices.clear();
     }
 
     public DefaultListModel Generate( int Selections, int AddOn ) {

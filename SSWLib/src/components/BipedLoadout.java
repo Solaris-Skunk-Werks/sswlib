@@ -28,13 +28,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import common.CommonTools;
 import visitors.VFCSApolloLoader;
 import visitors.VFCSArtemisIVLoader;
 import visitors.VFCSArtemisVLoader;
 
-public class BipedLoadout implements ifMechLoadout {
+public class BipedLoadout implements ifMechLoadout, ifLoadout {
     // Loadouts provide critical locations for all of a mech's equipment.
     // Each mech will have a basic loadout for it's chassis, equipment, and
     // extras.  Omnimechs may have several loadouts.  We're using arrays because
@@ -44,11 +44,11 @@ public class BipedLoadout implements ifMechLoadout {
     private String Name,
                    Source = "";
     private final static EmptyItem NoItem = new EmptyItem();
-    private Vector Queue = new Vector(),
-                   NonCore = new Vector(),
-                   Equipment = new Vector(),
-                   TCList = new Vector(),
-                   MechMods = new Vector();
+    private ArrayList Queue = new ArrayList(),
+                   NonCore = new ArrayList(),
+                   Equipment = new ArrayList(),
+                   TCList = new ArrayList(),
+                   MechMods = new ArrayList();
     private Mech Owner;
     private JumpJetFactory Jumps;
     private HeatSinkFactory HeatSinks;
@@ -371,20 +371,20 @@ public class BipedLoadout implements ifMechLoadout {
         return null;
     }
 
-    public Vector GetQueue() {
+    public ArrayList GetQueue() {
         // returns the queue
         return Queue;
     }
 
-    public Vector GetNonCore() {
+    public ArrayList GetNonCore() {
         return NonCore;
     }
 
-    public Vector GetEquipment() {
+    public ArrayList GetEquipment() {
         return Equipment;
     }
 
-    public Vector GetTCList() {
+    public ArrayList GetTCList() {
         return TCList;
     }
 
@@ -541,7 +541,7 @@ public class BipedLoadout implements ifMechLoadout {
         // to the new loadout.
         abPlaceable p;
         for( int i = NonCore.size(); i > 0; i-- ) {
-            p = (abPlaceable) NonCore.lastElement();
+            p = (abPlaceable) NonCore.get(NonCore.size()-1);
             l.AddToQueue( p );
             NonCore.remove( p );
         }
@@ -580,12 +580,21 @@ public class BipedLoadout implements ifMechLoadout {
 
     public void AddToHD( abPlaceable p ) throws Exception {
         // adds the specified item into the next available slot in the head
+        for( int i = 0; i < HDCrits.length; i++ ) {
+            if ( HDCrits[i] == NoItem) {
+                AddToHD( p, i );
+                return;
+            }
+        }
+        throw new Exception("Unable to add item to Head");
+        /*
         for( int i = HDCrits.length - 1; i >= 0; i-- ) {
             if( HDCrits[i] == NoItem ) {
                 AddToHD( p, i );
                 break;
             }
         }
+        */
     }
 
     public void AddToCT( abPlaceable p ) throws Exception {
@@ -594,17 +603,18 @@ public class BipedLoadout implements ifMechLoadout {
             for( int i = 0; i < CTCrits.length; i++ ) {
                 if( CTCrits[i] == NoItem ) {
                     AddToCT( p, i );
-                    break;
+                    return;
                 }
             }
         } else {
             for( int i = CTCrits.length - 1; i >= 0; i-- ) {
                 if( CTCrits[i] == NoItem ) {
                     AddToCT( p, i );
-                    break;
+                    return;
                 }
             }
         }
+        throw new Exception("Unable to add item.");
     }
 
     public void AddToLT( abPlaceable p ) throws Exception {
@@ -1241,10 +1251,10 @@ public class BipedLoadout implements ifMechLoadout {
         return l;
     }
 
-    public Vector FindSplitIndex( abPlaceable p ) {
+    public ArrayList FindSplitIndex( abPlaceable p ) {
         // finds the split location indexes of a contiguous item that can split.
-        // the vector should never be larger than two in size.
-        Vector v = new Vector();
+        // the ArrayList should never be larger than two in size.
+        ArrayList v = new ArrayList();
         LocationIndex l;
         int NumHere = 0;
         boolean[] searched = { false, false, false, false, false, false, false, false };
@@ -1532,10 +1542,10 @@ public class BipedLoadout implements ifMechLoadout {
         return retval;
     }
 
-    public Vector FindIndexes( abPlaceable p ) {
-        // returns a vector full of location indexes for the XML writer
+    public ArrayList FindIndexes( abPlaceable p ) {
+        // returns a ArrayList full of location indexes for the XML writer
         // this should only be used for non-contiguous items
-        Vector v = new Vector();
+        ArrayList v = new ArrayList();
         LocationIndex l;
         for( int i = 0; i < 6; i++ ) {
             if( HDCrits[i] == p ) {
@@ -3075,7 +3085,7 @@ public class BipedLoadout implements ifMechLoadout {
         boolean AddIn = false;
         boolean ArrayGood = false;
         int AddInSize = 1;
-        Vector removed = new Vector(), rears = new Vector();
+        ArrayList removed = new ArrayList(), rears = new ArrayList();
 
         // check for generic placement
         if( SIndex == -1 ) {
@@ -3590,13 +3600,13 @@ public class BipedLoadout implements ifMechLoadout {
         }
         if( NonCore.size() > 0 ) {
             // have to move the none-core items
-            clone.SetNonCore( (Vector) NonCore.clone() );
+            clone.SetNonCore( (ArrayList) NonCore.clone() );
         }
         if( TCList.size() > 0 ) {
-            clone.SetTCList( (Vector) TCList.clone() );
+            clone.SetTCList( (ArrayList) TCList.clone() );
         }
         if( Equipment.size() > 0 ) {
-            clone.SetEquipment( (Vector) Equipment.clone() );
+            clone.SetEquipment( (ArrayList) Equipment.clone() );
         }
         if( HasSupercharger() ) {
             clone.SetSupercharger( SCharger );
@@ -3677,15 +3687,15 @@ public class BipedLoadout implements ifMechLoadout {
         RLCrits = c;
     }
 
-    public void SetNonCore( Vector v ) {
+    public void SetNonCore( ArrayList v ) {
         NonCore = v;
     }
 
-    public void SetTCList( Vector v ) {
+    public void SetTCList( ArrayList v ) {
         TCList = v;
     }
 
-    public void SetEquipment( Vector v ) {
+    public void SetEquipment( ArrayList v ) {
         Equipment = v;
     }
 
@@ -4907,12 +4917,24 @@ public class BipedLoadout implements ifMechLoadout {
         MechMods.remove( m );
     }
 
-    public Vector GetMechMods() {
+    public ArrayList GetMechMods() {
         return MechMods;
     }
 
     @Override
     public String toString() {
         return "Loadout: " + Name;
+    }
+
+    public Engine GetEngine() {
+        return Owner.GetEngine();
+    }
+
+    public boolean UsingFractionalAccounting() {
+        return Owner.UsingFractionalAccounting();
+    }
+
+    public ifUnit GetUnit() {
+        return Owner;
     }
 }

@@ -28,6 +28,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
+import java.util.ArrayList;
+
 public class LocationIndex {
     // this is a convenience method for the XML saving and loading routine
     // it provides a location index for any given item.
@@ -52,13 +54,13 @@ public class LocationIndex {
                             CV_LOC_RIGHT = 2,
                             CV_LOC_REAR = 3,
                             CV_LOC_TURRET1 = 4,
-                            CV_LOC_ROTOR = 5,
-                            CV_LOC_TURRET2 = 6,
+                            CV_LOC_TURRET2 = 5,
+                            CV_LOC_ROTOR = 6,
                             CV_LOC_BODY = 7;
     public final static String[] MechLocs = { "Head", "Center Torso", "Left Torso",
         "Right Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg" },
                                  CVLocs = { "Front", "Left", "Right", "Rear",
-        "Turret", "Rotor", "Rear Turret", "Body" };
+        "Turret", "Rear Turret", "Rotor", "Body" };
 
     public LocationIndex() {}
 
@@ -77,5 +79,16 @@ public class LocationIndex {
                 Index = l.Index;
             }
         }
+    }
+
+    public static int FindIndex( CombatVehicle c, String location ) {
+        if ( location.equals("Front")) return CV_LOC_FRONT;
+        if ( location.equals("Left")) return CV_LOC_LEFT;
+        if ( location.equals("Right")) return CV_LOC_RIGHT;
+        if ( location.equals("Rear")) return CV_LOC_REAR;
+        if ( location.equals("Turret")) return CV_LOC_TURRET1;
+        if ( location.equals("Rear Turret")) return CV_LOC_TURRET2;
+        if ( location.equals("Body")) return CV_LOC_BODY;
+        return 11;
     }
 }

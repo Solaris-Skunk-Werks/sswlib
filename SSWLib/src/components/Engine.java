@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
+import common.CommonTools;
 import states.*;
 
 public class Engine extends abPlaceable {
@@ -159,7 +160,7 @@ public class Engine extends abPlaceable {
                 if( Owner.UsingFractionalAccounting() ) {
                     return retval * 1.5;
                 } else {
-                    return ((int) Math.ceil( retval * 3.0 )) * 0.5;
+                    return CommonTools.RoundHalfUp(retval * 1.5);
                 }
             } else {
                 return CurConfig.GetTonnage( EngineRating, Owner.UsingFractionalAccounting() );
@@ -403,6 +404,11 @@ public class Engine extends abPlaceable {
 
     public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES ) {
         return 0.0;
+    }
+
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
     }
 
     public double GetDefensiveBV() {

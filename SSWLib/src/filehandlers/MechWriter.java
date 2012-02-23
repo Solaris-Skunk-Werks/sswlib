@@ -32,7 +32,7 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Vector;
+import java.util.ArrayList;
 import common.*;
 import battleforce.BattleForceStats;
 import components.*;
@@ -134,7 +134,7 @@ public class MechWriter {
         FR.write( tab + "</structure>" );
         FR.newLine();
 
-        Vector engineLocs = CurMech.GetLoadout().FindIndexes( CurMech.GetEngine() );
+        ArrayList engineLocs = CurMech.GetLoadout().FindIndexes( CurMech.GetEngine() );
         LocationIndex ls = new LocationIndex();
         LocationIndex rs = new LocationIndex();
         ls.Location = LocationIndex.MECH_LOC_LT;
@@ -324,7 +324,7 @@ public class MechWriter {
         }
         if( CurMech.UsingPartialWing() ) {
             // this can only ever go in the base loadout, so we'll save it here
-            Vector pwlocs = CurMech.GetLoadout().FindIndexes( CurMech.GetPartialWing() );
+            ArrayList pwlocs = CurMech.GetLoadout().FindIndexes( CurMech.GetPartialWing() );
             ls = new LocationIndex();
             rs = new LocationIndex();
             ls.Location = LocationIndex.MECH_LOC_LT;
@@ -391,7 +391,7 @@ public class MechWriter {
 
         if( CurMech.IsOmnimech() ) {
             String curLoadout = CurMech.GetLoadout().GetName();
-            Vector v = CurMech.GetLoadouts();
+            ArrayList v = CurMech.GetLoadouts();
             for( int i = 0; i < v.size(); i++ ) {
                 CurMech.SetCurLoadout( ((ifMechLoadout) v.get( i )).GetName() );
                 if( CurMech.GetBaseRulesLevel() != CurMech.GetLoadout().GetRulesLevel() ) {
@@ -532,7 +532,7 @@ public class MechWriter {
         String retval = "";
         if( p.Contiguous() ) {
             if( p.CanSplit() ) {
-                Vector v = CurMech.GetLoadout().FindSplitIndex( p );
+                ArrayList v = CurMech.GetLoadout().FindSplitIndex( p );
                 if( v.size() < 1 ) {
                     return "";
                 } else if( v.size() == 1 ) {
@@ -549,7 +549,7 @@ public class MechWriter {
                 retval += Prefix + "<location index=\"" + l.Index + "\">" + FileCommon.EncodeLocation( l.Location, CurMech.IsQuad() ) + "</location>" + NL;
             }
         } else {
-            Vector v = CurMech.GetLoadout().FindIndexes( p );
+            ArrayList v = CurMech.GetLoadout().FindIndexes( p );
             if( v.size() < 1 ) {
                 return "";
             }
@@ -617,8 +617,8 @@ public class MechWriter {
 
     private String GetEquipmentLines( String prefix ) {
         String retval = "";
-        Vector v = CurMech.GetLoadout().GetNonCore();
-        Vector vBase = CurMech.GetBaseLoadout().GetNonCore();
+        ArrayList v = CurMech.GetLoadout().GetNonCore();
+        ArrayList vBase = CurMech.GetBaseLoadout().GetNonCore();
         boolean OmniLoad = false;
         if( ! CurMech.GetLoadout().GetName().equals( Constants.BASELOADOUT_NAME ) ) {
             OmniLoad = true;

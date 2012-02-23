@@ -33,14 +33,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class NameGenerator {
-    private Vector<String> MaleFirstNames = new Vector<String>();
-    private Vector<String> FemaleFirstNames = new Vector<String>();
-    private Vector<String> LastNames = new Vector<String>();
+    private ArrayList<String> MaleFirstNames = new ArrayList<String>();
+    private ArrayList<String> FemaleFirstNames = new ArrayList<String>();
+    private ArrayList<String> LastNames = new ArrayList<String>();
 
     public NameGenerator() {
         LoadFile("./Data/Personnel/last_names.txt", LastNames);
@@ -49,7 +49,7 @@ public class NameGenerator {
     }
 
     public String SimpleGenerate() {
-        Vector<String> FirstNames = new Vector<String>();
+        ArrayList<String> FirstNames = new ArrayList<String>();
         FirstNames.addAll(MaleFirstNames);
         FirstNames.addAll(FemaleFirstNames);
 
@@ -66,9 +66,9 @@ public class NameGenerator {
         return data;
     }
 
-    private void LoadFile( String filename, Vector<String> store ) {
+    private void LoadFile( String filename, ArrayList<String> store ) {
         try {
-            store.removeAllElements();
+            store.clear();
             BufferedReader reader;
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
             String line = null;

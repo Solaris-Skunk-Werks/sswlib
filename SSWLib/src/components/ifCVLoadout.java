@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public interface ifCVLoadout {
     public CombatVehicle GetOwner();
@@ -40,6 +40,8 @@ public interface ifCVLoadout {
     public boolean SetRulesLevel( int NewLevel );
     public int GetTechBase();
     public void SetTechBase( int NewLevel );
+    public CVJumpJetFactory GetJumpJets();
+    public CVHeatSinkFactory GetHeatSinks();
     public int GetEra();
     public boolean SetEra( int era );
     public int GetProductionEra();
@@ -54,10 +56,11 @@ public interface ifCVLoadout {
     public abPlaceable GetFromQueueByIndex( int Index );
     public boolean QueueContains( abPlaceable p );
     public EquipmentCollection GetCollection( abPlaceable p );
-    public Vector GetQueue();
-    public Vector GetNonCore();
-    public Vector GetEquipment();
-    public Vector GetTCList();
+    public ArrayList GetQueue();
+    public ArrayList GetNonCore();
+    public ArrayList GetEquipment();
+    public boolean UsingTC();
+    public TargetingComputer GetTC();
     public void FullUnallocate();
     public void ClearLoadout();
     public void SafeClearLoadout();
@@ -72,18 +75,20 @@ public interface ifCVLoadout {
     public void AddToBody( abPlaceable p ) throws Exception;
     public void AddToTurret1( abPlaceable p ) throws Exception;
     public void AddToTurret2( abPlaceable p ) throws Exception;
-    public abPlaceable[] GetFrontItems();
-    public abPlaceable[] GetLeftItems();
-    public abPlaceable[] GetRightItems();
-    public abPlaceable[] GetRearItems();
-    public abPlaceable[] GetBodyItems();
-    public abPlaceable[] GetTurret1Items();
-    public abPlaceable[] GetTurret2Items();
+    public ArrayList<abPlaceable> GetFrontItems();
+    public ArrayList<abPlaceable> GetLeftItems();
+    public ArrayList<abPlaceable> GetRightItems();
+    public ArrayList<abPlaceable> GetRearItems();
+    public ArrayList<abPlaceable> GetBodyItems();
+    public ArrayList<abPlaceable> GetTurret1Items();
+    public ArrayList<abPlaceable> GetTurret2Items();
+    public Turret GetTurret();
+    public Turret GetRearTurret();
     public abPlaceable[] GetItems( int Loc );
     public int Find( abPlaceable p );
     public LocationIndex FindIndex( abPlaceable p );
     public int[] FindInstances( abPlaceable p );
-    public Vector FindIndexes( abPlaceable p );
+    public ArrayList FindIndexes( abPlaceable p );
     public int[] FindModularArmor();
     public void FlushIllegal();
     public boolean UnallocateAll( abPlaceable p, boolean override );
@@ -106,9 +111,10 @@ public interface ifCVLoadout {
     public void SetBodyItems( abPlaceable[] c );
     public void SetTurret1( abPlaceable[] c );
     public void SetTurret2( abPlaceable[] c );
-    public void SetNonCore( Vector v );
-    public void SetTCList( Vector v );
-    public void SetEquipment( Vector v );
+    public void SetNonCore( ArrayList v );
+    public void SetTCList( ArrayList v );
+    public void SetEquipment( ArrayList v );
+    public ArrayList GetMechMods();
     public boolean CanUseClanCASE();
     public boolean IsUsingClanCASE();
     public void SetClanCASE( boolean b );
@@ -121,19 +127,21 @@ public interface ifCVLoadout {
     public boolean UsingArtemisIV();
     public boolean UsingArtemisV();
     public boolean UsingApollo();
-    public boolean UsingTC();
-    public TargetingComputer GetTC();
     public void UseTC( boolean use, boolean clan );
     public void CheckTC();
+    public void UnallocateTC();
     public void SetSupercharger( boolean b ) throws Exception;
     public void SetSupercharger( Supercharger s );
     public boolean HasSupercharger();
     public Supercharger GetSupercharger();
-    public PowerAmplifier GetPowerAmplifier();
+    public CVPowerAmplifier GetPowerAmplifier();
     public void CheckExclusions( abPlaceable a ) throws Exception;
+    public void MoveToQueue(int loc);
+    public double GetTurretTonnage();
+    public double GetRearTurretTonnage();
 /*
     public void AddMechModifier( MechModifier m );
     public void RemoveMechMod( MechModifier m );
-    public Vector GetMechMods();
+    public ArrayList GetMechMods();
  */
 }

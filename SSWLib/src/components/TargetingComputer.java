@@ -28,10 +28,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class TargetingComputer extends abPlaceable {
-    private ifMechLoadout Owner;
+    private ifLoadout Owner;
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
     private boolean Clan;
 
@@ -45,7 +45,22 @@ public class TargetingComputer extends abPlaceable {
         AC.SetPBMAllowed( true );
         AC.SetPIMAllowed( true );
         AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
-        Owner = l;
+        Owner = (ifLoadout)l;
+        Clan = clan;
+        SetExclusions( new Exclusion( new String[] { "A.E.S." }, "Targeting Computer" ) );
+    }
+
+    public TargetingComputer( ifCVLoadout l, boolean clan) {
+        AC.SetISCodes( 'E', 'X', 'X', 'E' );
+        AC.SetISDates( 0, 0, false, 3062, 0, 0, false, false );
+        AC.SetISFactions( "", "", "FC", "" );
+        AC.SetCLCodes( 'E', 'X', 'D', 'C' );
+        AC.SetCLDates( 0, 0, false, 2860, 0, 0, false, false );
+        AC.SetCLFactions( "", "", "CMN", "" );
+        AC.SetPBMAllowed( true );
+        AC.SetPIMAllowed( true );
+        AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+        Owner = (ifLoadout)l;
         Clan = clan;
         SetExclusions( new Exclusion( new String[] { "A.E.S." }, "Targeting Computer" ) );
     }
@@ -130,6 +145,11 @@ public class TargetingComputer extends abPlaceable {
         return 0.0;
     }
 
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
+    }
+
     public double GetDefensiveBV() {
         double retval = 0.0;
         if( IsArmored() ) {
@@ -149,7 +169,7 @@ public class TargetingComputer extends abPlaceable {
 
     private int GetSize() {
         double Build = 0.0;
-        Vector V = Owner.GetTCList();
+        ArrayList V = Owner.GetTCList();
 
         if( V.size() == 0 ) {
             return 0;

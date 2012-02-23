@@ -79,7 +79,21 @@ public class VArmorSetFF implements ifVisitor {
     }
 
     public void Visit( CombatVehicle v ) throws Exception {
-        // does nothing at the moment
+        switch( v.GetBaseTechbase() ) {
+            case AvailableCode.TECH_INNER_SPHERE:
+                v.GetArmor().SetISFF();
+                break;
+            case AvailableCode.TECH_CLAN:
+                v.GetArmor().SetCLFF();
+                break;
+            case AvailableCode.TECH_BOTH:
+                if( Clan ) {
+                    v.GetArmor().SetCLFF();
+                } else {
+                    v.GetArmor().SetISFF();
+                }
+                break;
+        }
     }
 
     public void Visit( Infantry i ) throws Exception {

@@ -216,6 +216,57 @@ public class BinaryConverter {
         return true;
     }
 
+
+/**
+ * Converts a CSV text file of Quirks data into a binary file to conserve
+ * space and prevent unwanted user changes.
+ *
+ * @param input The canonical input CSV filename.
+ * @param output The canonical output binary filename.
+ * @param delim The text delimiter used in the CSV file.  One character only.
+ */
+    public boolean ConvertQuirksCSVtoBin( String input, String output, String delim ) {
+        // take two filenames as input.
+        Messages = "";
+        int NumConverted = 0;
+        BufferedReader FR;
+        DataOutputStream FW;
+        try {
+            FR = new BufferedReader( new FileReader( input ) );
+            FW = new DataOutputStream( new FileOutputStream( output ) );
+            boolean EOF = false;
+            String read = "";
+            //Skip the first two lines
+            FR.readLine();
+            FR.readLine();
+            while( EOF == false ) {
+                read = FR.readLine();
+                if( read == null ) {
+                    // We've hit the end of the file.
+                    EOF = true;
+                } else {
+                    if( read.equals( "EOF" ) ) {
+                        // end of file.
+                        EOF = true;
+                    } else if ( read.trim().length() == 0 ) {
+                        //Skip!
+                    } else {
+                        ProcessQuirksString( FW, read, delim );
+                        NumConverted++;
+                    }
+                }
+            }
+            FR.close();
+            FW.close();
+        } catch( Exception e ) {
+            Messages += e.getMessage();
+            Messages += e.toString();
+            return false;
+        }
+        Messages += "Wrote " + NumConverted + " quirks to " + output + "\n";
+        return true;
+    }
+
     public String GetMessages() {
         return Messages;
     }
@@ -495,6 +546,45 @@ public class BinaryConverter {
         FW.writeInt( Integer.parseInt( data[62] ) ); // Weapon Class
         FW.writeInt( Integer.parseInt( data[63] ) ); // FCS Type
         FW.writeUTF( data[64] ); // Book Reference
+    }
+
+
+/**
+ * Processes the given ammo string from a CSV file into binary data.  Output
+ * is fed to the given DataOutputStream.
+ *
+ * @param FW The DataOutputStream to write to.
+ * @param read The delimited string to read from.  One full line of data.
+ * @param delim The text delimiter used in the CSV file.  One character only.
+ * @throws java.lang.Exception
+ */
+    private void ProcessQuirksString( DataOutputStream FW, String read, String delim ) throws Exception {
+        // here we're going to read the data string and output it to binary form
+        // Assuming semi-colon delimited.
+        String[] data = read.split( delim );
+        // this is very unsafe, but we're going to assume that all the information
+        // is correct and in the proper order.
+
+        // basic ammo info
+        FW.writeUTF( data[0] ); // Actual Name
+        FW.writeBoolean( Boolean.parseBoolean( data[1] ) );  // Positive or Negative
+        FW.writeInt( Integer.parseInt( data[2]) ); // Cost
+        FW.writeBoolean( Boolean.parseBoolean( data[3] ) ); // BM
+        FW.writeBoolean( Boolean.parseBoolean( data[4] ) ); // IM
+        FW.writeBoolean( Boolean.parseBoolean( data[5] ) ); // CV
+        FW.writeBoolean( Boolean.parseBoolean( data[6] ) ); // BA
+        FW.writeBoolean( Boolean.parseBoolean( data[7] ) ); // AF
+        FW.writeBoolean( Boolean.parseBoolean( data[8] ) ); // CF
+        FW.writeBoolean( Boolean.parseBoolean( data[9] ) ); // DS
+        FW.writeBoolean( Boolean.parseBoolean( data[10] ) ); // JS
+        FW.writeBoolean( Boolean.parseBoolean( data[11] ) ); // WS
+        FW.writeBoolean( Boolean.parseBoolean( data[12] ) ); // SS
+        FW.writeBoolean( Boolean.parseBoolean( data[13] ) ); // PM
+        FW.writeBoolean( Boolean.parseBoolean( data[14] ) ); //Is Variable
+        if (data.length == 16)
+            FW.writeUTF( data[15].trim() ); // Description
+        else
+            FW.writeUTF("");
     }
 
     private void ProcessAvailableCodeString( DataOutputStream FW, String[] data, int sindex ) throws Exception {

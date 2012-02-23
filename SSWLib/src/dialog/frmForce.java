@@ -52,7 +52,7 @@ import common.DesignForm;
 import components.Mech;
 
 import java.awt.event.KeyEvent;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.prefs.Preferences;
 
 
@@ -89,9 +89,9 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         try
         {
             Unit Data = (Unit) ((abTable) tblForce.getModel()).getForce().getUnits().get( tblForce.convertRowIndexToModel( tblForce.getSelectedRow() ) );
-            Data.LoadMech();
+            Data.LoadUnit();
             if ( Data.m != null ) {
-                Vector u = new Vector();
+                ArrayList u = new ArrayList();
                 u.add(Data.m);
                 parent.setUnit(u);
                 parent.loadUnitIntoGUI();
@@ -894,7 +894,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
 
     private void btnRemoveUnitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveUnitActionPerformed
          int[] rows = tblForce.getSelectedRows();
-         Vector<Unit> units = new Vector<Unit>();
+         ArrayList<Unit> units = new ArrayList<Unit>();
          for ( int i : rows ) {
              Unit u = (Unit) force.getUnits().get(tblForce.convertRowIndexToModel(i));
              units.add(u);
@@ -994,7 +994,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
         
         for ( int i = 0; i < force.getUnits().size(); i++ ) {
             Unit u = (Unit) force.getUnits().get(i);
-            u.LoadMech();
+            u.LoadUnit();
             mtf.setMech(u.m);
             try {
                 filename = mtfDir + u.m.GetFullName() + ".mtf";
@@ -1048,7 +1048,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
             for ( int i=0; i < rows.length; i++ ) {
                 try {
                     Unit data = (Unit) force.getUnits().get( tblForce.convertRowIndexToModel( rows[i] ) );
-                    data.LoadMech();
+                    data.LoadUnit();
                     if ( data.m != null ) {
                         dlgAmmoChooser Ammo = new dlgAmmoChooser( this, false, data.m, new DataFactory(data.m) );
                         Ammo.setLocationRelativeTo( this );

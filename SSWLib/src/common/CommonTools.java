@@ -245,6 +245,12 @@ public class CommonTools {
                     default:
                         return false;
                 }
+                // is the 'Mech primitive and is this equipment allowed?
+                if( ((CombatVehicle) u).IsPrimitive() ) {
+                    if( ! AC.IsPIMAllowed() ) { return false; }
+                } else {
+                    if( AC.IsPrimitiveOnly() ) { return false; }
+                }
                 break;
             case AvailableCode.UNIT_CONVFIGHTER:
                 switch( u.GetRulesLevel() ) {
@@ -802,7 +808,7 @@ public class CommonTools {
     }
 
     public static double RoundHalfUp( double d ) {
-        return .5 * Math.round(d/.5);
+        return .5 * Math.ceil(d/.5);
 
         //BigDecimal value = new BigDecimal(d);
         //value.setScale(1, RoundingMode.HALF_UP);

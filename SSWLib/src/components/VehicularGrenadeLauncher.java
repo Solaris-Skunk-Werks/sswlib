@@ -193,6 +193,12 @@ public class VehicularGrenadeLauncher extends abPlaceable implements ifWeapon {
     }
 
     @Override
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
+    }
+
+    @Override
     public String GetManufacturer() {
         return Manufacturer;
     }

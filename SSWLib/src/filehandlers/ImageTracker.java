@@ -9,11 +9,8 @@ import IO.JarResources;
 import Print.PrintConsts;
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 public class ImageTracker {
     public Media media = new Media();
@@ -49,21 +46,27 @@ public class ImageTracker {
 
     public void preLoadMechImages() {
         try {
-            getImage( PrintConsts.RS_TW_BP );
-            getImage( PrintConsts.RS_TW_QD );
-            getImage( PrintConsts.BP_ChartImage );
-            getImage( PrintConsts.QD_ChartImage );
+            LoadImageFromFile( PrintConsts.RS_TW_BP );
+            LoadImageFromFile( PrintConsts.RS_TW_QD );
+            LoadImageFromFile( PrintConsts.BP_ChartImage );
+            LoadImageFromFile( PrintConsts.QD_ChartImage );
         } catch ( Exception e ) {
             System.out.println(e.getMessage());
         }
     }
     
     public void preLoadBattleForceImages() {
-        getImage( PrintConsts.BF_BG );
-        getImage( PrintConsts.BF_Card );
-        getImage( PrintConsts.BF_Chart );
+        LoadImageFromFile( PrintConsts.BF_BG );
+        LoadImageFromFile( PrintConsts.BF_Card );
+        LoadImageFromFile( PrintConsts.BF_Chart );
     }
-
+    
+    public void preLoadVehicleImages() {
+        LoadImageFromFile( PrintConsts.RS_TW_GROUND );
+        LoadImageFromFile( PrintConsts.RS_TW_VTOL );
+        LoadImageFromFile( PrintConsts.RS_TW_NAVAL );
+    }
+    
     public Image getImage( String filename ) {
         for ( StoredImage PreLoadImage : imageStore ) {
             if ( PreLoadImage.filename.equals(filename) ) {
@@ -93,6 +96,13 @@ public class ImageTracker {
         return tempimg;
     }
 
+    private void LoadImageFromFile( String filename ) {
+        Image tempimg = null;
+        tempimg = media.GetImage(filename);
+        if ( tempimg != null ) {
+            imageStore.add(new StoredImage(filename, tempimg));
+        }
+    }
 
     private class StoredImage {
         String filename = "";

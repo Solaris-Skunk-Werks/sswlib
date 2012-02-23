@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package list;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import battleforce.BattleForceStats;
 
 /**
@@ -56,7 +56,7 @@ public abstract class abUnitData implements ifUnitData {
     boolean Omni = false;
     String basePath = "",
            filename = "";
-    public Vector Configurations = new Vector();
+    public ArrayList Configurations = new ArrayList();
     public BattleForceStats bfstat = new BattleForceStats();
     private String[] indexFields = new String[]{"Name", "Model", "Level", "Era",
     "Tech", "Source", "Tonnage", "Year", "BV", "Cost", "Filename", "Type",

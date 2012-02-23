@@ -66,7 +66,7 @@ public class VArmorSetPrimitive implements ifVisitor {
     }
 
     public void Visit( CombatVehicle v ) throws Exception {
-        // does nothing at the moment
+        v.GetArmor().SetPrimitive();
     }
 
     public void Visit( Infantry i ) throws Exception {

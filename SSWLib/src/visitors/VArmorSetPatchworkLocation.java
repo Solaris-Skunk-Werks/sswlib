@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package visitors;
 
 import components.*;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class VArmorSetPatchworkLocation implements ifVisitor {
     // sets the mech's armor to industrial
@@ -62,7 +62,7 @@ public class VArmorSetPatchworkLocation implements ifVisitor {
         MechArmor a = CurMech.GetArmor();
 
         // remove old armor from this location, if needed.
-        Vector v = l.FindIndexes( a );
+        ArrayList v = l.FindIndexes( a );
         LocationIndex[] OldLocs = new LocationIndex[v.size()];
         for( int i = 0; i < v.size(); i++ ) {
             OldLocs[i] = (LocationIndex) v.get( i );
@@ -235,7 +235,7 @@ public class VArmorSetPatchworkLocation implements ifVisitor {
 
     private LocationIndex[] GetLocations( int loc, LocationIndex[] locs ) {
         LocationIndex[] retval = null;
-        Vector<LocationIndex> Found = new Vector<LocationIndex>();
+        ArrayList<LocationIndex> Found = new ArrayList<LocationIndex>();
         for( int i = 0; i < locs.length; i++ ) {
             if( locs[i].Location == loc ) {
                 Found.add( locs[i] );

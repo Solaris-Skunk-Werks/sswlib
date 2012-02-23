@@ -118,6 +118,11 @@ public class BoobyTrap extends abPlaceable {
         return 0.0;
     }
 
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
+    }
+
     @Override
     public double GetDefensiveBV() {
         return 0.0;

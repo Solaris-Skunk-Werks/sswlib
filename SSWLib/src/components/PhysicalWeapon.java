@@ -45,7 +45,7 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
                    Specials,
                    BookReference = "",
                    Manufacturer = "";
-    protected Mech Owner;
+    protected ifUnit Owner;
     private AvailableCode AC;
     private int Heat = 0,
                 ToHitShort = 0,
@@ -78,13 +78,13 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
                     CanSplit = false,
                     PowerAmps = false;
 
-    public PhysicalWeapon( String actualname, String lookupname, String critname, String mname, String chatn, Mech m, AvailableCode a ) {
+    public PhysicalWeapon( String actualname, String lookupname, String critname, String mname, String chatn, AvailableCode a ) {
         ActualName= actualname;
         LookupName = lookupname;
         CritName = critname;
         MegaMekName = mname;
         ChatName = chatn;
-        Owner = m;
+        //Owner = m;
         AC = a;
     }
 
@@ -139,7 +139,7 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
         if( p.GetMechModifier() != null ) { AddMechModifier( p.GetMechModifier() ); }
     }
 
-    public void SetOwner( Mech m ) {
+    public void SetOwner( ifUnit m ) {
         // convenience method since physical weapons are based on tonnage
         Owner = m;
         if( PWClass == PW_CLASS_INDUSTRIAL ) {
@@ -155,7 +155,6 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
         Type = type;
         Specials = spec;
     }
-
     
     public void SetTonnage( double tmult, double tadd, boolean roundhalf ) {
         TonMult = tmult;
@@ -238,7 +237,8 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
 
     public void SetPWClass( int pwclass ) {
         PWClass = pwclass;
-        SetOwner( Owner );
+        if ( Owner != null )
+            SetOwner( Owner );
     }
 
     public void SetBookReference( String s ) {
@@ -416,6 +416,11 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
         } else {
             return GetOffensiveBV();
         }
+    }
+
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetCurOffensiveBV(UseRear, UseTC, UseAES);
     }
 
     public double GetDefensiveBV() {

@@ -62,7 +62,7 @@ public class VArmorSetHA implements ifVisitor {
     }
 
     public void Visit( CombatVehicle v ) throws Exception {
-        // does nothing at the moment
+        v.GetArmor().SetHardened();
     }
 
     public void Visit( Infantry i ) throws Exception {

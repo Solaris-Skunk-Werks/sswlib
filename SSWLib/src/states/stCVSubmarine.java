@@ -55,7 +55,7 @@ public class stCVSubmarine implements ifCombatVehicle {
     }
 
     public String GetMotiveLookupName() {
-        return "Submarine";
+        return "Naval (Submarine)";
     }
 
     public boolean CanUseJumpMP() {
@@ -88,5 +88,13 @@ public class stCVSubmarine implements ifCombatVehicle {
 
     public boolean CanUseMinesweeper() {
         return true;
+    }
+    
+    public boolean CanUseEnviroSealing() {
+        return false;
+    }
+
+    public int GetCostMultiplier() {
+        return 50;
     }
 }

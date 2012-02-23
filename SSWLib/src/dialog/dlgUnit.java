@@ -39,7 +39,7 @@ import common.CommonTools;
 import common.Constants;
 import components.ifMechLoadout;
 
-import filehandlers.ImageTracker;
+import filehandlers.*;
 import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
@@ -97,31 +97,67 @@ public class dlgUnit extends javax.swing.JDialog {
         BVBreakdown += "Total:  " + unit.TotalBV + "\n";
         txtBVBreakdown.setText(BVBreakdown);
 
-        unit.LoadMech();
-        if ( unit.m != null ) {
-            if ( unit.m.IsOmnimech() ) {
-                String curConfig = unit.m.GetLoadout().GetName();
-                int BV = unit.m.GetCurrentBV();
-                for (int i=0; i < unit.m.GetLoadouts().size(); i++) {
-                    ifMechLoadout config = (ifMechLoadout) unit.m.GetLoadouts().get(i);
-                    unit.m.SetCurLoadout(config.GetName());
-                    cmbConfiguration.addItem(config.GetName() + " (" + unit.m.GetCurrentBV() + ")");
+        unit.LoadUnit();
+        switch(unit.UnitType) {
+            case CommonTools.BattleMech:
+                if ( unit.m != null ) {
+                    if ( unit.m.IsOmnimech() ) {
+                        String curConfig = unit.m.GetLoadout().GetName();
+                        int BV = unit.m.GetCurrentBV();
+                        for (int i=0; i < unit.m.GetLoadouts().size(); i++) {
+                            ifMechLoadout config = (ifMechLoadout) unit.m.GetLoadouts().get(i);
+                            unit.m.SetCurLoadout(config.GetName());
+                            cmbConfiguration.addItem(config.GetName() + " (" + unit.m.GetCurrentBV() + ")");
+                        }
+                        unit.m.SetCurLoadout(curConfig);
+                        cmbConfiguration.setSelectedItem(curConfig + " (" + BV + ")");
+                        Default = false;
+                    } else {
+                        pnlConfiguration.setVisible(false);
+                    }
+                    setC3();
+                    setTRO();
+                    setImage();
+                    setBattleForce();
+                    btnSelectMech.setVisible(false);
+                } else {
+                    pnlConfiguration.setVisible(false);
+                    lblFilename.setForeground(new Color(Color.red.getRGB()));
+                    btnSelectMech.setVisible(true);
                 }
-                unit.m.SetCurLoadout(curConfig);
-                cmbConfiguration.setSelectedItem(curConfig + " (" + BV + ")");
-                Default = false;
-            } else {
+                break;
+            case CommonTools.Vehicle:
+                if ( unit.v != null ) {
+                    if ( unit.v.IsOmni() ) {
+                        String curConfig = unit.v.GetLoadout().GetName();
+                        int BV = unit.v.GetCurrentBV();
+                        for (int i=0; i < unit.v.GetLoadouts().size(); i++) {
+                            ifMechLoadout config = (ifMechLoadout) unit.v.GetLoadouts().get(i);
+                            unit.v.SetCurLoadout(config.GetName());
+                            cmbConfiguration.addItem(config.GetName() + " (" + unit.v.GetCurrentBV() + ")");
+                        }
+                        unit.v.SetCurLoadout(curConfig);
+                        cmbConfiguration.setSelectedItem(curConfig + " (" + BV + ")");
+                        Default = false;
+                    } else {
+                        pnlConfiguration.setVisible(false);
+                    }
+                    setC3();
+                    setTRO();
+                    setImage();
+                    setBattleForce();
+                    btnSelectMech.setVisible(false);
+                } else {
+                    pnlConfiguration.setVisible(false);
+                    lblFilename.setForeground(new Color(Color.red.getRGB()));
+                    btnSelectMech.setVisible(true);
+                }
+                break;
+            default:
                 pnlConfiguration.setVisible(false);
-            }
-            setC3();
-            setTRO();
-            setImage();
-            setBattleForce();
-            btnSelectMech.setVisible(false);
-        } else {
-            pnlConfiguration.setVisible(false);
-            lblFilename.setForeground(new Color(Color.red.getRGB()));
-            btnSelectMech.setVisible(true);
+                lblFilename.setForeground(new Color(Color.red.getRGB()));
+                btnSelectMech.setVisible(true);
+                break;
         }
     }
 
@@ -131,24 +167,35 @@ public class dlgUnit extends javax.swing.JDialog {
     }
 
     private void setTRO() {
-        TXTWriter txt = new TXTWriter(unit.m);
-        txt.CurrentLoadoutOnly = true;
-        tpnTRO.setText(txt.GetMiniTextExport());
-        tpnTRO.setCaretPosition(0);
+        switch(unit.UnitType) {
+            case CommonTools.BattleMech:
+                TXTWriter txt = new TXTWriter(unit.m);
+                txt.CurrentLoadoutOnly = true;
+                tpnTRO.setText(txt.GetMiniTextExport());
+                tpnTRO.setCaretPosition(0);
+                break;
+            case CommonTools.Vehicle:
+                CVTXTWriter ctxt = new CVTXTWriter(unit.v);
+                ctxt.CurrentLoadoutOnly = true;
+                tpnTRO.setText(ctxt.GetMiniTextExport());
+                tpnTRO.setCaretPosition(0);
+                break;
+        }
+        
     }
 
     private void setC3() {
-        if ( ! unit.m.HasC3() ) {
+        if ( ! unit.HasC3() ) {
             chkC3Active.setSelected(false);
             chkC3Active.setVisible(false);
         }
     }
 
     private void setImage() {
-        lblSSWImage.setText(unit.m.GetSSWImage());
-        if ( !unit.m.GetSSWImage().isEmpty() ) {
+        lblSSWImage.setText(unit.getImage());
+        if ( !unit.getImage().isEmpty() ) {
             try {
-                ImageIcon icon = new ImageIcon(unit.m.GetSSWImage());
+                ImageIcon icon = new ImageIcon(unit.getImage());
 
                 if( icon == null ) { return; }
 
@@ -173,7 +220,16 @@ public class dlgUnit extends javax.swing.JDialog {
     }
 
     private void setBattleForce() {
-        BattleForceStats stats = new BattleForceStats(unit.m);
+        BattleForceStats stats = null;
+        switch(unit.UnitType) {
+            case CommonTools.BattleMech:
+                stats = new BattleForceStats(unit.m);
+                break;
+            case CommonTools.Vehicle:
+                stats = new BattleForceStats(unit.v);
+                break;
+        }
+        
         lblBFMV.setText(stats.getMovement());
 
         lblBFShort.setText(stats.getShort()+"");
@@ -1230,8 +1286,8 @@ public class dlgUnit extends javax.swing.JDialog {
 
     private void cmbConfigurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbConfigurationActionPerformed
         if ( Default ) { return; }
-        unit.m.SetCurLoadout(cmbConfiguration.getSelectedItem().toString().substring(0, cmbConfiguration.getSelectedItem().toString().indexOf(" ")));
-        unit.UpdateByMech();
+        unit.SetCurLoadout(cmbConfiguration.getSelectedItem().toString().substring(0, cmbConfiguration.getSelectedItem().toString().indexOf(" ")));
+        unit.UpdateByUnit();
         setC3();
         setBV();
         setTRO();
@@ -1287,18 +1343,15 @@ public class dlgUnit extends javax.swing.JDialog {
 
     private void btnMechImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMechImageActionPerformed
         Media media = new Media();
-        File imageFile = media.SelectImage(Prefs.get("LastMechImage", ""), "Select Mech Image");
+        File imageFile = media.SelectImage(Prefs.get("LastMechImage", ""), "Select Unit Image");
         if ( imageFile != null ) {
             try {
                 Prefs.put("LastMechImage", imageFile.getCanonicalPath());
-                unit.m.SetSSWImage(imageFile.getCanonicalPath());
+                unit.SetUnitImage(imageFile.getCanonicalPath());
                 setImage();
-
-                MechWriter writer = new MechWriter();
-                writer.setMech(unit.m);
-                writer.WriteXML(unit.Filename);
+                unit.SaveUnit();
             } catch (IOException ex) {
-                //do nothing
+                System.err.println(ex.getMessage());
             }
         }
     }//GEN-LAST:event_btnMechImageActionPerformed
@@ -1324,7 +1377,7 @@ public class dlgUnit extends javax.swing.JDialog {
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
         imageTracker.preLoadMechImages();
         PagePrinter printer = new PagePrinter();
-        unit.LoadMech();
+        unit.LoadUnit();
         PrintMech pm = new PrintMech(unit.m, unit.getMechwarrior(), unit.getGunnery(), unit.getPiloting(), imageTracker);
         pm.setCanon(sswPrefs.getBoolean(Constants.Format_CanonPattern, false));
         pm.setCharts(sswPrefs.getBoolean(Constants.Format_Tables, false));
@@ -1376,13 +1429,13 @@ public class dlgUnit extends javax.swing.JDialog {
 
     private void btnSelectMechActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectMechActionPerformed
         Media media = new Media();
-        File mech = media.SelectFile(sswPrefs.get("ListPath", ""), "ssw", "Select Mech File");
+        File mech = media.SelectFile(sswPrefs.get("ListPath", ""), "ssw", "Select Unit File");
 
         if ( mech != null ) {
             try {
                 Media.Messager("Selected " + mech.getCanonicalPath());
                 unit.Filename = mech.getCanonicalPath();
-                unit.LoadMech();
+                unit.LoadUnit();
                 if ( unit.m != null ) {
                     unit.BaseBV = unit.m.GetCurrentBV();
                     unit.Refresh();
@@ -1403,16 +1456,9 @@ public class dlgUnit extends javax.swing.JDialog {
     }//GEN-LAST:event_chkC3ActiveActionPerformed
 
     private void btnClearImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearImageActionPerformed
-        try {
-            unit.m.SetSSWImage("../Images/No_Image.png");
-            setImage();
-
-            MechWriter writer = new MechWriter();
-            writer.setMech(unit.m);
-            writer.WriteXML(unit.Filename);
-        } catch (IOException ex) {
-            //do nothing
-        }
+        unit.SetUnitImage("../Images/No_Image.png");
+        setImage();
+        unit.SaveUnit();
     }//GEN-LAST:event_btnClearImageActionPerformed
 
     private void btnRandomNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRandomNameActionPerformed

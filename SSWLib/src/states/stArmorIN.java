@@ -45,7 +45,7 @@ public class stArmorIN implements ifArmor, ifState {
         AC.SetCLCodes( 'C', 'X', 'B', 'B' );
         AC.SetCLDates( 0, 0, false, 2439, 0, 0, false, false );
         AC.SetCLFactions( "", "", "TH", "" );
-        AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT );
+        AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_ADVANCED, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT );
     }
 
     public String ActualName() {

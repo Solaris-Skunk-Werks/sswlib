@@ -28,6 +28,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
-public interface ifLoadout {
+import java.util.ArrayList;
 
+public interface ifLoadout {
+    public ArrayList GetTCList();
+    public Engine GetEngine();
+    public boolean UsingFractionalAccounting();
+    public int GetTechBase();
+    public int Find( abPlaceable p );
+    public ArrayList GetNonCore();
+    public ifUnit GetUnit();
 }

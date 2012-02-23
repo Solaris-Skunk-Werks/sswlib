@@ -33,11 +33,11 @@ public class stCVHover implements ifCombatVehicle {
     public int GetSuspensionFactor( int Tonnage ) {
         if( Tonnage < 11 ) {
             return 40;
-        } else if( Tonnage > 10 && Tonnage < 21 ) {
+        } else if( Tonnage < 21 ) {
             return 85;
-        } else if( Tonnage > 20 && Tonnage < 31 ) {
+        } else if( Tonnage < 31 ) {
             return 130;
-        } else if( Tonnage > 30 && Tonnage < 41 ) {
+        } else if( Tonnage < 41 ) {
             return 175;
         } else {
             return 235;
@@ -98,5 +98,13 @@ public class stCVHover implements ifCombatVehicle {
 
     public boolean CanUseMinesweeper() {
         return false;
+    }
+    
+    public boolean CanUseEnviroSealing() {
+        return true;
+    }
+
+    public int GetCostMultiplier() {
+        return 50;
     }
 }

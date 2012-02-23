@@ -32,7 +32,7 @@ import common.CommonTools;
 import filehandlers.FileCommon;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.w3c.dom.*;
 
 /**
@@ -51,7 +51,7 @@ public class Warrior {
     private int     Gunnery = 4,
                     Piloting = 5;
     private double  ManeiDomini = 1.0d;
-    private Vector<Enhancement> Enhancements = new Vector<Enhancement>();
+    private ArrayList<Enhancement> Enhancements = new ArrayList<Enhancement>();
 
     public Warrior() {
 
@@ -315,11 +315,11 @@ public class Warrior {
         Enhancements.add(e);
     }
 
-    public void addEnhancements( Vector<Enhancement> e ) {
+    public void addEnhancements( ArrayList<Enhancement> e ) {
         Enhancements.addAll(e);
     }
 
-    public Vector<Enhancement> getEnhancements() {
+    public ArrayList<Enhancement> getEnhancements() {
         return Enhancements;
     }
 

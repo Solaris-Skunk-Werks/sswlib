@@ -28,11 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
-import components.MechArmor;
-import components.AvailableCode;
-import components.LocationIndex;
-import components.MechModifier;
-import components.ifMechLoadout;
+import components.*;
 
 public class stArmorISHF implements ifArmor, ifState {
     boolean locked = false;

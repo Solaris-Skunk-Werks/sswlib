@@ -34,12 +34,12 @@ import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
-import list.MechList;
+import list.UnitList;
 
 public abstract class abView extends AbstractTableModel {
     public Vector<Column> Columns = new Vector<Column>();
     public Vector<Column> SortFields = new Vector<Column>();
-    public MechList list;
+    public UnitList list;
 
     public void setupTable( JTable tbl ) {
         tbl.setModel(this);

@@ -33,9 +33,9 @@ import common.*;
 import battleforce.BattleForceStats;
 import visitors.VMechFullRecalc;
 import visitors.ifVisitor;
-import list.MechListData;
+import list.UnitListData;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.*;
@@ -103,16 +103,21 @@ public class MechReader {
  * @throws java.lang.Exception Throws a variety of exceptions that should explain
  *                             what went wrong while loading the 'Mech data.
  */
-    public MechListData ReadMechData( String filename, String basePath ) throws Exception {
-       MechListData mData = new MechListData();
+    public UnitListData ReadMechData( String filename, String basePath ) throws Exception {
+        UnitListData mData = new UnitListData();
         mData.setFilename(filename.replace(basePath, ""));
         filename = CommonTools.GetSafeFilename( filename );
         load = db.parse( filename );
 
+        if ( filename.endsWith("ssw")) {
+            return BuildData( mData, load );
+        } else if ( filename.endsWith("saw") ) {
+            return BuildVeeData( mData, load );
+        }
         return BuildData( mData, load );
     }
 
-    private MechListData BuildData( MechListData Data, Document d ) {
+    private UnitListData BuildData( UnitListData Data, Document d ) {
         NodeList n = d.getElementsByTagName( "mech" );
         NamedNodeMap map = n.item( 0 ).getAttributes();
 
@@ -166,7 +171,7 @@ public class MechReader {
         if( isOmni ) {
             NodeList OmniLoads = d.getElementsByTagName( "loadout" );
             for( int k = 0; k < OmniLoads.getLength(); k++ ) {
-                MechListData Config = new MechListData(Data);
+                UnitListData Config = new UnitListData(Data);
                 Config.setOmni(true);
                 map = OmniLoads.item( k ).getAttributes();
                 if( map.getNamedItem( "name" ) != null ) {
@@ -201,6 +206,93 @@ public class MechReader {
         return Data;
     }
 
+    private UnitListData BuildVeeData( UnitListData Data, Document d ) {
+        NodeList n = d.getElementsByTagName( "combatvehicle" );
+        NamedNodeMap map = n.item( 0 ).getAttributes();
+
+        boolean isOmni = ParseBoolean( map.getNamedItem( "omni" ).getTextContent() );
+        Data.setOmni( isOmni );
+
+        Data.setName( FileCommon.DecodeFluff( map.getNamedItem( "name" ).getTextContent() ) );
+        Data.setModel( FileCommon.DecodeFluff( map.getNamedItem( "model" ).getTextContent() ) );
+        Data.setTonnage( Integer.parseInt( map.getNamedItem( "tons" ).getTextContent() ) );
+
+        n = d.getElementsByTagName( "rules_level" );
+        Data.setLevel( CommonTools.GetRulesLevelString( Integer.parseInt( n.item( 0 ).getTextContent() ) ) );
+
+        n = d.getElementsByTagName( "era" );
+        Data.setEra( CommonTools.DecodeEra( Integer.parseInt( n.item( 0 ).getTextContent() ) ) );
+
+        n = d.getElementsByTagName( "techbase" );
+        Data.setTech( n.item( 0 ).getTextContent() );
+
+        n = d.getElementsByTagName( "year" );
+        Data.setYear( Integer.parseInt( n.item( 0 ).getTextContent() ) );
+
+        n = d.getElementsByTagName( "source" );
+        if( n.getLength() > 0 ) {Data.setSource( FileCommon.DecodeFluff( n.item( 0 ).getTextContent() ) );}
+
+        n = d.getElementsByTagName( "motive" );
+        map = n.item( 0 ).getAttributes();
+        Data.setType( map.getNamedItem( "type" ).getTextContent() );
+
+        n = d.getElementsByTagName( "info" );
+        if ( n.getLength() > 0 ) { Data.setInfo( n.item( 0 ).getTextContent() ); }
+
+        n = d.getElementsByTagName( "battleforce" );
+        if ( n.getLength() > 0 ) {
+            try {
+                Data.setBattleForceStats( new BattleForceStats(n.item(0)) );
+                Data.getBattleForceStats().setElement(Data.getFullName());
+            } catch ( Exception e ) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        n = d.getElementsByTagName( "battle_value" );
+        if (n.getLength() >= 1) Data.setBV( Integer.parseInt( n.item(0).getTextContent() ) );
+
+        n = d.getElementsByTagName( "cost" );
+        if (n.getLength() >= 1) Data.setCost( Double.parseDouble( n.item(0).getTextContent() ) );
+
+        if( isOmni ) {
+            NodeList OmniLoads = d.getElementsByTagName( "loadout" );
+            for( int k = 0; k < OmniLoads.getLength(); k++ ) {
+                UnitListData Config = new UnitListData(Data);
+                Config.setOmni(true);
+                map = OmniLoads.item( k ).getAttributes();
+                if( map.getNamedItem( "name" ) != null ) {
+                    Config.setName( Config.getName());
+                    Config.setModel( Config.getModel() );
+                    Config.setConfig(FileCommon.DecodeFluff( map.getNamedItem( "name" ).getTextContent() ));
+                }
+                if( map.getNamedItem( "ruleslevel" ) != null ) {
+                    Config.setLevel( CommonTools.GetRulesLevelString( Integer.parseInt( map.getNamedItem( "ruleslevel" ).getTextContent() ) ) );
+                }
+
+                n = OmniLoads.item( k ).getChildNodes();
+                for ( int dex=0; dex < n.getLength(); dex++ ) {
+                    Node node = n.item(dex);
+                    if (node.getNodeName().equals("techbase")) {Config.setTech( node.getTextContent() );}
+                    if (node.getNodeName().equals("loadout_era")) {Config.setEra( CommonTools.DecodeEra( Integer.parseInt( node.getTextContent() ) ) );}
+                    if (node.getNodeName().equals("loadout_year")) {Config.setYear( Integer.parseInt( node.getTextContent() ) );}
+                    if (node.getNodeName().equals("battle_value")) {Config.setBV( Integer.parseInt( node.getTextContent() ) );}
+                    if (node.getNodeName().equals("cost")) {Config.setCost( Double.parseDouble( node.getTextContent() ) );}
+                    if (node.getNodeName().equals("source")) {Config.setSource( node.getTextContent() );}
+                    if (node.getNodeName().equals("info")) {Config.setInfo( node.getTextContent() );}
+                    try {
+                        if (node.getNodeName().equals("battleforce")) {Config.setBattleForceStats( new BattleForceStats( node ) );}
+                    } catch ( Exception e ) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+
+                Data.Configurations.add(Config);
+            }
+        }        
+        return Data;
+    }
+    
     public Mech ReadMech( Node n ) throws Exception {
         Messages = "";
         Mech m = new Mech();
@@ -226,13 +318,13 @@ public class MechReader {
 
         NamedNodeMap map = n.item( 0 ).getAttributes();
         LocationIndex l;
-        Vector isLoc = new Vector();
-        Vector armLoc = new Vector();
-        Vector<ArmorType> armTypes = new Vector<ArmorType>();
-        Vector hsLoc = new Vector();
-        Vector jjLoc = new Vector();
-        Vector enhLoc = new Vector();
-        Vector acLoc = new Vector();
+        ArrayList isLoc = new ArrayList();
+        ArrayList armLoc = new ArrayList();
+        ArrayList<ArmorType> armTypes = new ArrayList<ArmorType>();
+        ArrayList hsLoc = new ArrayList();
+        ArrayList jjLoc = new ArrayList();
+        ArrayList enhLoc = new ArrayList();
+        ArrayList acLoc = new ArrayList();
         String Source = "";
 
         VMechFullRecalc Recalc = new VMechFullRecalc();
@@ -613,7 +705,7 @@ public class MechReader {
                 m.GetLoadout().SetBoobyTrap( true );
             } else if( n.item( i ).getNodeName().equals( "equipment" ) ) {
                 NodeList nl = n.item( i ).getChildNodes();
-                Vector splitLoc = new Vector();
+                ArrayList splitLoc = new ArrayList();
                 String eMan = "";
                 String eType = "";
                 String eName = "";
@@ -796,7 +888,7 @@ public class MechReader {
                 }
             } else if( n.item( i ).getNodeName().equals( "armored_locations" ) ) {
                 NodeList nl = n.item( i ).getChildNodes();
-                acLoc = new Vector();
+                acLoc = new ArrayList();
                 l = new LocationIndex();
                 for( int j = 0; j < nl.getLength(); j++ ) {
                     if( nl.item( j ).getNodeName().equals( "location" ) ) {
@@ -807,7 +899,7 @@ public class MechReader {
             } else if( n.item( i ).getNodeName().equals( "multislot" ) ) {
                 map = n.item( i ).getAttributes();
                 String type = map.getNamedItem( "name" ).getTextContent();
-                Vector msLoc = new Vector();
+                ArrayList msLoc = new ArrayList();
                 NodeList nl = n.item( i ).getChildNodes();
                 l = new LocationIndex();
                 for( int j = 0; j < nl.getLength(); j++ ) {
@@ -817,7 +909,7 @@ public class MechReader {
                     }
                 }
 
-                // turn the vector into an array
+                // turn the ArrayList into an array
                 LocationIndex[] Locs = new LocationIndex[msLoc.size()];
                 for( int j = 0; j < msLoc.size(); j++ ) {
                     Locs[j] = (LocationIndex) msLoc.get( j );
@@ -872,7 +964,7 @@ public class MechReader {
                     m.SetRAAES( true, Index );
                 }
             } else if( n.item( i ).getNodeName().equals( "leg_aes" ) ) {
-                Vector Loc = new Vector();
+                ArrayList Loc = new ArrayList();
                 NodeList nl = n.item( i ).getChildNodes();
                 l = new LocationIndex();
                 for( int j = 0; j < nl.getLength(); j++ ) {
@@ -893,7 +985,7 @@ public class MechReader {
                     }
                 }
 
-                // turn the vector into an array
+                // turn the ArrayList into an array
                 LocationIndex[] Locs = new LocationIndex[Loc.size()];
                 for( int j = 0; j < Loc.size(); j++ ) {
                     Locs[j] = (LocationIndex) Loc.get( j );
@@ -1296,7 +1388,7 @@ public class MechReader {
                         } else {
                             loadout = m.GetLoadout();
                             HeatSink[] hsList = m.GetHeatSinks().GetPlacedHeatSinks();
-                            Vector temp = new Vector();
+                            ArrayList temp = new ArrayList();
                             for( int j = 0; j < hsList.length; j++ ) {
                                 if( ! loadout.IsAllocated( hsList[j] ) ) {
                                     temp.add( hsList[j] );
@@ -1342,7 +1434,7 @@ public class MechReader {
                         } else {
                             loadout = m.GetLoadout();
                             JumpJet[] jjList = m.GetJumpJets().GetPlacedJumps();
-                            Vector temp = new Vector();
+                            ArrayList temp = new ArrayList();
                             for( int j = 0; j < jjList.length; j++ ) {
                                 if( ! loadout.IsAllocated( jjList[j] ) ) {
                                     temp.add( jjList[j] );
@@ -1371,7 +1463,7 @@ public class MechReader {
                         m.GetLoadout().SetBoobyTrap( true );
                     } else if( n.item( i ).getNodeName().equals( "equipment" ) ) {
                         NodeList nl = n.item( i ).getChildNodes();
-                        Vector splitLoc = new Vector();
+                        ArrayList splitLoc = new ArrayList();
                         String eMan = "";
                         String eType = "";
                         String eName = "";
@@ -1554,7 +1646,7 @@ public class MechReader {
                         }
                     } else if( n.item( i ).getNodeName().equals( "armored_locations" ) ) {
                         NodeList nl = n.item( i ).getChildNodes();
-                        acLoc = new Vector();
+                        acLoc = new ArrayList();
                         l = new LocationIndex();
                         for( int j = 0; j < nl.getLength(); j++ ) {
                             if( nl.item( j ).getNodeName().equals( "location" ) ) {

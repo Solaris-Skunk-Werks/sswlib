@@ -330,6 +330,11 @@ public class Cockpit extends abPlaceable {
         return 0.0f;
     }
 
+    public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic ) {
+        // BV will not change for this item, so just return the normal value
+        return GetOffensiveBV();
+    }
+
     // return the defensive battle value of the item
     public double GetDefensiveBV() {
         // a cockpit has no battle value unless it is armored
@@ -381,6 +386,10 @@ public class Cockpit extends abPlaceable {
 
     public boolean IsTorsoMounted() {
         return CurConfig.IsTorsoMounted();
+    }
+
+    public boolean IsRobotic() {
+        return ( CurConfig instanceof stCockpitRobotic ) ? true : false;
     }
 
     // the following 3 methods provided for the torso-mounted cockpit for saving

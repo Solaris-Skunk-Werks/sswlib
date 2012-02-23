@@ -32,7 +32,7 @@ import common.CommonTools;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 import components.*;
 
 public class MTFWriter {
@@ -227,10 +227,10 @@ public class MTFWriter {
         // will make things much easier
         ifMechLoadout l = CurMech.GetLoadout();
         FR.newLine();
-        Vector v = l.GetNonCore();
-        // now we have to split up the vector into equipment and ammo
-        Vector eq = new Vector();
-        Vector ammo = new Vector();
+        ArrayList v = l.GetNonCore();
+        // now we have to split up the ArrayList into equipment and ammo
+        ArrayList eq = new ArrayList();
+        ArrayList ammo = new ArrayList();
         for( int i = 0; i < v.size(); i++ ) {
             if( v.get( i ) instanceof Ammunition ) {
                 ammo.add( v.get( i ) );
@@ -247,7 +247,7 @@ public class MTFWriter {
             if( p instanceof ifWeapon ) {
                 if( ((ifWeapon) p).HasAmmo() ) {
                     // since we're removing ammo as we add it, ignore the ammo
-                    // index if it doesn't exist in the vector
+                    // index if it doesn't exist in the ArrayList
                     int ammoindex = ((ifWeapon) p).GetAmmoIndex();
                     int ammoamount = 0;
                     for( int j = ammo.size() - 1; j >= 0; j-- ) {
