@@ -28,7 +28,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
-public abstract class abPlaceable {
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public abstract class abPlaceable implements Comparable<abPlaceable> {
     // An abstract class for items that can be placed inside a loadout.
     protected boolean Locked = false,  Armored = false;
     private Exclusion Exclusions = null;
@@ -101,13 +104,12 @@ public abstract class abPlaceable {
         return Place(l);
     }
     
-    public boolean Place( ifCVLoadout l, int loc ) {
+    public boolean Place( ifCVLoadout l, int loc ) throws Exception {
         try {
             l.AddTo(this, loc);
             return true;
-        } catch ( Exception e )
-        {
-            return false;
+        } catch (Exception ex) {
+            throw ex;
         }
     }
 
@@ -459,4 +461,13 @@ public abstract class abPlaceable {
 
     // All placeables should be able to return their AvailableCode
     public abstract AvailableCode GetAvailability();
+    
+    public int compareTo(abPlaceable o ) {
+        return ActualName().compareTo(o.ActualName());
+    }
+    
+    @Override
+    public String toString() {
+        return ActualName();
+    }
 }

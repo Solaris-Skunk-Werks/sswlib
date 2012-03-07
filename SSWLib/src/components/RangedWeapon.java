@@ -411,7 +411,11 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
     }
 
     public int NumCVSpaces() {
-        return CVSpace;
+        int retval = CVSpace;
+        if ( UsingCapacitor ) retval += GetCapacitor().NumCVSpaces();
+        if ( UsingInsulator ) retval += GetInsulator().NumCVSpaces();
+        if ( UsingFCS ) { retval += ((abPlaceable) FCS).NumCVSpaces(); }
+        return retval;
     }
 
     @Override
@@ -983,10 +987,13 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
 
     @Override
     public String toString() {
-        if( MountedRear ) {
-            return "(R) " + CritName;
-        } else {
-            return CritName;
-        }
+        String retval = CritName;
+        if( MountedRear )
+            retval = "(R) " + retval;
+            
+        if ( UsingFCS ) 
+            retval += " w/" + GetFCS().toString();
+            
+        return retval;
     }
 }

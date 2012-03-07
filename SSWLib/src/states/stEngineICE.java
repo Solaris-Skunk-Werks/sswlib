@@ -38,15 +38,16 @@ public class stEngineICE implements ifEngine, ifState {
     // An Inner Sphere I.C.E. Engine
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH ),
                                        LARGE_AC = new AvailableCode( AvailableCode.TECH_BOTH );
-    private final static double[] Masses = { 1.0,1.0,1.0,1.0,2.0,2.0,2.0,
-        2.0,3.0,3.0,3.0,4.0,4.0,4.0,5.0,5.0,6.0,6.0,6.0,7.0,7.0,
-        8.0,8.0,8.0,9.0,9.0,10.0,10.0,11.0,11.0,12.0,12.0,12.0,
-        14.0,14.0,15.0,15.0,16.0,17.0,17.0,18.0,19.0,20.0,20.0,21.0,
-        22.0,23.0,24.0,25.0,26.0,27.0,28.0,29.0,31.0,32.0,33.0,35.0,
-        36.0,38.0,39.0,41.0,43.0,45.0,47.0,49.0,51.0,54.0,57.0,59.0,
-        63.0,66.0,69.0,73.0,77.0,82.0,87.0,92.0,98.0,105.0,113.0,
-        122.0,133.0,145.0,159.0,175.0,194.0,215.0,239.0,267.0,300.0,
-        337.0,380.0,429.0,486.0,551.0,626.0,712.0,811.0,925.0};
+    private final static double[] Masses = { 1.0,1.0,1.0,1.0,2.0,2.0,2.0,2.0,3.0,3.0,
+                                             3.0,4.0,4.0,4.0,5.0,5.0,6.0,6.0,6.0,7.0,
+                                             7.0,8.0,8.0,8.0,9.0,9.0,10.0,10.0,11.0,11.0,
+                                             12.0,12.0,12.0,14.0,14.0,15.0,15.0,16.0,17.0,17.0,
+                                             18.0,19.0,20.0,20.0,21.0,22.0,23.0,24.0,25.0,26.0,
+                                             27.0,28.0,29.0,31.0,32.0,33.0,35.0,36.0,38.0,39.0,
+                                             41.0,43.0,45.0,47.0,49.0,51.0,54.0,57.0,59.0,63.0,
+                                             66.0,69.0,73.0,77.0,82.0,87.0,92.0,98.0,105.0,113.0,
+                                             122.0,133.0,145.0,159.0,175.0,194.0,215.0,239.0,267.0,300.0,
+                                             337.0,380.0,429.0,486.0,551.0,626.0,712.0,811.0,925.0};
     private final static int[] BFStructure = {1,1,2,2,3,3,3,4,4,5,5,5,6,6,6,7,7,8,8};
     private Engine Owner;
 
@@ -166,7 +167,7 @@ public class stEngineICE implements ifEngine, ifState {
     }
 
     private int GetIndex( int Rating ) {
-        return Rating / 5 - 2;
+        return Math.round(Rating / 5) - 2;
     }
 
     private int GetBFIndex( int tonnage ) {
@@ -199,6 +200,6 @@ public class stEngineICE implements ifEngine, ifState {
 
     @Override
     public String toString() {
-        return "I.C.E. Engine";
+        return "I.C.E.";
     }
 }

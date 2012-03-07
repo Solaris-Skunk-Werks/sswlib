@@ -58,7 +58,7 @@ public class tbChatInformation extends abView {
             case 2:
                 return (int) m.getBV();
             case 3:
-                return m.getCost();
+                return String.format("%10.0f", m.getCost());
             case 4:
                 return m.getLevel();
             case 5:

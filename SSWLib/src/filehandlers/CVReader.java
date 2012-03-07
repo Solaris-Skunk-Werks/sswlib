@@ -288,8 +288,10 @@ public class CVReader {
         String turret = FileCommon.DecodeFluff( map.getNamedItem( "turret" ).getTextContent() );
         if ( turret.equals("Single Turret") )
             m.setHasTurret1(true);
-        if ( turret.equals("Dual Turret") )
+        if ( turret.equals("Dual Turret") ) {
+            m.setHasTurret1(true);
             m.setHasTurret2(true);
+        }
         
         n = d.getElementsByTagName( "productionera" );
         if ( n.getLength() > 0 ) { m.SetProductionEra(Integer.parseInt( n.item( 0 ).getTextContent() )); } else { m.SetProductionEra(0); }
@@ -348,6 +350,13 @@ public class CVReader {
                 isLoc.add( DecodeLocation( n.item( i ) ) );
             } else if( n.item( i ).getNodeName().equals( "type" ) ) {
                 Type = n.item( i );
+            } else if( n.item( i ).getNodeName().equals( "mods" ) ) {
+                NamedNodeMap Mods = n.item( i ).getAttributes();
+                m.SetFlotationHull(Boolean.parseBoolean(Mods.getNamedItem("flotation").getTextContent()));
+                m.SetLimitedAmphibious(Boolean.parseBoolean(Mods.getNamedItem("limitedamph").getTextContent()));
+                m.SetFullAmphibious(Boolean.parseBoolean(Mods.getNamedItem("fullamph").getTextContent()));
+                m.SetDuneBuggy(Boolean.parseBoolean(Mods.getNamedItem("dunebuggy").getTextContent()));
+                m.SetEnvironmentalSealing(Boolean.parseBoolean(Mods.getNamedItem("enviroseal").getTextContent()));
             }
         }
         if( Type == null ) {
@@ -389,6 +398,9 @@ public class CVReader {
             m.SetFCSArtemisIV( ParseBoolean( map.getNamedItem( "fcsa4" ).getTextContent() ) );
             m.SetFCSArtemisV( ParseBoolean( map.getNamedItem( "fcsa5" ).getTextContent() ) );
             m.SetFCSApollo( ParseBoolean( map.getNamedItem( "fcsapollo" ).getTextContent() ) );
+        }
+        if ( omniCombatVehicle && map.getNamedItem("turretlimit") != null ) {
+            m.GetLoadout().GetTurret().SetTonnage( Double.parseDouble(map.getNamedItem("turretlimit").getTextContent() ) );
         }
         // take care of Clan CASE on previous save file versions
         if( SaveFileVersion < 1 ) {
@@ -574,19 +586,6 @@ public class CVReader {
                 for( int j = 0; j < msLoc.size(); j++ ) {
                     Locs[j] = (LocationIndex) msLoc.get( j );
                 }
-
-                // now add the system in
-                if( type.equals( m.GetEnviroSealing().LookupName() ) ) {
-                    m.SetEnviroSealing( true, Locs );
-                }
-            }
-        }
-        if( m.UsingTC() ) {
-            if( ltc.Location == -1 ) {
-                throw new Exception( "A targeting computer was specified, but no location was given.\nThe CombatVehicle cannot be loaded." );
-            } else {
-                abPlaceable p = m.GetTC();
-                m.GetLoadout().AddTo( p, ltc.Location );
             }
         }
 
@@ -905,31 +904,7 @@ public class CVReader {
                             }
                         }
                         // set the heat sink number and place all sinks
-                        int temphs = numhs - m.GetHeatSinks().GetBaseLoadoutNumHS();
-                        if( temphs > 0 ) {
-                            for( int j = 0; j < temphs; j++ ) {
-                                m.GetHeatSinks().IncrementNumHS();
-                            }
-                        }
-                        int Check = m.GetHeatSinks().GetBaseLoadoutNumHS() - m.GetEngine().InternalHeatSinks();
-                        if( Check < 0 ) { Check = 0; }
-                        if( hsLoc.size() + Check != m.GetHeatSinks().GetPlacedHeatSinks().length ) {
-                            throw new Exception( "The heat sinks in the loadout " + m.GetLoadout().GetName() + " do not match the heatsinks that are saved.\nThe CombatVehicle cannot be loaded." );
-                        } else {
-                            loadout = m.GetLoadout();
-                            HeatSink[] hsList = m.GetHeatSinks().GetPlacedHeatSinks();
-                            ArrayList temp = new ArrayList();
-                            for( int j = 0; j < hsList.length; j++ ) {
-                                if( ! loadout.IsAllocated( hsList[j] ) ) {
-                                    temp.add( hsList[j] );
-                                }
-                            }
-                            for( int j = 0; j < hsLoc.size(); j++ ) {
-                                // place each heat sink
-                                LocationIndex li = (LocationIndex) hsLoc.get( j );
-                                loadout.AddTo( (HeatSink) temp.get( j ), li.Location );
-                            }
-                        }
+                        m.GetHeatSinks().SetNumHS(numhs);
                     } else if( n.item( i ).getNodeName().equals( "jumpjets" ) ) {
                         jjLoc.clear();
                         map = n.item( i ).getAttributes();
@@ -984,8 +959,8 @@ public class CVReader {
                         String eName = "";
                         int VGLArc = 0;
                         int VGLAmmo = 0;
-                        int lotsize = 0;
                         double vtons = 0.0;
+                        int lotsize = 0;
                         l = new LocationIndex();
                         for( int j = 0; j < nl.getLength(); j++ ) {
                             if( nl.item( j ).getNodeName().equals( "name" ) ) {
@@ -1028,12 +1003,6 @@ public class CVReader {
                                 m.GetLoadout().SetSupercharger( true );
                             }
                         } else {
-                            boolean turreted = false;
-                            if( eName.length() > 4 ) {
-                                if( eName.substring( 0, 4 ).equals( "(T) " ) ) {
-                                    turreted = true;
-                                }
-                            }
                             abPlaceable p = GetEquipmentByName( eName, eType, m );
                             if( p == null ) {
                                 throw new Exception( "Could not find " + eName + " as a piece of equipment.\nThe CombatVehicle cannot be loaded." );
@@ -1051,6 +1020,7 @@ public class CVReader {
                                 ((VehicularGrenadeLauncher) p).SetArc( VGLArc );
                                 ((VehicularGrenadeLauncher) p).SetAmmoType( VGLAmmo );
                             }
+                            m.GetLoadout().AddTo(p, l.Location);
                         }
                     } else if( n.item( i ).getNodeName().equals( "armored_locations" ) ) {
                         NodeList nl = n.item( i ).getChildNodes();
@@ -1062,14 +1032,6 @@ public class CVReader {
                                 acLoc.add( l );
                             }
                         }
-                    }
-                }
-                if( m.UsingTC() ) {
-                    if( ltc.Location == -1 ) {
-                        throw new Exception( "A targeting computer was specified, but no location was given.\nThe CombatVehicle cannot be loaded." );
-                    } else {
-                        abPlaceable p = m.GetTC();
-                        m.GetLoadout().AddTo( p, ltc.Location );
                     }
                 }
             }

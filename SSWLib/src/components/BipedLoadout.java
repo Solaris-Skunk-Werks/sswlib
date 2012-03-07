@@ -2274,35 +2274,35 @@ public class BipedLoadout implements ifMechLoadout, ifLoadout {
         // start the round-robin.  LA, LT, CT, RT, RA, LL, RL, HD in order
         while( p.NumPlaced() < p.NumCrits() ) {
             try {
-                if ( p.CanAllocArms() )
+                if ( p.CanAllocArms() && HasSpace(LocationIndex.MECH_LOC_LA) )
                     AddToLA( p );
                 if( p.NumPlaced() >= p.NumCrits() ) { break; }
                 if( FreeCrits() <= 0 ) { break; }
-                if ( p.CanAllocTorso() )
+                if ( p.CanAllocTorso() && HasSpace(LocationIndex.MECH_LOC_LT) )
                     AddToLT( p );
                 if( p.NumPlaced() >= p.NumCrits() ) { break; }
                 if( FreeCrits() <= 0 ) { break; }
-                if ( p.CanAllocCT() )
+                if ( p.CanAllocCT() && HasSpace(LocationIndex.MECH_LOC_CT) )
                     AddToCT( p );
                 if( p.NumPlaced() >= p.NumCrits() ) { break; }
                 if( FreeCrits() <= 0 ) { break; }
-                if ( p.CanAllocTorso() )
+                if ( p.CanAllocTorso() && HasSpace(LocationIndex.MECH_LOC_RT) )
                     AddToRT( p );
                 if( p.NumPlaced() >= p.NumCrits() ) { break; }
                 if( FreeCrits() <= 0 ) { break; }
-                if ( p.CanAllocArms() )
+                if ( p.CanAllocArms() && HasSpace(LocationIndex.MECH_LOC_RA) )
                     AddToRA( p );
                 if( p.NumPlaced() >= p.NumCrits() ) { break; }
                 if( FreeCrits() <= 0 ) { break; }
-                if ( p.CanAllocLegs() )
+                if ( p.CanAllocLegs() && HasSpace(LocationIndex.MECH_LOC_RL) )
                     AddToRL( p );
                 if( p.NumPlaced() >= p.NumCrits() ) { break; }
                 if( FreeCrits() <= 0 ) { break; }
-                if ( p.CanAllocLegs() )
+                if ( p.CanAllocLegs() && HasSpace(LocationIndex.MECH_LOC_LL) )
                     AddToLL( p );
                 if( p.NumPlaced() >= p.NumCrits() ) { break; }
                 if( FreeCrits() <= 0 ) { break; }
-                if ( p.CanAllocHD() )
+                if ( p.CanAllocHD() && HasSpace(LocationIndex.MECH_LOC_HD) )
                     AddToHD( p );
                 if( p.NumPlaced() >= p.NumCrits() ) { break; }
                 if( FreeCrits() <= 0 ) { break; }
@@ -4936,5 +4936,46 @@ public class BipedLoadout implements ifMechLoadout, ifLoadout {
 
     public ifUnit GetUnit() {
         return Owner;
+    }
+    
+    /**
+     * Checks the location given for instances of EmptyItem
+     * @param Location What area of crits to check
+     * @return True if EmptyItem found, False if not.
+     */
+    public boolean HasSpace( int Location ) {
+        abPlaceable[] Section = new abPlaceable[0];
+        switch (Location) {
+            case LocationIndex.MECH_LOC_CT:
+                Section = CTCrits;
+                break;
+            case LocationIndex.MECH_LOC_HD:
+                Section = HDCrits;
+                break;
+            case LocationIndex.MECH_LOC_LA:
+                Section = LACrits;
+                break;
+            case LocationIndex.MECH_LOC_LL:
+                Section = LLCrits;
+                break;
+            case LocationIndex.MECH_LOC_LT:
+                Section = LTCrits;
+                break;
+            case LocationIndex.MECH_LOC_RA:
+                Section = RACrits;
+                break;
+            case LocationIndex.MECH_LOC_RL:
+                Section = RLCrits;
+                break;
+            case LocationIndex.MECH_LOC_RT:
+                Section = RTCrits;
+                break;
+        }
+        
+        for ( abPlaceable a : Section ) {
+             if ( a instanceof EmptyItem )
+                 return true;
+        }
+        return false;
     }
 }

@@ -97,4 +97,8 @@ public class stCVDisplacement implements ifCombatVehicle {
     public int GetCostMultiplier() {
         return 200;
     }
+
+    public double GetDefensiveMultiplier() {
+        return 0.6;
+    }
 }

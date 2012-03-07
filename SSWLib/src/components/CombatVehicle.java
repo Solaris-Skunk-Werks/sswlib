@@ -70,14 +70,19 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
                     LiftEquipment = 0,
                     Controls = 0;
     private boolean Omni = false,
-                    HasEnviroSealing = false,
                     FractionalAccounting = false,
                     Changed = false,
                     Primitive = false,
                     HasBlueShield = false,
                     HasTurret1 = false,
                     HasTurret2 = false,
-                    HasPowerAmplifier = false;
+                    HasPowerAmplifier = false,
+                    UsingFlotationHull = false,
+                    UsingLimitedAmphibious = false,
+                    UsingFullAmphibious = false,
+                    UsingDuneBuggy = false,
+                    UsingEnvironmentalSealing = false,
+                    IsTrailer = false;
     private static ifCombatVehicle Wheeled = new stCVWheeled(),
                                  Tracked = new stCVTracked(),
                                  Hover = new stCVHover(),
@@ -268,11 +273,20 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     {
         return LiftEquipment;
     }
+    
+    public double GetLiftEquipmentCost() {
+        return GetLiftEquipmentCostMultiplier() * LiftEquipment;
+    }
 
     public double GetControls()
     {
         return Controls;
     }
+    
+    public double GetControlsCost() {
+        return 10000 * Controls;
+    }
+    
     public boolean IsVTOL() {
         return getCurConfig().IsVTOL();
     }
@@ -356,15 +370,23 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
     public int GetCurrentBV() {
         // returns the final battle value of the combat vehicle
-        return (int) Math.floor(( GetDefensiveBV() + GetOffensiveBV() ) + 0.5 );
+        return (int) Math.round(( GetDefensiveBV() + GetOffensiveBV() ) );
     }
 
     public double GetTotalCost() {
         // final cost calculations
-        //TODO Fix this!
-        return ( GetChassisCost() + GetEquipCost() ) * GetCostMult() * (1 + (Tonnage / CurConfig.GetCostMultiplier()));
+        return (( GetChassisCost() + GetEquipCost() ) * GetCostMult() * GetConfigMultiplier()) + GetAmmoCosts();
     }
-
+    
+    public double GetDryCost() {
+        // returns the total cost of the mech without ammunition
+        return ( GetEquipCost() + GetChassisCost() ) * GetCostMult() * GetConfigMultiplier();
+    }
+    
+    public double GetConfigMultiplier() {
+        return (1 + ((double)Tonnage / (double)CurConfig.GetCostMultiplier()));
+    }
+    
     public double GetCurrentTons() {
         // returns the current total tonnage of the combat vehicle
         double result = 0.0;
@@ -378,8 +400,9 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         result += CurLoadout.GetPowerAmplifier().GetTonnage();
         if ( isHasTurret1() ) result += CurLoadout.GetTurretTonnage();
         if ( isHasTurret2() ) result += CurLoadout.GetRearTurretTonnage();
-        if( CurLoadout.UsingTC() ) { result += CurLoadout.GetTC().GetTonnage(); }
-        //if( ! CurEngine.IsNuclear() ) { result += CurLoadout.GetPowerAmplifier().GetTonnage(); }
+        result += GetLimitedAmphibiousTonnage();
+        result += GetFullAmphibiousTonnage();
+        result += GetEnvironmentalSealingTonnage();
         //if( HasBlueShield ) { result += BlueShield.GetTonnage(); }
         if( CurLoadout.HasSupercharger() ) { result += CurLoadout.GetSupercharger().GetTonnage(); }
 
@@ -407,7 +430,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         if( ! CurEngine.IsNuclear() ) { result += CurLoadout.GetPowerAmplifier().GetTonnage(); }
         if( HasBlueShield ) { result += BlueShield.GetTonnage(); }
         if( CurLoadout.HasSupercharger() ) { result += CurLoadout.GetSupercharger().GetTonnage(); }
-        if( HasEnviroSealing ) { result += EnviroSealing.GetTonnage(); }
+        if( UsingEnvironmentalSealing ) { result += EnviroSealing.GetTonnage(); }
 
         ArrayList v = CurLoadout.GetNonCore();
         if( v.size() > 0 ) {
@@ -455,6 +478,10 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     public double GetHeatSinkTonnage() {
         // remember to not include the engine's free sinks.
         return 0.0;
+    }
+    
+    public void ResetHeatSinks() {
+        CurLoadout.ResetHeatSinks();
     }
 
     public boolean UsingTurret1() {
@@ -1078,6 +1105,8 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         else
             this.LiftEquipment = 0;
         this.Controls = CommonTools.RoundHalfUp((double)Tonnage * 0.05);
+        if ( CurConfig.CanBeTrailer() && IsTrailer && GetEngine().GetTonnage() == 0 )
+            this.Controls = 0;
         SetEngine(CurEngine);
     }
 
@@ -1096,6 +1125,14 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     public int getMaxItems()
     {
         return 5 + ( Math.round(Tonnage / 5) );
+    }
+    
+    public int getLocationCount() {
+        int retval = 4;
+        if ( isHasTurret1() ) retval += 1;
+        if ( isHasTurret2() ) retval += 1;
+        if ( IsVTOL() ) retval += 1;
+        return retval;        
     }
 
     public int getCruiseMP() {
@@ -1142,22 +1179,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         // remove any targeting computers from the base chassis.  they vary too
         // much to be fixed equipment
         UseTC( false, false );
-
-        // before we unallocate the actuators, we need to make sure that
-        // there are no physical weapons located there.
-        boolean left = true;
-        boolean right = true;
-        ArrayList v = MainLoadout.GetNonCore();
-        for( int i = 0; i < v.size(); i++ ) {
-            if( v.get( i ) instanceof PhysicalWeapon ) {
-                if( MainLoadout.Find( (abPlaceable) v.get( i ) ) == LocationIndex.MECH_LOC_LA ) {
-                    left = false;
-                }
-                if( MainLoadout.Find( (abPlaceable) v.get( i ) ) == LocationIndex.MECH_LOC_RA ) {
-                    right = false;
-                }
-            }
-        }
 
         // set the minimums on heat sinks and jump jets
         if( GetJumpJets().GetNumJJ() > 0 ) {
@@ -1230,47 +1251,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         }
 
         SetChanged( true );
-    }
-
-    public void SetEnviroSealing( boolean set ) {
-        HasEnviroSealing = set;
-
-        SetChanged( true );
-    }
-
-    // the following method is added for when we want to load a 'Mech
-    // and have specific locations for the system
-    public void SetEnviroSealing( boolean set, LocationIndex[] locs ) throws Exception {
-        if( set == HasEnviroSealing ) {
-            return;
-        } else {
-            if( set ) {
-                try {
-                    MainLoadout.CheckExclusions( EnviroSealing );
-                } catch( Exception e ) {
-                    throw e;
-                }
-                if( ! EnviroSealing.Place( MainLoadout, locs ) ) {
-                    MainLoadout.Remove( EnviroSealing );
-                    throw new Exception( "There is no available room for the Environmental Sealing!\nIt will not be allocated." );
-                }
-                AddMechModifier( EnviroSealing.GetMechModifier() );
-                HasEnviroSealing = true;
-            } else {
-                MainLoadout.Remove( EnviroSealing );
-                HasEnviroSealing = false;
-            }
-        }
-
-        SetChanged( true );
-    }
-
-    public boolean HasEnviroSealing() {
-        return HasEnviroSealing;
-    }
-
-    public MultiSlotSystem GetEnviroSealing() {
-        return EnviroSealing;
     }
 
     public boolean isFractionalAccounting() {
@@ -1713,7 +1693,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         Lookup.put( "Ferro-Fibrous", new VArmorSetFF() );
         Lookup.put( "(IS) Ferro-Fibrous", new VArmorSetFF() );
         Lookup.put( "(CL) Ferro-Fibrous", new VArmorSetFF() );
-        Lookup.put( "Stealth Armor", new VArmorSetStealth() );
+        Lookup.put( "Vehicle Stealth Armor", new VArmorSetVStealth() );
         Lookup.put( "Light Ferro-Fibrous", new VArmorSetLightFF() );
         Lookup.put( "Heavy Ferro-Fibrous", new VArmorSetHeavyFF() );
         Lookup.put( "Ferro-Lamellor", new VArmorSetFL() );
@@ -1744,6 +1724,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         //Lookup.put( "Primitive I.C.E. Engine", new VEngineSetPrimitiveICE() );
         Lookup.put( "Compact Fusion Engine", new VEngineSetCompactFusion() );
         Lookup.put( "Light Fusion Engine", new VEngineSetLightFusion() );
+        Lookup.put( "No Engine", new VEngineSetNone() );
         Lookup.put( "No Enhancement", new VEnhanceSetNone() );
         Lookup.put( "Single Heat Sink", new VHeatSinkSetSingle() );
         //Lookup.put( "Double Heat Sink", new VHeatSinkSetDouble() );
@@ -1853,7 +1834,20 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
     public double GetDefensiveBV() {
         // modify the result by the defensive factor and send it out
-        return GetUnmodifiedDefensiveBV() * GetDefensiveFactor();
+        return GetUnmodifiedDefensiveBV() * GetDefensiveModifier() * GetDefensiveFactor();
+    }
+    
+    public double GetDefensiveModifier() {
+        return CurConfig.GetDefensiveMultiplier() + GetChassisModifier();
+    }
+    public double GetChassisModifier() {
+        double retval = 0.0;
+        if ( UsingFlotationHull ) retval += 0.1;
+        if ( UsingLimitedAmphibious ) retval += 0.1;
+        if ( UsingFullAmphibious ) retval += 0.2;
+        if ( UsingDuneBuggy ) retval += 0.1;
+        if ( UsingEnvironmentalSealing || CurConfig instanceof stCVSubmarine ) retval += 0.1;
+        return retval;
     }
 
     public double GetUnmodifiedDefensiveBV() {
@@ -1861,17 +1855,28 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         double defresult = 0.0;
 
         // defensive battle value calculations start here
-        defresult += CurStructure.GetDefensiveBV();
         defresult += CurArmor.GetDefensiveBV();
+        defresult += CurStructure.GetDefensiveBV();
         defresult += GetDefensiveEquipBV();
         defresult += GetDefensiveExcessiveAmmoPenalty();
-        defresult += GetExplosiveAmmoPenalty();
-        defresult += GetExplosiveWeaponPenalty();
+        //defresult += GetExplosiveAmmoPenalty();
+        //defresult += GetExplosiveWeaponPenalty();
         if( defresult < 1.0 ) {
             defresult = 1.0;
         }
 
         return defresult;
+    }
+    
+    public String GetChassisModifierString() {
+        StringBuilder b = new StringBuilder();
+        if ( UsingFlotationHull ) b.append(", Flotation Hull");
+        if ( UsingLimitedAmphibious ) b.append(", Limited Amphibious");
+        if ( UsingFullAmphibious ) b.append(", Full Amphibious");
+        if ( UsingDuneBuggy ) b.append(", Dune Buggy");
+        if ( UsingEnvironmentalSealing && !(CurConfig instanceof stCVSubmarine) ) b.append(", Environmental Sealing");
+        if ( b.length() > 0 ) return  "(" + b.toString().substring(2) + ")";
+        return "";
     }
 
     public double GetDefensiveEquipBV() {
@@ -1891,9 +1896,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
             result += CurEngine.GetDefensiveBV();
             if( HasBlueShield() ) {
                 result += BlueShield.GetDefensiveBV();
-            }
-            if( HasEnviroSealing() ) {
-                result += EnviroSealing.GetDefensiveBV();
             }
             if( CurLoadout.HasSupercharger() ) {
                 result += CurLoadout.GetSupercharger().GetDefensiveBV();
@@ -2027,6 +2029,13 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
         // Get the defensive factors for jumping and running movement
         double ground = DefensiveFactor[RunMP];
+        
+        //VTOL's get an extra .1
+        if ( IsVTOL() ) ground += .1;
+        
+        //Stealth Armor gets an extra .2
+        if ( GetArmor().IsStealth() ) ground += .2;
+        
         double jump = 0.0;
         if( GetJumpJets().GetNumJJ() > 0 ) {
             JumpMP = GetJumpJets().GetNumJJ() - 1;
@@ -2041,12 +2050,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
             retval = ground;
         }
 
-        MechModifier m = GetTotalModifiers( true, true );
-        retval += m.DefensiveBonus();
-        if( retval < m.MinimumDefensiveBonus() ) {
-            retval = m.MinimumDefensiveBonus();
-        }
-
         return retval;
     }
 
@@ -2058,19 +2061,50 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     public double GetUnmodifiedOffensiveBV() {
         double offresult = 0.0;
 
-        offresult += GetHeatAdjustedWeaponBV();
+        offresult += GetWeaponBV();
         offresult += GetNonHeatEquipBV();
         offresult += GetExcessiveAmmoPenalty();
         offresult += GetTonnageBV();
         return offresult;
     }
 
-    public double GetHeatAdjustedWeaponBV() {
+    public double GetWeaponBV() {
         ArrayList v = CurLoadout.GetNonCore(), wep = new ArrayList();
         double result = 0.0, foreBV = 0.0, rearBV = 0.0;
-        boolean UseRear = false, TC = UsingTC(), UseAESMod = false;
+        boolean UseRear = false;
         abPlaceable a;
 
+        // is it even worth performing all this?
+        if( v.size() <= 0 ) {
+            // nope
+            return result;
+        }
+
+        // trim out the other equipment and get a list of offensive weapons only.
+        for( int i = 0; i < v.size(); i++ ) {
+            if( v.get( i ) instanceof ifWeapon ) {
+                wep.add( v.get( i ) );
+            }
+        }
+
+        // just to save us a headache if there are no weapons
+        if( wep.size() <= 0 ) { return result; }
+
+        // find out the total BV of rear and forward firing weapons
+        for( int i = 0; i < wep.size(); i++ ) {
+            a = ((abPlaceable) wep.get( i ));
+            if ( a.IsMountedRear() )
+                rearBV += a.GetCurOffensiveBV(true, CurLoadout.UsingTC(), false);
+            else
+                foreBV += a.GetCurOffensiveBV(false, CurLoadout.UsingTC(), false);
+        }
+        if( rearBV > foreBV ) { UseRear = true; }
+
+        for( int i = 0; i < wep.size(); i++ ) {
+            a = ((abPlaceable) wep.get( i ));
+            result += a.GetCurOffensiveBV( UseRear, CurLoadout.UsingTC(), false );
+        }
+        
         return result;
     }
 
@@ -2155,7 +2189,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public double GetTonnageBV() {
-        return 0;
+        return (double)Tonnage / 2.0;
     }
 
     public double GetOffensiveFactor() {
@@ -2202,7 +2236,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
     public int GetFinalEngineRating()
     {
-        return Math.min(Math.max(GetBaseEngineRating() - CurConfig.GetSuspensionFactor(Tonnage), 10), 400);
+        return Math.min(Math.max( (int)(CommonTools.RoundHalfUp( (GetBaseEngineRating() - CurConfig.GetSuspensionFactor(Tonnage))*.1 ) * 10) , 10), 400);
     }
 
     public AvailableCode GetAvailability() {
@@ -2238,9 +2272,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
         if( HasBlueShield() ) {
             Base.Combine( BlueShield.GetAvailability() );
-        }
-        if( HasEnviroSealing() ) {
-            Base.Combine( EnviroSealing.GetAvailability() );
         }
 
         // now adjust for the era.
@@ -2381,14 +2412,35 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         }
     }
 
+    public double GetBaseChassisCost() {
+        // chassis cost in this context is different than the ChassisCost
+        // variable.  It includes all components except engine, TC, and
+        // equipment without multiple calculation ("base" cost)
+
+        double result = 0.0;
+        result += CurStructure.GetCost();
+        result += GetControlsCost();
+        result += GetLiftEquipmentCost();
+        result += GetHeatSinks().GetCost();
+        result += GetJumpJets().GetCost();
+        result += CurArmor.GetCost();
+        if ( isHasTurret1() ) result += getCurLoadout().GetTurret().GetCost();
+        if ( isHasTurret2() ) result += getCurLoadout().GetRearTurret().GetCost();
+        if ( HasPowerAmplifier ) result += getCurLoadout().GetPowerAmplifier().GetCost();
+
+        return result;
+    }
+    
     public double GetChassisCost() {
         // this method sets the cost variable by calculating the base cost.
         // this is usually only done whenever a chassis component changes.
         double result = GetBaseChassisCost();
         result += CurEngine.GetCost();
 
+        if( UsingLimitedAmphibious ) { result += 10000.0 * GetLimitedAmphibiousTonnage(); }
+        if( UsingFullAmphibious ) { result += 10000.0 * GetFullAmphibiousTonnage(); }
+        if( UsingDuneBuggy ) { result += 10 * Tonnage * Tonnage; }
         if( HasBlueShield() ) { result += BlueShield.GetCost(); }
-        if( HasEnviroSealing() ) { result += EnviroSealing.GetCost(); }
 
         // same goes for the targeting computer and supercharger
         if( CurLoadout.UsingTC() ) {
@@ -2402,29 +2454,11 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public double GetCostMult() {
-        if( Omni ) {
-            return 1.25;
-        } else {
-            return 1;
-        }
-    }
-
-    public double GetBaseChassisCost() {
-        // chassis cost in this context is different than the ChassisCost
-        // variable.  It includes all components except engine, TC, and
-        // equipment without multiple calculation ("base" cost)
-
-        double result = 0.0;
-        result += 10000 * CurStructure.GetTonnage(); //CurStructure.GetCost();
-        result += 10000 * Controls;
-        result += 20000 * LiftEquipment;
-        result += GetHeatSinks().GetCost();
-        result += GetJumpJets().GetCost();
-        result += CurArmor.GetCost();
-        if ( isHasTurret1() ) result += getCurLoadout().GetTurret().GetCost();
-        if ( HasPowerAmplifier ) result += getCurLoadout().GetPowerAmplifier().GetCost();
-
-        return result;
+        double retval = 1.0;
+        if ( Omni ) retval *= 1.25;
+        if ( UsingFlotationHull ) retval *= 1.25;
+        if ( UsingEnvironmentalSealing && !(CurConfig instanceof stCVSubmarine) ) retval *= 1.25;
+        return Math.max(retval, 1);
     }
     
     public boolean IsQuad() {
@@ -2495,16 +2529,153 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         }
     }
     
-    public double GetDryCost() {
-        // returns the total cost of the mech without ammunition
-        return ( GetEquipCost() + GetChassisCost() ) * GetCostMult();
-    }
-    
     public String GetTurretLookupName() {
         String retval = "No Turret";
         if ( isHasTurret1() ) retval = "Single Turret";
         if ( isHasTurret2() ) retval = "Dual Turret";
         return retval;
+    }
+    
+    public int GetMegaMekLevel() {
+        // returns the mech's tech level according to MegaMek
+        switch( GetRulesLevel() ) {
+            case AvailableCode.RULES_TOURNAMENT:
+                if( CurLoadout.GetTechBase() == AvailableCode.TECH_CLAN ) {
+                    return 2;
+                }
+                if( GetAvailability().GetISSWCode() < 'F' ) {
+                    if( GetHeatSinks().IsDouble() ) {
+                        return 2;
+                    } else {
+                        return 1;
+                    }
+                } else {
+                    return 2;
+                }
+            case AvailableCode.RULES_ADVANCED:
+                return 3;
+            case AvailableCode.RULES_EXPERIMENTAL:
+                return 4;
+            default:
+                // only added for code completeness, we should never reach this
+                return 5;
+        }
+    }
+    
+    public void SetTrailer(boolean b ) {
+        IsTrailer = b;
+    }
+    
+    public boolean isTrailer() {
+        return IsTrailer;
+    }
+    
+    public double GetBVWeaponHeat() {
+        // this returns the heat generated by weapons for BV purposes as the
+        // normal method is governed by user preferences
+        double result = 0;
+        ArrayList v = CurLoadout.GetNonCore();
+        if( v.size() <= 0 ) {
+            return result;
+        }
+
+        abPlaceable a;
+        for( int i = 0; i < v.size(); i++ ) {
+            a = (abPlaceable) v.get( i );
+            if( a instanceof ifWeapon ) {
+                result += ((ifWeapon) a).GetBVHeat();
+            }
+            if( a instanceof MGArray ) {
+                result += ((MGArray) a).GetBVHeat();
+            }
+        }
+
+        return result;
+    }
+
+    public int GetBVMovementHeat() {
+        // provided for BV calculations
+        int walk = CurEngine.MaxMovementHeat();
+        int jump = 0;
+        int minjumpheat = 3 * CurEngine.JumpingHeatMultiplier();
+        double heatperjj = 0.0;
+
+        if( GetJumpJets().IsImproved() ) {
+            heatperjj = 0.5 * CurEngine.JumpingHeatMultiplier();
+        } else {
+            heatperjj = 1.0 * CurEngine.JumpingHeatMultiplier();
+        }
+
+        if( GetJumpJets().GetNumJJ() > 0 ) {
+            jump = (int) ( GetJumpJets().GetNumJJ() * heatperjj + 0.51f );
+            if( jump < minjumpheat ) { jump = minjumpheat; }
+
+            if ( GetJumpJets().IsUMU() ) { jump = 1 * CurEngine.JumpingHeatMultiplier(); }
+        }
+
+        if( jump > walk ) {
+            return jump;
+        } else {
+            return walk;
+        }
+    }
+    
+    public boolean HasFlotationHull() {
+        return UsingFlotationHull;
+    }
+    
+    public void SetFlotationHull(boolean b) {
+        UsingFlotationHull = b;
+    }
+    
+    public boolean HasLimitedAmphibious() {
+        return UsingLimitedAmphibious;
+    }
+    
+    public void SetLimitedAmphibious(boolean b) {
+        UsingLimitedAmphibious = b;
+    }
+    
+    public double GetLimitedAmphibiousTonnage() {
+        if ( UsingLimitedAmphibious ) 
+            return CommonTools.RoundHalfUp(Tonnage  / 25.0);
+        return 0;
+    }
+    
+    public boolean HasFullAmphibious() {
+        return UsingFullAmphibious;
+    }
+    
+    public void SetFullAmphibious(boolean b) {
+        UsingFullAmphibious = b;
+    }
+    
+    public double GetFullAmphibiousTonnage() {
+        if ( UsingFullAmphibious ) 
+            return CommonTools.RoundHalfUp(Tonnage  / 10.0);
+        return 0;
+    }
+    
+    public boolean HasEnvironmentalSealing() {
+        return UsingEnvironmentalSealing;
+    }
+    
+    public void SetEnvironmentalSealing(boolean b) {
+        UsingEnvironmentalSealing = b;
+    }
+    
+    public double GetEnvironmentalSealingTonnage() {
+        if ( UsingEnvironmentalSealing && !(CurConfig instanceof stCVSubmarine) ) 
+            return CommonTools.RoundHalfUp(Tonnage  / 10.0);
+        return 0;
+    }
+        
+    public boolean HasDuneBuggy() {
+        return UsingDuneBuggy;
+    }
+    
+    public void SetDuneBuggy(boolean b) {
+        UsingDuneBuggy = b;
     }
 }
 

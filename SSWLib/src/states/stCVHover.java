@@ -107,4 +107,8 @@ public class stCVHover implements ifCombatVehicle {
     public int GetCostMultiplier() {
         return 50;
     }
+    
+    public double GetDefensiveMultiplier() {
+        return 0.7;
+    }
 }

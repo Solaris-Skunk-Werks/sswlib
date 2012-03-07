@@ -46,7 +46,7 @@ public class CVArmor extends abPlaceable {
     private ifArmor Industrial = new stArmorIN(),
                     Standard = new stArmorMS(),
                     ISFF = new stArmorISFF(),
-                    ISST = new stArmorISST(),
+                    ISVST = new stArmorISVST(),
                     ISLF = new stArmorISLF(),
                     ISHF = new stArmorISHF(),
                     Hardened = new stArmorHA(),
@@ -79,16 +79,16 @@ public class CVArmor extends abPlaceable {
         int Percentage = ((!Owner.IsVTOL()) ? GetMaxArmor() : GetMaxArmor()-2) / locations;
 
         MaxArmor[LocationIndex.CV_LOC_BODY] = 0;
-        MaxArmor[LocationIndex.CV_LOC_FRONT] = Percentage;
-        MaxArmor[LocationIndex.CV_LOC_LEFT] = Percentage;
-        MaxArmor[LocationIndex.CV_LOC_RIGHT] = Percentage;
-        MaxArmor[LocationIndex.CV_LOC_REAR] = Percentage;
+        MaxArmor[LocationIndex.CV_LOC_FRONT] = GetMaxArmor();
+        MaxArmor[LocationIndex.CV_LOC_LEFT] = GetMaxArmor();
+        MaxArmor[LocationIndex.CV_LOC_RIGHT] = GetMaxArmor();
+        MaxArmor[LocationIndex.CV_LOC_REAR] = GetMaxArmor();
         
         if ( Owner.isHasTurret1() )
-            MaxArmor[LocationIndex.CV_LOC_TURRET1] = Percentage;
+            MaxArmor[LocationIndex.CV_LOC_TURRET1] = GetMaxArmor();
         
         if ( Owner.isHasTurret2() )
-            MaxArmor[LocationIndex.CV_LOC_TURRET2] = Percentage;
+            MaxArmor[LocationIndex.CV_LOC_TURRET2] = GetMaxArmor();
         
         if ( Owner.IsVTOL() )
             MaxArmor[LocationIndex.CV_LOC_ROTOR] = 2;
@@ -124,7 +124,7 @@ public class CVArmor extends abPlaceable {
         Config = Patchwork;
     }
 
-    //<editor-fold defaultstate="collapseed" desc="Armor Type Setters">
+    //<editor-fold defaultstate="collapsed" desc="Armor Type Setters">
     public void SetIndustrial() {
         // set the armor to Inner Sphere Industrial
         Config = Industrial;
@@ -219,34 +219,34 @@ public class CVArmor extends abPlaceable {
         }
     }
 
-    public void SetISST() {
-        // set the armor to Inner Sphere Stealth
-        Config = ISST;
+    public void SetISVST() {
+        // set the armor to Vehicle Stealth
+        Config = ISVST;
     }
 
-    public void SetISST( int Loc ) throws Exception {
-        CheckPatchworkSpace( ISST, Loc );
+    public void SetISVST( int Loc ) throws Exception {
+        CheckPatchworkSpace( ISVST, Loc );
         switch( Loc ) {
             case LocationIndex.CV_LOC_FRONT:
-                FrontConfig = ISST;
+                FrontConfig = ISVST;
                 return;
             case LocationIndex.CV_LOC_LEFT:
-                LeftConfig = ISST;
+                LeftConfig = ISVST;
                 return;
             case LocationIndex.CV_LOC_RIGHT:
-                RightConfig = ISST;
+                RightConfig = ISVST;
                 return;
             case LocationIndex.CV_LOC_REAR:
-                RearConfig = ISST;
+                RearConfig = ISVST;
                 return;
             case LocationIndex.CV_LOC_TURRET1:
-                Turret1Config = ISST;
+                Turret1Config = ISVST;
                 return;
             case LocationIndex.CV_LOC_ROTOR:
-                RotorConfig = ISST;
+                RotorConfig = ISVST;
                 return;
             case LocationIndex.CV_LOC_TURRET2:
-                Turret2Config = ISST;
+                Turret2Config = ISVST;
                 return;
         }
     }
@@ -880,7 +880,7 @@ public class CVArmor extends abPlaceable {
 
     public ifState[] GetStates() {
         ifState[] retval = { (ifState) Industrial, (ifState) Commercial, (ifState) PBM, (ifState) Standard, (ifState) ISFF, (ifState) CLFF,
-            (ifState) ISLF, (ifState) ISHF, (ifState) ISST, (ifState) Hardened, (ifState) ISLR, (ifState) CLLR, (ifState) ISRE, (ifState) CLRE,
+            (ifState) ISLF, (ifState) ISHF, (ifState) ISVST, (ifState) Hardened, (ifState) ISLR, (ifState) CLLR, (ifState) ISRE, (ifState) CLRE,
              (ifState) CLFL, (ifState) Patchwork };
         return retval;
     }
@@ -908,7 +908,7 @@ public class CVArmor extends abPlaceable {
     }
 
     public double GetDefensiveBV() {
-        return ( GetArmorValue() + GetModularArmorValue() ) * Config.GetBVTypeMult() * 2.5;
+        return ( GetArmorValue() + GetModularArmorValue() ) * 2.5;
     }
 
     public int GetBAR() {

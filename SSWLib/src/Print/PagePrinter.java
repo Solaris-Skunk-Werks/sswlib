@@ -29,7 +29,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package Print;
 
 import filehandlers.Media;
-
 import java.awt.print.*;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;

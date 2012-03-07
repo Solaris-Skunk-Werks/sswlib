@@ -209,4 +209,8 @@ public class TargetingComputer extends abPlaceable {
     public String toString() {
         return CritName();
     }
+    
+    public String toDisplay() {
+        return " (" + Owner.GetTCList().size() + " items : " + GetTonnage() + " tons)";
+    }
 }

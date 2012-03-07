@@ -105,4 +105,8 @@ public class stCVWiGE implements ifCombatVehicle {
     public int GetCostMultiplier() {
         return 25;
     }
+    
+    public double GetDefensiveMultiplier() {
+        return 0.7;
+    }
 }

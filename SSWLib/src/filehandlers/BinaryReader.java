@@ -28,19 +28,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package filehandlers;
 
+import components.*;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import components.Ammunition;
-import components.AvailableCode;
-import components.Equipment;
-import components.Exclusion;
-import components.Mech;
-import components.MechModifier;
-import components.PhysicalWeapon;
-import components.Quirk;
-import components.RangedWeapon;
 import java.util.ArrayList;
 
 public class BinaryReader {

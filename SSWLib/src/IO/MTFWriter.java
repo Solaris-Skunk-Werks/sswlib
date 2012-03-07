@@ -39,6 +39,7 @@ public class MTFWriter {
     // writes the given mech to an MTF file supported by MegaMek.
 
     private Mech CurMech;
+    private CombatVehicle CurVee;
     private String Prepend = "";
     private boolean mixed = false;
 
@@ -49,8 +50,12 @@ public class MTFWriter {
     public MTFWriter( Mech m ) {
         CurMech = m;
     }
+    
+    public MTFWriter( CombatVehicle v ) {
+        CurVee = v;
+    }
 
-    public void WriteMTF( String filename ) throws IOException {
+    public void WriteMechMTF( String filename ) throws IOException {
         BufferedWriter FR = new BufferedWriter( new FileWriter( filename ) );
 
         // get the prepend string for stuff that needs it
@@ -354,6 +359,236 @@ public class MTFWriter {
 
         // all done
         FR.close();
+    }
+    
+    public void WriteVeeMTF( String filename ) throws IOException {
+        BufferedWriter FR = new BufferedWriter( new FileWriter( filename ) );
+
+        // get the prepend string for stuff that needs it
+        switch( CurVee.GetLoadout().GetTechBase() ) {
+            case AvailableCode.TECH_INNER_SPHERE:
+                Prepend = "IS";
+                break;
+            case AvailableCode.TECH_CLAN:
+                Prepend = "CL";
+                break;
+            case AvailableCode.TECH_BOTH:
+                // use the best equipment, there is no difference between them
+                Prepend = "CL";
+                mixed = true;
+                break;
+        }
+        // first block for vesioning and name
+        FR.write( "Version:1.1" );
+        FR.newLine();
+        FR.write( CurVee.GetName() );
+        FR.newLine();
+        if( CurVee.IsOmni() ) {
+            if( CurVee.GetModel().equals( "" ) ) {
+                FR.write( CurVee.GetLoadout().GetName() );
+            } else {
+                FR.write( CurVee.GetModel() + " " + CurVee.GetLoadout().GetName() );
+            }
+        } else {
+            FR.write( CurVee.GetModel() );
+        }
+        FR.newLine();
+
+        // second block handles general mech stuff
+        FR.newLine();
+        FR.write( "Config:" + CurVee.getCurConfig().GetMotiveLookupName() );
+        FR.newLine();
+        switch( CurVee.GetLoadout().GetTechBase() ) {
+            case AvailableCode.TECH_INNER_SPHERE:
+                FR.write( "TechBase:Inner Sphere" );
+                break;
+            case AvailableCode.TECH_CLAN:
+                FR.write( "TechBase:Clan" );
+                break;
+            case AvailableCode.TECH_BOTH:
+                // for that wierd-ass MegaMek reasoning
+                if( CurVee.GetIntStruc().GetTechBase() == AvailableCode.TECH_INNER_SPHERE ) {
+                    FR.write( "TechBase:Mixed (IS Chassis)" );
+                } else{
+                    FR.write( "TechBase:Mixed (Clan Chassis)" );
+                }
+                break;
+        }
+        FR.newLine();
+        FR.write( "Era:" + CurVee.GetYear() );
+        FR.newLine();
+        FR.write( "Rules Level:" + CurVee.GetMegaMekLevel() );
+        FR.newLine();
+
+        // third block for mech specifics
+        FR.newLine();
+        FR.write( "Mass:" + CurVee.GetTonnage() );
+        FR.newLine();
+        if( mixed ) {
+            if( CurVee.GetEngine().GetTechBase() == AvailableCode.TECH_INNER_SPHERE ) {
+                if( CurVee.GetEngine().GetRating() > 400 ) {
+                    FR.write( "Engine:" + CurVee.GetEngine().GetRating() + " Large " + CurVee.GetEngine().CritName() + " (Inner Sphere)" );
+                } else {
+                    FR.write( "Engine:" + CurVee.GetEngine().GetRating() + " " + CurVee.GetEngine().CritName() + " (Inner Sphere)" );
+                }
+            } else {
+                if( CurVee.GetEngine().GetRating() > 400 ) {
+                    FR.write( "Engine:" + CurVee.GetEngine().GetRating() + " Large " + CurVee.GetEngine().CritName() + " (Clan)" );
+                } else {
+                    FR.write( "Engine:" + CurVee.GetEngine().GetRating() + " " + CurVee.GetEngine().CritName() + " (Clan)" );
+                }
+            }
+        } else {
+            if( CurVee.GetEngine().GetRating() > 400 ) {
+                FR.write( "Engine:" + CurVee.GetEngine().GetRating() + " Large " + CurVee.GetEngine().CritName() );
+            } else {
+                FR.write( "Engine:" + CurVee.GetEngine().GetRating() + " " + CurVee.GetEngine().CritName() );
+            }
+        }
+        FR.newLine();
+        FR.write( "Structure:" + CurVee.GetIntStruc().MegaMekName( false ) );
+        FR.newLine();
+
+        // fourth block for movement and heat
+        FR.newLine();
+        if( CurVee.GetHeatSinks().IsDouble() ) {
+            if( mixed ) {
+                if( CurVee.GetHeatSinks().GetTechBase() == AvailableCode.TECH_INNER_SPHERE ) {
+                    FR.write( "Heat Sinks:" + CurVee.GetHeatSinks().GetNumHS() + " Double (Inner Sphere)" );
+                } else {
+                    FR.write( "Heat Sinks:" + CurVee.GetHeatSinks().GetNumHS() + " Double (Clan)" );
+                }
+            } else {
+                FR.write( "Heat Sinks:" + CurVee.GetHeatSinks().GetNumHS() + " Double" );
+            }
+        } else {
+            FR.write( "Heat Sinks:" + CurVee.GetHeatSinks().GetNumHS() + " Single" );
+        }
+        FR.newLine();
+        if( CurVee.IsOmni() ) {
+            FR.write( "Base Chassis Heat Sinks: " + CurVee.GetLoadout().GetHeatSinks().GetBaseLoadoutNumHS() );
+            FR.newLine();
+        }
+        FR.write( "Cruise MP:" + CurVee.getCruiseMP() );
+        FR.newLine();
+        FR.write( "Jump MP:" + CurVee.GetJumpJets().GetNumJJ() );
+        FR.newLine();
+
+        // fifth block for armor information
+        FR.newLine();
+        if( mixed ) {
+            if( CurVee.GetArmor().GetTechBase() == AvailableCode.TECH_INNER_SPHERE ) {
+                FR.write( "Armor:" + CurVee.GetArmor().MegaMekName( false ) + " (Inner Sphere)" );
+            } else {
+                FR.write( "Armor:" + CurVee.GetArmor().MegaMekName( false ) + " (Clan)" );
+            }
+        } else {
+            FR.write( "Armor:" + CurVee.GetArmor().MegaMekName( false ) );
+        }
+        FR.newLine();
+        FR.write( "LA Armor:" + CurVee.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LA) );
+        FR.newLine();
+        FR.write( "RA Armor:" + CurVee.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RA) );
+        FR.newLine();
+        FR.write( "LT Armor:" + CurVee.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LT) );
+        FR.newLine();
+        FR.write( "RT Armor:" + CurVee.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RT) );
+        FR.newLine();
+        FR.write( "CT Armor:" + CurVee.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CT) );
+        FR.newLine();
+        FR.write( "HD Armor:" + CurVee.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_HD) );
+        FR.newLine();
+        FR.write( "LL Armor:" + CurVee.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LL) );
+        FR.newLine();
+        FR.write( "RL Armor:" + CurVee.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RL) );
+        FR.newLine();
+        FR.write( "RTL Armor:" + CurVee.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_LTR) );
+        FR.newLine();
+        FR.write( "RTR Armor:" + CurVee.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_RTR) );
+        FR.newLine();
+        FR.write( "RTC Armor:" + CurVee.GetArmor().GetLocationArmor( LocationIndex.MECH_LOC_CTR) );
+        FR.newLine();
+
+        // sixth block for weapon information.  Get the loadout directly as this
+        // will make things much easier
+        ifCVLoadout l = CurVee.GetLoadout();
+        FR.newLine();
+        ArrayList v = l.GetNonCore();
+        // now we have to split up the ArrayList into equipment and ammo
+        ArrayList eq = new ArrayList();
+        ArrayList ammo = new ArrayList();
+        for( int i = 0; i < v.size(); i++ ) {
+            if( v.get( i ) instanceof Ammunition ) {
+                ammo.add( v.get( i ) );
+            } else {
+                eq.add( v.get( i ) );
+            }
+        }
+        FR.write( "Weapons:" + eq.size() );
+        FR.newLine();
+        for( int i = 0; i < eq.size(); i++ ) {
+            // each piece of equipment has it's own line.  If it's a weapon,
+            // we'll have to find out how much ammo it has as well
+            abPlaceable p = (abPlaceable) eq.get( i );
+            if( p instanceof ifWeapon ) {
+                if( ((ifWeapon) p).HasAmmo() ) {
+                    // since we're removing ammo as we add it, ignore the ammo
+                    // index if it doesn't exist in the ArrayList
+                    int ammoindex = ((ifWeapon) p).GetAmmoIndex();
+                    int ammoamount = 0;
+                    for( int j = ammo.size() - 1; j >= 0; j-- ) {
+                        // we're using the literal ammo lot size, not what the ammo says.
+                        if( ((Ammunition) ammo.get( j )).GetAmmoIndex() == ammoindex ) {
+                            ammoamount += ((ifWeapon) p).GetAmmoLotSize();
+                            ammo.remove( j );
+                        }
+                    }
+                    // check for a rear-facing weapon
+                    String rear = "";
+                    if( p.IsMountedRear() ) {
+                        rear = " (R)";
+                    }
+                    // now that we have the amount, add the line in
+                    if( ammoamount > 0 ) {
+                        FR.write( "1 " + GetMMName( p ) + ", " + LocationIndex.MechLocs[l.Find( p )] + rear + ", Ammo:" + ammoamount );
+                    } else {
+                        FR.write( "1 " + GetMMName( p ) + ", " + LocationIndex.MechLocs[l.Find( p )] + rear );
+                    }
+                } else {
+                    // check for a rear-facing weapon
+                    String rear = "";
+                    if( p.IsMountedRear() ) {
+                        rear = " (R)";
+                    }
+                    // no ammo checking needed
+                    FR.write( "1 " + GetMMName( p ) + ", " + LocationIndex.MechLocs[l.Find( p )] + rear );
+                }
+                FR.newLine();
+            } else {
+                // not a weapon so no ammo checking.  Add it to the file
+                FR.write( "1 " + GetMMName( p ) + ", " + LocationIndex.MechLocs[l.Find( p )] );
+                FR.newLine();
+            }
+            // format is:
+            // "1 <weapon lookupname>, <location>, Ammo:<total lot size>
+        }
+
+
+        // all done
+        FR.close();
+    }
+    
+    public void WriteMTF( String filename ) throws IOException {
+        if (CurMech != null) {
+            WriteMechMTF(filename);
+            return;
+        }
+        
+        if ( CurVee != null ) {
+            WriteVeeMTF(filename);
+            return;
+        }
+                
     }
 
     public void setMech( Mech m ) {

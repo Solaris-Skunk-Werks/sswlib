@@ -97,4 +97,8 @@ public class stCVTracked implements ifCombatVehicle {
     public int GetCostMultiplier() {
         return 100;
     }
+    
+    public double GetDefensiveMultiplier() {
+        return 0.9;
+    }
 }

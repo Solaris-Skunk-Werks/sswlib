@@ -31,6 +31,9 @@ package components;
 import common.CommonTools;
 import common.Constants;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import states.stCVSubmarine;
 import visitors.VFCSApolloLoader;
 import visitors.VFCSArtemisIVLoader;
 import visitors.VFCSArtemisVLoader;
@@ -70,12 +73,12 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
                     Turret2 = new Turret(this, false);
     private CVPowerAmplifier PowerAmplifier = new CVPowerAmplifier(this);
     
-    //private TargetingComputer CurTC = new TargetingComputer( this, false );
     private int RulesLevel = AvailableCode.RULES_TOURNAMENT,
                 TechBase = AvailableCode.TECH_INNER_SPHERE,
                 Era = AvailableCode.ERA_STAR_LEAGUE,
                 ProductionEra = AvailableCode.PRODUCTION_ERA_AGE_OF_WAR,
                 Year = 2750;
+    public CASE Case = new CASE();
 
     public CVLoadout( CombatVehicle c ) {
         Owner = c;
@@ -250,12 +253,42 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     }
 
     public void SafeClearLoadout() {
-        FullUnallocate();
+        // this routine clears the loadout of any items that are non-core
+        ArrayList<ArrayList<abPlaceable>> Items = new ArrayList<ArrayList<abPlaceable>>();
+        Items.add(FrontItems);
+        Items.add(LeftItems);
+        Items.add(RightItems);
+        Items.add(RearItems);
+        Items.add(BodyItems);
+        Items.add(Turret1Items);
+        Items.add(Turret2Items);
+        
+        ArrayList<abPlaceable> remove = new ArrayList<abPlaceable>();
+        
+        for ( ArrayList<abPlaceable> list : Items ) {
+            for ( abPlaceable a : list ) {
+                if ( !a.LocationLocked() )
+                    remove.add(a);
+            }
+        }
+        
+        for(abPlaceable a : remove ) {
+            Remove(a);
+        }
+
+        //reset the number of heat sinks to the Engine base since they got rid of all the weapons.
+        GetHeatSinks().SetNumHS(GetTotalHeat());
+        
         Owner.SetChanged( true );
+    }
+    
+    public void ResetHeatSinks() {
+        //reset the number of heat sinks to the Engine base since they got rid of all the weapons.
+        GetHeatSinks().SetNumHS(GetTotalHeat());
     }
 
     public void SafeMassUnallocate() {
-        FullUnallocate();
+        SafeClearLoadout();
         Owner.SetChanged( true );
     }
 
@@ -264,33 +297,77 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     }
 
     public void AddTo(abPlaceable p, int Loc) throws Exception {
+        if ( p instanceof Ammunition ) Loc = LocationIndex.CV_LOC_BODY;
+        
         switch( Loc ) {
             case LocationIndex.CV_LOC_BODY:
-                BodyItems.add(p);
+                if ( p.CanAllocCVBody() )
+                    BodyItems.add(p);
+                else
+                    throw new Exception(p.ActualName() + " cannot be allocated to the Body.");
                 break;
             case LocationIndex.CV_LOC_FRONT:
-                FrontItems.add(p);
+                if ( p.CanAllocCVFront() )
+                    FrontItems.add(p);
+                else
+                    throw new Exception(p.ActualName() + " cannot be allocated to the Front.");
                 break;
             case LocationIndex.CV_LOC_LEFT:
-                LeftItems.add(p);
+                if ( p.CanAllocCVSide() )
+                    LeftItems.add(p);
+                else
+                    throw new Exception(p.ActualName() + " cannot be allocated to the Side.");
                 break;
             case LocationIndex.CV_LOC_REAR:
-                RearItems.add(p);
+                if ( p.CanAllocCVRear() ) {
+                    p.MountRear(true);
+                    RearItems.add(p);
+                } else
+                    throw new Exception(p.ActualName() + " cannot be allocated to the Rear.");
+                
                 break;
             case LocationIndex.CV_LOC_RIGHT:
-                RightItems.add(p);
+                if ( p.CanAllocCVSide() )
+                    RightItems.add(p);
+                else
+                    throw new Exception(p.ActualName() + " cannot be allocated to the Side.");
                 break;
             case LocationIndex.CV_LOC_TURRET1:
-                Turret1Items.add(p);
+                if ( p.CanAllocCVTurret() ) {
+                    Turret1Items.add(p);
+                    if ( Owner.IsOmni() ) {
+                        if ( Turret1.GetTonnage() > Turret1.GetMaxTonnage()  ) {
+                            Turret1Items.remove(p);
+                            throw new Exception("Turret is out of space");
+                        }
+                    }
+                } else
+                    throw new Exception(p.ActualName() + " cannot be allocated to the Turret.");
+                
                 break;
             case LocationIndex.CV_LOC_TURRET2:
-                Turret2Items.add(p);
+                if ( p.CanAllocCVTurret() )
+                    Turret2Items.add(p);
+                else
+                    throw new Exception(p.ActualName() + " cannot be allocated to the Rear Turret.");
                 break;
             default:
                 throw new Exception( "Location not recognized or not an integer\nwhile placing " + p.CritName() );
         }
+        if ( p instanceof RangedWeapon ) {
+            if ( ((RangedWeapon)p).IsTCCapable() )
+                TCList.add(p);
+        }
         if (GetHeatSinks().GetNumHS() < GetTotalHeat())
             GetHeatSinks().SetNumHS(GetTotalHeat());
+    }
+    
+    public double GetItemsTonnage( ArrayList<abPlaceable> items ) {
+        double total = 0;
+        for( abPlaceable a : items ) {
+            total += a.GetTonnage();
+        }
+        return total;
     }
     
     public int GetTotalHeat() {
@@ -300,6 +377,8 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
                 total += ((RangedWeapon)a).GetHeat();
             }
         }
+        if ( Owner.GetArmor().IsStealth() ) total += 10;
+        if ( Owner.IsOmni() && Owner.GetBaseLoadout().GetHeatSinks().GetBaseLoadoutNumHS() > total ) total = Owner.GetBaseLoadout().GetHeatSinks().GetBaseLoadoutNumHS();
         return total;
     }
 
@@ -362,11 +441,11 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
         return BodyItems;
     }
 
-    public ArrayList GetTurret1Items() {
+    public ArrayList<abPlaceable> GetTurret1Items() {
         return Turret1Items;
     }
 
-    public ArrayList GetTurret2Items() {
+    public ArrayList<abPlaceable> GetTurret2Items() {
         return Turret2Items;
     }
 
@@ -409,7 +488,14 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     }
 
     public LocationIndex FindIndex(abPlaceable p) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if ( FrontItems.contains(p)) return new LocationIndex(0, LocationIndex.CV_LOC_FRONT, p.NumCVSpaces());
+        if ( LeftItems.contains(p)) return new LocationIndex(0, LocationIndex.CV_LOC_LEFT, p.NumCVSpaces());
+        if ( RightItems.contains(p)) return new LocationIndex(0, LocationIndex.CV_LOC_RIGHT, p.NumCVSpaces());
+        if ( BodyItems.contains(p)) return new LocationIndex(0, LocationIndex.CV_LOC_BODY, p.NumCVSpaces());
+        if ( Turret1Items.contains(p)) return new LocationIndex(0, LocationIndex.CV_LOC_TURRET1, p.NumCVSpaces());
+        if ( RearItems.contains(p)) return new LocationIndex(0, LocationIndex.CV_LOC_REAR, p.NumCVSpaces());
+        if ( Turret2Items.contains(p)) return new LocationIndex(0, LocationIndex.CV_LOC_TURRET2, p.NumCVSpaces());
+        return null;
     }
 
     public int[] FindInstances(abPlaceable p) {
@@ -459,11 +545,11 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
         FrontItems.remove(p);
         LeftItems.remove(p);
         RightItems.remove(p);
+        BodyItems.remove(p);
         RearItems.remove(p);
         Turret1Items.remove(p);
         RotorItems.remove(p);
         Turret2Items.remove(p);
-        BodyItems.remove(p);
         NonCore.remove(p);
         TCList.remove(p);
         Owner.SetChanged( true );
@@ -476,23 +562,32 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
         UnallocateAll( p, true );
 
         // Now remove it from the queue
-        RemoveFromQueue( p );
+        //RemoveFromQueue( p );
 
         // check to see if this is a core component
-        if( ! p.CoreComponent() ) {
+        //if( ! p.CoreComponent() ) {
             // remove it to the non core list
-            if( NonCore.contains( p ) ) {
+            if( NonCore.contains( p ) )
                 NonCore.remove( p );
-            }
-
-            if( Equipment.contains( p ) ) {
+            if( Equipment.contains( p ) )
                 Equipment.remove( p );
-            }
-
-            if( TCList.contains( p ) ) {
+            if( TCList.contains( p ) )
                 TCList.remove( p );
-            }
-        }
+            if ( FrontItems.contains( p ) )
+                FrontItems.remove( p );
+            if ( LeftItems.contains(p))
+                LeftItems.remove(p);            
+            if ( RightItems.contains(p))
+                RightItems.remove(p);
+            if ( BodyItems.contains(p))
+                BodyItems.remove(p);
+            if ( RearItems.contains(p))
+                RearItems.remove(p);
+            if ( Turret1Items.contains(p))
+                Turret1Items.remove(p);
+            if ( Turret2Items.contains(p))
+                Turret2Items.remove(p);
+        //}
 
         Owner.SetChanged( true );
     }
@@ -522,14 +617,36 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     }
 
     public void LockChassis() {
-        for (abPlaceable a : (ArrayList<abPlaceable>)GetNonCore()) {
-            a.SetLocked(true);
+        ArrayList<ArrayList<abPlaceable>> Items = new ArrayList<ArrayList<abPlaceable>>();
+        Items.add(FrontItems);
+        Items.add(LeftItems);
+        Items.add(RightItems);
+        Items.add(RearItems);
+        Items.add(BodyItems);
+        Items.add(Turret1Items);
+        Items.add(Turret2Items);
+        
+        for ( ArrayList<abPlaceable> list : Items ) {
+            for ( abPlaceable a : list ) {
+                a.SetLocked(true);
+            }
         }
     }
 
     public void UnlockChassis() {
-        for (abPlaceable a : (ArrayList<abPlaceable>)GetNonCore()) {
-            a.SetLocked(false);
+        ArrayList<ArrayList<abPlaceable>> Items = new ArrayList<ArrayList<abPlaceable>>();
+        Items.add(FrontItems);
+        Items.add(LeftItems);
+        Items.add(RightItems);
+        Items.add(RearItems);
+        Items.add(BodyItems);
+        Items.add(Turret1Items);
+        Items.add(Turret2Items);
+        
+        for ( ArrayList<abPlaceable> list : Items ) {
+            for ( abPlaceable a : list ) {
+                a.SetLocked(false);
+            }
         }
     }
 
@@ -550,10 +667,14 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
             // will be empty.  Write an event to stderr
             System.err.println( "Could not set Artemis IV for an empty loadout." );
         }
-        if( NonCore.size() > 0 ) {
-            // have to move the none-core items
-            clone.SetNonCore( (ArrayList) NonCore.clone() );
-        }
+        clone.SetFrontItems( (ArrayList<abPlaceable>)FrontItems.clone() );
+        clone.SetLeftItems( (ArrayList<abPlaceable>)LeftItems.clone() );
+        clone.SetRightItems( (ArrayList<abPlaceable>)RightItems.clone() );
+        clone.SetBodyItems( (ArrayList<abPlaceable>)BodyItems.clone() );
+        clone.SetRearItems( (ArrayList<abPlaceable>)RearItems.clone() );
+        clone.SetTurret1( (ArrayList<abPlaceable>)Turret1Items.clone() );
+        clone.SetTurret2( (ArrayList<abPlaceable>)Turret2Items.clone() );
+        
         if( TCList.size() > 0 ) {
             clone.SetTCList( (ArrayList) TCList.clone() );
         }
@@ -566,6 +687,9 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
         if( Owner.IsOmni() ) {
             clone.SetBaseLoadout( this );
         }
+        clone.SetTurret(Turret1);
+        clone.SetRearTurret(Turret2);
+
         return clone;
     }
 
@@ -578,32 +702,32 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
         return BaseLoadout;
     }
 
-    public void SetFrontItems(abPlaceable[] c) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void SetFrontItems(ArrayList<abPlaceable> c) {
+        FrontItems = c;
     }
 
-    public void SetLeftItems(abPlaceable[] c) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void SetLeftItems(ArrayList<abPlaceable> c) {
+        LeftItems = c;
     }
 
-    public void SetRightItems(abPlaceable[] c) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void SetRightItems(ArrayList<abPlaceable> c) {
+        RightItems = c;
     }
 
-    public void SetRearItems(abPlaceable[] c) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void SetRearItems(ArrayList<abPlaceable> c) {
+        RearItems = c;
     }
 
-    public void SetBodyItems(abPlaceable[] c) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void SetBodyItems(ArrayList<abPlaceable> c) {
+        BodyItems = c;
     }
 
-    public void SetTurret1(abPlaceable[] c) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void SetTurret1(ArrayList<abPlaceable> c) {
+        Turret1Items = c;
     }
 
-    public void SetTurret2(abPlaceable[] c) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void SetTurret2(ArrayList<abPlaceable> c) {
+        Turret2Items =  c;
     }
 
     public void SetNonCore(ArrayList v) {
@@ -615,7 +739,7 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     }
 
     public void SetEquipment(ArrayList v) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Equipment = v;
     }
 
     public boolean CanUseClanCASE() {
@@ -628,19 +752,30 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
 
     public void SetClanCASE(boolean b) {
         UsingClanCASE = b;
+        Case.SetClan(b);
         Owner.SetChanged( true );
     }
 
+    public void RemoveISCase() {
+        Remove(Case);
+    }
+    
     public void SetISCASE(CASE c) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Remove(Case);
+        try {
+            AddTo(Case, LocationIndex.CV_LOC_BODY);
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 
     public boolean HasISCASE() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if ( GetNonCore().contains(Case) ) return true;
+        return false;
     }
 
     public CASE GetISCase() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return Case;
     }
 
 
@@ -740,26 +875,14 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     public void CheckTC() {
         // this routine checks to see if the targeting computer can be allocated
         // and does so if needed.  It will also remove the TC if it has to.
-        if( ! Use_TC ) {
-            // remove the TC from the loadout
-            Remove( CurTC );
+        
+        // remove the TC from the loadout
+        Remove( CurTC );
+        if( ! Use_TC )
             return;
-        }
-
-        if( ! QueueContains( CurTC ) ) {
-            if( ! IsAllocated( CurTC ) ) {
-                // TC not allocated or in the queue, let's see if we can add it
-                if( CurTC.NumCrits() > 0 ) {
-                    AddToQueue( CurTC );
-                } else {
-                    Remove( CurTC );
-                }
-            }
-        }
-
-        // lastly, see if we need to remove it altogether
-        if( CurTC.NumCrits() <= 0 ) { Remove( CurTC ); }
-
+        
+        BodyItems.add(CurTC);
+        
         Owner.SetChanged( true );
     }
 
@@ -876,12 +999,21 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     public Turret GetTurret(){
         return Turret1;
     }
+    
+    public void SetTurret( Turret t ) {
+        Turret1 = t;
+    }
 
     public Turret GetRearTurret() {
         return Turret2;
     }
+    
+    public void SetRearTurret( Turret t ) {
+        Turret2 = t;
+    }
 
     public void MoveToQueue( int loc ) {
+        /*
         switch (loc) {
             case LocationIndex.CV_LOC_TURRET1:
                 Queue.addAll(Turret1Items);
@@ -893,6 +1025,7 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
                 break;
         }
         Owner.SetChanged( true );
+        */
     }
     
     public ifUnit GetUnit() {

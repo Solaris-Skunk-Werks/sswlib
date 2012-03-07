@@ -64,6 +64,7 @@ public class PrintConsts {
                                RS_TW_GROUND = "./Data/Printing/RS_TW_GROUND.png",
                                RS_TW_NAVAL = "./Data/Printing/RS_TW_NAVAL.png",
                                RS_TW_VTOL = "./Data/Printing/RS_TW_VTOL.png",
+                               RS_TO_GROUND = "./Data/Printing/RS_TO_GROUND.png",
                                BP_ChartImage = "./Data/Printing/Charts.png",
                                QD_ChartImage = "./Data/Printing/ChartsQD.png",
                                BP_ChartImage_Minimal = "./Data/Printing/charts-minimal.png",

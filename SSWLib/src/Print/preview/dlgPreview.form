@@ -235,7 +235,7 @@
             <Component class="javax.swing.JCheckBox" name="chkImage">
               <Properties>
                 <Property name="selected" type="boolean" value="true"/>
-                <Property name="text" type="java.lang.String" value="Print Mech Images "/>
+                <Property name="text" type="java.lang.String" value="Print Image"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemChanged"/>

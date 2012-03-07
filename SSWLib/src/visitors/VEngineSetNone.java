@@ -30,58 +30,29 @@ package visitors;
 
 import components.*;
 
-public class VArmorSetStealth implements ifVisitor {
-    // sets the mech's armor to stealth
-    private Mech CurMech;
-    private LocationIndex[] Locs = null;
-
-    public VArmorSetStealth() {
-    }
-
-    public void LoadLocations( LocationIndex[] locs ) {
-        // loads up any location indexes needed to place this.  mainly for use
-        // when loading a 'Mech up.
-        Locs = locs;
-    }
-
+public class VEngineSetNone implements ifVisitor {
     public void SetClan( boolean clan ) {
     }
 
+    public void LoadLocations(LocationIndex[] locs) {
+        // does nothing here, but may later.
+    }
+
     public void Visit(Mech m) throws Exception {
-        // only the armor changes, so pass us off
-        CurMech = m;
-        ifMechLoadout l = CurMech.GetLoadout();
-        MechArmor a = CurMech.GetArmor();
-
-        // remove the old armor, if needed
-        l.Remove( a );
-        a.ResetPatchworkConfigs();
-
-        a.SetISST();
-
-        if( Locs == null ) {
-            // place the armor
-            if( ! a.Place( l ) ) {
-                // not enough free space.  tell the user
-                throw new Exception( "There is no available room for Stealth Armor!" );
-            }
-        } else {
-            // use the location index array given to allocate the armor
-            if( ! a.Place( l, Locs ) ) {
-                // not enough free space.  tell the user
-                throw new Exception( "There is no available room for Stealth Armor!" );
-            }
-        }
-        if( a.GetMechModifier() != null ) {
-            CurMech.AddMechModifier( a.GetMechModifier() );
-        }
-        // reset the locations just in case.  Any time this visitor is used we
-        // should load up a new set of locations.
-        Locs = null;
+        // only the engine changes here, so pass us off to the engine
+        throw new Exception("'Mechs require an engine.");
     }
 
     public void Visit( CombatVehicle v ) throws Exception {
-        // does nothing
+        Engine e = v.GetEngine();
+
+        //Only for trailers...
+        if (!v.isTrailer())
+            throw new Exception("This Engine can only be selected for Trailers.");
+        
+        // change the engine type
+        e.SetNoneEngine();
+        v.SetEngine(e);
     }
 
     public void Visit( Infantry i ) throws Exception {

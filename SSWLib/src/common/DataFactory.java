@@ -34,7 +34,6 @@ import components.Quirk;
 import filehandlers.BinaryReader;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.ArrayList;
 
 public class DataFactory {
     // Class file to make data lookups easier and disconnected from the GUI

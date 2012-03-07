@@ -36,6 +36,7 @@ public interface ifCombatVehicle {
     public float GetMinEngineWeight( int Tonnage );
     public float GetLiftEquipmentCostMultiplier();
     public int GetCostMultiplier();
+    public double GetDefensiveMultiplier();
     public boolean RequiresLiftEquipment();
     public boolean IsVTOL();
     public boolean CanBeTrailer();

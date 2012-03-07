@@ -1,5 +1,81 @@
 /*
-Copyright (c) 2008~2009, Justin R. Bengtson (poopshotgun@yahoo.com)
+Copyright (c) 2008~2009, Justin R. Beng
+
+            @Override
+            public String ActualName() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public String LookupName() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public String CritName() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public String ChatName() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public String MegaMekName(boolean UseRear) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public String BookReference() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public int NumCrits() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public int NumCVSpaces() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public double GetTonnage() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public double GetCost() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public double GetOffensiveBV() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public double GetCurOffensiveBV(boolean UseRear, boolean UseTC, boolean UseAES) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public double GetCurOffensiveBV(boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRobotic) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public double GetDefensiveBV() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public AvailableCode GetAvailability() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }son (poopshotgun@yahoo.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,

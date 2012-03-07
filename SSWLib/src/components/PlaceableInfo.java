@@ -34,7 +34,7 @@ import java.util.Vector;
 public class PlaceableInfo {
         public int Location,
                     UnitType = common.Constants.BattleMech,
-                    NameLength = 20;
+                    NameLength = 23;
         public String   Count = "",
                         name = "",
                         name2 = "",
@@ -160,19 +160,19 @@ public class PlaceableInfo {
         }
 
         public PlaceableInfo ATMERAmmo( PlaceableInfo item ) {
-            return new PlaceableInfo(CurMech, MiniConvRate, "", 0, "", "ER", "", "1/m", (4 * MiniConvRate ) + "", (9 * MiniConvRate ) + "", (18 * MiniConvRate ) + "", (27 * MiniConvRate ) + "", item.specials);
+            return new PlaceableInfo(CurMech, MiniConvRate, "", 0, "", " ER", "", "1/m", (4 * MiniConvRate ) + "", (9 * MiniConvRate ) + "", (18 * MiniConvRate ) + "", (27 * MiniConvRate ) + "", item.specials);
         }
 
         public PlaceableInfo ATMHEAmmo( PlaceableInfo item ) {
-            return new PlaceableInfo(CurMech, MiniConvRate, "", 0, "", "HE", "", "3/m", "-", (3 * MiniConvRate ) + "", (6 * MiniConvRate ) + "", (9 * MiniConvRate ) + "", item.specials);
+            return new PlaceableInfo(CurMech, MiniConvRate, "", 0, "", " HE", "", "3/m", "-", (3 * MiniConvRate ) + "", (6 * MiniConvRate ) + "", (9 * MiniConvRate ) + "", item.specials);
         }
 
         public PlaceableInfo MMLLRMAmmo( PlaceableInfo item ) {
-            return new PlaceableInfo(CurMech, MiniConvRate, "", 0, "", "LRM", "", "1/Msl.", (6 * MiniConvRate ) + "", (7 * MiniConvRate ) + "", (14 * MiniConvRate ) + "", (21 * MiniConvRate ) + "", "-");
+            return new PlaceableInfo(CurMech, MiniConvRate, "", 0, "", " LRM", "", "1/Msl.", (6 * MiniConvRate ) + "", (7 * MiniConvRate ) + "", (14 * MiniConvRate ) + "", (21 * MiniConvRate ) + "", "-");
         }
 
         public PlaceableInfo MMLSRMAmmo( PlaceableInfo item ) {
-            return new PlaceableInfo(CurMech, MiniConvRate, "", 0, "", "SRM", "", "2/Msl.", "--", (3 * MiniConvRate ) + "", (6 * MiniConvRate ) + "", (9 * MiniConvRate ) + "", "-");
+            return new PlaceableInfo(CurMech, MiniConvRate, "", 0, "", " SRM", "", "2/Msl.", "--", (3 * MiniConvRate ) + "", (6 * MiniConvRate ) + "", (9 * MiniConvRate ) + "", "-");
         }
 
         public PlaceableInfo ArtemisIV( PlaceableInfo item ) {

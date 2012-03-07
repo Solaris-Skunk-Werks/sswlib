@@ -27,7 +27,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package list.view;
 
+import java.text.NumberFormat;
 import javax.swing.SortOrder;
+import javax.swing.text.NumberFormatter;
 import list.UnitList;
 import list.UnitListData;
 
@@ -60,7 +62,7 @@ public class tbTotalWarfareView extends abView {
             case 2:
                 return (int) m.getBV();
             case 3:
-                return m.getCost();
+                return String.format("%10.0f", m.getCost());
             case 4:
                 return m.getLevel();
             case 5:

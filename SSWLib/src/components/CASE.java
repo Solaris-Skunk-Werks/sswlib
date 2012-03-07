@@ -31,6 +31,7 @@ package components;
 public class CASE extends abPlaceable {
     // A simple class for Inner Sphere CASE.
     private AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
+    private boolean IsClan = false;
 
     public CASE() {
         AC.SetISCodes( 'D', 'C', 'F', 'D' );
@@ -38,7 +39,7 @@ public class CASE extends abPlaceable {
         AC.SetISFactions( "", "", "TH", "DC" );
         AC.SetPBMAllowed( true );
         AC.SetPIMAllowed( true );
-        AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+        AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
         SetBattleForceAbilities( new String[] { "CASE" } );
     }
 
@@ -82,10 +83,12 @@ public class CASE extends abPlaceable {
 
     @Override
     public int NumCVSpaces() {
+        if ( IsClan ) return 0;
         return 1;
     }
 
     public double GetTonnage() {
+        if ( IsClan ) return 0;
         return 0.5;
     }
 
@@ -128,5 +131,9 @@ public class CASE extends abPlaceable {
     @Override
     public String toString() {
         return "C.A.S.E.";
+    }
+    
+    public void SetClan(boolean b ) {
+        IsClan = b;
     }
 }

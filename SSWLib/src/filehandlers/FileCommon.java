@@ -773,11 +773,11 @@ public class FileCommon {
                     case LocationIndex.CV_LOC_REAR:
                         return "R";
                     case LocationIndex.CV_LOC_ROTOR:
-                        return "RT";
+                        return "RO";
                     case LocationIndex.CV_LOC_TURRET1:
                         return "T";
                     case LocationIndex.CV_LOC_TURRET2:
-                        return "ST";
+                        return "RT";
                     default:
                         return "??";
                 }
@@ -787,6 +787,10 @@ public class FileCommon {
     }
     
     public static String EncodeLocations( int[] check, boolean quad ) {
+        return EncodeLocations( check, quad, common.CommonTools.BattleMech );
+    }
+    
+    public static String EncodeLocations( int[] check, boolean quad, int UnitType ) {
         // this will work initializing to 0 since you cannot split into the head
         // and no contiguous item can be split into more than two locations.
 
@@ -806,14 +810,15 @@ public class FileCommon {
 
         if( loc2 == 0 ) {
             // only took up one location
-            retval = EncodeLocation( loc1, quad );
+            retval = EncodeLocation( loc1, quad, UnitType );
         } else {
             // two locations
-            retval = EncodeLocation( loc1, quad ) + "/" + EncodeLocation( loc2, quad );
+            retval = EncodeLocation( loc1, quad, UnitType ) + "/" + EncodeLocation( loc2, quad, UnitType );
         }
 
         return retval;
     }
+    
 
     public static String DecodeCrits( int[] check ) {
         String retval = "";

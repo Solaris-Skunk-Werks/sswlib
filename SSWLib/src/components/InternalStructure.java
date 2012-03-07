@@ -237,11 +237,15 @@ public class InternalStructure extends abPlaceable {
         // returns the total number of internal structure points in the mech
         int retval = 0;
 
-        retval += GetHeadPoints();
-        retval += GetCTPoints();
-        retval += GetSidePoints() + GetSidePoints();
-        retval += GetArmPoints() + GetArmPoints();
-        retval += GetLegPoints() + GetLegPoints();
+        if ( Owner instanceof Mech ) {
+            retval += GetHeadPoints();
+            retval += GetCTPoints();
+            retval += GetSidePoints() + GetSidePoints();
+            retval += GetArmPoints() + GetArmPoints();
+            retval += GetLegPoints() + GetLegPoints();
+        } else if ( Owner instanceof CombatVehicle ) {
+            retval += NumCVSpaces() * ((CombatVehicle)Owner).getLocationCount();
+        }
 
         return retval;
     }
@@ -286,11 +290,13 @@ public class InternalStructure extends abPlaceable {
     }
 
     public double GetDefensiveBV() {
-        double result = GetHeadPoints() + GetCTPoints() + ( GetSidePoints() * 2.0 )
-                + ( GetArmPoints() * 2.0 ) + ( GetLegPoints() * 2.0 );
+        double result = 0.0;
+        result = GetTotalPoints();
         result *= 1.5;
-        result *= GetBVTypeMult();
-        result *= Owner.GetEngine().GetBVMult();
+        if ( Owner instanceof Mech) {
+            result *= GetBVTypeMult();
+            result *= Owner.GetEngine().GetBVMult();
+        }
         return result;
     }
 

@@ -28,7 +28,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package Print;
 
+import Print.Points.PIPRow;
 import java.awt.Point;
+import java.util.ArrayList;
 
 public class TWVTOLPoints implements ifPrintPoints {
     
@@ -170,7 +172,7 @@ public class TWVTOLPoints implements ifPrintPoints {
         new Point( 206, 190 ) }; //lng
     
     private final static Point[] DataPoints = {
-        new Point( 32, 105 ), //MechName
+        new Point( 32, 105 ), //MechName = 0
         new Point( 58, 129 ), //WALKMP = 1,
         new Point( 58, 139 ), //RUNMP = 2
         new Point( 58, 149 ), //JUMPMP = 3
@@ -187,7 +189,7 @@ public class TWVTOLPoints implements ifPrintPoints {
         new Point( 522, 699 ),
         new Point( 522, 713 ), 
         new Point( 142, 354 ), //MAX_HEAT = 16
-        new Point( 525, 12 ), //TOTAL_ARMOR = 17
+        new Point( 440, 28 ), //TOTAL_ARMOR = 17
         new Point( 122, 708 ),  //STATS = 18;
         new Point( 62, 151 ),      //Movement Type = 19
         new Point( 62, 163 )};     // Engine Type = 20
@@ -216,7 +218,11 @@ public class TWVTOLPoints implements ifPrintPoints {
     }
 
     public Point[] GetArmorRearPoints() {
-        return RearArmorPoints;
+        ArrayList<PIPRow> Rows = new ArrayList<PIPRow>();
+        Point start = new Point( 478, 237);
+        Point offset = new Point(6,6);
+        Rows.add(new PIPRow(new Point(start.x, start.y), 11, offset.x, offset.y));
+        return PIPRow.RenderColumns(Rows);
     }
 
     public Point[] GetArmorTurretPoints() {

@@ -90,7 +90,7 @@ public class stChassisPIMQD implements ifChassis, ifState {
     }
 
     public String MegaMekName( boolean UseRear ) {
-        return "PrimitiveIndustrial";
+        return "Industrial";
     }
 
     public String BookReference() {

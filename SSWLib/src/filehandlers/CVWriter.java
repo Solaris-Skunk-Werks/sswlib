@@ -110,6 +110,12 @@ public class CVWriter {
         FR.newLine();
         FR.write( tab + tab + "<type>" + CurUnit.GetIntStruc().LookupName() + "</type>" );
         FR.newLine();
+        FR.write( tab + tab + "<mods flotation=\"" + CurUnit.HasFlotationHull() + "\" "
+                                    + "limitedamph=\"" + CurUnit.HasLimitedAmphibious() + "\" "
+                                    + "fullamph=\"" + CurUnit.HasFullAmphibious() + "\" "
+                                    + "dunebuggy=\"" + CurUnit.HasDuneBuggy() + "\" "
+                                    + "enviroseal=\"" + CurUnit.HasEnvironmentalSealing() + "\" />");
+        FR.newLine();       
         FR.write( tab + "</structure>" );
         FR.newLine();
         
@@ -158,7 +164,7 @@ public class CVWriter {
         if( CurUnit.IsOmni() ) {
             CurUnit.SetCurLoadout( common.Constants.BASELOADOUT_NAME );
         }
-        FR.write( tab + "<baseloadout fcsa4=\"" + FileCommon.GetBoolean( CurUnit.UsingArtemisIV() ) + "\" fcsa5=\"" + FileCommon.GetBoolean( CurUnit.UsingArtemisV() ) + "\" fcsapollo=\"" + FileCommon.GetBoolean( CurUnit.UsingApollo() ) + "\">" );
+        FR.write( tab + "<baseloadout fcsa4=\"" + FileCommon.GetBoolean( CurUnit.UsingArtemisIV() ) + "\" fcsa5=\"" + FileCommon.GetBoolean( CurUnit.UsingArtemisV() ) + "\" fcsapollo=\"" + FileCommon.GetBoolean( CurUnit.UsingApollo() ) + "\" turretlimit=\"" + CurUnit.GetBaseLoadout().GetTurret().GetMaxTonnage() + "\" >" );
         FR.newLine();
 
         FR.write( tab + tab + "<source>" + FileCommon.EncodeFluff( CurUnit.getSource() ) + "</source>" );
@@ -195,14 +201,6 @@ public class CVWriter {
             FR.write( tab + tab + "</multislot>" );
             FR.newLine();
         }
-        if( CurUnit.HasEnviroSealing() ) {
-            // this can only ever go in the base loadout, so we'll save it here
-            FR.write( tab + tab + "<multislot name=\"" + CurUnit.GetEnviroSealing().LookupName() + "\">" );
-            FR.newLine();
-            FR.write( GetLocationLines( tab + tab + tab, CurUnit.GetEnviroSealing() ) );
-            FR.write( tab + tab + "</multislot>" );
-            FR.newLine();
-        }
         FR.write( GetEquipmentLines( tab + tab ) );
         FR.write( tab + "</baseloadout>" );
         FR.newLine();
@@ -211,7 +209,7 @@ public class CVWriter {
             String curLoadout = CurUnit.GetLoadout().GetName();
             ArrayList v = CurUnit.GetLoadouts();
             for( int i = 0; i < v.size(); i++ ) {
-                CurUnit.SetCurLoadout( ((ifMechLoadout) v.get( i )).GetName() );
+                CurUnit.SetCurLoadout( ((ifCVLoadout) v.get( i )).GetName() );
                 if( CurUnit.GetBaseRulesLevel() != CurUnit.GetLoadout().GetRulesLevel() ) {
                     FR.write( tab + "<loadout name=\"" + FileCommon.EncodeFluff( CurUnit.GetLoadout().GetName() ) + "\" ruleslevel=\"" + CurUnit.GetLoadout().GetRulesLevel() + "\" fcsa4=\"" + FileCommon.GetBoolean( CurUnit.UsingArtemisIV() ) + "\" fcsa5=\"" + FileCommon.GetBoolean( CurUnit.UsingArtemisV() ) + "\" fcsapollo=\"" + FileCommon.GetBoolean( CurUnit.UsingApollo() ) + "\">" );
                 } else {
@@ -421,14 +419,16 @@ public class CVWriter {
                 retval += prefix + "</equipment>" + NL;
             }
         }
-        if( CurUnit.UsingTC() && CurUnit.GetTC().NumCrits() > 0 ) {
+        /*
+        if( CurUnit.UsingTC() ) {
             abPlaceable p = (abPlaceable) CurUnit.GetTC();
             retval += prefix + "<equipment>" + NL;
             retval += prefix + tab + "<name manufacturer=\"\">" + p.LookupName() + "</name>" + NL;
             retval += prefix + tab + "<type>TargetingComputer</type>" + NL;
-            retval += GetLocationLines( prefix + tab, p );
+            retval += prefix + tab + "<location>Body</location>" + NL;
             retval += prefix + "</equipment>" + NL;
         }
+        */
         if( CurUnit.GetLoadout().HasSupercharger() ) {
             abPlaceable p = (abPlaceable) CurUnit.GetLoadout().GetSupercharger();
             retval += prefix + "<equipment>" + NL;
@@ -464,6 +464,8 @@ public class CVWriter {
             return "equipment";
         } else if( p instanceof Ammunition ) {
             return "ammunition";
+        } else if( p instanceof TargetingComputer ) {
+            return "TargetingComputer";
         } else {
             return "miscellaneous";
         }

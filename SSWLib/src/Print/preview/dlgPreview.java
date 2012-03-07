@@ -99,6 +99,20 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         chkPrintScenario.setEnabled(false);
         Verify();
     }
+    
+    public void setRSOnly() {
+        chkPrintForce.setSelected(false);
+        chkPrintForce.setEnabled(false);
+        
+        chkPrintBattleforce.setSelected(false);
+        chkPrintBattleforce.setEnabled(false);
+        
+        chkPrintScenario.setSelected(false);
+        chkPrintScenario.setEnabled(false);
+        
+        chkPrintFireChits.setSelected(false);
+        chkPrintFireChits.setEnabled(false);
+    }
 
     public final void setScenario( Scenario scenario ) {
         this.scenario = scenario;
@@ -634,7 +648,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         });
 
         chkImage.setSelected(true);
-        chkImage.setText("Print Mech Images ");
+        chkImage.setText("Print Image");
         chkImage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 itemChanged(evt);

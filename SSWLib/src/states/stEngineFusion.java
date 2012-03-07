@@ -166,7 +166,7 @@ public class stEngineFusion implements ifEngine, ifState {
     }
 
     private int GetIndex( int Rating ) {
-        return Rating / 5 - 2;
+        return Math.round(Rating / 5) - 2;
     }
 
     private int GetBFIndex( int tonnage ) {

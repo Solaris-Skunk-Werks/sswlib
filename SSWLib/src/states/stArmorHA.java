@@ -96,7 +96,7 @@ public class stArmorHA implements ifArmor, ifState {
     }
 
     public int NumCVSpaces() {
-        return 0;
+        return 1;
     }
 
     public int PatchworkCrits() {

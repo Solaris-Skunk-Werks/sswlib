@@ -103,4 +103,8 @@ public class stCVVTOL implements ifCombatVehicle {
     public int GetCostMultiplier() {
         return 30;
     }
+    
+    public double GetDefensiveMultiplier() {
+        return 0.7;
+    }
 }

@@ -28,9 +28,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package utilities;
 
-import java.util.ArrayList;
-import common.*;
+import common.CommonTools;
 import components.*;
+import java.util.ArrayList;
 
 public class CostBVBreakdown {
     private Mech CurMech = null;

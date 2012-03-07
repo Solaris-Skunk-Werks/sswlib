@@ -52,7 +52,8 @@ public class Engine extends abPlaceable {
                            ISXLEngine = new stEngineISXL( this ),
                            ISXXLEngine = new stEngineISXXL( this ),
                            CLXLEngine = new stEngineCLXL( this ),
-                           CLXXLEngine = new stEngineCLXXL( this );
+                           CLXXLEngine = new stEngineCLXXL( this ),
+                           NAEngine = new stEngineNone( this );
     private ifUnit Owner;
 
     // Constructor
@@ -133,6 +134,10 @@ public class Engine extends abPlaceable {
 
     public void SetISCFEngine() {
         CurConfig = ISCFEngine;
+    }
+    
+    public void SetNoneEngine() {
+        CurConfig = NAEngine;
     }
 
     public int GetTechBase() {
@@ -280,7 +285,8 @@ public class Engine extends abPlaceable {
             (ifState) ISXLEngine,
             (ifState) ISXXLEngine,
             (ifState) CLXLEngine,
-            (ifState) CLXXLEngine };
+            (ifState) CLXXLEngine,
+            (ifState) NAEngine};
         return retval;
     }
 

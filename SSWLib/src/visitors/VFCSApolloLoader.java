@@ -127,7 +127,26 @@ public class VFCSApolloLoader implements ifVisitor {
     }
 
     public void Visit( CombatVehicle v ) throws Exception {
-        // does nothing at the moment
+        ArrayList test = v.GetLoadout().GetNonCore();
+        abPlaceable p;
+        
+        for( int i = 0; i < test.size(); i++ ) {
+            p = (abPlaceable) test.get( i );
+            //Is it a Ranged Weapon
+            if( p instanceof RangedWeapon ) {
+                RangedWeapon MW = (RangedWeapon) p;
+                
+                //if the weapon cannot do FCS let's move on quickly
+                if ( !MW.IsFCSCapable() ) continue;
+                
+                //if the location is locked...stop here!
+                if( v.IsOmni() && MW.LocationLocked() ) {
+                    result = false;
+                    return;
+                }
+                MW.UseFCS(v.UsingApollo(), ifMissileGuidance.FCS_ArtemisIV);
+            }
+        }
     }
 
     public void Visit( Infantry i ) throws Exception {

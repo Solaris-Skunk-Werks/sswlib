@@ -111,7 +111,7 @@ public class stChassisCVIS implements ifChassis, ifState {
     }
     
     public double GetCost( int Tonnage ) {
-        return 400 * Tonnage;
+        return 10000 * GetStrucTon( Tonnage, false );
     }
     
     public double GetBVMult() {

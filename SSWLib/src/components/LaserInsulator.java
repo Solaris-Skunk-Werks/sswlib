@@ -89,7 +89,7 @@ public class LaserInsulator extends abPlaceable {
     }
 
     public int NumCVSpaces() {
-        return 0;
+        return 1;
     }
 
     @Override

@@ -30,12 +30,12 @@ package visitors;
 
 import components.*;
 
-public class VArmorSetStealth implements ifVisitor {
+public class VArmorSetVStealth implements ifVisitor {
     // sets the mech's armor to stealth
     private Mech CurMech;
     private LocationIndex[] Locs = null;
 
-    public VArmorSetStealth() {
+    public VArmorSetVStealth() {
     }
 
     public void LoadLocations( LocationIndex[] locs ) {
@@ -49,39 +49,11 @@ public class VArmorSetStealth implements ifVisitor {
 
     public void Visit(Mech m) throws Exception {
         // only the armor changes, so pass us off
-        CurMech = m;
-        ifMechLoadout l = CurMech.GetLoadout();
-        MechArmor a = CurMech.GetArmor();
-
-        // remove the old armor, if needed
-        l.Remove( a );
-        a.ResetPatchworkConfigs();
-
-        a.SetISST();
-
-        if( Locs == null ) {
-            // place the armor
-            if( ! a.Place( l ) ) {
-                // not enough free space.  tell the user
-                throw new Exception( "There is no available room for Stealth Armor!" );
-            }
-        } else {
-            // use the location index array given to allocate the armor
-            if( ! a.Place( l, Locs ) ) {
-                // not enough free space.  tell the user
-                throw new Exception( "There is no available room for Stealth Armor!" );
-            }
-        }
-        if( a.GetMechModifier() != null ) {
-            CurMech.AddMechModifier( a.GetMechModifier() );
-        }
-        // reset the locations just in case.  Any time this visitor is used we
-        // should load up a new set of locations.
-        Locs = null;
+        throw new Exception("Vehicular Stealth Armor cannot be placed on a 'Mech.");
     }
 
     public void Visit( CombatVehicle v ) throws Exception {
-        // does nothing
+        v.GetArmor().SetISVST();
     }
 
     public void Visit( Infantry i ) throws Exception {

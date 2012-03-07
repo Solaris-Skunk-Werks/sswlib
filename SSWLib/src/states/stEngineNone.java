@@ -34,103 +34,80 @@ import components.Engine;
 import components.Mech;
 import components.MechModifier;
 
-public class stEngineISXL implements ifEngine, ifState {
-    // An Inner Sphere XL Fusion Engine
-    private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE ),
-                                       LARGE_AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
-    private final static double[] Masses = {0.5,0.5,0.5,0.5,0.5,0.5,0.5,
-        0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.5,1.5,1.5,1.5,1.5,2.0,2.0,
-        2.0,2.0,2.0,2.5,2.5,2.5,2.5,3.0,3.0,3.0,3.0,3.0,3.5,3.5,
-        4.0,4.0,4.0,4.5,4.5,4.5,5.0,5.0,5.0,5.5,5.5,6.0,6.0,6.5,
-        6.5,7.0,7.0,7.5,8.0,8.0,8.5,9.0,9.0,9.5,10.0,10.5,11.0,
-        11.5,12.0,12.5,13.0,13.5,14.5,15.0,16.0,16.5,17.5,18.5,19.5,
-        20.5,22.0,23.0,24.5,26.5,28.5,30.5,33.5,36.5,40.0,44.0,48.5,
-        54.0,60.0,67.0,75.0,84.5,95.0,107.5,121.5,138.0,156.5,178.0,
-        203.0,231.5 };
-    private final static int[] BFStructure = {1,1,1,1,1,2,2,2,2,3,3,3,3,3,4,4,4,4,4};
+public class stEngineNone implements ifEngine, ifState {
+    // An Inner Sphere I.C.E. Engine
+    private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH ),
+                                       LARGE_AC = new AvailableCode( AvailableCode.TECH_BOTH );
     private Engine Owner;
 
-    public stEngineISXL( Engine e ) {
-        AC.SetISCodes( 'E', 'D', 'F', 'E' );
-        AC.SetISDates( 0, 0, false, 2579, 2865, 3035, true, true );
-        AC.SetISFactions( "", "", "TH", "LC" );
-        AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_ADVANCED );
-        LARGE_AC.SetISCodes( 'E', 'D', 'F', 'E' );
-        LARGE_AC.SetISDates( 2579, 2630, true, 2630, 2865, 3035, true, true );
-        LARGE_AC.SetISFactions( "TH", "TH", "TH", "LC" );
-        LARGE_AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL );
+    public stEngineNone( Engine e ) {
+        AC.SetISCodes( 'C', 'A', 'A', 'A' );
+        AC.SetISDates( 0, 0, false, 1950, 0, 0, false, false );
+        AC.SetISFactions( "", "", "PS", "" );
+        AC.SetCLCodes( 'C', 'X', 'A', 'A' );
+        AC.SetCLDates( 0, 0, false, 1950, 0, 0, false, false );
+        AC.SetCLFactions( "", "", "PS", "" );
+        AC.SetRulesLevels( AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_INTRODUCTORY, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+        LARGE_AC.SetISCodes( 'C', 'A', 'A', 'A' );
+        LARGE_AC.SetISDates( 2550, 2630, true, 2630, 0, 0, false, false );
+        LARGE_AC.SetISFactions( "PS", "PS", "", "" );
+        LARGE_AC.SetCLCodes( 'C', 'X', 'A', 'A' );
+        LARGE_AC.SetCLDates( 2550, 2630, true, 2630, 0, 0, false, false );
+        LARGE_AC.SetCLFactions( "PS", "PS", "", "" );
+        LARGE_AC.SetRulesLevels( AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
         Owner = e;
     }
 
     public boolean HasCounterpart() {
-        return true;
+        return false;
     }
 
     public double GetTonnage( int Rating, boolean fractional ) {
-        if( fractional ) {
-            double retval = CommonTools.RoundFractionalTons( stEngineFusion.Masses[GetIndex( Rating )] * 0.5 );
-//            double retval = Math.ceil( stEngineFusion.Masses[GetIndex( Rating )] * 500 ) * 0.001;
-            if( retval < 0.25 ) { return 0.25; }
-            return retval;
-        } else {
-            return Masses[GetIndex( Rating )];
-        }
+        return 0;
     }
     
     public int GetCTCrits() {
-        return 3;
+        return 0;
     }
     
     public int GetSideTorsoCrits() {
-        return 3;
+        return 0;
     }
     
     public int NumCTBlocks() {
-        return 2;
+        return 0;
     }
 
     public int NumCVSpaces() {
-        return 2;
+        return 0;
     }
 
     public int LargeCVSpaces() {
-        return 3;
+        return 0;
     }
 
     public boolean CanSupportRating( int rate, Mech m ) {
-        if( CommonTools.IsAllowed( LARGE_AC, m ) ) {
-            if( rate < 5 || rate > 500 || rate % 5 != 0 ) {
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            if( rate < 5 || rate > 400 || rate % 5 != 0 ) {
-                return false;
-            } else {
-                return true;
-            }
-        }
+        return false;
     }
 
     public String ActualName() {
-        return "Extra-Light Fusion Engine";
+        return "No Engine";
     }
 
     public String CritName() {
-        return "XL Fusion Engine";
+        return "No Engine";
     }
 
     public String LookupName() {
-        return "XL Engine";
+        return "No Engine";
     }
 
     public String ChatName() {
-        return "XLFE";
+        return "NOE";
     }
 
     public String MegaMekName( boolean UseRear ) {
-        return "Fusion Engine";
+        return "";
     }
 
     public String BookReference() {
@@ -138,7 +115,7 @@ public class stEngineISXL implements ifEngine, ifState {
     }
 
     public double GetCost( int MechTonnage, int Rating ) {
-        return ( 20000.0f * ((double) MechTonnage) * ((double) Rating )) / 75.0f;
+        return 0;
     }
     
     public AvailableCode GetAvailability() {
@@ -147,39 +124,39 @@ public class stEngineISXL implements ifEngine, ifState {
     }
 
     public int FreeHeatSinks() {
-        return 10;
+        return 0;
     }
 
     public double GetBVMult() {
-        return 0.5f;
+        return 0.0f;
     }
     
     public boolean IsFusion() {
-        return true;
+        return false;
     }
 
     public boolean IsNuclear() {
-        return true;
+        return false;
     }
 
     public int GetFullCrits() {
-        return 12;
+        return 0;
     }
 
     private int GetIndex( int Rating ) {
-        return Math.round(Rating / 5) - 2;
+        return 0;
     }
 
     private int GetBFIndex( int tonnage ) {
-        return (tonnage - 10) / 5;
+        return 0;
     }
 
     public int GetBFStructure( int tonnage ) {
-        return BFStructure[GetBFIndex(tonnage)];
+        return 0;
     }
-
+    
     public int MaxMovementHeat() {
-        return 2;
+        return 0;
     }
 
     public int MinimumHeat() {
@@ -187,7 +164,7 @@ public class stEngineISXL implements ifEngine, ifState {
     }
 
     public int JumpingHeatMultiplier() {
-        return 1;
+        return 0;
     }
 
     public MechModifier GetMechModifier() {
@@ -200,6 +177,6 @@ public class stEngineISXL implements ifEngine, ifState {
 
     @Override
     public String toString() {
-        return "Fusion XL Engine";
+        return "No Engine";
     }
 }

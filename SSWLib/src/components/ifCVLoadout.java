@@ -104,20 +104,23 @@ public interface ifCVLoadout {
     public ifCVLoadout Clone();
     public void SetBaseLoadout( ifCVLoadout l );
     public ifCVLoadout GetBaseLoadout();
-    public void SetFrontItems( abPlaceable[] c );
-    public void SetLeftItems( abPlaceable[] c );
-    public void SetRightItems( abPlaceable[] c );
-    public void SetRearItems( abPlaceable[] c );
-    public void SetBodyItems( abPlaceable[] c );
-    public void SetTurret1( abPlaceable[] c );
-    public void SetTurret2( abPlaceable[] c );
+    public void SetFrontItems( ArrayList<abPlaceable> c );
+    public void SetLeftItems( ArrayList<abPlaceable> c );
+    public void SetRightItems( ArrayList<abPlaceable> c );
+    public void SetRearItems( ArrayList<abPlaceable> c );
+    public void SetBodyItems( ArrayList<abPlaceable> c );
+    public void SetTurret1( ArrayList<abPlaceable> c );
+    public void SetTurret2( ArrayList<abPlaceable> c );
     public void SetNonCore( ArrayList v );
     public void SetTCList( ArrayList v );
     public void SetEquipment( ArrayList v );
+    public void SetTurret( Turret t );
+    public void SetRearTurret( Turret t );
     public ArrayList GetMechMods();
     public boolean CanUseClanCASE();
     public boolean IsUsingClanCASE();
     public void SetClanCASE( boolean b );
+    public void RemoveISCase();
     public void SetISCASE( CASE c );
     public boolean HasISCASE();
     public CASE GetISCase();
@@ -139,6 +142,7 @@ public interface ifCVLoadout {
     public void MoveToQueue(int loc);
     public double GetTurretTonnage();
     public double GetRearTurretTonnage();
+    public void ResetHeatSinks();
 /*
     public void AddMechModifier( MechModifier m );
     public void RemoveMechMod( MechModifier m );

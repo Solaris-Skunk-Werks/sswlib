@@ -117,4 +117,8 @@ public class stCVHydrofoil implements ifCombatVehicle {
     public int GetCostMultiplier() {
         return 75;
     }
+    
+    public double GetDefensiveMultiplier() {
+        return 0.6;
+    }
 }

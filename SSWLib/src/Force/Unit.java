@@ -116,6 +116,7 @@ public class Unit implements ifSerializable {
 
     public Unit( Mech m ) {
         this();
+        UnitType = CommonTools.BattleMech;
         Name = m.GetName();
         Model = m.GetModel();
         TypeModel = m.GetFullName();
@@ -174,6 +175,7 @@ public class Unit implements ifSerializable {
 
     public Unit( CombatVehicle vee ) {
         this();
+        UnitType = CommonTools.Vehicle;
         Name = vee.GetName();
         Model = vee.GetModel();
         TypeModel = vee.GetFullName();

@@ -34,8 +34,10 @@ import java.util.ArrayList;
 public class Turret extends abPlaceable {
     private ifCVLoadout Owner;
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
-    private boolean Clan;
+    private boolean Clan,
+                    isTonnageSet;
     private ArrayList Items = new ArrayList();
+    private double MaxTonnage = 0;
 
     public Turret( ifCVLoadout l, boolean clan) {
         AC.SetISCodes( 'E', 'X', 'X', 'E' );
@@ -94,17 +96,15 @@ public class Turret extends abPlaceable {
 
     @Override
     public double GetTonnage() {
-        double retval = GetSize();
-        return retval;
+        if ( isTonnageSet )
+            return MaxTonnage;
+        else 
+            return GetSize();
     }
 
     @Override
     public double GetCost() {
-        if( IsArmored() ) {
-            return GetSize() * 10000.0 + GetSize() * 150000.0;
-        } else {
-            return GetSize() * 10000.0;
-        }
+        return GetSize() * 5000.0;
     }
 
     public double GetOffensiveBV() {
@@ -186,5 +186,22 @@ public class Turret extends abPlaceable {
     
     public ArrayList GetItems() {
         return Items;
+    }
+    
+    public void TonnageSet( boolean i ) {
+        isTonnageSet = i;
+        if (!i)
+            MaxTonnage = 0;
+    }
+    public void SetTonnage( double t ) {
+        MaxTonnage = t;
+        isTonnageSet = true;
+    }
+    public boolean isTonnageSet() {
+        return isTonnageSet;
+    }
+    
+    public double GetMaxTonnage() {
+        return MaxTonnage;
     }
 }

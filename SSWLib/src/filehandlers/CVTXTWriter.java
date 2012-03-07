@@ -28,22 +28,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package filehandlers;
 
-import Force.*;
+import Force.Force;
+import Force.Group;
+import Force.Scenario;
+import Force.Unit;
 import battleforce.BFConstants;
-import common.*;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.ArrayList;
 import battleforce.BattleForceStats;
 import battleforce.BattleForceTools;
+import common.CommonTools;
 import components.*;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import list.*;
+import list.UnitList;
+import list.UnitListData;
 import utilities.CostBVBreakdown;
 
 public class CVTXTWriter {
@@ -137,7 +135,7 @@ public class CVTXTWriter {
         } else {
             retval += "Tech Base: " + CommonTools.GetTechbaseString( CurVee.GetBaseTechbase() ) + NL;
         }
-        retval += "Motive Type: " + CurVee.GetMotiveLookupName() + ( CurVee.IsOmni() ? "OmniVehicle":"");
+        retval += "Motive Type: " + CurVee.GetMotiveLookupName() + ( CurVee.IsOmni() ? " OmniVehicle":"") + NL;
         retval += "Rules Level: " + CommonTools.GetRulesLevelString( CurVee.GetRulesLevel() ) + NL;
         retval += "Era: " + CommonTools.DecodeEra( CurVee.GetEra() ) + NL;
         retval += "Tech Rating/Era Availability: " + CurVee.GetAvailability().GetBestCombinedCode() + NL;
@@ -149,12 +147,14 @@ public class CVTXTWriter {
             retval += "Construction Options: Fractional Accounting" + NL + NL;
         }
 
-        retval += "Chassis: " + CurVee.GetChassisModel() + " " + CurVee.GetIntStruc().CritName() + NL;
+        //retval += "Chassis: " + CurVee.GetChassisModel() + " " + CurVee.GetIntStruc().CritName() + NL;
         retval += "Power Plant: " + CurVee.GetEngineManufacturer() + " " + CurVee.GetEngine().GetRating() + " " + CurVee.GetEngine() + NL;
-        retval += "Cruise Speed: " + CommonTools.FormatSpeed( CurVee.getCruiseMP() ) + " km/h" + NL;
-        retval += "Flanking Speed: " + CommonTools.FormatSpeed( CurVee.getFlankMP() ) + " km/h" + NL;
-        retval += "Jump Jets: " + CurVee.GetJJModel() + NL;
-        retval += "    Jump Capacity: " + GetJumpJetDistanceLine() + NL;
+        retval += "Cruise Speed: " + CommonTools.FormatSpeed( CurVee.getCruiseMP() * 10.8 ) + " km/h" + NL;
+        retval += "Flanking Speed: " + CommonTools.FormatSpeed( CurVee.getFlankMP() * 10.8 ) + " km/h" + NL;
+        if ( CurVee.GetJumpJets().GetNumJJ() > 0 ) {
+            retval += "Jump Jets: " + CurVee.GetJJModel() + NL;
+            retval += "    Jump Capacity: " + GetJumpJetDistanceLine() + NL;
+        }
         retval += "Armor: " + CurVee.GetArmorModel() + " " + CurVee.GetArmor().CritName() + NL;
         retval += "Armament:" + NL;
         retval += GetArmament();
@@ -213,18 +213,24 @@ public class CVTXTWriter {
         retval += "--------------------------------------------------------------------------------" + NL;
         retval += String.format( "Internal Structure: %1$-28s %2$3s points              %3" + tformat, CurVee.GetIntStruc().CritName(), CurVee.GetIntStruc().GetTotalPoints(), CurVee.GetIntStruc().GetTonnage() ) + NL;
         retval += String.format( "Engine:             %1$-28s %2$3s                     %3" + tformat, FileCommon.GetExportName( CurVee, CurVee.GetEngine() ), CurVee.GetEngine().GetRating(), CurVee.GetEngine().GetTonnage() ) + NL;
-        retval += "    Cruise MP: " + CurVee.getCruiseMP() + NL;
-        retval += "    Flank MP: " + CurVee.getFlankMP() + NL;
-        retval += "    Jumping MP: " + GetJumpingMPLine() + " " + GetJumpJetTypeLine() + NL;
+        retval += "    Cruise MP:  " + CurVee.getCruiseMP() + NL;
+        retval += "    Flank MP:   " + CurVee.getFlankMP() + NL;
         if( CurVee.GetJumpJets().GetNumJJ() > 0 ) {
+            retval += "    Jumping MP: " + GetJumpingMPLine() + " " + GetJumpJetTypeLine() + NL;
             retval += String.format( "    %1$-68s %2$6.2f", "Jump Jet Locations: " + FileCommon.GetJumpJetLocations( CurVee ), CurVee.GetJumpJets().GetTonnage() ) + NL;
         }
         retval += String.format( "Heat Sinks:         %1$-28s %2$-8s                %3" + tformat, GetHSType(), GetHSNum(), CurVee.GetHeatSinks().GetTonnage() ) + NL;
+        retval += String.format( "Control Equipment:  %1$-28s %2$-8s                %3" + tformat, "", "", CurVee.GetControls() ) + NL;
+        retval += String.format( "Lift Equipment:     %1$-28s %2$-8s                %3" + tformat, "", "", CurVee.GetLiftEquipmentTonnage() ) + NL;
         if( ! CurVee.GetEngine().IsNuclear() ) {
             if( CurVee.GetLoadout().GetPowerAmplifier().GetTonnage() > 0 ) {
                 retval += String.format( "%1$-72s %2" + tformat, "Power Amplifiers:", CurVee.GetLoadout().GetPowerAmplifier().GetTonnage() ) + NL;
             }
         }
+        if ( CurVee.isHasTurret1() ) 
+            retval += String.format( "Turret:             %1$-28s %2$-8s                %3" + tformat, "", "", CurVee.GetLoadout().GetTurret().GetTonnage() ) + NL;
+        if ( CurVee.isHasTurret2() ) 
+            retval += String.format( "Rear Turret:        %1$-28s %2$-8s                %3" + tformat, "", "", CurVee.GetLoadout().GetRearTurret().GetTonnage() ) + NL;
         if( CurVee.GetArmor().GetBAR() < 10 ) {
             retval += String.format( "Armor:              %1$-28s AV - %2$3s                %3" + tformat, CurVee.GetArmor().CritName() + " (BAR: " + CurVee.GetArmor().GetBAR() +")", CurVee.GetArmor().GetArmorValue(), CurVee.GetArmor().GetTonnage() ) + NL;
         } else {
@@ -248,11 +254,10 @@ public class CVTXTWriter {
             }
         } else {
             retval += String.format( "                                               Front     %1$-3s       ", CurVee.GetArmor().GetLocationArmor( LocationIndex.CV_LOC_FRONT ) ) + NL;
-            retval += String.format( "                                                Left     %1$-3s       ", CurVee.GetArmor().GetLocationArmor( LocationIndex.CV_LOC_LEFT ) ) + NL;
-            retval += String.format( "                                               Right     %1$-3s       ", CurVee.GetArmor().GetLocationArmor( LocationIndex.CV_LOC_RIGHT ) ) + NL;
-            retval += String.format( "                                                Rear     %1$-3s       ", CurVee.GetArmor().GetLocationArmor( LocationIndex.CV_LOC_REAR ) ) + NL;
+            retval += String.format( "                                          Left/Right  %1$3s/%2$-3s       ", CurVee.GetArmor().GetLocationArmor( LocationIndex.CV_LOC_LEFT ), CurVee.GetArmor().GetLocationArmor( LocationIndex.CV_LOC_RIGHT) ) + NL;
             if ( CurVee.isHasTurret1() )
                 retval += String.format( "                                              Turret     %1$-3s       ", CurVee.GetArmor().GetLocationArmor( LocationIndex.CV_LOC_TURRET1 ) ) + NL;
+            retval += String.format( "                                                Rear     %1$-3s       ", CurVee.GetArmor().GetLocationArmor( LocationIndex.CV_LOC_REAR ) ) + NL;
             if ( CurVee.isHasTurret2() )
                 retval += String.format( "                                         Rear Turret     %1$-3s       ", CurVee.GetArmor().GetLocationArmor( LocationIndex.CV_LOC_TURRET2 ) ) + NL;
             if ( CurVee.IsVTOL() )
@@ -475,7 +480,8 @@ public class CVTXTWriter {
             v.add( CurVee.GetPhysEnhance() );
         }
         if( CurVee.UsingTC() ) {
-            v.add( CurVee.GetTC() );
+            //don't add as we already have it in the Body 
+            //v.add( CurVee.GetTC() );
         }
         if( CurVee.GetLoadout().HasSupercharger() ) {
             v.add( CurVee.GetLoadout().GetSupercharger() );
@@ -501,7 +507,7 @@ public class CVTXTWriter {
         equips[0] = null;
 /*
         if( equips.length <= 1 ) {
-            retval += ProcessEquipStatLines( cur, FileCommon.EncodeLocation( CurVee.GetLoadout().Find( cur ), CurVee.IsQuad() ), "" + cur.NumCrits(), 1 );
+            retval += ProcessEquipStatLines( cur, FileCommon.EncodeLocation( CurVee.GetLoadout().Find( cur ), CurVee.IsQuad() ), "" + cur.NumCVSpaces(), 1 );
             return retval;
         }
 */
@@ -512,7 +518,7 @@ public class CVTXTWriter {
                 // splittable items are generally too big for two in one
                 // location or are split into different areas.  just avoid.
                 int[] check = CurVee.GetLoadout().FindInstances( cur );
-                loc = FileCommon.EncodeLocations( check, CurVee.IsQuad() );
+                loc = FileCommon.EncodeLocations( check, CurVee.IsQuad(), common.CommonTools.Vehicle );
                 crits = FileCommon.DecodeCrits( check );
                 retval += ProcessEquipStatLines( cur, loc, crits, 1 );
             } else {
@@ -541,11 +547,11 @@ public class CVTXTWriter {
                 }
 
                 if( numthisloc > 1) {
-                    crits = "" + ( cur.NumCrits() * numthisloc );
+                    crits = "" + ( cur.NumCVSpaces() * numthisloc );
                 } else {
-                    crits = "" + cur.NumCrits();
+                    crits = "" + cur.NumCVSpaces();
                 }
-                loc = FileCommon.EncodeLocation( locint, CurVee.IsQuad() );
+                loc = FileCommon.EncodeLocation( locint, CurVee.IsQuad(), common.CommonTools.Vehicle );
                 // add the current weapon to the armament string
                 retval += ProcessEquipStatLines( cur, loc, crits, numthisloc );
             }
@@ -572,10 +578,6 @@ public class CVTXTWriter {
             retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, CurVee.GetBlueShield().CritName(), "*", "-", 7, 3.0 ) + NL;
             Special = true;
         }
-        if( CurVee.HasEnviroSealing() ) {
-            retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, CurVee.GetEnviroSealing().CritName(), "*", "-", 8, 0.0 ) + NL;
-            Special = true;
-        }
 
         if( Special ) {
             retval += NL;
@@ -584,9 +586,6 @@ public class CVTXTWriter {
         // add in the equipment footers if needed
         if( CurVee.HasBlueShield() ) {
             retval += "* The " + CurVee.GetBlueShield().LookupName() + " occupies 1 slot in every location except the HD." + NL;
-        }
-        if( CurVee.HasEnviroSealing() ) {
-            retval += "* The " + CurVee.GetEnviroSealing().LookupName() + " occupies 1 slot in every location." + NL;
         }
 
         BattleForceStats bfs = new BattleForceStats( CurVee );
@@ -647,7 +646,8 @@ public class CVTXTWriter {
             v.add( CurVee.GetPhysEnhance() );
         }
         if( CurVee.UsingTC() ) {
-            v.add( CurVee.GetTC() );
+            //don't add as we already have it in the Body of the Vehicle
+            //v.add( CurVee.GetTC() );
         }
         if( CurVee.GetLoadout().HasSupercharger() ) {
             v.add( CurVee.GetLoadout().GetSupercharger() );
@@ -674,7 +674,7 @@ public class CVTXTWriter {
         equips[0] = null;
 
         if( equips.length <= 1 ) {
-            retval += ProcessEquipStatLines( cur, FileCommon.EncodeLocation( CurVee.GetLoadout().Find( cur ), CurVee.IsQuad() ), "" + cur.NumCrits(), 1 );
+            retval += ProcessEquipStatLines( cur, FileCommon.EncodeLocation( CurVee.GetLoadout().Find( cur ), CurVee.IsQuad(), common.CommonTools.Vehicle ), "" + cur.NumCVSpaces(), 1 );
             return retval;
         }
 
@@ -685,7 +685,7 @@ public class CVTXTWriter {
                 // splittable items are generally too big for two in one
                 // location or are split into different areas.  just avoid.
                 int[] check = CurVee.GetLoadout().FindInstances( cur );
-                loc = FileCommon.EncodeLocations( check, CurVee.IsQuad() );
+                loc = FileCommon.EncodeLocations( check, CurVee.IsQuad(), common.CommonTools.Vehicle );
                 crits = FileCommon.DecodeCrits( check );
                 retval += ProcessEquipStatLines( cur, loc, crits, 1 );
             } else {
@@ -714,11 +714,11 @@ public class CVTXTWriter {
                 }
 
                 if( numthisloc > 1) {
-                    crits = "" + ( cur.NumCrits() * numthisloc );
+                    crits = "" + ( cur.NumCVSpaces() * numthisloc );
                 } else {
-                    crits = "" + cur.NumCrits();
+                    crits = "" + cur.NumCVSpaces();
                 }
-                loc = FileCommon.EncodeLocation( locint, CurVee.IsQuad() );
+                loc = FileCommon.EncodeLocation( locint, CurVee.IsQuad(), common.CommonTools.Vehicle );
                 // add the current weapon to the armament string
                 retval += ProcessEquipStatLines( cur, loc, crits, numthisloc );
             }
@@ -812,12 +812,12 @@ public class CVTXTWriter {
             if( ((RangedWeapon) p).IsUsingFCS() ) {
                 abPlaceable a = (abPlaceable) ((RangedWeapon) p).GetFCS();
                 tons -= a.GetTonnage();
-                add += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5" + tformat, FileCommon.GetExportName( CurVee, a ), loc, "-", a.NumCrits() * numthisloc, a.GetTonnage() * numthisloc ) + NL;
+                add += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5" + tformat, FileCommon.GetExportName( CurVee, a ), loc, "-", a.NumCVSpaces() * numthisloc, a.GetTonnage() * numthisloc ) + NL;
             }
             if( ((RangedWeapon) p).IsUsingCapacitor() ) {
                 tons -= 1.0f;
                 abPlaceable a = ((RangedWeapon) p).GetCapacitor();
-                add += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5" + tformat, FileCommon.GetExportName( CurVee, p ), loc, numthisloc * 5 + "*", a.NumCrits(), a.GetTonnage() * numthisloc ) + NL;
+                add += String.format( "    %1$-40s %2$-9s %3$-9s %4$-7s %5" + tformat, FileCommon.GetExportName( CurVee, p ), loc, numthisloc * 5 + "*", a.NumCVSpaces(), a.GetTonnage() * numthisloc ) + NL;
             }
             retval += String.format( "%1$-44s %2$-9s %3$-9s %4$-7s %5" + tformat, name, loc, ((RangedWeapon) p).GetHeat() * numthisloc, crits, tons * numthisloc ) + NL + add;
         } else if( p instanceof MGArray ) {

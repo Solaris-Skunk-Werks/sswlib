@@ -220,8 +220,8 @@ public class PrintVehicle implements Printable {
 
         //DrawImages( graphics );
         DrawSheet( graphics );
-        DrawPips( graphics );
         DrawMechData( graphics );
+        DrawPips( graphics );
 
         if( Charts ) {
             // reset the scale and add the charts
@@ -244,6 +244,7 @@ public class PrintVehicle implements Printable {
         }
         
         graphics.drawImage( RecordSheet, 0, 0, 576, 756, null );
+        //graphics.drawImage( RecordSheet, 0, 0, 556, 760, null ); vee size?
         //graphics.drawImage( RecordSheet, 0, 0, 560, 757, null );
         
         Point start = ap.GetPoints().GetMechImageLoc();
@@ -274,6 +275,7 @@ public class PrintVehicle implements Printable {
             if ( item.name2.length() > 0 ) { TotItems += 1;}
             if ( item.specials.replace("-", "").length() > 0 ) { TotItems += 1;}
         }
+        TotItems += AmmoList.size();
         return TotItems;
     }
 
@@ -319,10 +321,16 @@ public class PrintVehicle implements Printable {
                     graphics.drawString( item.name2, p[1].x, p[1].y + offset );
                     lineoffset = graphics.getFont().getSize();
                 }
-                if ( item.specials.replace("-", "").length() > 0 ) {
-                    xoffset = (int)Math.ceil(item.specials.length());
-                    graphics.drawString( item.specials, p[4].x - xoffset, p[4].y + offset );
-                    lineoffset = graphics.getFont().getSize();
+                //if we aren't printing a TRO specific sheet...get rid of all the excess!
+                if (TRO || TotalItemLines() < 15) {
+                    if ( item.specials.replace("-", "").length() > 0 ) {
+                        xoffset = (int)Math.ceil(item.specials.length());
+                        //Font curFont = graphics.getFont();
+                        //graphics.setFont(PrintConsts.CrazyTinyFont);
+                        graphics.drawString( item.specials, p[4].x - xoffset, p[4].y + offset );
+                        lineoffset = graphics.getFont().getSize();
+                        //graphics.setFont(curFont);
+                    }
                 }
                 offset += lineoffset;
             }
@@ -335,7 +343,7 @@ public class PrintVehicle implements Printable {
             if ( AmmoList.size() > 0 ) {
                 offset += 2;
                 graphics.drawString("Ammunition Type", p[0].x, p[0].y + offset);
-                graphics.drawString("Rounds", p[3].x, p[3].y + offset);
+                graphics.drawString("Rounds", p[3].x-30, p[3].y + offset);
                 offset += 2;
                 graphics.drawLine(p[0].x, p[0].y + offset, p[8].x + 8, p[8].y + offset);
                 offset += graphics.getFont().getSize();
@@ -343,8 +351,25 @@ public class PrintVehicle implements Printable {
             for ( int index=0; index < AmmoList.size(); index++ ) {
                 AmmoData CurAmmo = (AmmoData) AmmoList.get(index);
                 graphics.drawString( CurAmmo.Format(), p[0].x, p[0].y + offset);
-                graphics.drawString( CurAmmo.LotSize + "", p[3].x, p[3].y + offset);
-                offset += graphics.getFont().getSize();
+                graphics.drawString( CurAmmo.LotSize + "", p[3].x-30, p[3].y + offset);
+                
+                //Ammo boxes
+                Point spot = new Point(p[3].x-15, p[3].y + offset - 5);
+                graphics.setStroke(new BasicStroke(0.5f));
+                int lotsize = Math.min(CurAmmo.LotSize, 100);
+                if ( CurAmmo.LotSize >= 100 ) lotsize = 40;
+                while( lotsize > 0 ) {
+                    for ( int i=0; i < Math.min(lotsize, 20); i++ ) {
+                        //graphics.drawRect(spot.x, spot.y, 4, 4);
+                        //spot.setLocation(spot.x+((((i+1)%5) == 0) ? 5 : 4), spot.y);
+                        graphics.drawOval(spot.x, spot.y, 5, 5);
+                        spot.setLocation(spot.x+((((i+1)%5) == 0) ? 7 : 6), spot.y);
+                    }
+                    offset += 5;
+                    spot.setLocation(p[3].x-15, spot.y + 6);
+                    lotsize -= 20;
+                }
+                offset += 1;
             }
         }
 
@@ -353,14 +378,6 @@ public class PrintVehicle implements Printable {
         graphics.setFont( PrintConsts.Small8Font );
         graphics.drawString( CurVee.GetFullName(), p[PrintConsts.MECHNAME].x, p[PrintConsts.MECHNAME].y );
 
-//        //Movement Heat
-//        if ( !TRO ) {
-//            graphics.setFont(PrintConsts.CrazyTinyFont);
-//            graphics.drawString("1", p[PrintConsts.WALKMP].x-14, p[PrintConsts.WALKMP].y+1);
-//            graphics.drawString("2", p[PrintConsts.RUNMP].x-14, p[PrintConsts.RUNMP].y+1);
-//            graphics.drawString("" + CurVee.GetJumpingHeat(), p[PrintConsts.JUMPMP].x-12, p[PrintConsts.JUMPMP].y+1);
-//        }
-
         // have to hack the movement to print the correct stuff here.
         graphics.setFont( PrintConsts.Small8Font );
         graphics.drawString( ( CurVee.getCruiseMP() * MiniConvRate ) + "", p[PrintConsts.WALKMP].x, p[PrintConsts.WALKMP].y );
@@ -368,7 +385,7 @@ public class PrintVehicle implements Printable {
 
         // Movement and Engine
         if ( !CurVee.IsVTOL() ) {
-            graphics.drawString( CurVee.GetMotiveLookupName() + "", p[19].x, p[19].y );
+            graphics.drawString( CurVee.GetMotiveLookupName() + "" + CurVee.GetChassisModifierString(), p[19].x, p[19].y );
             graphics.drawString( CurVee.GetEngine().CritName() + "", p[20].x, p[20].y );
         } else {
             graphics.drawString( CurVee.GetEngine().CritName() + "", p[19].x, p[19].y );
@@ -403,7 +420,7 @@ public class PrintVehicle implements Printable {
             else
                 graphics.drawString( String.format( "%1$,.0f (Base: %2$,d)", BV, CurVee.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
             graphics.setFont( PrintConsts.SmallFont );
-            graphics.drawString( "Armor Pts: " + CurVee.GetArmor().GetArmorValue(), p[PrintConsts.TOTAL_ARMOR].x-8, p[PrintConsts.TOTAL_ARMOR].y+16 );
+            graphics.drawString( CurVee.GetArmor().CritName() + " Pts: " + CurVee.GetArmor().GetArmorValue(), p[PrintConsts.TOTAL_ARMOR].x, p[PrintConsts.TOTAL_ARMOR].y );
             graphics.setFont( PrintConsts.BoldFont );
         } else {
             graphics.drawString( String.format( "%1$,d", CurVee.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );
@@ -436,32 +453,6 @@ public class PrintVehicle implements Printable {
         graphics.drawString( temp, p[PrintConsts.TECH_IS].x, p[PrintConsts.TECH_IS].y );
 
         graphics.drawString( CurVee.GetYear() + "", p[PrintConsts.TECH_IS].x, p[PrintConsts.TECH_IS].y + 10 );
-
-        //Armor Information when not Standard
-        if ( !CurVee.GetArmor().CritName().contains("Standard") ) {
-            //Armor Type
-            graphics.setFont( PrintConsts.SmallFont );
-            if ( CurVee.IsQuad() ) { graphics.setFont( PrintConsts.XtraSmallFont ); }
-
-            int baseX = ap.GetPoints().GetArmorInfoPoints()[LocationIndex.MECH_LOC_CT].x-5;
-            int baseY = ap.GetPoints().GetArmorInfoPoints()[LocationIndex.MECH_LOC_CT].y + 20;
-
-            if ( CurVee.GetArmor().RequiresExtraRules() ) {
-                graphics.setFont( PrintConsts.SmallBoldFont );
-                if ( CurVee.IsQuad() ) { graphics.setFont( PrintConsts.XtraSmallBoldFont ); }
-            }
-
-            String[] parts = PrintConsts.wrapText(CurVee.GetArmor().CritName().trim(), 8, true); //CurVee.GetArmor().CritName().trim().split(" ");
-            for (String part: parts) {
-                if ( !part.trim().isEmpty() ) {
-                    //int xCoord = baseX - ((part.trim().length() / 2) * 3);
-                    graphics.drawString( part, baseX - part.trim().length(), baseY );
-                    baseY += graphics.getFont().getSize();
-                }
-            }
-            graphics.setFont( PrintConsts.PlainFont );
-        }
-
 
         if ( !TRO ) {
             //Availability Codes
@@ -553,8 +544,16 @@ public class PrintVehicle implements Printable {
         ChartImage = images.getImage(PrintConsts.BP_ChartImage );
         points = new TWGroundPoints();
 
-        if ( CurVee.IsVTOL() )
-            RecordSheet = images.getImage( PrintConsts.RS_TW_VTOL );
+        //We have to use the advanced sheet for dual turrets
+        if ( CurVee.isHasTurret2() )
+            RecordSheet = images.getImage( PrintConsts.RS_TO_GROUND );
+        
+        if ( CurVee.IsVTOL() ) {
+            if ( CurVee.isHasTurret1() )
+                RecordSheet = images.getImage( PrintConsts.RS_TW_VTOL );
+            else
+                RecordSheet = images.getImage( PrintConsts.RS_TW_VTOL );
+        }
         
         if ( CurVee.IsNaval() )
             RecordSheet = images.getImage( PrintConsts.RS_TW_NAVAL );

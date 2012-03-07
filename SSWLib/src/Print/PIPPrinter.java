@@ -28,14 +28,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package Print;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.util.Hashtable;
-
-import components.*;
+import Print.Points.PIPRow;
+import components.CombatVehicle;
+import components.LocationIndex;
+import components.Mech;
 import filehandlers.ImageTracker;
-import java.awt.Color;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PIPPrinter {
     private Graphics2D graphics = null;
@@ -43,8 +43,8 @@ public class PIPPrinter {
     private Mech CurMech = null;
     private CombatVehicle CurVee = null;
     private ImageTracker imageTracker;
-    private Hashtable<Integer, PIPSettings> Armor = new Hashtable<Integer, PIPSettings>();
-    private Hashtable<Integer, PIPSettings> Internal = new Hashtable<Integer, PIPSettings>();
+    private HashMap<Integer, PIPSettings> Armor = new HashMap<Integer, PIPSettings>();
+    private HashMap<Integer, PIPSettings> Internal = new HashMap<Integer, PIPSettings>();
     private String filePath = "/data/";
     private String Source = "TW";
     private String Chassis = "BP";
@@ -152,6 +152,7 @@ public class PIPPrinter {
         this.imageTracker = images;
 
         Points = new TWGroundPoints();
+        if ( CurVee.isHasTurret2() ) Points = new TWAdvGroundPoints();
         if ( CurVee.IsNaval() ) Points = new TWNavalPoints();
         if ( CurVee.IsVTOL() ) Points = new TWVTOLPoints();
         
@@ -207,13 +208,15 @@ public class PIPPrinter {
         
         if ( graphics == null ) { return; }
 
+        graphics.setStroke(new BasicStroke(.75f));
         for ( int key : Armor.keySet() ) {
             PIPSettings settings = (PIPSettings) Armor.get(key);
             if ( useCanon && !settings.startingPoint.equals(new Point(0,0)) ) {
                 renderImage(settings);
             } else {
                 for( int i = 0; i < settings.GetArmor(CurVee); i++ ) {
-                    graphics.drawOval( settings.points[i].x, settings.points[i].y, 5, 5 );
+                    if ( settings.points.length-1 >= i )
+                        graphics.drawOval( settings.points[i].x, settings.points[i].y, 5, 5 );
                 }
             }
         }
@@ -223,7 +226,8 @@ public class PIPPrinter {
                 renderImage(settings);
             } else {
                for( int i = 0; i < CurVee.GetIntStruc().NumCVSpaces(); i++ ) {
-                    PrintConsts.FilledCircle( graphics, Color.BLACK, Color.WHITE, 5, settings.points[i].x, settings.points[i].y);
+                   if ( settings.points.length >= i ) 
+                       PrintConsts.FilledCircle( graphics, Color.BLACK, Color.WHITE, 5, settings.points[i].x, settings.points[i].y);
                     //graphics.drawOval( settings.points[i].x, settings.points[i].y, 5, 5 );
                 }
             }
