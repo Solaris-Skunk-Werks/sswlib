@@ -133,7 +133,7 @@ public class CVCostBVBreakdown {
             }
         }
         if( CurUnit.UsingTC() ) {
-            retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "Targeting Computer", CurUnit.GetTC().GetDefensiveBV(), CurUnit.GetTC().GetOffensiveBV(), CurUnit.GetTC().GetCost() ) + NL;
+            //retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", "Targeting Computer", CurUnit.GetTC().GetDefensiveBV(), CurUnit.GetTC().GetOffensiveBV(), CurUnit.GetTC().GetCost() ) + NL;
         }
         if( CurUnit.HasBlueShield() ) {
             retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", CurUnit.GetBlueShield().CritName(), CurUnit.GetBlueShield().GetDefensiveBV(), CurUnit.GetBlueShield().GetOffensiveBV(), CurUnit.GetBlueShield().GetCost() ) + NL;
@@ -160,43 +160,53 @@ public class CVCostBVBreakdown {
     }
 
     public String PrintHeatAdjustedWeaponBV() {
-        ArrayList v = CurUnit.GetLoadout().GetNonCore(), wep = new ArrayList();
         double foreBV = 0.0, rearBV = 0.0;
         boolean UseRear = false, TC = CurUnit.UsingTC(), UseAESMod = false;
         String retval = "";
-        abPlaceable a;
 
+        ArrayList<ArrayList<abPlaceable>> FrontRear = new ArrayList<ArrayList<abPlaceable>>();
+        FrontRear.add(CurUnit.GetLoadout().GetFrontItems());
+        FrontRear.add(CurUnit.GetLoadout().GetRearItems());
+        
+        ArrayList<ArrayList<abPlaceable>> Locations = new ArrayList<ArrayList<abPlaceable>>();
+        Locations.add(CurUnit.GetLoadout().GetLeftItems());
+        Locations.add(CurUnit.GetLoadout().GetRightItems());
+        Locations.add(CurUnit.GetLoadout().GetTurret1Items());
+        Locations.add(CurUnit.GetLoadout().GetTurret2Items());
+        
         // is it even worth performing all this?
-        if( v.size() <= 0 ) {
+        if( CurUnit.GetLoadout().GetNonCore().size() <= 0 ) {
             // nope
             return retval;
         }
 
-        // trim out the other equipment and get a list of offensive weapons only.
-        for( int i = 0; i < v.size(); i++ ) {
-            if( v.get( i ) instanceof ifWeapon ) {
-                wep.add( v.get( i ) );
-            }
-        }
-
-        // just to save us a headache if there are no weapons
-        if( wep.size() <= 0 ) { return retval; }
-
         // find out the total BV of rear and forward firing weapons
-        for( int i = 0; i < wep.size(); i++ ) {
-            a = ((abPlaceable) wep.get( i ));
-            if ( a.IsMountedRear() )
-                rearBV += a.GetCurOffensiveBV(true, TC, false);
-            else
-                foreBV += a.GetCurOffensiveBV(false, TC, false);
+        for ( abPlaceable w : CurUnit.GetLoadout().GetFrontItems() ) {
+            if ( w instanceof ifWeapon )
+                foreBV += w.GetCurOffensiveBV(false, TC, false);
+        }
+        for ( abPlaceable w : CurUnit.GetLoadout().GetRearItems() ) {
+            if ( w instanceof ifWeapon )
+                rearBV += w.GetCurOffensiveBV(true, TC, false);
         }
         if( rearBV > foreBV ) { UseRear = true; }
 
-        // no need for extensive calculations, return the weapon BV
-        for( int i = 0; i < wep.size(); i++ ) {
-            a = ((abPlaceable) wep.get( i ));
-            retval += String.format( "%1$-71s %2$,8.2f", "    -> " + a.CritName(), a.GetCurOffensiveBV( UseRear, TC, UseAESMod ) ) + NL;
+        //Re-calculate values now based on rear adjustment
+        for ( ArrayList<abPlaceable> list : FrontRear ) {
+            for ( abPlaceable w : list ) {
+                if ( w instanceof ifWeapon)
+                    retval += String.format( "%1$-71s %2$,8.2f", "    -> " + w.CritName(), w.GetCurOffensiveBV( UseRear, TC, UseAESMod ) ) + NL;
+            }
         }
+        
+        //Sides and Turrets are full value no matter what
+        for ( ArrayList<abPlaceable> list : Locations ) {
+            for ( abPlaceable w : list ) {
+                if ( w instanceof ifWeapon)
+                    retval += String.format( "%1$-71s %2$,8.2f", "    -> " + w.CritName(), w.GetCurOffensiveBV( false, TC, UseAESMod ) ) + NL;
+            }
+        }
+        
         return retval;
     }
 

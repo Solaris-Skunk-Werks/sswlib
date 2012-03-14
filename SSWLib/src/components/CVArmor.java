@@ -652,7 +652,7 @@ public class CVArmor extends abPlaceable {
 
     private void SetSingle( int Loc, int av ) {
         // make sure we're within bounds
-        if( (GetArmorValue()-GetLocationArmor(Loc)) + av >= GetMaxArmor() ) {
+        if( (GetArmorValue()-GetLocationArmor(Loc)) + av > GetMaxArmor() ) {
             av = Math.abs(GetMaxArmor() - GetArmorValue() - GetLocationArmor(Loc));
             ArmorPoints[Loc] = av;
         } else if( av < 0 ) {
@@ -675,6 +675,10 @@ public class CVArmor extends abPlaceable {
         // returns the maximum amount of armor allowed.\
         return (int) ( Owner.GetTonnage() * 3.5 ) + 40;
     }
+    
+    public int GetArmorPoints(double Tonnage) {
+        return (int) ( Math.floor( Tonnage * 16 * GetAVMult() ) );
+    }
 
     public int GetArmorValue() {
         int result = 0;
@@ -686,6 +690,12 @@ public class CVArmor extends abPlaceable {
         result += ArmorPoints[LocationIndex.CV_LOC_ROTOR];
         result += ArmorPoints[LocationIndex.CV_LOC_TURRET2];
         return result;
+    }
+    
+    public void ClearArmorValues() {
+        for (int i = 0; i < ArmorPoints.length; i++) {
+            ArmorPoints[i] = 0;
+        }
     }
 
     public int GetModularArmorValue() {
@@ -863,6 +873,35 @@ public class CVArmor extends abPlaceable {
         int mid = (int) Math.round( result + 0.4999 );
         result = mid * 0.5;
         return result;
+    }
+    
+    public void Maximize() {
+        int AV = GetMaxArmor();
+        
+        // remove all existing amounts so we can reset
+        ClearArmorValues();
+        
+        if ( Owner.IsVTOL() ) {
+            SetArmor(LocationIndex.CV_LOC_ROTOR, 2);
+            AV -= 2;
+        }
+        int split = AV / Owner.getLocationCount();
+        
+        if ( Owner.isHasTurret1() ) SetArmor( LocationIndex.CV_LOC_TURRET1, split);
+        if ( Owner.isHasTurret2() ) SetArmor( LocationIndex.CV_LOC_TURRET2, split);
+        
+        SetArmor( LocationIndex.CV_LOC_LEFT, split);
+        SetArmor( LocationIndex.CV_LOC_RIGHT, split);
+        
+        SetArmor( LocationIndex.CV_LOC_FRONT, (int)Math.ceil((split * 2) * .6) );
+        SetArmor( LocationIndex.CV_LOC_REAR, (split * 2)-GetLocationArmor(LocationIndex.CV_LOC_FRONT));
+        
+        if ( GetArmorValue() < GetMaxArmor() ) {
+            int val = GetMaxArmor()-GetArmorValue();
+            for (int i = 0; i < val; i++) {
+                IncrementArmor(LocationIndex.CV_LOC_FRONT);
+            }
+        }
     }
 
     public double GetAVMult() {

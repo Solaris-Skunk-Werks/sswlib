@@ -90,7 +90,7 @@ public class Unit implements ifSerializable {
     private Preferences Prefs;
 
     public Unit(){
-        Prefs = Preferences.userRoot().node( Constants.BFBPrefs );
+        Prefs = Preferences.userRoot().node( Constants.SSWPrefs );
     }
 
     public Unit( UnitListData m ) {

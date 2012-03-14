@@ -126,6 +126,9 @@ public class EquipmentFactory {
             Equipment.add( new ExtendedFuelTank( (Mech) m ) );
             Equipment.add( new DroneOperatingSystem( (Mech) m ) );
         }
+        if ( m instanceof CombatVehicle ) {
+            Equipment.add( new Hitch() );
+        }
         BuildMGArrays();
     }
 
@@ -146,6 +149,8 @@ public class EquipmentFactory {
             retval = ((RangedWeapon) p).Clone();
         } else if( p instanceof VehicularGrenadeLauncher ) {
             retval = new VehicularGrenadeLauncher();
+        } else if( p instanceof Hitch ) {
+            retval = new Hitch();
         } else if( p instanceof PhysicalWeapon ) {
             PhysicalWeapon w = (PhysicalWeapon) p;
             switch( w.GetPWClass() ) {
@@ -424,12 +429,19 @@ public class EquipmentFactory {
 
         for (int i = 0; i < Equipment.size(); i++) {
             p = (abPlaceable) Equipment.get(i);
-            AC = p.GetAvailability();
-            if (CommonTools.IsAllowed(AC, m)) {
-                RetVal.add(p);
+            if ( p instanceof Equipment ) {
+                AC = p.GetAvailability();
+                if (CommonTools.IsAllowed(AC, m)) {
+                    RetVal.add(p);
+                }
+            } else if ( p instanceof Hitch ) {
+                if ( m instanceof CombatVehicle ) {
+                    if ( ((CombatVehicle)m).CanBeTrailer() )
+                        RetVal.add(p);
+                }
             }
         }
-
+        
         if (RetVal.size() < 1) {
             return null;
         } else {

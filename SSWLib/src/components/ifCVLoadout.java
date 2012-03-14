@@ -121,7 +121,7 @@ public interface ifCVLoadout {
     public boolean IsUsingClanCASE();
     public void SetClanCASE( boolean b );
     public void RemoveISCase();
-    public void SetISCASE( CASE c );
+    public void SetISCASE();
     public boolean HasISCASE();
     public CASE GetISCase();
     public void SetFCSArtemisIV( boolean b ) throws Exception;

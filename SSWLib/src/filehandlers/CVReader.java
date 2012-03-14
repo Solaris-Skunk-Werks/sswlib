@@ -318,29 +318,7 @@ public class CVReader {
         m.SetYear( Integer.parseInt( n.item( 0 ).getTextContent() ), true );
         m.SetYearRestricted( ParseBoolean( map.getNamedItem( "restricted" ).getTextContent() ) );
 
-        n = d.getElementsByTagName( "engine" );
-        map = n.item( 0 ).getAttributes();
-        LocationIndex[] lengine = { null, null };
-        ifVisitor v = m.Lookup( n.item( 0 ).getTextContent() );
-        if( v == null ) {
-            throw new Exception( "The Engine type could not be found (lookup name missing or incorrect).\nThe CombatVehicle cannot be loaded." );
-        } else {
-            if( map.getNamedItem( "techbase" ) == null ) {
-                // old style save file, set the engine based on the 'CombatVehicle's techbase
-                if( m.GetBaseTechbase() == AvailableCode.TECH_CLAN ) {
-                    v.SetClan( true );
-                }
-            } else {
-                if( Integer.parseInt( map.getNamedItem( "techbase" ).getTextContent() ) == AvailableCode.TECH_CLAN ) {
-                    v.SetClan( true );
-                }
-            }
-            v.LoadLocations( lengine );
-            m.Visit( v );
-        }
-        //m.SetEngineRating( Integer.parseInt( map.getNamedItem( "rating" ).getTextContent() ) );
-        m.SetEngineManufacturer( FileCommon.DecodeFluff( map.getNamedItem( "manufacturer" ).getTextContent() ) );
-
+        ifVisitor v;
         n = d.getElementsByTagName( "structure" );
         map = n.item( 0 ).getAttributes();
         n = n.item( 0 ).getChildNodes();
@@ -357,6 +335,11 @@ public class CVReader {
                 m.SetFullAmphibious(Boolean.parseBoolean(Mods.getNamedItem("fullamph").getTextContent()));
                 m.SetDuneBuggy(Boolean.parseBoolean(Mods.getNamedItem("dunebuggy").getTextContent()));
                 m.SetEnvironmentalSealing(Boolean.parseBoolean(Mods.getNamedItem("enviroseal").getTextContent()));
+                if ( Mods.getNamedItem("trailer") != null )
+                    m.SetTrailer(Boolean.parseBoolean(Mods.getNamedItem("trailer").getTextContent()));
+                
+                //Refresh the Equipment data
+                data.Rebuild(m);
             }
         }
         if( Type == null ) {
@@ -380,6 +363,29 @@ public class CVReader {
             }
         }
         m.SetChassisModel( FileCommon.DecodeFluff( map.getNamedItem( "manufacturer" ).getTextContent() ) );
+        
+        n = d.getElementsByTagName( "engine" );
+        map = n.item( 0 ).getAttributes();
+        LocationIndex[] lengine = { null, null };
+        v = m.Lookup( n.item( 0 ).getTextContent() );
+        if( v == null ) {
+            throw new Exception( "The Engine type could not be found (lookup name missing or incorrect).\nThe CombatVehicle cannot be loaded." );
+        } else {
+            if( map.getNamedItem( "techbase" ) == null ) {
+                // old style save file, set the engine based on the 'CombatVehicle's techbase
+                if( m.GetBaseTechbase() == AvailableCode.TECH_CLAN ) {
+                    v.SetClan( true );
+                }
+            } else {
+                if( Integer.parseInt( map.getNamedItem( "techbase" ).getTextContent() ) == AvailableCode.TECH_CLAN ) {
+                    v.SetClan( true );
+                }
+            }
+            v.LoadLocations( lengine );
+            m.Visit( v );
+        }
+        //m.SetEngineRating( Integer.parseInt( map.getNamedItem( "rating" ).getTextContent() ) );
+        m.SetEngineManufacturer( FileCommon.DecodeFluff( map.getNamedItem( "manufacturer" ).getTextContent() ) );
 
         // base loadout
         // get the actuators first since that will complete the structural components
@@ -535,6 +541,9 @@ public class CVReader {
                             }
                         }
                         ltc = l;
+                    } else if( eType.equals( "CASE" ) ) {
+                        m.GetLoadout().SetISCASE();
+                        m.GetLoadout().SetClanCASE(( m.GetTechBase() == AvailableCode.TECH_CLAN));
                     } else if( eType.equals( "Supercharger" ) ) {
                         m.GetLoadout().SetSupercharger( true );
                     }

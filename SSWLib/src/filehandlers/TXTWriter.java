@@ -1156,6 +1156,7 @@ public class TXTWriter {
         Iterator itr = lines.iterator();
         while(itr.hasNext()) {
             ret[c] = (String) itr.next();
+            c++;
         }
 
         return ret;

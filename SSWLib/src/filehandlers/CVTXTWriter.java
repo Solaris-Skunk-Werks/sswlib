@@ -489,7 +489,7 @@ public class CVTXTWriter {
 
         if( v.size() < 1 ) { return ""; }
         String retval = "================================================================================" + NL;
-        retval += "Equipment                                 Location    Heat    Critical    Mass  " + NL;
+        retval += "Equipment                                 Location    Heat     Spaces     Mass  " + NL;
         retval += "--------------------------------------------------------------------------------" + NL;
 
         // now sort the equipment by location
@@ -514,28 +514,14 @@ public class CVTXTWriter {
         // count up individual weapons and build their string
         for( int i = 1; i <= equips.length; i++ ) {
             // find any other weapons of this type
-            if( cur.CanSplit() |! cur.Contiguous() || cur instanceof MGArray ) {
-                // splittable items are generally too big for two in one
-                // location or are split into different areas.  just avoid.
-                int[] check = CurVee.GetLoadout().FindInstances( cur );
-                loc = FileCommon.EncodeLocations( check, CurVee.IsQuad(), common.CommonTools.Vehicle );
-                crits = FileCommon.DecodeCrits( check );
-                retval += ProcessEquipStatLines( cur, loc, crits, 1 );
-            } else {
-                int locint = CurVee.GetLoadout().Find( cur );
-                for( int j = 0; j < equips.length; j++ ) {
-                    if( equips[j] != null ) {
-                        if( cur instanceof Equipment ) {
-                            if( ((Equipment) cur).IsVariableSize() ) {
-                                if( equips[j].CritName().equals( cur.CritName() ) && CurVee.GetLoadout().Find( equips[j] ) == locint ) {
-                                    numthisloc++;
-                                    equips[j] = null;
-                                }
-                            } else {
-                                if( equips[j].LookupName().equals( cur.LookupName() ) && CurVee.GetLoadout().Find( equips[j] ) == locint ) {
-                                    numthisloc++;
-                                    equips[j] = null;
-                                }
+            int locint = CurVee.GetLoadout().Find( cur );
+            for( int j = 0; j < equips.length; j++ ) {
+                if( equips[j] != null ) {
+                    if( cur instanceof Equipment ) {
+                        if( ((Equipment) cur).IsVariableSize() ) {
+                            if( equips[j].CritName().equals( cur.CritName() ) && CurVee.GetLoadout().Find( equips[j] ) == locint ) {
+                                numthisloc++;
+                                equips[j] = null;
                             }
                         } else {
                             if( equips[j].LookupName().equals( cur.LookupName() ) && CurVee.GetLoadout().Find( equips[j] ) == locint ) {
@@ -543,18 +529,23 @@ public class CVTXTWriter {
                                 equips[j] = null;
                             }
                         }
+                    } else {
+                        if( equips[j].LookupName().equals( cur.LookupName() ) && CurVee.GetLoadout().Find( equips[j] ) == locint ) {
+                            numthisloc++;
+                            equips[j] = null;
+                        }
                     }
                 }
-
-                if( numthisloc > 1) {
-                    crits = "" + ( cur.NumCVSpaces() * numthisloc );
-                } else {
-                    crits = "" + cur.NumCVSpaces();
-                }
-                loc = FileCommon.EncodeLocation( locint, CurVee.IsQuad(), common.CommonTools.Vehicle );
-                // add the current weapon to the armament string
-                retval += ProcessEquipStatLines( cur, loc, crits, numthisloc );
             }
+
+            if( numthisloc > 1) {
+                crits = "" + ( cur.NumCVSpaces() * numthisloc );
+            } else {
+                crits = "" + cur.NumCVSpaces();
+            }
+            loc = FileCommon.EncodeLocation( locint, CurVee.IsQuad(), common.CommonTools.Vehicle );
+            // add the current weapon to the armament string
+            retval += ProcessEquipStatLines( cur, loc, crits, numthisloc );
 
             // find the next weapon type and set it to current
             cur = null;
@@ -663,7 +654,7 @@ public class CVTXTWriter {
         }
 
         // the basic equipment block header
-        retval += NL + "Equipment                                 Location    Heat    Critical    Mass  " + NL;
+        retval += NL + "Equipment                                 Location    Heat     Spaces     Mass  " + NL;
         retval += "--------------------------------------------------------------------------------" + NL;
 
         if( equips.length < 1 ) { return retval; }
@@ -681,28 +672,14 @@ public class CVTXTWriter {
         // count up individual weapons and build their string
         for( int i = 1; i <= equips.length; i++ ) {
             // find any other weapons of this type
-            if( cur.CanSplit() |! cur.Contiguous() || cur instanceof MGArray ) {
-                // splittable items are generally too big for two in one
-                // location or are split into different areas.  just avoid.
-                int[] check = CurVee.GetLoadout().FindInstances( cur );
-                loc = FileCommon.EncodeLocations( check, CurVee.IsQuad(), common.CommonTools.Vehicle );
-                crits = FileCommon.DecodeCrits( check );
-                retval += ProcessEquipStatLines( cur, loc, crits, 1 );
-            } else {
-                int locint = CurVee.GetLoadout().Find( cur );
-                for( int j = 0; j < equips.length; j++ ) {
-                    if( equips[j] != null ) {
-                        if( cur instanceof Equipment ) {
-                            if( ((Equipment) cur).IsVariableSize() ) {
-                                if( equips[j].CritName().equals( cur.CritName() ) && CurVee.GetLoadout().Find( equips[j] ) == locint ) {
-                                    numthisloc++;
-                                    equips[j] = null;
-                                }
-                            } else {
-                                if( equips[j].LookupName().equals( cur.LookupName() ) && CurVee.GetLoadout().Find( equips[j] ) == locint ) {
-                                    numthisloc++;
-                                    equips[j] = null;
-                                }
+            int locint = CurVee.GetLoadout().Find( cur );
+            for( int j = 0; j < equips.length; j++ ) {
+                if( equips[j] != null ) {
+                    if( cur instanceof Equipment ) {
+                        if( ((Equipment) cur).IsVariableSize() ) {
+                            if( equips[j].CritName().equals( cur.CritName() ) && CurVee.GetLoadout().Find( equips[j] ) == locint ) {
+                                numthisloc++;
+                                equips[j] = null;
                             }
                         } else {
                             if( equips[j].LookupName().equals( cur.LookupName() ) && CurVee.GetLoadout().Find( equips[j] ) == locint ) {
@@ -710,18 +687,23 @@ public class CVTXTWriter {
                                 equips[j] = null;
                             }
                         }
+                    } else {
+                        if( equips[j].LookupName().equals( cur.LookupName() ) && CurVee.GetLoadout().Find( equips[j] ) == locint ) {
+                            numthisloc++;
+                            equips[j] = null;
+                        }
                     }
                 }
-
-                if( numthisloc > 1) {
-                    crits = "" + ( cur.NumCVSpaces() * numthisloc );
-                } else {
-                    crits = "" + cur.NumCVSpaces();
-                }
-                loc = FileCommon.EncodeLocation( locint, CurVee.IsQuad(), common.CommonTools.Vehicle );
-                // add the current weapon to the armament string
-                retval += ProcessEquipStatLines( cur, loc, crits, numthisloc );
             }
+
+            if( numthisloc > 1) {
+                crits = "" + ( cur.NumCVSpaces() * numthisloc );
+            } else {
+                crits = "" + cur.NumCVSpaces();
+            }
+            loc = FileCommon.EncodeLocation( locint, CurVee.IsQuad(), common.CommonTools.Vehicle );
+            // add the current weapon to the armament string
+            retval += ProcessEquipStatLines( cur, loc, crits, numthisloc );
 
             // find the next weapon type and set it to current
             cur = null;

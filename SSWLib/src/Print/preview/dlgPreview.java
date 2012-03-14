@@ -76,6 +76,13 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         setScenario(scenario);
         setPrinter(printer);
     }
+    
+    public dlgPreview(String title, Component owner, PagePrinter printer, Scenario scenario, ImageTracker images, boolean RSOnly) {
+        this(title, owner, printer.Preview(), 0.0, images);
+        this.printer = printer;
+        setScenario(scenario);
+        if ( RSOnly ) setRSOnly();
+    }
 
     public dlgPreview(String title, Component owner, Printable printable, PageFormat format, int pages, double zoom, ImageTracker images) {
         this(title, owner, new MyPageable(printable, format, pages), zoom, images);
@@ -100,7 +107,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         Verify();
     }
     
-    public void setRSOnly() {
+    public final void setRSOnly() {
         chkPrintForce.setSelected(false);
         chkPrintForce.setEnabled(false);
         
@@ -112,6 +119,8 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
         
         chkPrintFireChits.setSelected(false);
         chkPrintFireChits.setEnabled(false);
+        
+        chkPrintRecordsheets.setSelected(true);
     }
 
     public final void setScenario( Scenario scenario ) {

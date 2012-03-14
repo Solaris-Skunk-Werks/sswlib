@@ -187,42 +187,34 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
     public void SetWheeled() {
         setCurConfig(Wheeled);
-        SetChanged(true);
     }
 
     public void SetTracked() {
         setCurConfig(Tracked);
-        SetChanged(true);
     }
 
     public void SetHover() {
         setCurConfig(Hover);
-        SetChanged(true);
     }
 
     public void setVTOL() {
         setCurConfig(VTOL);
-        SetChanged(true);
     }
 
     public void SetWiGE() {
         setCurConfig(WiGE);
-        SetChanged(true);
     }
 
     public void SetDisplacement() {
         setCurConfig(Displacement);
-        SetChanged(true);
     }
 
     public void SetHydrofoil() {
         setCurConfig(Hydrofoil);
-        SetChanged(true);
     }
 
     public void SetSubmarine() {
         setCurConfig(Submarine);
-        SetChanged(true);
     }
 
     public String GetMotiveLookupName() {
@@ -893,8 +885,8 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     public int GetTechbase() {
         return getCurLoadout().GetTechBase();
     }
-
-    public int GetBaseTechbase() {
+ 
+   public int GetBaseTechbase() {
         return getMainLoadout().GetTechBase();
     }
 
@@ -908,7 +900,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         } else {
             MainLoadout.SetEra( e );
         }
-        SetChanged( true );
     }
 
     public void SetYear( int y, boolean specified ) {
@@ -917,7 +908,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         } else {
             MainLoadout.SetYear( y, specified );
         }
-        SetChanged( true );
     }
     
     public boolean IsYearRestricted() {
@@ -1098,15 +1088,13 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
     public final void setTonnage(int Tonnage) {
         this.Tonnage = Tonnage;
-        //this.InternalStructure = CommonTools.RoundHalfUp((double)Tonnage / 10.0);
-        //this.InternalStructurePoints = (int)Math.round(Tonnage / 10.0);
+        LiftEquipment = 0;
+        Controls = 0;
+        
         if ( CurConfig.RequiresLiftEquipment() )
             this.LiftEquipment = CommonTools.RoundHalfUp((double)Tonnage / 10.0);
-        else
-            this.LiftEquipment = 0;
-        this.Controls = CommonTools.RoundHalfUp((double)Tonnage * 0.05);
-        if ( CurConfig.CanBeTrailer() && IsTrailer && GetEngine().GetTonnage() == 0 )
-            this.Controls = 0;
+        if( CurEngine.RequiresControls() )
+            this.Controls = CommonTools.RoundHalfUp((double)Tonnage * 0.05);
         SetEngine(CurEngine);
     }
 
@@ -1131,7 +1119,8 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         int retval = 4;
         if ( isHasTurret1() ) retval += 1;
         if ( isHasTurret2() ) retval += 1;
-        if ( IsVTOL() ) retval += 1;
+        //don't count the rotor in the location count
+        //if ( IsVTOL() ) retval += 1;
         return retval;        
     }
 
@@ -1149,15 +1138,18 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
             return (int) Math.floor( ( 400.0 + (double)CurConfig.GetSuspensionFactor(Tonnage) ) / (double)Tonnage   );
         }
     }
+    
+    public int getMinCruiseMP() {
+        if ( CurEngine.RequiresControls() ) return 1;
+        return 0;
+    }
 
     public void setCruiseMP(int mp) throws Exception {
         int MaxWalk = getMaxCruiseMP();
         if( mp > MaxWalk ) { mp = MaxWalk; }
-        if( mp < 1 ) { mp = 1; }
+        if( mp < 0 ) { mp = 0; }
         CruiseMP = mp;
         CurEngine.SetRating( GetFinalEngineRating() );
-
-        SetChanged( true );
     }
 
     public double getJJMult() {
@@ -1196,8 +1188,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         l.SetName( name );
         Loadouts.add( l );
         CurLoadout = l;
-
-        SetChanged( true );
     }
 
     public void UnlockChassis() {
@@ -1228,8 +1218,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         l.SetName( Name );
         Loadouts.add( l );
         CurLoadout = l;
-
-        SetChanged( true );
     }
 
     public void RemoveLoadout( String Name ) {
@@ -1249,8 +1237,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         } else {
             CurLoadout = MainLoadout;
         }
-
-        SetChanged( true );
     }
 
     public boolean isFractionalAccounting() {
@@ -1419,7 +1405,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         } else {
             MainLoadout.SetYear( y, specified );
         }
-        SetChanged( true );
     }
 
     public void SetYearRestricted( boolean y ) {
@@ -1428,7 +1413,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         } else {
             MainLoadout.SetYearRestricted( y );
         }
-        SetChanged( true );
     }
 
     public String getSource() {
@@ -1453,7 +1437,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         } else {
             MainLoadout.SetRulesLevel( r );
         }
-        SetChanged( true );
     }
 
     public int GetBaseEra() {
@@ -1482,7 +1465,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         } else {
             MainLoadout.SetTechBase( t );
         }
-        SetChanged( true );
         return true;
     }
 
@@ -1527,8 +1509,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         GetHeatSinks().ReCalculate();
         //GetJumpJets().ReCalculate();
         CurArmor.Recalculate();
-
-        SetChanged( true );
     }
 
     public void SetClan() {
@@ -1557,7 +1537,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         //GetJumpJets().ReCalculate();
         CurArmor.Recalculate();
 
-        SetChanged( true );
     }
     public void SetMixed() {
         SetTechBase( AvailableCode.TECH_BOTH );
@@ -1585,8 +1564,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
             CurArmor.SetStandard();
             CurArmor.Recalculate();
         }
-
-        SetChanged( true );
     }
 
     public String GetFullName() {
@@ -2069,40 +2046,50 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public double GetWeaponBV() {
-        ArrayList v = CurLoadout.GetNonCore(), wep = new ArrayList();
         double result = 0.0, foreBV = 0.0, rearBV = 0.0;
-        boolean UseRear = false;
-        abPlaceable a;
-
+        boolean UseRear = false, TC = CurLoadout.UsingTC();
+        
+        ArrayList<ArrayList<abPlaceable>> FrontRear = new ArrayList<ArrayList<abPlaceable>>();
+        FrontRear.add(CurLoadout.GetFrontItems());
+        FrontRear.add(CurLoadout.GetRearItems());
+        
+        ArrayList<ArrayList<abPlaceable>> Locations = new ArrayList<ArrayList<abPlaceable>>();
+        Locations.add(CurLoadout.GetLeftItems());
+        Locations.add(CurLoadout.GetRightItems());
+        Locations.add(CurLoadout.GetTurret1Items());
+        Locations.add(CurLoadout.GetTurret2Items());
+        
         // is it even worth performing all this?
-        if( v.size() <= 0 ) {
+        if( CurLoadout.GetNonCore().size() <= 0 ) {
             // nope
             return result;
         }
 
-        // trim out the other equipment and get a list of offensive weapons only.
-        for( int i = 0; i < v.size(); i++ ) {
-            if( v.get( i ) instanceof ifWeapon ) {
-                wep.add( v.get( i ) );
-            }
-        }
-
-        // just to save us a headache if there are no weapons
-        if( wep.size() <= 0 ) { return result; }
-
         // find out the total BV of rear and forward firing weapons
-        for( int i = 0; i < wep.size(); i++ ) {
-            a = ((abPlaceable) wep.get( i ));
-            if ( a.IsMountedRear() )
-                rearBV += a.GetCurOffensiveBV(true, CurLoadout.UsingTC(), false);
-            else
-                foreBV += a.GetCurOffensiveBV(false, CurLoadout.UsingTC(), false);
+        for ( abPlaceable w : CurLoadout.GetFrontItems() ) {
+            if ( w instanceof ifWeapon )
+                foreBV += w.GetCurOffensiveBV(false, TC, false);
+        }
+        for ( abPlaceable w : CurLoadout.GetRearItems() ) {
+            if ( w instanceof ifWeapon )
+                rearBV += w.GetCurOffensiveBV(true, TC, false);
         }
         if( rearBV > foreBV ) { UseRear = true; }
-
-        for( int i = 0; i < wep.size(); i++ ) {
-            a = ((abPlaceable) wep.get( i ));
-            result += a.GetCurOffensiveBV( UseRear, CurLoadout.UsingTC(), false );
+        
+        //Re-calculate values now based on rear adjustment
+        for ( ArrayList<abPlaceable> list : FrontRear ) {
+            for ( abPlaceable w : list ) {
+                if ( w instanceof ifWeapon)
+                    result += w.GetCurOffensiveBV(UseRear, TC, false);
+            }
+        }
+        
+        //Sides and Turrets are full value no matter what
+        for ( ArrayList<abPlaceable> list : Locations ) {
+            for ( abPlaceable w : list ) {
+                if ( w instanceof ifWeapon)
+                    result += w.GetCurOffensiveBV(false, TC, false);
+            }
         }
         
         return result;
@@ -2209,6 +2196,12 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     public boolean SetEngine( Engine e ) {
         CurEngine = e;
 
+        if ( !e.RequiresControls() ) {
+            CruiseMP = 0;
+        } else {
+            if ( CruiseMP == 0 ) 
+                CruiseMP = 1;
+        }
         CurEngine.SetRating( GetFinalEngineRating() );
 
         if ( e.FreeHeatSinks() > GetHeatSinks().GetNumHS() )
@@ -2444,7 +2437,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
         // same goes for the targeting computer and supercharger
         if( CurLoadout.UsingTC() ) {
-            result += GetTC().GetCost();
+            //result += GetTC().GetCost();
         }
         if( CurLoadout.HasSupercharger() ) {
             result += CurLoadout.GetSupercharger().GetCost();
@@ -2487,7 +2480,10 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     
     public int GetCrew()
     {
-        return Math.round(Tonnage / 15) + ( (Tonnage % 15 > 0) ? 1 : 0);
+        if ( CurEngine.RequiresControls() )
+            return Math.round(Tonnage / 15) + ( (Tonnage % 15 > 0) ? 1 : 0);
+        else
+            return 0;
     }
     
     public void SetProductionEra( int e ) {
@@ -2496,7 +2492,6 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         } else {
             MainLoadout.SetProductionEra( e );
         }
-        SetChanged( true );
     }
     
     public void setMotiveType( String Motive ) {
@@ -2564,6 +2559,10 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     
     public void SetTrailer(boolean b ) {
         IsTrailer = b;
+        if ( b ) {
+            CurEngine.SetNoneEngine();
+            setTonnage(Tonnage);
+        }
     }
     
     public boolean isTrailer() {

@@ -145,6 +145,6 @@ public class stChassisCVIS implements ifChassis, ifState {
     }
 
     public int GetCVPoints( int Tonnage ) {
-        return (int)Math.round(Tonnage / 10.0);
+        return (int)Math.ceil(Tonnage / 10.0);
     }
 }

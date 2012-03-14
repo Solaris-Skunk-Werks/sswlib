@@ -145,6 +145,9 @@ public class Turret extends abPlaceable {
     private double GetSize() {
         double Build = 0.0;
 
+        if ( isTonnageSet ) 
+            return MaxTonnage;
+        
         if( Items.isEmpty() ) {
             return 0;
         }

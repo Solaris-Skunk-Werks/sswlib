@@ -31,9 +31,6 @@ package components;
 import common.CommonTools;
 import common.Constants;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import states.stCVSubmarine;
 import visitors.VFCSApolloLoader;
 import visitors.VFCSArtemisIVLoader;
 import visitors.VFCSArtemisVLoader;
@@ -66,6 +63,7 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
                     UseApollo = false,
                     Use_TC = false,
                     UsingClanCASE = false,
+                    UsingCASE = false,
                     UsingSupercharger = false,
                     YearSpecified = false,
                     YearRestricted = false;
@@ -297,7 +295,13 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     }
 
     public void AddTo(abPlaceable p, int Loc) throws Exception {
+        //Ammo only ever goes in the Body
         if ( p instanceof Ammunition ) Loc = LocationIndex.CV_LOC_BODY;
+        //Quite a bit of equipment can only go in the body
+        if ( p instanceof Equipment ) {
+            if ( !((Equipment)p).CanAllocCVFront() && !((Equipment)p).CanAllocCVSide() && !((Equipment)p).CanAllocCVRear() && !((Equipment)p).CanAllocCVTurret() )
+                Loc = LocationIndex.CV_LOC_BODY;
+        }
         
         switch( Loc ) {
             case LocationIndex.CV_LOC_BODY:
@@ -589,6 +593,7 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
                 Turret2Items.remove(p);
         //}
 
+        GetHeatSinks().SetNumHS(GetTotalHeat());
         Owner.SetChanged( true );
     }
 
@@ -757,10 +762,12 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     }
 
     public void RemoveISCase() {
+        UsingCASE = false;
         Remove(Case);
     }
     
-    public void SetISCASE(CASE c) {
+    public void SetISCASE() {
+        UsingCASE = true;
         Remove(Case);
         try {
             AddTo(Case, LocationIndex.CV_LOC_BODY);
@@ -770,7 +777,8 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     }
 
     public boolean HasISCASE() {
-        if ( GetNonCore().contains(Case) ) return true;
+        if ( UsingCASE ) return true;        
+        if ( Owner.IsOmni() && this != Owner.GetBaseLoadout() ) return Owner.GetBaseLoadout().HasISCASE();
         return false;
     }
 

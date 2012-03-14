@@ -114,7 +114,8 @@ public class CVWriter {
                                     + "limitedamph=\"" + CurUnit.HasLimitedAmphibious() + "\" "
                                     + "fullamph=\"" + CurUnit.HasFullAmphibious() + "\" "
                                     + "dunebuggy=\"" + CurUnit.HasDuneBuggy() + "\" "
-                                    + "enviroseal=\"" + CurUnit.HasEnvironmentalSealing() + "\" />");
+                                    + "enviroseal=\"" + CurUnit.HasEnvironmentalSealing() + "\" "
+                                    + "trailer=\"" + CurUnit.isTrailer() + "\" />");
         FR.newLine();       
         FR.write( tab + "</structure>" );
         FR.newLine();
@@ -242,8 +243,8 @@ public class CVWriter {
                 FR.newLine();
                 FR.write( tab + tab + "<cost>" + CurUnit.GetTotalCost() + "</cost>" );
                 FR.newLine();
-                FR.write( tab + tab + "<clancase>" + FileCommon.GetBoolean( CurUnit.GetLoadout().IsUsingClanCASE() ) + "</clancase>" );
-                FR.newLine();
+                //FR.write( tab + tab + "<clancase>" + FileCommon.GetBoolean( CurUnit.GetLoadout().IsUsingClanCASE() ) + "</clancase>" );
+                //FR.newLine();
                 if( CurUnit.GetJumpJets().GetNumJJ() > CurUnit.GetJumpJets().GetBaseLoadoutNumJJ() ) {
                     FR.write( tab + tab + "<jumpjets number=\"" + CurUnit.GetJumpJets().GetNumJJ() + "\">" );
                     FR.newLine();
@@ -466,6 +467,8 @@ public class CVWriter {
             return "ammunition";
         } else if( p instanceof TargetingComputer ) {
             return "TargetingComputer";
+        } else if ( p instanceof CASE ) {
+            return "CASE";
         } else {
             return "miscellaneous";
         }

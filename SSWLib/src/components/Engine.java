@@ -487,4 +487,9 @@ public class Engine extends abPlaceable {
         if ( EngineRating > 400  ) return true;
         return false;
     }
+    
+    public boolean RequiresControls() {
+        if ( CurConfig instanceof stEngineNone ) return false;
+        return true;
+    }
 }

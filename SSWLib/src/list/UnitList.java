@@ -43,7 +43,7 @@ import list.view.tbTotalWarfareView;
 public class UnitList extends AbstractTableModel {
     private ArrayList<UnitListData> List = new ArrayList<UnitListData>();
     private String Directory = "";
-    private int IndexVersion = 8;
+    private int IndexVersion = 9;
     private abView currentModel = new tbTotalWarfareView(this);
     String[] Extensions = { ".ssw", ".saw" };
 

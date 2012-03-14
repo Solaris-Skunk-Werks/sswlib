@@ -771,7 +771,7 @@ public class FileCommon {
                     case LocationIndex.CV_LOC_RIGHT:
                         return "RS";
                     case LocationIndex.CV_LOC_REAR:
-                        return "R";
+                        return "RR";
                     case LocationIndex.CV_LOC_ROTOR:
                         return "RO";
                     case LocationIndex.CV_LOC_TURRET1:

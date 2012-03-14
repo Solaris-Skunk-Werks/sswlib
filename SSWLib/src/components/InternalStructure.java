@@ -192,7 +192,7 @@ public class InternalStructure extends abPlaceable {
     }
     
     public int NumCVSpaces() {
-        return (int)Math.round(Owner.GetTonnage() / 10.0);
+        return (int)Math.ceil(Owner.GetTonnage() / 10.0);
     }
 
     public String ActualName() {
