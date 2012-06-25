@@ -1304,6 +1304,7 @@ public class MechReader {
                 }
                 n = OmniLoads.item( k ).getChildNodes();
                 ltc = new LocationIndex();
+                acLoc = new ArrayList();
                 for( int i = 0; i < n.getLength(); i++ ) {
                     // the main loadout routine
                     if( n.item( i ).getNodeName().equals( "source" ) ) {
