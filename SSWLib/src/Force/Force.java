@@ -584,25 +584,29 @@ public class Force extends AbstractTableModel implements ifSerializable {
         bf.LogoPath = this.LogoPath;
         for ( int i=0; i < Units.size(); i++ ) {
             Unit u = (Unit) Units.get(i);
-            u.LoadUnit();
-            switch(u.UnitType) {
-                case common.CommonTools.BattleMech:
-                    if ( u.m != null ) {
-                        BattleForceStats stat = new BattleForceStats(u.m,u.getGroup(), u.getGunnery(),u.getPiloting());
-                        stat.setWarrior(u.getMechwarrior());
-                        bf.BattleForceStats.add(stat);
-                    } else {
-                        error += "Could not load " + u.TypeModel + ".  The filename is most likely blank.\n";
-                    }
-                    break;
-                case common.CommonTools.Vehicle:
-                    if ( u.v != null ) {
-                        BattleForceStats stat = new BattleForceStats(u.v, u.getGroup(), u.getGunnery(),u.getPiloting());
-                        stat.setWarrior(u.getMechwarrior());
-                        bf.BattleForceStats.add(stat);
-                    } else {
-                        error += "Could not load " + u.TypeModel + ".  The filename is most likely blank.\n";
-                    }
+            if ( u.getBFStats() != null ) {
+                bf.BattleForceStats.add(u.getBFStats());
+            } else {
+                u.LoadUnit();
+                switch(u.UnitType) {
+                    case common.CommonTools.BattleMech:
+                        if ( u.m != null ) {
+                            BattleForceStats stat = new BattleForceStats(u.m,u.getGroup(), u.getGunnery(),u.getPiloting());
+                            stat.setWarrior(u.getMechwarrior());
+                            bf.BattleForceStats.add(stat);
+                        } else {
+                            error += "Could not load " + u.TypeModel + ".  The filename is most likely blank.\n";
+                        }
+                        break;
+                    case common.CommonTools.Vehicle:
+                        if ( u.v != null ) {
+                            BattleForceStats stat = new BattleForceStats(u.v, u.getGroup(), u.getGunnery(),u.getPiloting());
+                            stat.setWarrior(u.getMechwarrior());
+                            bf.BattleForceStats.add(stat);
+                        } else {
+                            error += "Could not load " + u.TypeModel + ".  The filename is most likely blank.\n";
+                        }
+                }
             }
         }
 
