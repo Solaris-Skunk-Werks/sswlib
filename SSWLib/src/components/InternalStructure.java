@@ -244,7 +244,7 @@ public class InternalStructure extends abPlaceable {
             retval += GetArmPoints() + GetArmPoints();
             retval += GetLegPoints() + GetLegPoints();
         } else if ( Owner instanceof CombatVehicle ) {
-            retval += NumCVSpaces() * ((CombatVehicle)Owner).getLocationCount();
+            retval += NumCVSpaces() * ((CombatVehicle)Owner).getLocationCount(true);
         }
 
         return retval;
