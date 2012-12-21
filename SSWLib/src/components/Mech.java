@@ -4843,6 +4843,7 @@ public class Mech implements ifUnit, ifBattleforce {
                 if ( ability.equals("C3M") ) MHQTons += 5.0d;
                 if ( ability.equals("C3I") ) MHQTons += 2.5d;
                 if ( ability.equals("C3BM") ) MHQTons += 6.0d;
+                if ( ability.equals("C3S") ) MHQTons += 1.0d;
                 if ( ability.equals("MTAS") ) Taser += 1;
                 if ( ability.equals("RSD") ) RSD += 1;
                 if ( ability.equals("HT2") ) Heat += 2;
