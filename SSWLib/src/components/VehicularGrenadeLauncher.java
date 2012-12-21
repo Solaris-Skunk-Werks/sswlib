@@ -54,7 +54,7 @@ public class VehicularGrenadeLauncher extends abPlaceable implements ifWeapon {
         AC.SetCLCodes( 'C', 'X', 'C', 'E' );
         AC.SetCLDates( 0, 0, false, 1900, 0, 0, false, false );
         AC.SetCLFactions( "", "", "PS", "" );
-        AC.SetRulesLevels( AvailableCode.RULES_ADVANCED, AvailableCode.RULES_ADVANCED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+        AC.SetRulesLevels( AvailableCode.RULES_ADVANCED, AvailableCode.RULES_ADVANCED, AvailableCode.RULES_ADVANCED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 
     public void SetArcFore() {
@@ -112,7 +112,12 @@ public class VehicularGrenadeLauncher extends abPlaceable implements ifWeapon {
     }
 
     public String CritName() {
-        return ARCDESCSHORT[CurrentArc] + " Vehicular Grenade Launcher ";
+        return ARCDESCSHORT[CurrentArc] + " Vehicular Grenade Launcher";
+    }
+    
+    @Override
+    public String PrintName() {
+        return "Vehic Gren Launcher";
     }
 
     public String LookupName() {

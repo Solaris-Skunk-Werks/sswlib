@@ -138,7 +138,9 @@ public class stEngineCLXXL implements ifEngine, ifState {
     }
 
     public double GetCost( int MechTonnage, int Rating ) {
-        return ( 100000.0f * ((double) MechTonnage) * ((double) Rating )) / 75.0f;
+        double baseCost = 100000.0f;
+        if ( Rating > 400 ) baseCost *= 2;
+        return ( baseCost * ((double) MechTonnage) * ((double) Rating )) / 75.0f;
    }
     
     public AvailableCode GetAvailability() {

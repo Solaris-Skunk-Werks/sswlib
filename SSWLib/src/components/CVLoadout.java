@@ -362,8 +362,16 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
             if ( ((RangedWeapon)p).IsTCCapable() )
                 TCList.add(p);
         }
-        if (GetHeatSinks().GetNumHS() < GetTotalHeat())
+        RefreshHeatSinks();
+    }
+    
+    public void RefreshHeatSinks() {
+        if (GetHeatSinks().GetNumHS() != GetTotalHeat())
             GetHeatSinks().SetNumHS(GetTotalHeat());
+        if ( GetHeatSinks().GetNumHS() < GetEngine().FreeHeatSinks() )
+            GetHeatSinks().SetNumHS(GetEngine().FreeHeatSinks());
+        if ( Owner.IsOmni() && Owner.GetBaseLoadout().GetHeatSinks().GetNumHS() > GetHeatSinks().GetNumHS() ) 
+            GetHeatSinks().SetNumHS(Owner.GetBaseLoadout().GetHeatSinks().GetNumHS());
     }
     
     public double GetItemsTonnage( ArrayList<abPlaceable> items ) {
@@ -524,10 +532,10 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
         //Owner.CheckArmoredComponents();
 
         // see if there's anything to flush out
-        if( NonCore.size() <= 0 ) { return; }
+        if( GetNonCore().size() <= 0 ) { return; }
 
-        for( int i = NonCore.size() - 1; i >= 0; i-- ) {
-            p = (abPlaceable) NonCore.get( i );
+        for( int i = GetNonCore().size() - 1; i >= 0; i-- ) {
+            p = (abPlaceable) GetNonCore().get( i );
             AC = p.GetAvailability();
             try {
                 CheckExclusions( p );
@@ -537,12 +545,13 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
             } catch( Exception e ) {
                 Remove( p );
             }
-            if( NonCore.contains( p ) ) {
+            if( GetNonCore().contains( p ) ) {
                 if( Rules < AvailableCode.RULES_EXPERIMENTAL ) {
                     p.ArmorComponent( false );
                 }
             }
         }
+        RefreshHeatSinks();
     }
 
     public boolean UnallocateAll(abPlaceable p, boolean override) {
@@ -875,6 +884,7 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
             Use_TC = use;
         }
 
+        CurTC.SetLocked(true);
         CurTC.SetClan( clan );
         CheckTC();
         Owner.SetChanged( true );
@@ -886,8 +896,11 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
         
         // remove the TC from the loadout
         Remove( CurTC );
-        if( ! Use_TC )
+        if( ! Use_TC ) {
+            BodyItems.remove(CurTC);
+            TCList = new ArrayList<abPlaceable>();
             return;
+        }
         
         BodyItems.add(CurTC);
         
@@ -917,7 +930,7 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     }
 
     public void CheckExclusions(abPlaceable p) throws Exception {
-              // this checks all the items in the loadout vs. the placeable's exclusions
+        // this checks all the items in the loadout vs. the placeable's exclusions
         // not worried about a return value since we're tossing exceptions
 
         // check basic requirements first
@@ -1005,6 +1018,7 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     }
 
     public Turret GetTurret(){
+        Turret1.SetItems(Turret1Items);
         return Turret1;
     }
     
@@ -1013,6 +1027,7 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     }
 
     public Turret GetRearTurret() {
+        Turret2.SetItems(Turret2Items);
         return Turret2;
     }
     

@@ -429,15 +429,15 @@ public class EquipmentFactory {
 
         for (int i = 0; i < Equipment.size(); i++) {
             p = (abPlaceable) Equipment.get(i);
-            if ( p instanceof Equipment ) {
-                AC = p.GetAvailability();
-                if (CommonTools.IsAllowed(AC, m)) {
-                    RetVal.add(p);
-                }
-            } else if ( p instanceof Hitch ) {
+            if ( p instanceof Hitch ) {
                 if ( m instanceof CombatVehicle ) {
                     if ( ((CombatVehicle)m).CanBeTrailer() )
                         RetVal.add(p);
+                }
+            } else {
+                AC = p.GetAvailability();
+                if (CommonTools.IsAllowed(AC, m)) {
+                    RetVal.add(p);
                 }
             }
         }

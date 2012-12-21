@@ -90,8 +90,10 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
                                  WiGE = new stCVWiGE(),
                                  Displacement = new stCVDisplacement(),
                                  Hydrofoil = new stCVHydrofoil(),
-                                 Submarine = new stCVSubmarine();
-    private ifCombatVehicle[] states = new ifCombatVehicle[]{ Wheeled, Tracked, Hover, VTOL, WiGE, Displacement, Hydrofoil, Submarine};
+                                 Submarine = new stCVSubmarine(),
+                                 SHHover = new stCVHoverSH(),
+                                 SHDisplacement = new stCVDisplacementSH();
+    private ifCombatVehicle[] states = new ifCombatVehicle[]{ Wheeled, Tracked, Hover, VTOL, WiGE, Displacement, Hydrofoil, Submarine, SHHover, SHDisplacement};
     private Engine CurEngine = new Engine( this );
     private ifCombatVehicle CurConfig = Tracked;
     private InternalStructure CurStructure = new InternalStructure( this );
@@ -216,11 +218,23 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     public void SetSubmarine() {
         setCurConfig(Submarine);
     }
+    
+    public void SetSuperHeavyHover() {
+        setCurConfig(SHHover);
+    }
+    
+    public void SetSuperHeavyDisplacement() {
+        setCurConfig(SHDisplacement);
+    }
 
     public String GetMotiveLookupName() {
         return getCurConfig().GetMotiveLookupName();
     }
 
+    public int GetMinTonnage() {
+        return getCurConfig().GetMinTonnage();
+    }
+    
     public int GetMaxTonnage() {
         return getCurConfig().GetMaxTonnage();
     }
@@ -367,7 +381,8 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
     public double GetTotalCost() {
         // final cost calculations
-        return (( GetChassisCost() + GetEquipCost() ) * GetCostMult() * GetConfigMultiplier()) + GetAmmoCosts();
+        // 8/7/2012 Commented out the GetAmmoCosts addition to match the way Mech works - GKB
+        return (( GetChassisCost() + GetEquipCost() ) * GetCostMult() * GetConfigMultiplier()); //+ GetAmmoCosts();
     }
     
     public double GetDryCost() {
@@ -1115,13 +1130,16 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         return 5 + ( Math.round(Tonnage / 5) );
     }
     
-    public int getLocationCount() {
+    public int getLocationCount(boolean includeRotor) {
         int retval = 4;
         if ( isHasTurret1() ) retval += 1;
         if ( isHasTurret2() ) retval += 1;
-        //don't count the rotor in the location count
-        //if ( IsVTOL() ) retval += 1;
+        if ( includeRotor && IsVTOL() ) retval += 1;
         return retval;        
+    }
+    
+    public int getLocationCount() {
+        return getLocationCount(false);       
     }
 
     public int getCruiseMP() {
@@ -1263,7 +1281,8 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         this.HasTurret1 = HasTurret1;
         //Move any weapons/equipment that was in the turret to another location
         if (!HasTurret1) {
-            GetLoadout().MoveToQueue(LocationIndex.CV_LOC_TURRET1);
+            GetLoadout().SetTurret1(new ArrayList<abPlaceable>());
+            GetLoadout().RefreshHeatSinks();
             CurArmor.SetArmor(LocationIndex.CV_LOC_TURRET1, 0);
         }
     }
@@ -1276,7 +1295,8 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         this.HasTurret2 = HasTurret2;
         //Move any weapons/equipment that was in the turret to another location
         if (!HasTurret2) {
-            GetLoadout().MoveToQueue(LocationIndex.CV_LOC_TURRET2);
+            GetLoadout().SetTurret2(new ArrayList<abPlaceable>());
+            GetLoadout().RefreshHeatSinks();
             CurArmor.SetArmor(LocationIndex.CV_LOC_TURRET2, 0);
         }
     }
@@ -1823,7 +1843,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         if ( UsingLimitedAmphibious ) retval += 0.1;
         if ( UsingFullAmphibious ) retval += 0.2;
         if ( UsingDuneBuggy ) retval += 0.1;
-        if ( UsingEnvironmentalSealing || CurConfig instanceof stCVSubmarine ) retval += 0.1;
+        if ( UsingEnvironmentalSealing ) retval += 0.1;
         return retval;
     }
 
@@ -2561,8 +2581,10 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         IsTrailer = b;
         if ( b ) {
             CurEngine.SetNoneEngine();
-            setTonnage(Tonnage);
+        } else if ( CurEngine.isNone() ) {
+            CurEngine.SetICEngine();
         }
+        setTonnage(Tonnage);
     }
     
     public boolean isTrailer() {

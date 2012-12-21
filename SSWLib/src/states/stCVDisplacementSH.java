@@ -28,18 +28,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
-public class stCVSubmarine implements ifCombatVehicle {
-    // Submarine state
+public class stCVDisplacementSH implements ifCombatVehicle {
+    // Naval Displacement Hull state
     public int GetSuspensionFactor( int Tonnage ) {
-        return 30;
+        return Tonnage / 10;
     }
 
     public int GetMinTonnage() {
-        return 1;
+        return 301;
     }
     
     public int GetMaxTonnage() {
-        return 300;
+        return 555;
     }
 
     public float GetMinEngineWeight( int Tonnage ) {
@@ -47,11 +47,11 @@ public class stCVSubmarine implements ifCombatVehicle {
     }
 
     public boolean RequiresLiftEquipment() {
-        return true;
+        return false;
     }
 
     public float GetLiftEquipmentCostMultiplier() {
-        return 20000.0f;
+        return 0.0f;
     }
 
     public boolean CanBeTrailer() {
@@ -59,7 +59,7 @@ public class stCVSubmarine implements ifCombatVehicle {
     }
 
     public String GetMotiveLookupName() {
-        return "Naval (Submarine)";
+        return "Naval (Displacement)";
     }
 
     public boolean CanUseJumpMP() {
@@ -95,13 +95,13 @@ public class stCVSubmarine implements ifCombatVehicle {
     }
     
     public boolean CanUseEnviroSealing() {
-        return false;
+        return true;
     }
 
     public int GetCostMultiplier() {
-        return 50;
+        return 200;
     }
-    
+
     public double GetDefensiveMultiplier() {
         return 0.6;
     }

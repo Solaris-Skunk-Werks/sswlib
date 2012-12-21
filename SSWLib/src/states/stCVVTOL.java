@@ -40,6 +40,10 @@ public class stCVVTOL implements ifCombatVehicle {
         }
     }
 
+    public int GetMinTonnage() {
+        return 1;
+    }
+    
     public int GetMaxTonnage() {
         return 30;
     }
@@ -106,5 +110,8 @@ public class stCVVTOL implements ifCombatVehicle {
     
     public double GetDefensiveMultiplier() {
         return 0.7;
+    }
+    public boolean IsSuperHeavy() {
+        return false;
     }
 }

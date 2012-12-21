@@ -227,7 +227,11 @@ public class PrintConsts {
     public static String GetPrintName( abPlaceable a, int Techbase, int Loc ) {
         // returns a modified PrintName, useful for special situations such as
         // mixed-tech mechs.
-        String retval = a.CritName( Loc );
+        return GetPrintName( a, Techbase, a.CritName( Loc ));
+    }
+    
+    public static String GetPrintName( abPlaceable a, int Techbase, String Name ) {
+        String retval = Name;
         if( a instanceof RangedWeapon && Techbase == AvailableCode.TECH_BOTH ) {
             switch( ((RangedWeapon) a).GetTechBase() ) {
                 case AvailableCode.TECH_INNER_SPHERE:

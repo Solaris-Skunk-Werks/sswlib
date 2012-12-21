@@ -326,6 +326,11 @@ public abstract class abPlaceable implements Comparable<abPlaceable> {
         return CritName();
     }
 
+    // allow for a printing specific name to be used
+    public String PrintName() {
+        return CritName();
+    }
+    
     // the name to be used when expoerting this equipment to a chat line.
     public abstract String ChatName();
 

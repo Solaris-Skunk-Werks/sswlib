@@ -1283,13 +1283,21 @@ public class TXTWriter {
         FR.write( "PV,Wt,MV,S,M,L,E,OV,Armor,Internal,Special Abilities" );
         FR.newLine();
 
-        String datum = "";
+        String datum = "", omniname = "";
         for (int i=0; i < list.Size(); i++) {
             UnitListData data = (UnitListData) list.Get(i);
-            FR.write( CSVFormat("BattleMech") );
-            datum = "BattleMech";
-            if ( data.isOmni() ) { datum = "OmniMech"; }
+            switch(data.getUnitType()) {
+                case CommonTools.BattleMech:
+                    datum = "BattleMech";
+                    omniname = data.isOmni() ? "OmniMech":datum;
+                    break;
+                case CommonTools.Vehicle:
+                    datum = "Combat Vehicle";
+                    omniname = data.isOmni() ? "OmniVehicle":datum;
+                    break;
+            }
             FR.write( CSVFormat(datum) );
+            FR.write( CSVFormat(omniname) );
             FR.write( CSVFormat(data.getName()) );
             FR.write( CSVFormat((data.getModel() + " " + data.getConfig()).trim()) );
             FR.write( CSVFormat(data.getTonnage()+"") );

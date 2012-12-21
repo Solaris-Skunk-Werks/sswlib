@@ -452,6 +452,10 @@ public class Engine extends abPlaceable {
     public boolean isFuelCell() {
         return ( CurConfig instanceof stEngineFuelCell || CurConfig instanceof stEnginePrimitiveFuelCell );
     }
+    
+    public boolean isNone() {
+        return ( CurConfig instanceof stEngineNone );
+    }
 
     public int MaxMovementHeat() {
         return CurConfig.MaxMovementHeat();

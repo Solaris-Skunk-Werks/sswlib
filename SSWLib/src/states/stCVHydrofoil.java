@@ -54,6 +54,10 @@ public class stCVHydrofoil implements ifCombatVehicle {
         }
     }
 
+    public int GetMinTonnage() {
+        return 1;
+    }
+    
     public int GetMaxTonnage() {
         return 100;
     }
@@ -120,5 +124,8 @@ public class stCVHydrofoil implements ifCombatVehicle {
     
     public double GetDefensiveMultiplier() {
         return 0.6;
+    }
+    public boolean IsSuperHeavy() {
+        return false;
     }
 }

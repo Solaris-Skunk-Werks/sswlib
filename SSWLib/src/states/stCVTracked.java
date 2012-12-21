@@ -34,6 +34,10 @@ public class stCVTracked implements ifCombatVehicle {
         return 0;
     }
 
+    public int GetMinTonnage() {
+        return 1;
+    }
+    
     public int GetMaxTonnage() {
         return 100;
     }
@@ -100,5 +104,8 @@ public class stCVTracked implements ifCombatVehicle {
     
     public double GetDefensiveMultiplier() {
         return 0.9;
+    }
+    public boolean IsSuperHeavy() {
+        return false;
     }
 }

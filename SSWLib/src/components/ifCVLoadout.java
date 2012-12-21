@@ -68,6 +68,7 @@ public interface ifCVLoadout {
     public void Transfer( ifCVLoadout l );
     public void AddTo( abPlaceable p, int Loc ) throws Exception;
     public void AddTo( abPlaceable p, abPlaceable[] Loc ) throws Exception;
+    public void RefreshHeatSinks();
     public void AddToFront( abPlaceable p ) throws Exception;
     public void AddToLeft( abPlaceable p ) throws Exception;
     public void AddToRight( abPlaceable p ) throws Exception;

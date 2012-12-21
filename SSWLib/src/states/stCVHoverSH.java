@@ -28,22 +28,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package states;
 
-public class stCVSubmarine implements ifCombatVehicle {
-    // Submarine state
+public class stCVHoverSH implements ifCombatVehicle {
+    // Hovercraft state
     public int GetSuspensionFactor( int Tonnage ) {
-        return 30;
+        return 235 + (int)Math.ceil(((Tonnage - 50) / 25.0)) * 45;
     }
 
     public int GetMinTonnage() {
-        return 1;
+        return 51;
     }
     
     public int GetMaxTonnage() {
-        return 300;
+        return 100;
     }
 
     public float GetMinEngineWeight( int Tonnage ) {
-        return 0.0f;
+        return ((int) ( Math.ceil( Tonnage * 0.2f * 2 ))) * 0.5f;
     }
 
     public boolean RequiresLiftEquipment() {
@@ -59,11 +59,11 @@ public class stCVSubmarine implements ifCombatVehicle {
     }
 
     public String GetMotiveLookupName() {
-        return "Naval (Submarine)";
+        return "Hovercraft";
     }
 
     public boolean CanUseJumpMP() {
-        return false;
+        return true;
     }
 
     public boolean CanUseTurret() {
@@ -79,7 +79,7 @@ public class stCVSubmarine implements ifCombatVehicle {
     }
 
     public boolean CanUseFlotationHull() {
-        return false;
+        return true;
     }
 
     public boolean CanUseArmoredMotiveSystem() {
@@ -91,11 +91,11 @@ public class stCVSubmarine implements ifCombatVehicle {
     }
 
     public boolean CanUseMinesweeper() {
-        return true;
+        return false;
     }
     
     public boolean CanUseEnviroSealing() {
-        return false;
+        return true;
     }
 
     public int GetCostMultiplier() {
@@ -103,9 +103,9 @@ public class stCVSubmarine implements ifCombatVehicle {
     }
     
     public double GetDefensiveMultiplier() {
-        return 0.6;
+        return 0.7;
     }
     public boolean IsSuperHeavy() {
-        return false;
+        return true;
     }
 }

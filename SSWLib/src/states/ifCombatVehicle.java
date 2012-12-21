@@ -32,6 +32,7 @@ public interface ifCombatVehicle {
     // combat vehicle states.  these are for the differnet chassis types.
     public String GetMotiveLookupName();
     public int GetSuspensionFactor( int Tonnage );
+    public int GetMinTonnage();
     public int GetMaxTonnage();
     public float GetMinEngineWeight( int Tonnage );
     public float GetLiftEquipmentCostMultiplier();
@@ -48,4 +49,5 @@ public interface ifCombatVehicle {
     public boolean CanUseAmphibious();
     public boolean CanUseMinesweeper();
     public boolean CanUseEnviroSealing();
+    public boolean IsSuperHeavy();
 }

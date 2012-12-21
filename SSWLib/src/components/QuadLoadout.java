@@ -4345,7 +4345,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
     }
 
     public boolean CanUseHDTurret() {
-        if( Owner.GetCockpit().IsTorsoMounted() ) {
+        if( Owner.GetCockpit().IsTorsoMounted() && !HasLTTurret() && !HasRTTurret() ) {
             return true;
         }
         return false;
@@ -4402,7 +4402,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
     }
 
     public boolean CanUseLTTurret() {
-        if( HasRTTurret() ) { return false; }
+        if( HasRTTurret() || HasHDTurret() ) { return false; }
         return true;
     }
 
@@ -4457,7 +4457,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
     }
 
     public boolean CanUseRTTurret() {
-        if( HasLTTurret() ) { return false; }
+        if( HasLTTurret() || HasHDTurret() ) { return false; }
         return true;
     }
 

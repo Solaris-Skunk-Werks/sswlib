@@ -137,7 +137,9 @@ public class stEngineFusion implements ifEngine, ifState {
     }
 
     public double GetCost( int MechTonnage, int Rating ) {
-        return ( 5000.0 * (double) MechTonnage * (double) Rating ) / 75.0;
+        double baseCost = 5000.0f;
+        if ( Rating > 400 ) baseCost *= 2;
+        return ( baseCost * (double) MechTonnage * (double) Rating ) / 75.0;
     }
 
     public AvailableCode GetAvailability() {

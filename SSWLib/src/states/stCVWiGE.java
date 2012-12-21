@@ -42,6 +42,10 @@ public class stCVWiGE implements ifCombatVehicle {
         }
     }
 
+    public int GetMinTonnage() {
+        return 1;
+    }
+    
     public int GetMaxTonnage() {
         return 80;
     }
@@ -108,5 +112,8 @@ public class stCVWiGE implements ifCombatVehicle {
     
     public double GetDefensiveMultiplier() {
         return 0.7;
+    }
+    public boolean IsSuperHeavy() {
+        return false;
     }
 }

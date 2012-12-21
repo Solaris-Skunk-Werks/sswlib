@@ -33,7 +33,9 @@ public class stCVDisplacement implements ifCombatVehicle {
     public int GetSuspensionFactor( int Tonnage ) {
         return 30;
     }
-
+    public int GetMinTonnage() {
+        return 1;
+    }
     public int GetMaxTonnage() {
         return 300;
     }
@@ -100,5 +102,8 @@ public class stCVDisplacement implements ifCombatVehicle {
 
     public double GetDefensiveMultiplier() {
         return 0.6;
+    }
+    public boolean IsSuperHeavy() {
+        return false;
     }
 }

@@ -2,6 +2,11 @@ package battleforce;
 
 import java.util.ArrayList;
 
+/*
+ * This class is used to setup basic data for BattleForce calculations.  Allows 
+ * for weapon information to be added and will do the work of totalling up the 
+ * amounts and ammunition and determining the final value
+ */
 public class BattleForceData {
     public DataSet  Base = new DataSet(false);
     public DataSet  AdjBase = new DataSet(false);
@@ -9,6 +14,7 @@ public class BattleForceData {
     public DataSet  LRM = new DataSet(true);
     public DataSet  SRM = new DataSet(true);
     public DataSet  TOR = new DataSet(true);
+    public DataSet  TUR = new DataSet(true);
     public DataSet  IF = new DataSet(false);
     public DataSet  FLK = new DataSet(false);
     private int TotalHeatGenerated = 0;
@@ -125,7 +131,7 @@ public class BattleForceData {
     public int getTotalHeatDissipation() {
         return TotalHeatDissipation;
     }
-
+    
     public class DataSet {
         private double baseShort = 0.0;
         private double baseMedium = 0.0;
@@ -157,6 +163,12 @@ public class BattleForceData {
             this(false);
         }
 
+        /**
+         * DateSet holds all the information about the weapons for this specific
+         * item
+         * 
+         * @param isSpecial Is this dataset used for a Special Ability
+         */
         public DataSet( boolean isSpecial ) {
             this.isSpecial = isSpecial;
         }

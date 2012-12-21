@@ -34,6 +34,10 @@ public class stCVWheeled implements ifCombatVehicle {
         return 20;
     }
 
+    public int GetMinTonnage() {
+        return 1;
+    }
+    
     public int GetMaxTonnage() {
         return 80;
     }
@@ -100,5 +104,8 @@ public class stCVWheeled implements ifCombatVehicle {
     
     public double GetDefensiveMultiplier() {
         return 0.8;
+    }
+    public boolean IsSuperHeavy() {
+        return false;
     }
 }

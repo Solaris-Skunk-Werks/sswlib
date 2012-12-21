@@ -43,7 +43,9 @@ public class stCVHover implements ifCombatVehicle {
             return 235;
         }
     }
-
+    public int GetMinTonnage() {
+        return 1;
+    }
     public int GetMaxTonnage() {
         return 50;
     }
@@ -110,5 +112,8 @@ public class stCVHover implements ifCombatVehicle {
     
     public double GetDefensiveMultiplier() {
         return 0.7;
+    }
+    public boolean IsSuperHeavy() {
+        return false;
     }
 }

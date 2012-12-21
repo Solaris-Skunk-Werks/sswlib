@@ -233,6 +233,15 @@ public class Equipment extends abPlaceable {
         }
     }
 
+    @Override
+    public String PrintName() {
+        String retval = CritName();
+        if ( retval.length() >= 20 )
+            retval = ChatName();
+        
+        return retval;
+    }
+    
     public String LookupName() {
         if( Rear ) {
             return "(R) " + LookupName;

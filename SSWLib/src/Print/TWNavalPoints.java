@@ -92,16 +92,8 @@ public class TWNavalPoints implements ifPrintPoints {
         Rows.add(new PIPRow(new Point(413,104), 16, 8, 8));
         Rows.add(new PIPRow(new Point(405,112), 18, 8, 8));
         Rows.add(new PIPRow(new Point(405,120), 18, 8, 8));
-
         
-        for ( PIPRow a : Rows ) {
-            for (int i = 0; i < a.NumDots; i++) {
-                Points.add(new Point(a.Start.x+(a.xOffset*i), a.Start.y));
-            }
-        }
-        
-        Point[] a = new Point[Rows.size()];
-        return (Point[])Points.toArray(a);
+        return PIPRow.RenderRows(Rows);
     }
 
     public Point[] GetArmorLeftPoints() {
@@ -123,14 +115,7 @@ public class TWNavalPoints implements ifPrintPoints {
         Rows.add(new PIPRow(new Point( 411, starting.y+(8*6)), 2, 9, 8));
         Rows.add(new PIPRow(new Point( 411, starting.y+(8*7)), 2, 9, 8));
         
-        for ( PIPRow a : Rows ) {
-            for (int i = 0; i < a.NumDots; i++) {
-                Points.add(new Point(a.Start.x+(a.xOffset*i), a.Start.y));
-            }
-        }
-        
-        Point[] a = new Point[Rows.size()];
-        return (Point[])Points.toArray(a);
+        return PIPRow.RenderRows(Rows);
     }
 
     public Point[] GetArmorRightPoints() {
@@ -152,14 +137,7 @@ public class TWNavalPoints implements ifPrintPoints {
         Rows.add(new PIPRow(new Point( 537, starting.y+(8*6)), 2, -9, 8));
         Rows.add(new PIPRow(new Point( 537, starting.y+(8*7)), 2, -9, 8));
         
-        for ( PIPRow a : Rows ) {
-            for (int i = 0; i < a.NumDots; i++) {
-                Points.add(new Point(a.Start.x+(a.xOffset*i), a.Start.y));
-            }
-        }
-        
-        Point[] a = new Point[Rows.size()];
-        return (Point[])Points.toArray(a);
+        return PIPRow.RenderRows(Rows);
     }
 
     public Point[] GetArmorRearPoints() {
@@ -181,14 +159,7 @@ public class TWNavalPoints implements ifPrintPoints {
             starting = new Point( starting.x, starting.y+8);
         }
         
-        for ( PIPRow a : Rows ) {
-            for (int i = 0; i < a.NumDots; i++) {
-                Points.add(new Point(a.Start.x+(a.xOffset*i), a.Start.y));
-            }
-        }
-        
-        Point[] a = new Point[Rows.size()];
-        return (Point[])Points.toArray(a);
+        return PIPRow.RenderRows(Rows);
     }
 
     public Point[] GetArmorTurretPoints() {
@@ -206,14 +177,7 @@ public class TWNavalPoints implements ifPrintPoints {
             starting.setLocation(starting.x, starting.y+offset.y);
         }
         
-        for ( PIPRow a : Rows ) {
-            for (int i = 0; i < a.NumDots; i++) {
-                Points.add(new Point(a.Start.x+(a.xOffset*i), a.Start.y));
-            }
-        }
-        
-        Point[] a = new Point[Rows.size()];
-        return (Point[])Points.toArray(a);
+        return PIPRow.RenderRows(Rows);
     }
 
     public Point[] GetArmorTurret2Points() {
@@ -250,7 +214,7 @@ public class TWNavalPoints implements ifPrintPoints {
         Rows.add(new PIPRow(new Point(423,136), 11, 9, 8));
         Rows.add(new PIPRow(new Point(428,144), 11, 8, 8));
         Rows.add(new PIPRow(new Point(434,152), 9, 8, 8));
-        return PIPRow.Render(Rows);
+        return PIPRow.RenderRows(Rows);
     }
 
     public Point[] GetInternalLeftPoints() {
@@ -266,7 +230,7 @@ public class TWNavalPoints implements ifPrintPoints {
             Rows.add(new PIPRow(new Point(start.x,start.y), 3, offset.x, offset.y));
             start.setLocation(start.x, start.y+offset.y);
         }
-        return PIPRow.Render(Rows);
+        return PIPRow.RenderRows(Rows);
     }
 
     public Point[] GetInternalRightPoints() {
@@ -282,7 +246,7 @@ public class TWNavalPoints implements ifPrintPoints {
             Rows.add(new PIPRow(new Point(start.x,start.y), 3, offset.x, offset.y));
             start.setLocation(start.x, start.y+offset.y);
         }
-        return PIPRow.Render(Rows);
+        return PIPRow.RenderRows(Rows);
     }
 
     public Point[] GetInternalRearPoints() {
@@ -291,7 +255,7 @@ public class TWNavalPoints implements ifPrintPoints {
         Rows.add(new PIPRow(new Point(428, 517), 11, 9, 8));
         Rows.add(new PIPRow(new Point(433, 510), 11, 8, 8));
         Rows.add(new PIPRow(new Point(440, 503), 9, 8, 8));
-        return PIPRow.Render(Rows);
+        return PIPRow.RenderRows(Rows);
     }
 
     public Point[] GetInternalTurretPoints() {
@@ -303,15 +267,15 @@ public class TWNavalPoints implements ifPrintPoints {
             starting.setLocation(starting.x, starting.y+offset.y);
         }
         Rows.add(new PIPRow(new Point(starting.x+8, starting.y), 2, offset.x, offset.y));
-        return PIPRow.Render(Rows);
+        return PIPRow.RenderRows(Rows);
     }
 
     public Point[] GetInternalTurret2Points() {
-        return PIPRow.Render(new ArrayList<PIPRow>());
+        return PIPRow.RenderRows(new ArrayList<PIPRow>());
     }
 
     public Point[] GetInternalRotorPoints() {
-        return PIPRow.Render(new ArrayList<PIPRow>());
+        return PIPRow.RenderRows(new ArrayList<PIPRow>());
     }
     
     //<editor-fold desc="Mech Info">
