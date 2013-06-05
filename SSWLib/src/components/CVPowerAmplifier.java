@@ -56,7 +56,7 @@ public class CVPowerAmplifier {
         double tons = 0.0;
         
         //we only use the poweramp if the engine is ICE
-        if ( !CurLoadout.GetEngine().IsICE() )
+        if ( !CurLoadout.GetEngine().IsNuclear())
             return tons;
         
         ArrayList v = CurLoadout.GetNonCore();
