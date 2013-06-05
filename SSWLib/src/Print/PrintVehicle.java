@@ -250,18 +250,21 @@ public class PrintVehicle implements Printable {
         Point start = ap.GetPoints().GetMechImageLoc();
         start.x -= 3;
         start.y -= 6;
+        Point bounds = ap.GetPoints().GetImageBounds();
         if ( printMech ) {
             UnitImage = imageTracker.media.GetImage(imageTracker.media.DetermineMatchingImage(CurVee.GetName(), CurVee.GetModel(), CurVee.GetSSWImage()));
             if( UnitImage != null ) {
                 //graphics.drawRect(start.x, start.y, 150, 210);
-                Dimension d = imageTracker.media.reSize(getUnitImage(), 150, 210);
-                Point offset = imageTracker.media.offsetImageCenter( new Dimension(150, 210), d);
+                Dimension d = imageTracker.media.reSize(getUnitImage(), bounds.x, bounds.y);
+                Point offset = imageTracker.media.offsetImageCenter( new Dimension(bounds.x, bounds.y), d);
                 graphics.drawImage( getUnitImage(), start.x + offset.x, start.y + offset.y, d.width, d.height, null );
             }
         }
 
         if ( printLogo && LogoImage != null ) {
-            graphics.drawImage( LogoImage, ap.GetPoints().GetMechImageLoc().x-3, ap.GetPoints().GetMechImageLoc().y+154, 50, 50, null );
+            Dimension d = imageTracker.media.reSize(LogoImage, 50, 50);
+            Point offset = imageTracker.media.offsetImageBottom(new Dimension(bounds.x, bounds.y), d);
+            graphics.drawImage( LogoImage, start.x + offset.x, start.y+offset.y, d.width, d.height, null );
         }
     }
 

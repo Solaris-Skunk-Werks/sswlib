@@ -275,7 +275,9 @@ public class PrintMech implements Printable {
         }
 
         if ( printLogo && LogoImage != null ) {
-            graphics.drawImage( LogoImage, points.GetMechImageLoc().x-3, points.GetMechImageLoc().y+154, 50, 50, null );
+            Dimension d = imageTracker.media.reSize(LogoImage, 50, 50);
+            Point offset = imageTracker.media.offsetImageBottom( new Dimension(150, 210), d);
+            graphics.drawImage( LogoImage, start.x + offset.x, start.y+offset.y, d.width, d.height, null );
         }
     }
 

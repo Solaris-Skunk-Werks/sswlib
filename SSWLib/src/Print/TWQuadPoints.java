@@ -450,6 +450,10 @@ public class TWQuadPoints implements ifPrintPoints {
         return new Point( 230, 160 );
     }
     
+    public Point GetImageBounds() {
+        return new Point( 150, 210 );
+    }
+    
     public Point GetLogoImageLoc() {
         return new Point( 300, 160 );
     }

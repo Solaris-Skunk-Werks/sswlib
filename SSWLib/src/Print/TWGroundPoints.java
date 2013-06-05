@@ -264,9 +264,13 @@ public class TWGroundPoints implements ifPrintPoints {
     }
 
     public Point GetMechImageLoc() {
-        return new Point( 231, 215 );
+        return new Point( 231, 262 );
     }
 
+    public Point GetImageBounds() {
+        return new Point( 170, 109 );
+    }
+    
     public Point GetLogoImageLoc() {
         return new Point( 331, 195 );
     }

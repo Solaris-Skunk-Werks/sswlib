@@ -238,9 +238,13 @@ public class TWAdvGroundPoints implements ifPrintPoints {
     }
 
     public Point GetMechImageLoc() {
-        return new Point( 231, 215 );
+        return new Point( 231, 248 );
     }
 
+    public Point GetImageBounds() {
+        return new Point( 175, 123 );
+    }
+    
     public Point GetLogoImageLoc() {
         return new Point( 331, 195 );
     }

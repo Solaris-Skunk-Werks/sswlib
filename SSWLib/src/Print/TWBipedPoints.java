@@ -530,6 +530,10 @@ public class TWBipedPoints implements ifPrintPoints {
         return new Point( 230, 162 );
     }
 
+    public Point GetImageBounds() {
+        return new Point( 150, 210 );
+    }
+    
     public Point GetLogoImageLoc() {
         return new Point( 330, 162 );
     }
