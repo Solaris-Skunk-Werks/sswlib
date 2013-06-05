@@ -108,7 +108,7 @@ public class Unit implements ifSerializable {
         if ( Info.contains("C3") ) {
             C3Available = true;
             for ( String Item : Info.split(" ") ) {
-                if ( Item.contains("C3") ) C3Type = Item.trim();
+                if ( Item.contains("C3") ) C3Type = Item.replace(",", "").trim();
             }
         }
         Refresh();
@@ -127,7 +127,7 @@ public class Unit implements ifSerializable {
         if ( m.HasC3() ) {
             C3Available = true;
             for ( String Item : Info.split(",") ) {
-                if ( Item.contains("C3") ) C3Type = Item.trim();
+                if ( Item.contains("C3") ) C3Type = Item.replace(",", "").trim();
             }
         }
 
@@ -186,7 +186,7 @@ public class Unit implements ifSerializable {
         if ( vee.HasC3() ) {
             C3Available = true;
             for ( String Item : Info.split(",") ) {
-                if ( Item.contains("C3") ) C3Type = Item.trim();
+                if ( Item.contains("C3") ) C3Type = Item.replace(",", "").trim();
             }
         }
 
@@ -338,7 +338,7 @@ public class Unit implements ifSerializable {
                     if (Info.contains("C3")) {
                         C3Available = true;
                         for ( String s : Info.split(" ") ) {
-                            if ( s.startsWith("C3") ) C3Type = s.trim();
+                            if ( s.startsWith("C3") ) C3Type = s.replace(",", "").trim();
                         }
                     }
                 }
@@ -396,7 +396,7 @@ public class Unit implements ifSerializable {
             if ( v.HasC3() ) {
                 C3Available = true;
                 for ( String Item : Info.split(",") ) {
-                    if ( Item.contains("C3") ) C3Type = Item.trim();
+                    if ( Item.contains("C3") ) C3Type = Item.replace(",", "").trim();
                 }
             }
 
@@ -452,7 +452,7 @@ public class Unit implements ifSerializable {
             if (Info.contains("C3")) {
                 C3Available = true;
                 for ( String s : Info.split(" ") ) {
-                    if ( s.startsWith("C3") ) C3Type = s.trim();
+                    if ( s.startsWith("C3") ) C3Type = s.replace(",", "").trim();
                 }
             }
             BFStats = new BattleForceStats(m);
