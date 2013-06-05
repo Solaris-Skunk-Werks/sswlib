@@ -1429,7 +1429,7 @@ public class dlgUnit extends javax.swing.JDialog {
 
     private void btnSelectMechActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectMechActionPerformed
         Media media = new Media();
-        File mech = media.SelectFile(sswPrefs.get("ListPath", ""), "ssw", "Select Unit File");
+        File mech = media.SelectFile(sswPrefs.get("ListPath", ""), "ssw,saw", "Select Unit File");
 
         if ( mech != null ) {
             try {

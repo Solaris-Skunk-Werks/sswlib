@@ -60,9 +60,13 @@ public class Media {
 
     public File SelectFile(String defaultDirectory, String Extension, String commandName) {
         File tempFile = new File(defaultDirectory);
-        fileChooser.addChoosableFileFilter(new ExtensionFilter(Extension));
+        String[] extensions = Extension.split(",");
+        for (String extend : extensions) {
+            fileChooser.addChoosableFileFilter(new ExtensionFilter(extend));
+        }
         fileChooser.setAcceptAllFileFilterUsed(false);
         fileChooser.setCurrentDirectory(tempFile);
+        fileChooser.setSelectedFile(tempFile);
         int returnVal = fileChooser.showDialog(null, commandName);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return null;
