@@ -37,7 +37,8 @@ public class SimplePlaceable extends abPlaceable {
     private boolean LocLocked;
     private int Crits;
     private double Tonnage = 0.0,
-                  Cost = 0.0;
+                  Cost = 0.0,
+                  ArmoredTonnage = 0.5;
     private String ActualName,
                    LookupName,
                    CritName,
@@ -106,10 +107,14 @@ public class SimplePlaceable extends abPlaceable {
 
     public double GetTonnage() {
         if( IsArmored() ) {
-            return Crits * 0.5 + Tonnage;
+            return Crits * ArmoredTonnage + Tonnage;
         } else {
             return Tonnage;
         }
+    }
+    
+    public void SetArmoredTonnage(double tonnage){
+        ArmoredTonnage = tonnage;
     }
 
     public double GetOffensiveBV() {

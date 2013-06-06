@@ -267,6 +267,7 @@ public class Mech implements ifUnit, ifBattleforce {
         CommandConsole = new SimplePlaceable( "Command Console", "Command Console", "Command Console", "CommandConsole", "Tactical Operations", 1, true, AC );
         CommandConsole.SetTonnage( 3.0 );
         CommandConsole.SetCost( 500000.0 );
+        CommandConsole.SetArmoredTonnage(1.0);
 
         FHESAC.SetISCodes( 'D', 'X', 'F', 'E' );
         FHESAC.SetISDates( 0, 0, false, 3023, 0, 0, false, false );
@@ -2141,6 +2142,7 @@ public class Mech implements ifUnit, ifBattleforce {
         if( CurLoadout.GetRulesLevel() >= AvailableCode.RULES_EXPERIMENTAL && CurLoadout.GetEra() >= AvailableCode.ERA_CLAN_INVASION ) {
             result += CurEngine.GetDefensiveBV();
             result += CurCockpit.GetDefensiveBV();
+            if (HasCommandConsole()) result += CommandConsole.GetDefensiveBV();
             result += CurLoadout.GetActuators().GetDefensiveBV();
             if( HasNullSig() ) {
                 result += NullSig.GetDefensiveBV();
