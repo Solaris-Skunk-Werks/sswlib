@@ -55,7 +55,8 @@ public class PrintMech implements Printable {
                     TRO = false,
                     printMech = false,
                     printLogo = false,
-                    makeAmmoGeneric = false;
+                    makeAmmoGeneric = false,
+                    useMiniConvRate = false;
     private String PilotName = "",
                     GroupName = "",
                     currentAmmoFormat = "",
@@ -111,7 +112,13 @@ public class PrintMech implements Printable {
     }
 
     public void SetMiniConversion( int conv ) {
-        MiniConvRate = conv;
+        useMiniConvRate = false;
+        MiniConvRate = 1;
+        
+        if ( conv > 0 ) {
+            MiniConvRate = conv;
+            useMiniConvRate = true;
+        }
     }
 
     public void setMechwarrior(String name) {
@@ -410,6 +417,14 @@ public class PrintMech implements Printable {
         int offset = 0,
             xoffset = 0;
 
+        //Coverup the (hexes) above the ranges if we are not using traditional measurements
+        if (useMiniConvRate)
+        {
+            graphics.setColor(Color.white);
+            graphics.fillRect(p[6].x-5, p[6].y-28, 30, 10);
+            graphics.setColor(Color.black);
+        }
+            
         for ( PlaceableInfo item : Items ) {
             xoffset = 0;
             graphics.drawString( item.Count + "", p[0].x+1, p[0].y + offset );
