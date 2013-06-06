@@ -2558,6 +2558,10 @@ public class Mech implements ifUnit, ifBattleforce {
 
         // now get the mech's heat efficiency and the total heat from weapons
         double heff = 6 + GetHeatSinks().TotalDissipation() - GetBVMovementHeat();
+        //Subtract another 10 for the stealth armor
+        if ( CurArmor.IsStealth() )
+            heff -= 10;
+        
         double wheat = GetBVWeaponHeat();
 
         if( GetRulesLevel() == AvailableCode.RULES_EXPERIMENTAL ) {
