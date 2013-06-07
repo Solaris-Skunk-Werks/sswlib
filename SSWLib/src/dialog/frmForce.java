@@ -1104,6 +1104,7 @@ public class frmForce extends javax.swing.JFrame implements java.awt.datatransfe
             case 1: force.setCurrentModel(new tbBattleForce(force)); break;
             case 2: force.setCurrentModel(new tbChatInfo(force)); break;
         }
+        force.setupTable(tblForce);
         force.RefreshBV();
     }//GEN-LAST:event_cmbViewActionPerformed
 
