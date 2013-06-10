@@ -611,7 +611,9 @@ public class MTFWriter {
             //readded prepend of CL or IS after discussion with Torren on the MM
             //MTF loader.
             retval = Prepend + retval;
-
+        } else if ( retval.contains("UMU")) {
+            //adding after error report from user stating that MM needs ISUMU or CLUMU
+            retval = Prepend + retval;
         } else if( ! p.CoreComponent() ) {
             if( p instanceof PhysicalWeapon || p instanceof PartialWing ) {
                 // do nothing here
