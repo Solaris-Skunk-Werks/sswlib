@@ -235,6 +235,7 @@ public class MechReader {
         n = d.getElementsByTagName( "motive" );
         map = n.item( 0 ).getAttributes();
         Data.setType( map.getNamedItem( "type" ).getTextContent() );
+        Data.setMotive(map.getNamedItem( "type" ).getTextContent());
 
         n = d.getElementsByTagName( "info" );
         if ( n.getLength() > 0 ) { Data.setInfo( n.item( 0 ).getTextContent() ); }
