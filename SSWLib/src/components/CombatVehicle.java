@@ -196,34 +196,42 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public void SetHover() {
+        SetTrailer(false);
         setCurConfig(Hover);
     }
 
     public void setVTOL() {
+        SetTrailer(false);
         setCurConfig(VTOL);
     }
 
     public void SetWiGE() {
+        SetTrailer(false);
         setCurConfig(WiGE);
     }
 
     public void SetDisplacement() {
+        SetTrailer(false);
         setCurConfig(Displacement);
     }
 
     public void SetHydrofoil() {
+        SetTrailer(false);
         setCurConfig(Hydrofoil);
     }
 
     public void SetSubmarine() {
+        SetTrailer(false);
         setCurConfig(Submarine);
     }
     
     public void SetSuperHeavyHover() {
+        SetTrailer(false);
         setCurConfig(SHHover);
     }
     
     public void SetSuperHeavyDisplacement() {
+        SetTrailer(false);
         setCurConfig(SHDisplacement);
     }
 
@@ -1158,7 +1166,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
     
     public int getMinCruiseMP() {
-        if ( CurEngine.RequiresControls() ) return 1;
+        if ( CurEngine.RequiresControls() && !IsTrailer ) return 1;
         return 0;
     }
 
@@ -1444,7 +1452,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     public int getFlankMP() {
-        return (int) Math.floor( CruiseMP * 1.5 + 0.5 );
+        return CruiseMP == 0 ? 0 : (int) Math.floor( CruiseMP * 1.5 + 0.5 );
     }
 
     public int getFlankMP( int MiniMult ) {
@@ -2249,7 +2257,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
 
     public int GetFinalEngineRating()
     {
-        return Math.min(Math.max( (int)(CommonTools.RoundHalfUp( (GetBaseEngineRating() - CurConfig.GetSuspensionFactor(Tonnage))*.1 ) * 10) , 10), 400);
+        return Math.min(Math.max( (int)(CommonTools.RoundHalfUp( (GetBaseEngineRating() - CurConfig.GetSuspensionFactor(Tonnage))*.1 ) * 10) , CurEngine.GetTonnage() == 0 ? 0 : 10), 400);
     }
 
     public AvailableCode GetAvailability() {
