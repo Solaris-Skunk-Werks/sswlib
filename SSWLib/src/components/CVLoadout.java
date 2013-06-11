@@ -302,7 +302,7 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
             if ( !((Equipment)p).CanAllocCVFront() && !((Equipment)p).CanAllocCVSide() && !((Equipment)p).CanAllocCVRear() && !((Equipment)p).CanAllocCVTurret() )
                 Loc = LocationIndex.CV_LOC_BODY;
         }
-        
+
         switch( Loc ) {
             case LocationIndex.CV_LOC_BODY:
                 if ( p.CanAllocCVBody() )
@@ -311,9 +311,11 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
                     throw new Exception(p.ActualName() + " cannot be allocated to the Body.");
                 break;
             case LocationIndex.CV_LOC_FRONT:
-                if ( p.CanAllocCVFront() )
+                if ( p.CanAllocCVFront() ) {
+                    if ( p instanceof Hitch && HasHitch(FrontItems) )
+                         throw new Exception(p.ActualName() + " cannot be allocated more then once to the same location.");
                     FrontItems.add(p);
-                else
+                } else
                     throw new Exception(p.ActualName() + " cannot be allocated to the Front.");
                 break;
             case LocationIndex.CV_LOC_LEFT:
@@ -324,6 +326,8 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
                 break;
             case LocationIndex.CV_LOC_REAR:
                 if ( p.CanAllocCVRear() ) {
+                    if ( p instanceof Hitch && HasHitch(RearItems) )
+                         throw new Exception(p.ActualName() + " cannot be allocated more then once to the same location.");
                     p.MountRear(true);
                     RearItems.add(p);
                 } else
@@ -365,6 +369,15 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
         RefreshHeatSinks();
     }
     
+    private boolean HasHitch(ArrayList<abPlaceable> items)
+    {
+        for( int i = 0; i < items.size(); ++i ) {
+            abPlaceable currentItem = (abPlaceable) items.get( i );
+            if (currentItem instanceof Hitch)
+                return true;
+        }
+        return false;
+    }
     public void RefreshHeatSinks() {
         if (GetHeatSinks().GetNumHS() != GetTotalHeat())
             GetHeatSinks().SetNumHS(GetTotalHeat());
@@ -399,37 +412,37 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     }
 
     public void AddToFront(abPlaceable p) throws Exception {
-        FrontItems.add(p);
+        AddTo(p, LocationIndex.CV_LOC_FRONT);
         Owner.SetChanged( true );
     }
 
     public void AddToLeft(abPlaceable p) throws Exception {
-        LeftItems.add(p);
+        AddTo(p, LocationIndex.CV_LOC_LEFT);
         Owner.SetChanged( true );
     }
 
     public void AddToRight(abPlaceable p) throws Exception {
-        RightItems.add(p);
+        AddTo(p, LocationIndex.CV_LOC_RIGHT);
         Owner.SetChanged( true );
     }
 
     public void AddToRear(abPlaceable p) throws Exception {
-        RearItems.add(p);
+        AddTo(p, LocationIndex.CV_LOC_REAR);
         Owner.SetChanged( true );
     }
 
     public void AddToBody(abPlaceable p) throws Exception {
-        BodyItems.add(p);
+        AddTo(p, LocationIndex.CV_LOC_BODY);
         Owner.SetChanged( true );
     }
 
     public void AddToTurret1(abPlaceable p) throws Exception {
-        Turret1Items.add(p);
+        AddTo(p, LocationIndex.CV_LOC_TURRET1);
         Owner.SetChanged( true );
     }
 
     public void AddToTurret2(abPlaceable p) throws Exception {
-        Turret2Items.add(p);
+        AddTo(p, LocationIndex.CV_LOC_TURRET2);
         Owner.SetChanged( true );
     }
 
