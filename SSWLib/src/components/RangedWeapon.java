@@ -755,12 +755,12 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
 
     @Override
     public boolean CanAllocCVRear() {
-        return alloc_sides;
+        return alloc_rear;
     }
 
     @Override
     public boolean CanAllocCVSide() {
-        return alloc_rear;
+        return alloc_sides;
     }
 
     @Override
