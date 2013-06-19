@@ -615,8 +615,10 @@ public class MTFWriter {
             //adding after error report from user stating that MM needs ISUMU or CLUMU
             retval = Prepend + retval;
         } else if( ! p.CoreComponent() ) {
-            if( p instanceof PhysicalWeapon || p instanceof PartialWing ) {
+            if( p instanceof PhysicalWeapon ) {
                 // do nothing here
+            } else if ( p instanceof PartialWing ) {
+                retval = Prepend + retval;
             } else if ( retval.contains("Artemis-capable") && !retval.contains("(Clan)") && CurMech.GetTechBase() != AvailableCode.TECH_INNER_SPHERE ) {
                 retval = Prepend + retval.replace("Artemis-capable", "(Clan) Artemis-capable");
             } else if( ( ! retval.contains( "IS" ) ) && ( ! retval.contains( "CL" ) ) && ( ! retval.contains( "Clan" ) ) ) {
