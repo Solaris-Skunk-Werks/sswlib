@@ -26,6 +26,11 @@ public class BattleForceData {
         FLK.setNormalRound(true);
     }
 
+    /**
+     * Set the total heat dissipation for all special damage situations
+     * 
+     * @param TotalDiss 
+     */
     public void SetHeat( int TotalDiss ) {
         this.TotalHeatDissipation = TotalDiss;
         Base.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
@@ -33,6 +38,7 @@ public class BattleForceData {
         LRM.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
         SRM.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
         TOR.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
+        TUR.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
         IF.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
         FLK.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
         AdjBase.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
@@ -40,13 +46,19 @@ public class BattleForceData {
         //System.out.println("Heat Set " + TotalHeatGenerated + " [" + TotalHeatDissipation + "]");
     }
 
+    /**
+     * Sets the heat levels for calculations
+     * 
+     * @param TotalHeat Total heat generated when firing everything and moving as fast as possible
+     * @param TotalDiss  Total heat that can be removed in a single turn
+     */
     public void SetHeat( int TotalHeat, int TotalDiss ) {
         this.TotalHeatGenerated = TotalHeat;
         SetHeat(TotalDiss);
     }
         
     public int BaseMaxShort() {
-        return Base.BattleForceValue(AdjBase.baseShort); //+
+        return Base.BattleForceValue(Base.baseShort); //+
                 //Base.BattleForceValue(AC.baseShort) +
                 //Base.BattleForceValue(SRM.baseShort) +
                 //Base.BattleForceValue(LRM.baseShort);
@@ -54,7 +66,7 @@ public class BattleForceData {
 
     public int BaseMaxMedium() {
         //System.out.println(AdjBase.BattleForceValue(AdjBase.baseMedium) + "/" + AC.BattleForceValue(AC.baseMedium) + "/" + SRM.BattleForceValue(SRM.baseMedium) + "/" + LRM.BattleForceValue(LRM.baseMedium));
-        return Base.BattleForceValue(AdjBase.baseMedium); //+
+        return Base.BattleForceValue(Base.baseMedium); //+
                 //Base.BattleForceValue(AC.baseMedium) +
                 //Base.BattleForceValue(SRM.baseMedium) +
                 //Base.BattleForceValue(LRM.baseMedium);
@@ -64,6 +76,9 @@ public class BattleForceData {
         return (int) AdjBase.heatMedium + (int) AC.heatMedium + (int) SRM.heatMedium + (int) LRM.heatMedium;
     }
 
+    /**
+     * Runs adjustments on the various potential special damage situations
+     */
     public void CheckSpecials() {
         AdjBase.baseShort = Base.baseShort;
         AdjBase.baseMedium = Base.baseMedium;
@@ -86,15 +101,30 @@ public class BattleForceData {
         AdjBase.baseExtreme -= special.baseExtreme;
     }
 
+    /**
+     * Add weapon data to the base calculations
+     * 
+     * @param vals double[] with calculated values for each range
+     */
     public void AddBase( double[] vals ) {
         Base.AddBase(vals);
         TotalHeatGenerated += (int)vals[BFConstants.BF_OV];
     }
 
+    /**
+     * Add special heat (like Stealth Armor)
+     * 
+     * @param Heat Amount of heat to add
+     */
     public void AddHeat( int Heat ) {
         this.TotalHeatGenerated += Heat;
     }
 
+    /**
+     * Collection of notes generated during the calculation process
+     * 
+     * @param note Note to add to the list
+     */
     public void AddNote( String note ) {
         Notes.add(note);
     }
@@ -111,6 +141,7 @@ public class BattleForceData {
         data += "LRM\n" + LRM.toString();
         data += "SRM\n" + SRM.toString();
         data += "TOR\n" + TOR.toString();
+        data += "TUR\n" + TUR.toString();
         data += "IF\n" + IF.toString();
         data += "FLK\n" + FLK.toString();
         data += "Heat: Dissipation (" + TotalHeatDissipation + ") < Max (" + TotalHeatGenerated + ") [Max-4]";
@@ -173,6 +204,11 @@ public class BattleForceData {
             this.isSpecial = isSpecial;
         }
 
+        /**
+         * Determine if there is enough ammo for the launchers
+         * 
+         * @return True if enough, false if not.
+         */
         public boolean EnoughAmmo() {
             if ( LauncherCount > 0 ) {
                 if ( AmmoCount - (LauncherCount * 10) < 0 ) {
@@ -183,6 +219,11 @@ public class BattleForceData {
             NotEnoughAmmo = false;
             return true;
         }
+        
+        /**
+         * Determines if the unit has special damage or not
+         * @return True if using special damage
+         */
         public boolean CheckSpecial() {
             boolean retval = false;
             if ( TotalHeatDissipation < TotalHeatGenerated ) {
@@ -199,12 +240,20 @@ public class BattleForceData {
             return retval;
         }
 
+        /**
+         * Clear the base values
+         */
         public void Clear() {
             baseShort = 0;
             baseMedium = 0;
             baseLong = 0;
         }
 
+        /**
+         * Returns a / delimited string of values for the ranges
+         * 
+         * @return ie. 0/1/1
+         */
         public String GetAbility() {
             return BFShort + "/" + BFMedium + "/" + BFLong; //+ "/" + BFExtreme;
         }
@@ -215,13 +264,24 @@ public class BattleForceData {
             this.baseLong += vals[BFConstants.BF_LONG];
             this.baseExtreme += vals[BFConstants.BF_EXTREME];
             this.TotalHeatGenerated += (int)vals[BFConstants.BF_OV];
-            LauncherCount += 1;
         }
 
+        /**
+         * Add amount of ammo to this specific type
+         * 
+         * @param lotsize Amount of ammo to add
+         */
         public void AddAmmo( int lotsize ) {
             this.AmmoCount += lotsize;
         }
 
+        /*
+         * Used to increase the count of launchers that need ammunition
+         */
+        public void AddLauncher() {
+            LauncherCount++;
+        }
+        
         public void SetHeat( int TotalHeatGenerated, int TotalHeatDissipation ) {
             this.TotalHeatGenerated = TotalHeatGenerated;
             this.TotalHeatDissipation = TotalHeatDissipation;

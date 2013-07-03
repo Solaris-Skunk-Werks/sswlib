@@ -34,6 +34,7 @@ import common.Constants;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.prefs.Preferences;
 import states.*;
 import visitors.*;
@@ -508,6 +509,10 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     }
 
     //Battleforce Specific Methods
+    /**
+     * Determines the size of the unit from pg. 356 of Strategic Operations
+     * @return 
+     */
     public int GetBFSize() {
         int mass = GetTonnage();
         if( mass < 40 ){
@@ -519,6 +524,61 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         }else{
             return BFConstants.BF_SIZE_ASSAULT;
         }
+
+        /*
+        int mass = GetTonnage();
+        if ( mass < 5.0 ) 
+            return BFConstants.BF_SIZE_SMALL;
+        
+        //Hover
+        if ( "h".equals(CurConfig.GetBFMotiveType())) {
+            if ( mass <= 50 )
+                return BFConstants.BF_SIZE_MEDIUM;
+            return BFConstants.BF_SIZE_LARGE;
+        }
+        
+        //Naval and Submarines
+        if ( "n".equals(CurConfig.GetBFMotiveType()) || 
+             "s".equals(CurConfig.GetBFMotiveType())) {
+            if ( mass <= 300)
+                return BFConstants.BF_SIZE_MEDIUM;
+            if ( mass <= 6000)
+                return BFConstants.BF_SIZE_LARGE;
+            if ( mass <= 30000)
+                return BFConstants.BF_SIZE_VERYLARGE;
+            return BFConstants.BF_SIZE_SUPERLARGE;
+        }
+        
+        //Tracked
+        if ( "t".equals(CurConfig.GetBFMotiveType())) {
+            if ( mass <= 100 )
+                return BFConstants.BF_SIZE_MEDIUM;
+            return BFConstants.BF_SIZE_LARGE;
+        }
+        
+        //VTOL
+        if ( "v".equals(CurConfig.GetBFMotiveType())) {
+            if ( mass <= 30)
+                return BFConstants.BF_SIZE_MEDIUM;
+            return BFConstants.BF_SIZE_LARGE;
+        }
+        
+        //Wheeled
+        if ( "w".equals(CurConfig.GetBFMotiveType())) {
+            if ( mass <= 80)
+                return BFConstants.BF_SIZE_MEDIUM;
+            return BFConstants.BF_SIZE_LARGE;
+        }
+        
+        //WiGE
+        if ( "g".equals(CurConfig.GetBFMotiveType())) {
+            if ( mass <= 80)
+                return BFConstants.BF_SIZE_MEDIUM;
+            return BFConstants.BF_SIZE_LARGE;
+        }
+        
+        return BFConstants.BF_SIZE_SMALL;
+        */
     }
 
     public int GetBFPrimeMovement() {
@@ -534,10 +594,10 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
             if ( GetBFSecondaryMovementMode().isEmpty() ) {
                 return "j";
             } else {
-                return "";
+                return CurConfig.GetBFMotiveType();
             }
         }else{
-            return "";
+            return CurConfig.GetBFMotiveType();
         }
     }
 
@@ -599,7 +659,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         if ( isHasTurret2() ) retval += s;
         if ( IsVTOL() ) retval += s;
         
-        return retval / 10;
+        return (int)Math.round(retval / 10.0);
     }
 
     public int[] GetBFDamage(BattleForceStats bfs) {
@@ -609,62 +669,95 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         // Loop through all weapons in non-core
         // and convert all weapon dmg
         ArrayList nc = GetLoadout().GetNonCore();
+        BattleForceData baseData = new BattleForceData();
+        BattleForceData turret1Data = new BattleForceData();
+        BattleForceData turret2Data = new BattleForceData();
         BFData = new BattleForceData();
 
+        BFData.AddNote("Weapon  :: Short / Medium / Long / Extreme / [Heat]" );
         for ( int i = 0; i < nc.size(); i++ ) {
             if ( nc.get(i) instanceof ifWeapon ) {
-                double [] temp = BattleForceTools.GetDamage((ifWeapon)nc.get(i), (ifBattleforce)this);
-
+                ifWeapon w = (ifWeapon)nc.get(i);
+                double [] temp = BattleForceTools.GetDamage(w, (ifBattleforce)this);
                 BFData.AddBase(temp);
-                if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.Base.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
-
-                if ( BattleForceTools.isBFAutocannon((ifWeapon)nc.get(i)) )
+                
+                boolean isRanged = nc.get(i) instanceof RangedWeapon;
+                boolean hasAmmo = (isRanged ? ((RangedWeapon)nc.get(i)).HasAmmo() : false);
+                int AmmoCount = (isRanged && hasAmmo ? GetAmmoCount(((RangedWeapon)nc.get(i)).GetAmmoIndex()): 0);
+                
+                if ( hasAmmo ) {
+                    BFData.Base.AddLauncher();
+                    BFData.Base.AddAmmo(AmmoCount);
+                }
+                
+                BFData = baseData;
+                //Turrets are calculated all on their own
+                if ( GetLoadout().Find((abPlaceable)nc.get(i)) == LocationIndex.CV_LOC_TURRET1)
+                    BFData = turret1Data;
+                if ( GetLoadout().Find((abPlaceable)nc.get(i)) == LocationIndex.CV_LOC_TURRET2)
+                    BFData = turret2Data;
+                
+                
+                if ( BattleForceTools.isBFAutocannon(w) )
                 {
                     BFData.AC.AddBase(temp);
-                    if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.AC.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.AC.AddLauncher();
+                        BFData.AC.AddAmmo(AmmoCount);
+                    }
                 }
-                else if ( BattleForceTools.isBFLRM((ifWeapon)nc.get(i)) )
+                else if ( BattleForceTools.isBFLRM(w) )
                 {
                     BFData.LRM.AddBase(temp);
-                    if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.LRM.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.LRM.AddLauncher();
+                        BFData.LRM.AddAmmo(AmmoCount);
+                    }
                 }
-                else if ( BattleForceTools.isBFSRM((ifWeapon)nc.get(i)) )
+                else if ( BattleForceTools.isBFSRM(w) )
                 {
                     BFData.SRM.AddBase(temp);
-                    if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.SRM.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.SRM.AddLauncher();
+                        BFData.SRM.AddAmmo(AmmoCount);
+                    }
                 }
-                else if ( BattleForceTools.isBFSRT((ifWeapon)nc.get(i)) ||
-                            BattleForceTools.isBFLRT((ifWeapon)nc.get(i)) )
+                else if ( BattleForceTools.isBFSRT(w) ||
+                            BattleForceTools.isBFLRT(w) )
                 {
                     BFData.TOR.AddBase(temp);
-                    if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.TOR.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.TOR.AddLauncher();
+                        BFData.TOR.AddAmmo(AmmoCount);
+                    }
                 }
-                else if ( BattleForceTools.isBFMML((ifWeapon)nc.get(i)) )
+                else if ( BattleForceTools.isBFMML(w) )
                 {
                     BFData.SRM.AddBase(new double[]{temp[BFConstants.BF_SHORT], temp[BFConstants.BF_MEDIUM]/2.0, 0.0, 0.0, temp[BFConstants.BF_OV]});
                     BFData.LRM.AddBase(new double[]{0.0, temp[BFConstants.BF_MEDIUM]/2.0, temp[BFConstants.BF_LONG], 0.0, temp[BFConstants.BF_OV]} );
-                    if ( nc.get(i) instanceof RangedWeapon ){
-                        BFData.SRM.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
-                        BFData.LRM.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.SRM.AddLauncher();
+                        BFData.SRM.AddAmmo(AmmoCount);
+                        BFData.LRM.AddLauncher();
+                        BFData.LRM.AddAmmo(AmmoCount);
                     }
 
                 }
-                if ( BattleForceTools.isBFIF((ifWeapon)nc.get(i)) )
+                if ( BattleForceTools.isBFIF(w) )
                 {
                     BFData.IF.AddBase(temp);
-                    if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.IF.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.IF.AddLauncher();
+                        BFData.IF.AddAmmo(AmmoCount);
+                    }
                 }
-                if ( BattleForceTools.isBFFLK((ifWeapon)nc.get(i)) )
+                if ( BattleForceTools.isBFFLK(w) )
                 {
                     BFData.FLK.AddBase(temp);
-                    if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.FLK.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.FLK.AddLauncher();
+                        BFData.FLK.AddAmmo(AmmoCount);
+                    }
                 }
                 BFData.AddNote(nc.get(i).toString() + " :: " + temp[BFConstants.BF_SHORT] + "/" + temp[BFConstants.BF_MEDIUM] + "/" + temp[BFConstants.BF_LONG] + "/" + temp[BFConstants.BF_EXTREME] + " [" + temp[BFConstants.BF_OV] + "]" );
             } else if ( nc.get(i) instanceof Ammunition ) {
@@ -698,25 +791,49 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
                 }
             }
         }
+        BFData = baseData;
 
         // Subtract 4 because Joel says so...
         // and besides, Joel is awesome and we should trust him
         BFData.AddHeat(-4);
+        turret1Data.AddHeat(-4);
+        turret2Data.AddHeat(-4);
 
         // Also include Stealth heat, which is ALWAYS on in BF
         if ( GetArmor().IsStealth() ) {
             BFData.AddHeat(10);
+            turret1Data.AddHeat(10);
+            turret2Data.AddHeat(10);
         }
 
-        BFData.SetHeat(this.GetHeatSinks().TotalDissipation() + CoolantPods);
+        BFData.SetHeat(BFData.getTotalHeatGenerated());
+        turret1Data.SetHeat(turret1Data.getTotalHeatGenerated());
+        turret2Data.SetHeat(turret2Data.getTotalHeatGenerated());
+        
         BFData.CheckSpecials();
+        turret1Data.CheckSpecials();
+        turret2Data.CheckSpecials();
 
         // Convert all damage to BF scale
         retval[BFConstants.BF_SHORT] = BFData.AdjBase.getBFShort(); //(int) Math.ceil(dmgShort / 10);
         retval[BFConstants.BF_MEDIUM] = BFData.AdjBase.getBFMedium(); //(int) Math.ceil(dmgMedium / 10);
         retval[BFConstants.BF_LONG] = BFData.AdjBase.getBFLong(); //(int) Math.ceil(dmgLong / 10);
-        retval[BFConstants.BF_EXTREME] = 0;   // Mechs dont have extreme range ever
+        retval[BFConstants.BF_EXTREME] = 0;   // Vehicles dont have extreme range ever
 
+        if ( HasTurret1 ) {
+            ArrayList<String> data = new ArrayList<String>();
+            if ( turret1Data.AdjBase.getBFShort() > 0 ||
+                 turret1Data.AdjBase.getBFMedium()> 0 ||
+                 turret1Data.AdjBase.getBFLong()> 0) data.add(turret1Data.AdjBase.GetAbility());
+            if ( turret1Data.AC.CheckSpecial() ) data.add("AC " + turret1Data.AC.GetAbility());
+            if ( turret1Data.SRM.CheckSpecial() ) data.add("SRM " + turret1Data.SRM.GetAbility());
+            if ( turret1Data.LRM.CheckSpecial() ) data.add("LRM " + turret1Data.LRM.GetAbility());
+            if ( turret1Data.TOR.CheckSpecial() ) data.add("TOR " + turret1Data.TOR.GetAbility());
+            if ( turret1Data.IF.CheckSpecial() ) data.add("IF " + turret1Data.IF.GetAbility());
+            if ( turret1Data.FLK.CheckSpecial() ) data.add("FLK " + turret1Data.FLK.GetAbility());
+            bfs.addAbility("TUR(" + data.toString().replace("\\[", "").replace("\\]", "") + ")");
+        }
+        
         // Add Special Abilities to BattleForceStats if applicable
         if ( BFData.AC.CheckSpecial() ) bfs.addAbility("AC " + BFData.AC.GetAbility() );
         if ( BFData.SRM.CheckSpecial() ) bfs.addAbility("SRM " + BFData.SRM.GetAbility() );
@@ -724,7 +841,8 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         if ( BFData.TOR.CheckSpecial() ) bfs.addAbility("TOR " + BFData.TOR.GetAbility() );
         if ( BFData.IF.getBFLong() > 0 )  bfs.addAbility("IF " + BFData.IF.getBFLong() );
         if ( BFData.FLK.getBaseMedium() > 5 ) bfs.addAbility("FLK " + BFData.FLK.GetAbility() );
-
+            
+           
         // Determine OverHeat
         if ( BFData.BaseMaxMedium() != 0 )
         {

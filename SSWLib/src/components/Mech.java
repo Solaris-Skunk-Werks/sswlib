@@ -4647,60 +4647,80 @@ public class Mech implements ifUnit, ifBattleforce {
         ArrayList nc = GetLoadout().GetNonCore();
         BFData = new BattleForceData();
 
+        BFData.AddNote("Weapon  :: Short / Medium / Long / Extreme / [Heat]" );
         for ( int i = 0; i < nc.size(); i++ ) {
             if ( nc.get(i) instanceof ifWeapon ) {
                 double [] temp = BattleForceTools.GetDamage((ifWeapon)nc.get(i), (ifBattleforce)this);
-
                 BFData.AddBase(temp);
-                if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.Base.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                
+                boolean isRanged = nc.get(i) instanceof RangedWeapon;
+                boolean hasAmmo = (isRanged ? ((RangedWeapon)nc.get(i)).HasAmmo() : false);
+                int AmmoCount = (isRanged && hasAmmo ? GetAmmoCount(((RangedWeapon)nc.get(i)).GetAmmoIndex()): 0);
+                
+                if ( hasAmmo ) {
+                    BFData.Base.AddLauncher();
+                    BFData.Base.AddAmmo(AmmoCount);
+                }    
         
                 if ( BattleForceTools.isBFAutocannon((ifWeapon)nc.get(i)) )
                 {
                     BFData.AC.AddBase(temp);
-                    if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.AC.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.AC.AddLauncher();
+                        BFData.AC.AddAmmo(AmmoCount);
+                    }
                 }
                 else if ( BattleForceTools.isBFLRM((ifWeapon)nc.get(i)) )
                 {
                     BFData.LRM.AddBase(temp);
-                    if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.LRM.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.LRM.AddLauncher();
+                        BFData.LRM.AddAmmo(AmmoCount);
+                    }
                 }
                 else if ( BattleForceTools.isBFSRM((ifWeapon)nc.get(i)) )
                 {
                     BFData.SRM.AddBase(temp);
-                    if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.SRM.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.SRM.AddLauncher();
+                        BFData.SRM.AddAmmo(AmmoCount);
+                    }
                 }
                 else if ( BattleForceTools.isBFSRT((ifWeapon)nc.get(i)) ||
                             BattleForceTools.isBFLRT((ifWeapon)nc.get(i)) )
                 {
                     BFData.TOR.AddBase(temp);
-                    if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.TOR.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.TOR.AddLauncher();
+                        BFData.TOR.AddAmmo(AmmoCount);
+                    }
                 }
                 else if ( BattleForceTools.isBFMML((ifWeapon)nc.get(i)) )
                 {
                     BFData.SRM.AddBase(new double[]{temp[BFConstants.BF_SHORT], temp[BFConstants.BF_MEDIUM]/2.0, 0.0, 0.0, temp[BFConstants.BF_OV]});
                     BFData.LRM.AddBase(new double[]{0.0, temp[BFConstants.BF_MEDIUM]/2.0, temp[BFConstants.BF_LONG], 0.0, temp[BFConstants.BF_OV]} );
-                    if ( nc.get(i) instanceof RangedWeapon ){
-                        BFData.SRM.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
-                        BFData.LRM.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.SRM.AddLauncher();
+                        BFData.SRM.AddAmmo(AmmoCount);
+                        BFData.LRM.AddLauncher();
+                        BFData.LRM.AddAmmo(AmmoCount);
                     }
-
                 }
                 if ( BattleForceTools.isBFIF((ifWeapon)nc.get(i)) )
                 {
                     BFData.IF.AddBase(temp);
-                    if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.IF.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.IF.AddLauncher();
+                        BFData.IF.AddAmmo(AmmoCount);
+                    }
                 }
                 if ( BattleForceTools.isBFFLK((ifWeapon)nc.get(i)) )
                 {
                     BFData.FLK.AddBase(temp);
-                    if ( nc.get(i) instanceof RangedWeapon )
-                        BFData.FLK.AddAmmo(GetAmmoCount( ((RangedWeapon)nc.get(i)).GetAmmoIndex() ));
+                    if ( hasAmmo ) {
+                        BFData.FLK.AddLauncher();
+                        BFData.FLK.AddAmmo(AmmoCount);
+                    }
                 }
                 BFData.AddNote(nc.get(i).toString() + " :: " + temp[BFConstants.BF_SHORT] + "/" + temp[BFConstants.BF_MEDIUM] + "/" + temp[BFConstants.BF_LONG] + "/" + temp[BFConstants.BF_EXTREME] + " [" + temp[BFConstants.BF_OV] + "]" );
             } else if ( nc.get(i) instanceof Ammunition ) {
@@ -4769,9 +4789,15 @@ public class Mech implements ifUnit, ifBattleforce {
         if ( BFData.FLK.getBaseMedium() > 5 ) bfs.addAbility("FLK " + BFData.FLK.GetAbility() );
 
         // Determine OverHeat
+        BFData.AddNote("OverHeat Calculations");
+        BFData.AddNote("Is Base Max Medium > 0 ? " + (BFData.BaseMaxMedium() > 0));
         if ( BFData.BaseMaxMedium() != 0 )
         {
             int DmgMedium = BFData.AdjBase.getBFMedium() + BFData.SRM.getBFMedium() + BFData.LRM.getBFMedium() + BFData.AC.getBFMedium();
+            BFData.AddNote("Medium Damage = Adj Base (" + BFData.AdjBase.getBFMedium() + ") + "
+                                            + "SRM (" + BFData.SRM.getBFMedium() + ") + "
+                                            + "LRM (" + BFData.LRM.getBFMedium() + ") + "
+                                            + "AC (" + BFData.AC.getBFMedium() + ") = " + DmgMedium);
             retval[BFConstants.BF_OV] = BFData.BaseMaxMedium() - DmgMedium;
             BFData.AddNote("Medium: " + BFData.BaseMaxMedium() + " - " + DmgMedium + " = " + (BFData.BaseMaxMedium()-DmgMedium));
             //System.out.println( BFData.BaseMaxMedium() + " - " + DmgMedium + " = " + (BFData.BaseMaxMedium()-DmgMedium));
