@@ -557,6 +557,7 @@ public class CVReader {
                     p.SetManufacturer( eMan );
                     if( p instanceof Equipment ) {
                         if( ((Equipment) p).IsVariableSize() ) {
+                            ((Equipment) p).SetMaxTons(m.GetTonnage());
                             ((Equipment) p).SetTonnage( vtons );
                         }
                     }
