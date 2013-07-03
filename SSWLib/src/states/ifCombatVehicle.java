@@ -50,4 +50,5 @@ public interface ifCombatVehicle {
     public boolean CanUseMinesweeper();
     public boolean CanUseEnviroSealing();
     public boolean IsSuperHeavy();
+    public String GetBFMotiveType();
 }
