@@ -474,6 +474,10 @@ public class Equipment extends abPlaceable {
     public double GetMaxTons() {
         return MaxTons;
     }
+    
+    public void SetMaxTons(double Max) {
+        MaxTons = Max;
+    }
 
     public double GetMinTons() {
         return MinTons;
