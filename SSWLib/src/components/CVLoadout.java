@@ -412,38 +412,60 @@ public class CVLoadout implements ifCVLoadout, ifLoadout {
     }
 
     public void AddToFront(abPlaceable p) throws Exception {
-        AddTo(p, LocationIndex.CV_LOC_FRONT);
-        Owner.SetChanged( true );
+        if ( p.CanAllocCVFront() ) {
+            AddTo(p, LocationIndex.CV_LOC_FRONT);
+            Owner.SetChanged( true );
+        } else
+            throw new Exception(p.ActualName() + " cannot be allocated to the Front.");
     }
 
     public void AddToLeft(abPlaceable p) throws Exception {
-        AddTo(p, LocationIndex.CV_LOC_LEFT);
-        Owner.SetChanged( true );
+        if ( p.CanAllocCVSide() ) {
+            AddTo(p, LocationIndex.CV_LOC_LEFT);
+            Owner.SetChanged( true );
+        } else
+            throw new Exception(p.ActualName() + " cannot be allocated to the Side.");
     }
 
     public void AddToRight(abPlaceable p) throws Exception {
-        AddTo(p, LocationIndex.CV_LOC_RIGHT);
-        Owner.SetChanged( true );
+        if ( p.CanAllocCVSide() ) {
+            AddTo(p, LocationIndex.CV_LOC_RIGHT);
+            Owner.SetChanged( true );
+        } else 
+            throw new Exception(p.ActualName() + " cannot be allocated to the Side.");
     }
 
     public void AddToRear(abPlaceable p) throws Exception {
-        AddTo(p, LocationIndex.CV_LOC_REAR);
-        Owner.SetChanged( true );
+        if ( !p.CanAllocCVRear() ) {
+            AddTo(p, LocationIndex.CV_LOC_REAR);
+            Owner.SetChanged( true );
+        } else 
+            throw new Exception(p.ActualName() + " cannot be allocated to the Rear.");
     }
 
     public void AddToBody(abPlaceable p) throws Exception {
-        AddTo(p, LocationIndex.CV_LOC_BODY);
-        Owner.SetChanged( true );
+        if ( p.CanAllocCVBody() ) {
+            AddTo(p, LocationIndex.CV_LOC_BODY);
+            Owner.SetChanged( true );
+        } else
+            throw new Exception(p.ActualName() + " cannot be allocated to the Body.");
+        
     }
 
     public void AddToTurret1(abPlaceable p) throws Exception {
-        AddTo(p, LocationIndex.CV_LOC_TURRET1);
-        Owner.SetChanged( true );
+        if ( p.CanAllocCVTurret() ) {
+            AddTo(p, LocationIndex.CV_LOC_TURRET1);
+            Owner.SetChanged( true );
+        } else
+            throw new Exception(p.ActualName() + " cannot be allocated to the Turret.");
     }
 
     public void AddToTurret2(abPlaceable p) throws Exception {
-        AddTo(p, LocationIndex.CV_LOC_TURRET2);
-        Owner.SetChanged( true );
+        if ( p.CanAllocCVTurret() ) {
+            AddTo(p, LocationIndex.CV_LOC_TURRET2);
+            Owner.SetChanged( true );
+        } else
+            throw new Exception(p.ActualName() + " cannot be allocated to the Turret.");
     }
 
     public ArrayList<abPlaceable> GetFrontItems() {
