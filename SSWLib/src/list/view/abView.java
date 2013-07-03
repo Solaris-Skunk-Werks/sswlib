@@ -65,6 +65,9 @@ public abstract class abView extends AbstractTableModel {
             if ( col.preferredWidth > 0 && list.Size() > 0 ) {
                 tbl.getColumnModel().getColumn(col.Index).setPreferredWidth(col.preferredWidth);
             }
+            if ( col.Renderer != null ) {
+                tbl.getColumnModel().getColumn(col.Index).setCellRenderer(col.Renderer);
+            }
         }
     }
     

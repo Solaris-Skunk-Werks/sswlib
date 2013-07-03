@@ -2,6 +2,7 @@
 package list.view;
 
 import javax.swing.SortOrder;
+import javax.swing.table.TableCellRenderer;
 
 
 public class Column {
@@ -13,6 +14,7 @@ public class Column {
     public boolean isSortable = true;
     public SortOrder sortOrder = SortOrder.ASCENDING;
     public String propertyName = "";
+    public TableCellRenderer Renderer = null;
 
     public Column( int Index, String Title, String propertyName ) {
         this(Index, Title, propertyName, false, 0, String.class, false, null);
@@ -51,5 +53,10 @@ public class Column {
         this.classType = ClassType;
         this.isSortable = Sortable;
         this.sortOrder = sortOrder;
+    }
+    
+    public void SetRenderer(TableCellRenderer render)
+    {
+        Renderer = render;
     }
 }

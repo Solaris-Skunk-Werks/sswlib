@@ -40,7 +40,9 @@ public class tbTotalWarfareView extends abView {
         Columns.add(new Column( 0, "Tons", "Tonnage", false, 20, Integer.class, true, SortOrder.ASCENDING ));
         Columns.add(new Column( 1, "Type/Model", "Name", false, 150, String.class, true, SortOrder.ASCENDING ));
         Columns.add(new Column( 2, "BV", "BV", false, 20, Integer.class, true, SortOrder.ASCENDING ));
-        Columns.add(new Column( 3, "Cost", "Cost", 20, Integer.class ));
+        Column cost = new Column( 3, "Cost", "Cost", 20, Integer.class );
+        cost.SetRenderer(new NumberRenderer());
+        Columns.add(cost);
         Columns.add(new Column( 4, "Level", "Level", 80 ));
         Columns.add(new Column( 5, "Era", "Era", 100 ));
         Columns.add(new Column( 6, "Tech", "Tech", 50 ));
