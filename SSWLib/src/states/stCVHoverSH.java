@@ -108,4 +108,7 @@ public class stCVHoverSH implements ifCombatVehicle {
     public boolean IsSuperHeavy() {
         return true;
     }
+    public String GetBFMotiveType() {
+        return "h";
+    }
 }

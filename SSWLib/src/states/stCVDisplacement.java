@@ -106,4 +106,9 @@ public class stCVDisplacement implements ifCombatVehicle {
     public boolean IsSuperHeavy() {
         return false;
     }
+
+    public String GetBFMotiveType() {
+        return "n";
+    }
+    
 }

@@ -114,4 +114,7 @@ public class stCVVTOL implements ifCombatVehicle {
     public boolean IsSuperHeavy() {
         return false;
     }
+    public String GetBFMotiveType() {
+        return "v";
+    }
 }

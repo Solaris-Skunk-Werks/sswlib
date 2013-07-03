@@ -108,4 +108,7 @@ public class stCVWheeled implements ifCombatVehicle {
     public boolean IsSuperHeavy() {
         return false;
     }
+    public String GetBFMotiveType() {
+        return "w";
+    }
 }

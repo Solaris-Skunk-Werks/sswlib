@@ -128,4 +128,7 @@ public class stCVHydrofoil implements ifCombatVehicle {
     public boolean IsSuperHeavy() {
         return false;
     }
+    public String GetBFMotiveType() {
+        return "n";
+    }
 }
