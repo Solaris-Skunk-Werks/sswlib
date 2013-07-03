@@ -747,7 +747,12 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
     public boolean CanAllocLegs() {
         return Alloc_Legs;
     }
-
+    
+    @Override
+    public boolean CanAllocCVBody() {
+        return alloc_body;
+    }
+    
     @Override
     public boolean CanAllocCVFront() {
         return alloc_front;
