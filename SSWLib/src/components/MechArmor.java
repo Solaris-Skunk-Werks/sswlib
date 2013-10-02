@@ -59,6 +59,10 @@ public class MechArmor  extends abPlaceable {
                     CLFL = new stArmorCLFL(),
                     CLLR = new stArmorCLLR(),
                     CLRE = new stArmorCLRE(),
+                    ISAB = new stArmorISAB(),
+                    HeatDiss = new stArmorHD(),
+                    ISIR = new stArmorISIR(),
+                    ISBR = new stArmorISBR(),
                     Patchwork = new stArmorPatchwork();
     private ifArmor Config = Standard,
                     HDConfig = Standard,
@@ -1348,7 +1352,420 @@ public class MechArmor  extends abPlaceable {
                 return;
         }
     }
+    
+    public void SetISAB() {
+        Config = ISAB;
+    }
 
+    public void SetISAB( int Loc ) throws Exception {
+        switch( Loc ) {
+            case LocationIndex.MECH_LOC_HD:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISAB.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_CT:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISAB.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_LT:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISAB.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_RT:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISAB.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_LA:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISAB.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_RA:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISAB.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_LL:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISAB.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_RL:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISAB.PatchworkCrits() ) } );
+                return;
+        }
+    }
+
+    public void SetISAB( int Loc, LocationIndex[] locs ) throws Exception {
+        switch( Loc ) {
+            case LocationIndex.MECH_LOC_HD:
+                HDConfig = ISAB;
+                if( ! HDConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    HDConfig = Standard;
+                    HDConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Ablative Armor as patchwork in the Head.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_CT:
+                CTConfig = ISAB;
+                if( ! CTConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    CTConfig = Standard;
+                    CTConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Ablative Armor as patchwork in the Center Torso.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_LT:
+                LTConfig = ISAB;
+                if( ! LTConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    LTConfig = Standard;
+                    LTConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Ablative Armor as patchwork in the Left Torso.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_RT:
+                RTConfig = ISAB;
+                if( ! RTConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    RTConfig = Standard;
+                    RTConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Ablative Armor as patchwork in the Right Torso.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_LA:
+                LAConfig = ISAB;
+                if( ! LAConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    LAConfig = Standard;
+                    LAConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Ablative Armor as patchwork in the Left Arm.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_RA:
+                RAConfig = ISAB;
+                if( ! RAConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    RAConfig = Standard;
+                    RAConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Ablative Armor as patchwork in the Right Arm.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_LL:
+                LLConfig = ISAB;
+                if( ! LLConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    LLConfig = Standard;
+                    LLConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Ablative Armor as patchwork in the Left Leg.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_RL:
+                RLConfig = ISAB;
+                if( ! RLConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    RLConfig = Standard;
+                    RLConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Ablative Armor as patchwork in the Right Leg.\nReverting to Standard Armor." );
+                }
+                return;
+        }
+    }
+    
+    
+    public void SetHD() {
+        Config = HeatDiss;
+    }
+
+    public void SetHD( int Loc ) throws Exception {
+        switch( Loc ) {
+            case LocationIndex.MECH_LOC_HD:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, HeatDiss.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_CT:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, HeatDiss.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_LT:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, HeatDiss.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_RT:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, HeatDiss.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_LA:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, HeatDiss.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_RA:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, HeatDiss.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_LL:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, HeatDiss.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_RL:
+                SetCLRE( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, HeatDiss.PatchworkCrits() ) } );
+                return;
+        }
+    }
+
+    public void SetHD( int Loc, LocationIndex[] locs ) throws Exception {
+        switch( Loc ) {
+            case LocationIndex.MECH_LOC_HD:
+                HDConfig = HeatDiss;
+                if( ! HDConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    HDConfig = Standard;
+                    HDConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Heat-Dissipating Armor as patchwork in the Head.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_CT:
+                CTConfig = HeatDiss;
+                if( ! CTConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    CTConfig = Standard;
+                    CTConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Heat-Dissipating Armor as patchwork in the Center Torso.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_LT:
+                LTConfig = HeatDiss;
+                if( ! LTConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    LTConfig = Standard;
+                    LTConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Heat-Dissipating Armor as patchwork in the Left Torso.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_RT:
+                RTConfig = HeatDiss;
+                if( ! RTConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    RTConfig = Standard;
+                    RTConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Heat-Dissipating Armor as patchwork in the Right Torso.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_LA:
+                LAConfig = HeatDiss;
+                if( ! LAConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    LAConfig = Standard;
+                    LAConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Heat-Dissipating Armor as patchwork in the Left Arm.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_RA:
+                RAConfig = HeatDiss;
+                if( ! RAConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    RAConfig = Standard;
+                    RAConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Heat-Dissipating Armor as patchwork in the Right Arm.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_LL:
+                LLConfig = HeatDiss;
+                if( ! LLConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    LLConfig = Standard;
+                    LLConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Heat-Dissipating Armor as patchwork in the Left Leg.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_RL:
+                RLConfig = HeatDiss;
+                if( ! RLConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    RLConfig = Standard;
+                    RLConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit Heat-Dissipating Armor as patchwork in the Right Leg.\nReverting to Standard Armor." );
+                }
+                return;
+        }
+    }
+    
+    
+    public void SetISIR() {
+        Config = ISIR;
+    }
+
+    
+    public void SetISIR( int Loc ) throws Exception {
+        switch( Loc ) {
+            case LocationIndex.MECH_LOC_HD:
+                SetISIR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISIR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_CT:
+                SetISIR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISIR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_LT:
+                SetISIR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISIR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_RT:
+                SetISIR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISIR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_LA:
+                SetISIR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISIR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_RA:
+                SetISIR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISIR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_LL:
+                SetISIR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISIR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_RL:
+                SetISIR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISIR.PatchworkCrits() ) } );
+                return;
+        }
+    }
+
+    public void SetISIR( int Loc, LocationIndex[] locs ) throws Exception {
+        switch( Loc ) {
+            case LocationIndex.MECH_LOC_HD:
+                HDConfig = ISIR;
+                if( ! HDConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    HDConfig = Standard;
+                    HDConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISIR.ActualName() + " as patchwork in the Head.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_CT:
+                CTConfig = ISIR;
+                if( ! CTConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    CTConfig = Standard;
+                    CTConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISIR.ActualName() + " as patchwork in the Center Torso.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_LT:
+                LTConfig = ISIR;
+                if( ! LTConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    LTConfig = Standard;
+                    LTConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISIR.ActualName() + " as patchwork in the Left Torso.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_RT:
+                RTConfig = ISIR;
+                if( ! RTConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    RTConfig = Standard;
+                    RTConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISIR.ActualName() + " as patchwork in the Right Torso.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_LA:
+                LAConfig = ISIR;
+                if( ! LAConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    LAConfig = Standard;
+                    LAConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISIR.ActualName() + " as patchwork in the Left Arm.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_RA:
+                RAConfig = ISIR;
+                if( ! RAConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    RAConfig = Standard;
+                    RAConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISIR.ActualName() + " as patchwork in the Right Arm.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_LL:
+                LLConfig = ISIR;
+                if( ! LLConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    LLConfig = Standard;
+                    LLConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISIR.ActualName() + " as patchwork in the Left Leg.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_RL:
+                RLConfig = ISIR;
+                if( ! RLConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    RLConfig = Standard;
+                    RLConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISIR.ActualName() + " as patchwork in the Right Leg.\nReverting to Standard Armor." );
+                }
+                return;
+        }
+    }
+    
+    
+    public void SetISBR() {
+        Config = ISBR;
+    }
+
+    
+    public void SetISBR( int Loc ) throws Exception {
+        switch( Loc ) {
+            case LocationIndex.MECH_LOC_HD:
+                SetISBR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISBR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_CT:
+                SetISBR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISBR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_LT:
+                SetISBR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISBR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_RT:
+                SetISBR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISBR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_LA:
+                SetISBR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISBR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_RA:
+                SetISBR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISBR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_LL:
+                SetISBR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISBR.PatchworkCrits() ) } );
+                return;
+            case LocationIndex.MECH_LOC_RL:
+                SetISBR( Loc, new LocationIndex[] { new LocationIndex( -1, Loc, ISBR.PatchworkCrits() ) } );
+                return;
+        }
+    }
+
+    public void SetISBR( int Loc, LocationIndex[] locs ) throws Exception {
+        switch( Loc ) {
+            case LocationIndex.MECH_LOC_HD:
+                HDConfig = ISBR;
+                if( ! HDConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    HDConfig = Standard;
+                    HDConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISBR.ActualName() + " as patchwork in the Head.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_CT:
+                CTConfig = ISBR;
+                if( ! CTConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    CTConfig = Standard;
+                    CTConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISBR.ActualName() + " as patchwork in the Center Torso.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_LT:
+                LTConfig = ISBR;
+                if( ! LTConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    LTConfig = Standard;
+                    LTConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISBR.ActualName() + " as patchwork in the Left Torso.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_RT:
+                RTConfig = ISBR;
+                if( ! RTConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    RTConfig = Standard;
+                    RTConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISBR.ActualName() + " as patchwork in the Right Torso.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_LA:
+                LAConfig = ISBR;
+                if( ! LAConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    LAConfig = Standard;
+                    LAConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISBR.ActualName() + " as patchwork in the Left Arm.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_RA:
+                RAConfig = ISBR;
+                if( ! RAConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    RAConfig = Standard;
+                    RAConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISBR.ActualName() + " as patchwork in the Right Arm.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_LL:
+                LLConfig = ISBR;
+                if( ! LLConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    LLConfig = Standard;
+                    LLConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISBR.ActualName() + " as patchwork in the Left Leg.\nReverting to Standard Armor." );
+                }
+                return;
+            case LocationIndex.MECH_LOC_RL:
+                RLConfig = ISBR;
+                if( ! RLConfig.Place( this, Owner.GetLoadout(), locs ) ) {
+                    RLConfig = Standard;
+                    RLConfig.Place( this, Owner.GetLoadout(), locs );
+                    throw new Exception( "Could not fit " + ISBR.ActualName() + " as patchwork in the Right Leg.\nReverting to Standard Armor." );
+                }
+                return;
+        }
+    }
+    
     public void Recalculate() {
         // recalculates the armor if mech tonnage or motive type changes
         SetMaxArmor();
@@ -1978,14 +2395,14 @@ public class MechArmor  extends abPlaceable {
     public ifState[] GetStates() {
         ifState[] retval = { (ifState) Industrial, (ifState) Commercial, (ifState) PBM, (ifState) Standard, (ifState) ISFF, (ifState) CLFF,
             (ifState) ISLF, (ifState) ISHF, (ifState) ISST, (ifState) Hardened, (ifState) ISLR, (ifState) CLLR, (ifState) ISRE, (ifState) CLRE,
-             (ifState) CLFL, (ifState) Patchwork };
+             (ifState) CLFL, (ifState) ISAB, (ifState) HeatDiss, (ifState) ISIR, (ifState) ISBR, (ifState) Patchwork };
         return retval;
     }
 
     public ifState[] GetPatchworkStates() {
         ifState[] retval = { (ifState) Industrial, (ifState) Commercial, (ifState) PBM, (ifState) Standard, (ifState) ISFF, (ifState) CLFF,
             (ifState) ISLF, (ifState) ISHF, (ifState) ISST, (ifState) Hardened, (ifState) ISLR, (ifState) CLLR, (ifState) ISRE, (ifState) CLRE,
-             (ifState) CLFL };
+             (ifState) CLFL, (ifState) ISAB, (ifState) HeatDiss, (ifState) ISIR, (ifState) ISBR };
         return retval;
     }
 

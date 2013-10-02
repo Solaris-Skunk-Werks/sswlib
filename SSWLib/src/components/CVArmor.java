@@ -58,6 +58,10 @@ public class CVArmor extends abPlaceable {
                     CLFL = new stArmorCLFL(),
                     CLLR = new stArmorCLLR(),
                     CLRE = new stArmorCLRE(),
+                    ISAB = new stArmorISAB(),
+                    HeatDiss = new stArmorHD(),
+                    ISIR = new stArmorISIR(),
+                    ISBR = new stArmorISBR(),
                     Patchwork = new stArmorPatchwork();
     private ifArmor Config = Standard,
                     FrontConfig = Standard,
@@ -597,6 +601,71 @@ public class CVArmor extends abPlaceable {
                 return;
         }
     }
+    
+    
+    public void SetISAB() {
+        Config = ISAB;
+    }
+
+    public void SetISAB( int Loc ) throws Exception {
+        CheckPatchworkSpace( ISAB, Loc );
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = ISAB;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = ISAB;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = ISAB;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = ISAB;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = ISAB;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = ISAB;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = ISAB;
+                return;
+        }
+    }
+    
+    
+    
+    public void SetISBR() {
+        Config = ISBR;
+    }
+
+    public void SetISBR( int Loc ) throws Exception {
+        CheckPatchworkSpace( ISBR, Loc );
+        switch( Loc ) {
+            case LocationIndex.CV_LOC_FRONT:
+                FrontConfig = ISBR;
+                return;
+            case LocationIndex.CV_LOC_LEFT:
+                LeftConfig = ISBR;
+                return;
+            case LocationIndex.CV_LOC_RIGHT:
+                RightConfig = ISBR;
+                return;
+            case LocationIndex.CV_LOC_REAR:
+                RearConfig = ISBR;
+                return;
+            case LocationIndex.CV_LOC_TURRET1:
+                Turret1Config = ISBR;
+                return;
+            case LocationIndex.CV_LOC_ROTOR:
+                RotorConfig = ISBR;
+                return;
+            case LocationIndex.CV_LOC_TURRET2:
+                Turret2Config = ISBR;
+                return;
+        }
+    }
     //</editor-fold>
     
     private void CheckPatchworkSpace( ifArmor test, int loc ) throws Exception {
@@ -920,7 +989,7 @@ public class CVArmor extends abPlaceable {
     public ifState[] GetStates() {
         ifState[] retval = { (ifState) Industrial, (ifState) Commercial, (ifState) PBM, (ifState) Standard, (ifState) ISFF, (ifState) CLFF,
             (ifState) ISLF, (ifState) ISHF, (ifState) ISVST, (ifState) Hardened, (ifState) ISLR, (ifState) CLLR, (ifState) ISRE, (ifState) CLRE,
-             (ifState) CLFL, (ifState) Patchwork };
+             (ifState) CLFL, (ifState) ISAB, (ifState) ISBR, (ifState) Patchwork };
         return retval;
     }
 

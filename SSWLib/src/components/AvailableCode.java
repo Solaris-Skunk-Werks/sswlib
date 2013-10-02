@@ -65,12 +65,12 @@ public class AvailableCode {
     private char IS_SL = 'X',
                  IS_SW = 'X',
                  IS_CI = 'X',
-                 //IS_DA = 'X',
+                 IS_DA = 'A',
                  IS_TechRating = 'X',
                  CL_SL = 'X',
                  CL_SW = 'X',
                  CL_CI = 'X',
-                 //CL_DA ='X',
+                 CL_DA ='A',
                  CL_TechRating = 'X';
     private int IS_RandDStartDate = 0,
                 IS_PrototypeDate = 0,
@@ -136,6 +136,11 @@ public class AvailableCode {
         IS_CI = CI;
         //IS_DA = DA;
     }
+    
+    public void SetISCodes( char tech, char SL, char SW, char CI, char DA) {
+        SetISCodes(tech, SL, SW, CI);
+        IS_DA = DA;
+    }
 
     public void SetCLCodes( char tech, char SL, char SW, char CI ) {
         CL_TechRating = tech;
@@ -143,6 +148,11 @@ public class AvailableCode {
         CL_SW = SW;
         CL_CI = CI;
         //CL_DA = DA;
+    }
+    
+    public void SetCLCodes( char tech, char SL, char SW, char CI, char DA ) {
+        SetCLCodes(tech, SL, SW, CI);
+        CL_DA = DA;
     }
 
     public void SetISDates( int RDStart, int Proto, boolean IsProto, int Intro, int Extinct, int ReIntro, boolean wentExtinct, boolean WasReIntrod ) {
@@ -229,6 +239,10 @@ public class AvailableCode {
     public char GetISCICode() {
         return IS_CI;
     }
+    
+    public char GetISDACode() {
+        return IS_DA;
+    }
 
     public char GetCLTechRating() {
         return CL_TechRating;
@@ -244,6 +258,10 @@ public class AvailableCode {
 
     public char GetCLCICode() {
         return CL_CI;
+    }
+    
+    public char GetCLDACode() {
+        return CL_DA;
     }
 
     public int GetISRandDStartDate() {
@@ -390,11 +408,11 @@ public class AvailableCode {
  *  Informational
  */
     public String GetISCombinedCode() {
-        return IS_TechRating + "/" + IS_SL + "-" + IS_SW + "-" + IS_CI;
+        return IS_TechRating + "/" + IS_SL + "-" + IS_SW + "-" + IS_CI + "-" + IS_DA;
     }
 
     public String GetCLCombinedCode() {
-        return CL_TechRating + "/" + CL_SL + "-" + CL_SW + "-" + CL_CI;
+        return CL_TechRating + "/" + CL_SL + "-" + CL_SW + "-" + CL_CI + "-" + CL_DA;
     }
 
     public char GetBestTechRating() {
@@ -433,9 +451,17 @@ public class AvailableCode {
             return CL_CI;
         }
     }
+    
+    public char GetBestDACode() {
+        if ( IS_DA < CL_DA ) {
+            return IS_DA;
+        } else {
+            return CL_DA;
+        }
+    }
 
     public String GetBestCombinedCode() {
-        return GetBestTechRating() + "/" + GetBestSLCode() + "-" + GetBestSWCode() + "-" + GetBestCICode();
+        return GetBestTechRating() + "/" + GetBestSLCode() + "-" + GetBestSWCode() + "-" + GetBestCICode() + "-" + GetBestDACode();
     }
 
 /*
