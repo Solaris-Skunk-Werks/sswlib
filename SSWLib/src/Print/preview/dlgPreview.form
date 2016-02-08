@@ -9,6 +9,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <Events>
     <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosing"/>
@@ -156,7 +157,7 @@
             </Component>
             <Component class="javax.swing.JCheckBox" name="chkPrintBattleforce">
               <Properties>
-                <Property name="text" type="java.lang.String" value="BattleForce Sheets"/>
+                <Property name="text" type="java.lang.String" value="Alpha Strike Sheets"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemChanged"/>
@@ -475,8 +476,8 @@
             <Container class="javax.swing.JPanel" name="jPanel6">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="BattleForce">
-                    <Property name="tabTitle" type="java.lang.String" value="BattleForce"/>
+                  <JTabbedPaneConstraints tabName="Alpha Strike">
+                    <Property name="tabTitle" type="java.lang.String" value="Alpha Strike"/>
                   </JTabbedPaneConstraints>
                 </Constraint>
               </Constraints>
@@ -499,7 +500,7 @@
                               </Group>
                               <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="30" max="32767" attributes="0"/>
+                          <EmptySpace pref="26" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -556,12 +557,13 @@
                 <Component class="javax.swing.JComboBox" name="cmbBFSheetType">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="5">
+                      <StringArray count="6">
                         <StringItem index="0" value="*Strategic Ops"/>
                         <StringItem index="1" value="*QuickStrike Cards"/>
-                        <StringItem index="2" value="BattleForce Sheet"/>
-                        <StringItem index="3" value="Vertical Cards"/>
-                        <StringItem index="4" value="QuickStrike Card Sheet"/>
+                        <StringItem index="2" value="*Alpha Strike Cards"/>
+                        <StringItem index="3" value="BattleForce Sheet"/>
+                        <StringItem index="4" value="Vertical Cards"/>
+                        <StringItem index="5" value="Alpha Strike Card Sheet"/>
                       </StringArray>
                     </Property>
                   </Properties>

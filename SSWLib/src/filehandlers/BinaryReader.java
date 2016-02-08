@@ -292,7 +292,7 @@ public class BinaryReader {
         ints[4] = FR.readInt();
         AC.SetRulesLevels( ints[0], ints[1], ints[2], ints[3], ints[4] );
         // Inner Sphere availability
-        AC.SetISCodes( FR.readChar(), FR.readChar(), FR.readChar(), FR.readChar() );
+        AC.SetISCodes( FR.readChar(), FR.readChar(), FR.readChar(), FR.readChar(), FR.readChar() );
         ints[0] = FR.readInt();
         strings[0] = FR.readUTF();
         bools[0] = FR.readBoolean();
@@ -308,7 +308,7 @@ public class BinaryReader {
         AC.SetISDates( ints[3], ints[4], bools[2], ints[0], ints[1], ints[2], bools[0], bools[1] );
         AC.SetISFactions( strings[2], strings[3], strings[0], strings[1] );
         // Clan availability
-        AC.SetCLCodes( FR.readChar(), FR.readChar(), FR.readChar(), FR.readChar() );
+        AC.SetCLCodes( FR.readChar(), FR.readChar(), FR.readChar(), FR.readChar(), FR.readChar() );
         ints[0] = FR.readInt();
         strings[0] = FR.readUTF();
         bools[0] = FR.readBoolean();

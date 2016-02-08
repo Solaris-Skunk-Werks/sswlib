@@ -78,6 +78,12 @@ public class PrintConsts {
                                BF_Chart = "./Data/Printing/BF_Chart.png",
                                BF_Chart2 = "./Data/Printing/BF_Chart2.png",
                                QS_Card = "./Data/Printing/QSCard.png",
+                               AS_Standard_Card = "./Data/Printing/AS_Card/Alpha_Strike_Card_Empty_Print.png",
+                               AS_Standard_Card_Overlay =  "./Data/Printing/AS_Card/Alpha_Strike_Card_Empty_Print_Overlay.png",
+                               AS_Aerospace_Card = "./Data/Printing/AS_Card/ASCard_Aero.png",
+                               AS_Aerospace_Card_Overlay =  "./Data/Printing/AS_Card/ASCard_Aero_Overlay.png",
+                               AS_Large_Card = "./Data/Printing/AS_Card/Alpha_Strike_Card_Large_Unit_Empty_Print.png",
+                               AS_Large_Card_Overlay =  "./Data/Printing/AS_Card/Alpha_Strike_Card_Large_Unit_Empty_Print_Overlay.png",
                                BFB_BG = "./Data/Printing/bfb_bg.png",
                                BT_LOGO = "./Data/Printing/BT_Logo.png",
                                LA_Shield = "./Data/Printing/LA_Shield.png",
@@ -125,6 +131,7 @@ public class PrintConsts {
     public final static Font SmallFont = BaseFont.deriveFont(Font.PLAIN, 7);
     public final static Font SmallItalicFont = BaseFont.deriveFont(Font.ITALIC, 7);
     public final static Font SmallBoldFont = BaseBoldFont.deriveFont(Font.PLAIN, 7);
+    public final static Font Bold8Font = BaseBoldFont.deriveFont(Font.PLAIN, 8);
     public final static Font ReallySmallFont = BaseFont.deriveFont(Font.PLAIN, 6);
     public final static Font XtraSmallBoldFont = BaseBoldFont.deriveFont(Font.PLAIN, 6);
     public final static Font XtraSmallFont = BaseFont.deriveFont(Font.PLAIN, 6);

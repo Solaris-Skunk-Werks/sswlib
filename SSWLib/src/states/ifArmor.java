@@ -58,4 +58,5 @@ public interface ifArmor {
     public void SetLocked( boolean l );
     public MechModifier GetMechModifier();
     public AvailableCode GetAvailability();
+    public boolean AllowHarJel();
 }

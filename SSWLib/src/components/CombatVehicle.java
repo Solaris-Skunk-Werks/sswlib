@@ -2576,6 +2576,10 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
         return false;
     }
 
+    public boolean IsTripod() {
+        return false;
+    }
+    
     public PhysicalEnhancement GetPhysEnhance() {
         return new PhysicalEnhancement(this);
     }
@@ -2796,6 +2800,7 @@ public class CombatVehicle implements ifUnit, ifBattleforce {
     public void SetDuneBuggy(boolean b) {
         UsingDuneBuggy = b;
     }
+
 }
 
 

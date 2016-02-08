@@ -84,13 +84,13 @@ public class UnitList extends AbstractTableModel {
     
     final void Load( String Directory ) {
         File d = new File(Directory);
-        if ( d.isDirectory() ) {
+        if ( d.isDirectory() && !d.isHidden() ) {
             if( d.listFiles() == null ) { return; }
             for ( File f : d.listFiles() ) {
                 if ( f.isFile() && EditorFile(f) ) {
                     Add(f);
                 }
-                if ( f.isDirectory() ) {
+                if ( f.isDirectory() && !f.isHidden() ) {
                     Load( f.getPath() );
                 }
             }

@@ -472,19 +472,19 @@ public class CommonTools {
             case AvailableCode.ERA_DARK_AGES:
                 switch( u.GetTechbase() ) {
                     case AvailableCode.TECH_INNER_SPHERE:
-                        if( AC.GetISCICode() < 'X' ) {
+                        if( AC.GetISDACode() < 'X' ) {
                             return true;
                         } else {
                             return false;
                         }
                     case AvailableCode.TECH_CLAN:
-                        if( AC.GetCLCICode() < 'X' ) {
+                        if( AC.GetCLDACode() < 'X' ) {
                             return true;
                         } else {
                             return false;
                         }
                     case AvailableCode.TECH_BOTH:
-                        if( AC.GetBestCICode() < 'X' ) {
+                        if( AC.GetBestDACode() < 'X' ) {
                             return true;
                         } else {
                             return false;
@@ -813,6 +813,15 @@ public class CommonTools {
         //BigDecimal value = new BigDecimal(d);
         //value.setScale(1, RoundingMode.HALF_UP);
         //return value.doubleValue();
+    }
+
+    /***
+     * Adds .5 and rounds the result...this should round up to the full integer anything <.4 
+     * @param d Value to round up to the next full integer
+     * @return rounded integer
+     */
+    public static double RoundFullUp( double d ) {
+        return Math.round(.4 + d);
     }
 
     public static String FormatSpeed( double d ) {

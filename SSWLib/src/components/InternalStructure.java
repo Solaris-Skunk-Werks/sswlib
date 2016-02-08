@@ -39,8 +39,10 @@ public class InternalStructure extends abPlaceable {
     private ifChassis Config;
     private static ifChassis MSBP = new stChassisMSBP(),
                              MSQD = new stChassisMSQD(),
+                             MSTP = new stChassisMSTP(),
                              ISESBP = new stChassisISESBP(),
                              ISESQD = new stChassisISESQD(),
+                             ISESTP = new stChassisISESTP(),
                              ISCOBP = new stChassisISCOBP(),
                              ISCOQD = new stChassisISCOQD(),
                              ISECBP = new stChassisISECBP(),
@@ -83,6 +85,11 @@ public class InternalStructure extends abPlaceable {
         Config = MSQD;
     }
 
+    public void SetMSTP() {
+        // Set this chassis to an Inner Sphere Standard Tripod
+        Config = MSTP;
+    }
+
     public void SetISESBP() {
         // Set this chassis to an Inner Sphere Endo Steel Biped
         Config = ISESBP;
@@ -91,6 +98,11 @@ public class InternalStructure extends abPlaceable {
     public void SetISESQD() {
         // Set this chassis to an Inner Sphere Endo Steel Quad
         Config = ISESQD;
+    }
+
+    public void SetISESTP() {
+        // Set this chassis to an Inner Sphere Endo Steel Tripod
+        Config = ISESTP;
     }
 
     public void SetISCOBP() {
@@ -306,18 +318,7 @@ public class InternalStructure extends abPlaceable {
 
     public ifState[] GetStates( boolean biped ) {
         ifState[] retval = { null, null, null, null, null, null, null, null, null, null };
-        if( biped ) {
-            retval[0] = (ifState) MSBP;
-            retval[1] = (ifState) ISESBP;
-            retval[2] = (ifState) CLESBP;
-            retval[3] = (ifState) ISECBP;
-            retval[4] = (ifState) CLECBP;
-            retval[5] = (ifState) ISCOBP;
-            retval[6] = (ifState) REBP;
-            retval[7] = (ifState) IMBP;
-            retval[8] = (ifState) PBMBP;
-            retval[9] = (ifState) PIMBP;
-        } else {
+        if ( Owner.IsQuad() ) {
             retval[0] = (ifState) MSQD;
             retval[1] = (ifState) ISESQD;
             retval[2] = (ifState) CLESQD;
@@ -328,6 +329,20 @@ public class InternalStructure extends abPlaceable {
             retval[7] = (ifState) IMQD;
             retval[8] = (ifState) PBMQD;
             retval[9] = (ifState) PIMQD;
+        } else if ( Owner.IsTripod() ) {
+            retval[0] = (ifState) MSTP;
+            retval[1] = (ifState) ISESTP;
+        } else {
+            retval[0] = (ifState) MSBP;
+            retval[1] = (ifState) ISESBP;
+            retval[2] = (ifState) CLESBP;
+            retval[3] = (ifState) ISECBP;
+            retval[4] = (ifState) CLECBP;
+            retval[5] = (ifState) ISCOBP;
+            retval[6] = (ifState) REBP;
+            retval[7] = (ifState) IMBP;
+            retval[8] = (ifState) PBMBP;
+            retval[9] = (ifState) PIMBP;
         }
         return retval;
     }

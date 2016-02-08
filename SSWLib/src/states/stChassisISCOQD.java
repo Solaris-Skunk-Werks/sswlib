@@ -134,7 +134,7 @@ public class stChassisISCOQD implements ifChassis, ifState {
     }
 
     public double GetBVMult() {
-        return 1.0f;
+        return 0.5f;
     }
 
     public boolean IncrementPlaced() {

@@ -31,9 +31,9 @@ package states;
 import components.AvailableCode;
 import components.MechModifier;
 
-public class stChassisISCOBP implements ifChassis, ifState {
-    // An Inner Sphere Composite Biped chassis
-    private final static double[] Masses = { 0.5, 1.0, 1.0, 1.5, 1.5, 2.0, 2.0, 2.5, 2.5, 3.0, 3.0, 3.5, 3.5, 4.0, 4.0, 4.5, 4.5, 5.0, 5.0 };
+public class stChassisMSTP implements ifChassis, ifState {
+    // An Inner Sphere Standard Military Tripod chassis
+    public final static double[] Masses = { 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 10.5, 11.0 };
     private final static int[][] IntPoints = {
         { 4, 3, 1, 2 },
         { 5, 4, 2, 3 },
@@ -56,11 +56,14 @@ public class stChassisISCOBP implements ifChassis, ifState {
         { 31, 21, 17, 21 } };
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
 
-    public stChassisISCOBP() {
-        AC.SetISCodes( 'E', 'X', 'X', 'E' );
-        AC.SetISDates( 3056, 3061, true, 3061, 0, 0, false, false );
-        AC.SetISFactions( "FC", "FS", "", "" );
-        AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+    public stChassisMSTP() {
+        AC.SetISCodes( 'E', 'F', 'X', 'X', 'F' );
+        AC.SetISDates( 0, 0, false, 2602, 0, 0, false, false );
+        AC.SetISFactions( "", "", "TH", "" );
+        /*AC.SetCLCodes( 'D', 'X', 'B', 'B' );
+        AC.SetCLDates( 0, 0, false, 2443, 0, 0, false, false );
+        AC.SetCLFactions( "", "", "TH", "" );*/
+        AC.SetRulesLevels( AvailableCode.RULES_ADVANCED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 
     public boolean HasCounterpart() {
@@ -72,35 +75,31 @@ public class stChassisISCOBP implements ifChassis, ifState {
     }
     
     public String ActualName() {
-        return "Composite Structure (Biped)";
+        return "Military Standard Structure (Tripod)";
     }
 
     public String CritName() {
-        return "Composite Structure";
+        return "Standard";
     }
 
     public String LookupName() {
-        return "Composite Structure";
+        return "Standard Structure";
     }
 
     public String ChatName() {
-        return "Comp";
+        return "Std Tripod";
     }
 
     public String MegaMekName( boolean UseRear ) {
-        return "Composite";
+        return "Standard";
     }
 
     public String BookReference() {
-        return "Tactical Operations";
+        return "Field Manual 3145";
     }
 
     public double GetStrucTon( int Tonnage, boolean fractional ) {
-        if( fractional ) {
-            return Math.ceil( stChassisMSBP.Masses[GetIndex(Tonnage)] * 500 ) * 0.001;
-        } else {
-            return Masses[GetIndex(Tonnage)];
-        }
+        return Masses[GetIndex(Tonnage)];
     }
     
     public boolean IsQuad() {
@@ -121,21 +120,22 @@ public class stChassisISCOBP implements ifChassis, ifState {
     }
     
     public int GetArmPoints( int Tonnage ) {
-        return IntPoints[GetIndex(Tonnage)][2];
+        // Quads have legs for "arms" so we return the leg points
+        return IntPoints[GetIndex(Tonnage)][3];
     }
 
     public int GetLegPoints( int Tonnage ) {
         return IntPoints[GetIndex(Tonnage)][3];
     }
-    
+
     public double GetCost( int Tonnage ) {
-        return 1600 * Tonnage;
+        return (400 * Tonnage) * 1.2;
     }
-    
+
     public double GetBVMult() {
-        return 0.5f;
+        return 1.0f;
     }
-    
+
     public boolean IncrementPlaced() {
         return false;
     }
@@ -159,7 +159,7 @@ public class stChassisISCOBP implements ifChassis, ifState {
     // toString
     @Override
     public String toString() {
-        return "Composite";
+        return "Standard";
     }
 
     public int GetCVPoints(int Tonnage) {

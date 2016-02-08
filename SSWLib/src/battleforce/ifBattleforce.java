@@ -45,4 +45,5 @@ public interface ifBattleforce {
     public String GetBFConversionStr( );
     public int GetBFPoints();
     public int GetAmmoCount( int ammoIndex );
+    public int GetWeaponCount( int ammoIndex );
 }

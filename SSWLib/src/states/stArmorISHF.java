@@ -152,4 +152,8 @@ public class stArmorISHF implements ifArmor, ifState {
     public AvailableCode GetAvailability() {
         return AC;
     }
+
+    public boolean AllowHarJel(){
+        return true;
+    }
 }

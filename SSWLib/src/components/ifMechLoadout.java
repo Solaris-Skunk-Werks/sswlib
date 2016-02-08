@@ -37,6 +37,7 @@ public interface ifMechLoadout {
     public String GetSource();
     public Mech GetMech();
     public boolean IsQuad();
+    public boolean IsTripod();
     public abPlaceable GetNoItem();
     public JumpJetFactory GetJumpJets();
     public HeatSinkFactory GetHeatSinks();
@@ -79,6 +80,7 @@ public interface ifMechLoadout {
     public void AddToRA( abPlaceable p ) throws Exception;
     public void AddToLL( abPlaceable p ) throws Exception;
     public void AddToRL( abPlaceable p ) throws Exception;
+    public void AddToCL( abPlaceable p ) throws Exception;
     public void AddToHD( abPlaceable p, int SIndex ) throws Exception;
     public void AddToCT( abPlaceable p, int SIndex ) throws Exception;
     public void AddToRT( abPlaceable p, int SIndex ) throws Exception;
@@ -87,6 +89,7 @@ public interface ifMechLoadout {
     public void AddToLA( abPlaceable p, int SIndex ) throws Exception;
     public void AddToRL( abPlaceable p, int SIndex ) throws Exception;
     public void AddToLL( abPlaceable p, int SIndex ) throws Exception;
+    public void AddToCL( abPlaceable p, int SIndex ) throws Exception;
     public abPlaceable[] GetHDCrits();
     public abPlaceable[] GetCTCrits();
     public abPlaceable[] GetRTCrits();
@@ -95,6 +98,7 @@ public interface ifMechLoadout {
     public abPlaceable[] GetLACrits();
     public abPlaceable[] GetRLCrits();
     public abPlaceable[] GetLLCrits();
+    public abPlaceable[] GetCLCrits();
     public abPlaceable[] GetCrits( int Loc );
     public int Find( abPlaceable p );
     public LocationIndex FindIndex( abPlaceable p );
@@ -133,6 +137,7 @@ public interface ifMechLoadout {
     public void SetRACrits( abPlaceable[] c );
     public void SetLLCrits( abPlaceable[] c );
     public void SetRLCrits( abPlaceable[] c );
+    public void SetCLCrits( abPlaceable[] c );
     public void SetNonCore( ArrayList v );
     public void SetTCList( ArrayList v );
     public void SetEquipment( ArrayList v );
@@ -183,6 +188,10 @@ public interface ifMechLoadout {
     public void SetRLCASEII( CASEII c );
     public boolean HasRLCASEII();
     public CASEII GetRLCaseII();
+    public void SetCLCASEII( boolean Add, int index, boolean clan ) throws Exception;
+    public void SetCLCASEII( CASEII c );
+    public boolean HasCLCASEII();
+    public CASEII GetCLCaseII();
     public void SetFCSArtemisIV( boolean b ) throws Exception;
     public void SetFCSArtemisV( boolean b ) throws Exception;
     public void SetFCSApollo( boolean b ) throws Exception;

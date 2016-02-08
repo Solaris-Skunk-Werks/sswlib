@@ -70,6 +70,7 @@ public class Mech implements ifUnit, ifBattleforce {
         1.3, 1.3, 1.3, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.5,
         1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.6, 1.6, 1.6, 1.6, 1.6, 1.6 };
     private boolean Quad,
+                    Tripod,
                     Omnimech,
                     Primitive = false,
                     IndustrialMech = false,
@@ -1220,6 +1221,197 @@ public class Mech implements ifUnit, ifBattleforce {
         return Quad;
     }
 
+    public boolean IsTripod() {
+        return Tripod;
+    }
+    
+    public void SetTripod() {
+        // this performs all the neccesary actions to change this mech into a quad
+        // see if we have any CASE systems installed first.
+        boolean ctcase = HasCTCase();
+        boolean ltcase = HasLTCase();
+        boolean rtcase = HasRTCase();
+        boolean hdcase2 = CurLoadout.HasHDCASEII();
+        boolean hdcase2clan = CurLoadout.GetHDCaseII().IsClan();
+        boolean ctcase2 = CurLoadout.HasCTCASEII();
+        boolean ctcase2clan = CurLoadout.GetCTCaseII().IsClan();
+        boolean ltcase2 = CurLoadout.HasLTCASEII();
+        boolean ltcase2clan = CurLoadout.GetLTCaseII().IsClan();
+        boolean rtcase2 = CurLoadout.HasRTCASEII();
+        boolean rtcase2clan = CurLoadout.GetRTCaseII().IsClan();
+        boolean lacase2 = CurLoadout.HasLACASEII();
+        boolean lacase2clan = CurLoadout.GetLACaseII().IsClan();
+        boolean racase2 = CurLoadout.HasRACASEII();
+        boolean racase2clan = CurLoadout.GetRACaseII().IsClan();
+        boolean llcase2 = CurLoadout.HasLLCASEII();
+        boolean llcase2clan = CurLoadout.GetLLCaseII().IsClan();
+        boolean rlcase2 = CurLoadout.HasRLCASEII();
+        boolean rlcase2clan = CurLoadout.GetRLCaseII().IsClan();
+        boolean useClanCase = CurLoadout.IsUsingClanCASE();
+        String Jumps = GetJumpJets().LookupName();
+        String HeatSinks = GetHeatSinks().LookupName();
+
+        // remember how many heat sinks and jump jets we had
+        int NumJJ = GetJumpJets().GetNumJJ();
+        int NumHS = GetHeatSinks().GetNumHS() - CurEngine.FreeHeatSinks();
+
+        // Get a new Quad Loadout and load up the queue
+        ifMechLoadout l = new TripodLoadout( Constants.BASELOADOUT_NAME, this );
+        l.SetTechBase( MainLoadout.GetTechBase() );
+        l.SetRulesLevel( MainLoadout.GetRulesLevel() );
+        l.SetEra( MainLoadout.GetEra() );
+        l.SetProductionEra( MainLoadout.GetProductionEra() );
+        CurLoadout.Transfer( l );
+        CurLoadout.ClearLoadout();
+
+        // Now set the new main loadout and current loadout
+        MainLoadout = l;
+        CurLoadout = l;
+        CurLoadout.SetBaseLoadout( MainLoadout );
+
+        // next, change the internal structure to a default standard quad
+        if( IndustrialMech ) {
+            CurIntStruc.SetIMQD();
+        } else {
+            CurIntStruc.SetMSQD();
+        }
+
+        // set the mech to a quad
+        Tripod = true;
+
+        // remove the AES system entirely
+        CurLAAES = FLLAES;
+        CurRAAES = FRLAES;
+        HasRAAES = false;
+        HasLAAES = false;
+        HasLegAES = false;
+
+        // remove the  any existing  physical weapons and industrial equipment
+        ArrayList v = CurLoadout.GetNonCore();
+        for( int i = v.size() - 1; i >= 0; i-- ) {
+            abPlaceable p = (abPlaceable) v.get( i );
+            if( p instanceof PhysicalWeapon ) {
+                CurLoadout.Remove(p);
+            } else if( p instanceof Equipment ) {
+                if( ! ((Equipment) p).Validate( this ) ) {
+                    CurLoadout.Remove( p );
+                }
+            }
+        }
+
+        // replace everything into the new loadout
+        CurGyro.Place( CurLoadout );
+        CurEngine.Place( CurLoadout );
+        CurIntStruc.Place( CurLoadout );
+        CurCockpit.Place( CurLoadout );
+        GetActuators().PlaceActuators();
+        CurPhysEnhance.Place( CurLoadout );
+        // reset the correct number of heat sinks and jump jets
+        try {
+            ifVisitor ResetV = Lookup( Jumps );
+            Visit( ResetV );
+            for( int i = 0; i < NumJJ; i++ ) {
+                GetJumpJets().IncrementNumJJ();
+            }
+            ResetV = Lookup( HeatSinks );
+            Visit( ResetV );
+            for( int i = 0; i < NumHS; i++ ) {
+                GetHeatSinks().IncrementNumHS();
+            }
+        } catch( Exception e ) {
+            // we shouldn't get an error from these visitors, but log it anyway
+            System.err.println( e.getMessage() );
+            e.printStackTrace();
+        }
+
+        // it is safe to recalc here because we have the correct number
+        GetHeatSinks().ReCalculate();
+        GetJumpJets().ReCalculate();
+        CurArmor.Recalculate();
+        CurArmor.ResetPlaced();
+        CurArmor.Place( CurLoadout );
+
+        // attempt to replace any CASE systems that went missing
+        try {
+            if( ctcase ) {
+                AddCTCase();
+            }
+            if( ltcase ) {
+                AddLTCase();
+            }
+            if( rtcase ) {
+                AddRTCase();
+            }
+            if( hdcase2 ) {
+                CurLoadout.SetHDCASEII( true, -1, hdcase2clan );
+            }
+            if( ctcase2 ) {
+                CurLoadout.SetCTCASEII( true, -1, ctcase2clan );
+            }
+            if( ltcase2 ) {
+                CurLoadout.SetLTCASEII( true, -1, ltcase2clan );
+            }
+            if( rtcase2 ) {
+                CurLoadout.SetRTCASEII( true, -1, rtcase2clan );
+            }
+            if( lacase2 ) {
+                CurLoadout.SetLACASEII( true, -1, lacase2clan );
+            }
+            if( racase2 ) {
+                CurLoadout.SetRACASEII( true, -1, racase2clan );
+            }
+            if( llcase2 ) {
+                CurLoadout.SetLLCASEII( true, -1, llcase2clan );
+            }
+            if( rlcase2 ) {
+                CurLoadout.SetRLCASEII( true, -1, rlcase2clan );
+            }
+
+            if (useClanCase){
+                CurLoadout.SetClanCASE(false);
+                CurLoadout.SetClanCASE(true);
+            }
+            // replace fixed-slot equipment
+            if(HasBlueShield){
+                SetBlueShield(false);
+                SetBlueShield(true);
+            }
+            if(HasChameleon){
+                SetChameleon(false);
+                SetChameleon(true);
+            }
+            if(HasEjectionSeat){
+                SetEjectionSeat(false);
+                SetEjectionSeat(true);
+            }
+            if(HasEnviroSealing){
+                SetEnviroSealing(false);
+                SetEnviroSealing(true);
+            }
+            if(HasNullSig){
+                SetNullSig(false);
+                SetNullSig(true);
+            }
+            if(HasTracks){
+                SetTracks(false);
+                SetTracks(true);
+            }
+            if(HasVoidSig){
+                SetVoidSig(false);
+                SetVoidSig(true);
+            }
+            if(HasPartialWing) {
+                SetPartialWing( false );
+                SetPartialWing( true );
+            }
+        } catch( Exception e ) {
+            // unhandled at this time, print an error out
+            System.err.println( "System not reinstalled:\n" + e.getMessage() );
+        }
+
+        SetChanged( true );
+    }
+    
     public void SetIndustrialmech() {
         // do all the neccesary things to change over to an IndustrialMech
         IndustrialMech = true;
@@ -2654,6 +2846,9 @@ public class Mech implements ifUnit, ifBattleforce {
 
         for( int i = 0; i < v.size(); i++ ) {
             if( ! ( v.get( i ) instanceof ifWeapon ) ) {
+                if ( v.get(i) instanceof Equipment )
+                    if ( ((Equipment)v.get(i)).LookupName().equals( "Radical Heat Sink" )) 
+                        result += CommonTools.RoundFullUp(GetHeatSinks().GetNumHS() * 1.4);
                 result += ((abPlaceable) v.get( i )).GetOffensiveBV();
             }
         }
@@ -2999,6 +3194,11 @@ public class Mech implements ifUnit, ifBattleforce {
                 if (w instanceof RangedWeapon)
                 {
                     if (((RangedWeapon)w).GetAmmoIndex() == ammoIndex )
+                        retval++;
+                }
+                if (w instanceof MGArray)
+                {
+                    if (((MGArray)w).GetAmmoIndex() == ammoIndex )
                         retval++;
                 }
             }

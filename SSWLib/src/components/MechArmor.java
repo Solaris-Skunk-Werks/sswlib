@@ -42,8 +42,8 @@ public class MechArmor  extends abPlaceable {
     // Declares
     private Mech Owner;
     private int Placed = 0;
-    private int[] ArmorPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    private int[] MaxArmor = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    private int[] ArmorPoints = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    private int[] MaxArmor = { 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, 0 };
     private ifArmor Industrial = new stArmorIN(),
                     Standard = new stArmorMS(),
                     ISFF = new stArmorISFF(),
@@ -2562,6 +2562,11 @@ public class MechArmor  extends abPlaceable {
 
     public int GetRLBAR() {
         return RLConfig.GetBAR();
+    }
+
+    public boolean AllowHarJel()
+    {
+        return Config.AllowHarJel();
     }
 
     @Override

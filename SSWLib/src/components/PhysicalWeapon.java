@@ -412,7 +412,7 @@ public class PhysicalWeapon extends abPlaceable implements ifWeapon {
 
     public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES ) {
         if( UseAES ) {
-            return GetOffensiveBV() * 1.5;
+            return GetOffensiveBV() * 1.25;
         } else {
             return GetOffensiveBV();
         }

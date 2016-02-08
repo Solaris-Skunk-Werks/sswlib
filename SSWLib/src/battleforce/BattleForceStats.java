@@ -38,7 +38,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 public class BattleForceStats {
-    private String Element = "",
+    private String  BFType = "BM",
+                    Element = "",
                     Name = "",
                     Model = "",
                     MV = "",
@@ -76,6 +77,7 @@ public class BattleForceStats {
     }
 
     public BattleForceStats( Mech m ) {
+        BFType = "BM";
         Element = m.GetFullName();
         Name = m.GetName();
         Model = m.GetModel();
@@ -108,6 +110,7 @@ public class BattleForceStats {
     }
 
     public BattleForceStats(CombatVehicle m) {
+        BFType = "CV";
         Element = m.GetFullName();
         Name = m.GetName();
         Model = m.GetModel();
@@ -633,5 +636,13 @@ public class BattleForceStats {
 
     public void setLogo(String Logo) {
         this.Logo = Logo;
+    }
+    
+    public String getBFType() {
+        return BFType;
+    }
+    
+    public void setBFType(String BFType) {
+        this.BFType = BFType;
     }
 }

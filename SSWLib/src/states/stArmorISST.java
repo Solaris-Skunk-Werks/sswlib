@@ -269,4 +269,8 @@ public class stArmorISST implements ifArmor, ifState {
     public AvailableCode GetAvailability() {
         return AC;
     }
+
+    public boolean AllowHarJel(){
+        return false;
+    }
 }

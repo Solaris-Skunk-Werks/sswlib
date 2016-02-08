@@ -233,7 +233,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                     chkBFBacks.setEnabled(true);
                     chkUseColor.setEnabled(true);
                     break;
-                case 2:
+                case 3:
                     chkBFOnePerPage.setSelected(true);
                     chkBFOnePerPage.setEnabled(false);
                     chkBFBacks.setEnabled(false);
@@ -387,6 +387,17 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                         break;
 
                     case 2:
+                        for ( BattleForce f : scenario.toBattleForceBySize(MaxUnits) ) {
+                            ASHorizontalCardPrinter hqs = new ASHorizontalCardPrinter(f, imageTracker);
+                            hqs.setPrintLogo(chkLogo.isSelected());
+                            hqs.setPrintMechs(chkImage.isSelected());
+                            hqs.setPrintWarriorData(chkPrintGroup.isSelected());
+                            if ( chkBFTerrainMV.isSelected() ) hqs.setTerrain(true);
+                            printer.Append( pageSize, hqs);
+                        }
+                        break;
+                            
+                    case 3:
                         imageTracker.preLoadBattleForceImages();
                         for ( BattleForce f : scenario.toBattleForceByGroup( 6 ) ) {
                             BattleforceCardPrinter bf = new BattleforceCardPrinter(f, imageTracker);
@@ -398,7 +409,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                         }
                         break;
 
-                    case 3:
+                    case 4:
                         if ( chkBFBacks.isSelected() ) MaxUnits = 4;
                         for ( BattleForce f : scenario.toBattleForceBySize(MaxUnits) ) {
                             QSVerticalCardPrinter qs = new QSVerticalCardPrinter(f, imageTracker);
@@ -414,7 +425,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                         }
                         break;
 
-                    case 4:
+                    case 5:
                         imageTracker.preLoadBattleForceImages();
                         for ( BattleForce f : scenario.toBattleForceByGroup( 6 ) ) {
                             QSCardSheetPrinter bf = new QSCardSheetPrinter(f, imageTracker);
@@ -446,6 +457,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                                         pm.setPrintLogo(chkLogo.isSelected());
                                         pm.setAmmoGeneric(chkGenericAmmo.isSelected());
                                         pm.setChartImageOption(cmbChartImage.getSelectedItem().toString());
+                                        pm.setPrintPilot(chkPrintGroup.isSelected());
                                         if ( cmbPaperSize.getSelectedIndex() == 2 ) pm.setA4();
                                         if ( chkPrintGroup.isSelected() ) pm.setGroupName( g.getName() + " [" + g.getForce().ForceName + "]" );
                                         if ( chkUseHexConversion.isSelected() ) pm.SetMiniConversion(cmbHexConvFactor.getSelectedIndex()+1);
@@ -464,6 +476,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                                         pv.setPrintMech(chkImage.isSelected());
                                         pv.setPrintLogo(chkLogo.isSelected());
                                         pv.setAmmoGeneric(chkGenericAmmo.isSelected());
+                                        pv.setPrintPilot(chkPrintGroup.isSelected());
                                         if ( cmbPaperSize.getSelectedIndex() == 2 ) pv.setA4();
                                         if ( chkPrintGroup.isSelected() ) pv.setGroupName( g.getName() + " [" + g.getForce().ForceName + "]" );
                                         if ( chkUseHexConversion.isSelected() ) pv.SetMiniConversion(cmbHexConvFactor.getSelectedIndex()+1);
@@ -604,7 +617,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             }
         });
 
-        chkPrintBattleforce.setText("BattleForce Sheets");
+        chkPrintBattleforce.setText("Alpha Strike Sheets");
         chkPrintBattleforce.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 itemChanged(evt);
@@ -867,7 +880,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
             }
         });
 
-        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "*Strategic Ops", "*QuickStrike Cards", "BattleForce Sheet", "Vertical Cards", "QuickStrike Card Sheet" }));
+        cmbBFSheetType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "*Strategic Ops", "*QuickStrike Cards", "*Alpha Strike Cards", "BattleForce Sheet", "Vertical Cards", "Alpha Strike Card Sheet" }));
         cmbBFSheetType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 itemChanged(evt);
@@ -897,7 +910,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                             .addComponent(chkBFBacks)
                             .addComponent(cmbBFSheetType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel3))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -917,7 +930,7 @@ public class dlgPreview extends javax.swing.JFrame implements ActionListener {
                 .addContainerGap(78, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("BattleForce", jPanel6);
+        jTabbedPane1.addTab("Alpha Strike", jPanel6);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

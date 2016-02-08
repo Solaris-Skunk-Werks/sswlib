@@ -28,18 +28,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
-import common.CommonTools;
 import java.util.ArrayList;
+import common.CommonTools;
+import visitors.VFCSApolloLoader;
 import visitors.VFCSArtemisIVLoader;
 import visitors.VFCSArtemisVLoader;
-import visitors.VFCSApolloLoader;
 
-public class QuadLoadout implements ifMechLoadout, ifLoadout {
+public class TripodLoadout implements ifMechLoadout, ifLoadout {
     // Loadouts provide critical locations for all of a mech's equipment.
     // Each mech will have a basic loadout for it's chassis, equipment, and
     // extras.  Omnimechs may have several loadouts.  We're using arrays because
     // space inside a mech is fixed.
-    
+
     // Declares
     private String Name,
                    Source = "";
@@ -63,7 +63,8 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                    LACaseII = new CASEII( false ),
                    RACaseII = new CASEII( false ),
                    LLCaseII = new CASEII( false ),
-                   RLCaseII = new CASEII( false );
+                   RLCaseII = new CASEII( false ),
+                   CLCaseII = new CASEII( false );
     private MechTurret HDTurret = new MechTurret( this ),
                        LTTurret = new MechTurret( this ),
                        RTTurret = new MechTurret( this );
@@ -81,11 +82,11 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
     private PowerAmplifier PowerAmp = new PowerAmplifier( this );
     private Supercharger SCharger = new Supercharger( this );
     private BoobyTrap BTrap = new BoobyTrap( this );
-    private int RulesLevel = AvailableCode.RULES_TOURNAMENT,
+    private int RulesLevel = AvailableCode.RULES_ADVANCED,
                 TechBase = AvailableCode.TECH_INNER_SPHERE,
-                Era = AvailableCode.ERA_STAR_LEAGUE,
-                ProductionEra = AvailableCode.PRODUCTION_ERA_AGE_OF_WAR,
-                Year = 2750;
+                Era = AvailableCode.ERA_DARK_AGES,
+                ProductionEra = AvailableCode.PRODUCTION_ERA_DARK_AGES,
+                Year = 2602;
 
     // Fill up and initialize the critical space arrays.  This is where all the
     // stuff in the loadout will get placed.
@@ -98,16 +99,18 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
     private abPlaceable LTCrits[] = { NoItem, NoItem, NoItem, NoItem, NoItem,
         NoItem, NoItem, NoItem, NoItem, NoItem, NoItem, NoItem };
     private abPlaceable RACrits[] = { NoItem, NoItem, NoItem, NoItem, NoItem,
-        NoItem };
+        NoItem, NoItem, NoItem, NoItem, NoItem, NoItem, NoItem };
     private abPlaceable LACrits[] = { NoItem, NoItem, NoItem, NoItem, NoItem,
-        NoItem };
+        NoItem, NoItem, NoItem, NoItem, NoItem, NoItem, NoItem };
     private abPlaceable RLCrits[] = { NoItem, NoItem, NoItem, NoItem, NoItem,
+        NoItem };
+   private abPlaceable CLCrits[] = { NoItem, NoItem, NoItem, NoItem, NoItem,
         NoItem };
     private abPlaceable LLCrits[] = { NoItem, NoItem, NoItem, NoItem, NoItem,
         NoItem };
 
     // Constructor
-    public QuadLoadout( String name, Mech m ) {
+    public TripodLoadout( String name, Mech m ) {
         // provided to avoid confusion
         Name = name;
         Owner = m;
@@ -116,7 +119,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
         Actuators = new ActuatorSet( this, Owner );
     }
 
-    public QuadLoadout( String name, Mech m, int BaseNumHS, HeatSinkFactory hs, JumpJetFactory jump ) {
+    public TripodLoadout( String name, Mech m, int BaseNumHS, HeatSinkFactory hs, JumpJetFactory jump ) {
         // provided for cloning purposes
         Name = name;
         Owner = m;
@@ -149,11 +152,11 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
     }
 
     public boolean IsQuad() {
-        return true;
+        return false;
     }
 
     public boolean IsTripod(){
-        return false;
+        return true;
     }
     
     public abPlaceable GetNoItem() {
@@ -224,7 +227,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
         ProductionEra = era;
         return true;
     }
-    
+
     public int GetYear() {
         return Year;
     }
@@ -335,6 +338,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                         if( e.IsEmpty() ) {
                             Queue.remove( e );
                         }
+                        break;
                     }
                 }
             }
@@ -419,6 +423,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             RACrits[i] = NoItem;
             LACrits[i] = NoItem;
             RLCrits[i] = NoItem;
+            CLCrits[i] = NoItem;
             LLCrits[i] = NoItem;
         }
 
@@ -426,13 +431,13 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             CTCrits[i] = NoItem;
             RTCrits[i] = NoItem;
             LTCrits[i] = NoItem;
+            RACrits[i] = NoItem;
+            LACrits[i] = NoItem;
         }
 
         for( int i = NonCore.size() - 1; i >= 0; i-- ) {
             if( ! Queue.contains( NonCore.get( i ) ) ) {
                 Queue.add( NonCore.get(i) );
-            } else {
-                NonCore.remove(i);
             }
         }
 
@@ -449,6 +454,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             RACrits[i] = NoItem;
             LACrits[i] = NoItem;
             RLCrits[i] = NoItem;
+            CLCrits[i] = NoItem;
             LLCrits[i] = NoItem;
         }
 
@@ -456,6 +462,8 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             CTCrits[i] = NoItem;
             RTCrits[i] = NoItem;
             LTCrits[i] = NoItem;
+            RACrits[i] = NoItem;
+            LACrits[i] = NoItem;
         }
 
         Queue.clear();
@@ -486,7 +494,6 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             UnallocateAll( HDCrits[i], false );
         }
     }
-    
     public void SafeMassUnallocate() {
         // this unallocates all non-core and movable items from the loadout
         for( int i = 0; i < 6; i++ ) {
@@ -511,6 +518,9 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             if( RLCrits[i] != NoItem &! RLCrits[i].LocationLocked() ) {
                 UnallocateAll( RLCrits[i], false );
             }
+            if( CLCrits[i] != NoItem &! CLCrits[i].LocationLocked() ) {
+                UnallocateAll( CLCrits[i], false );
+            }
             if( LLCrits[i] != NoItem &! LLCrits[i].LocationLocked() ) {
                 UnallocateAll( LLCrits[i], false );
             }
@@ -526,6 +536,12 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             }
             if( LTCrits[i] != NoItem &! LTCrits[i].LocationLocked() ) {
                 UnallocateAll( LTCrits[i], false );
+            }
+            if( RACrits[i] != NoItem &! RACrits[i].LocationLocked() ) {
+                UnallocateAll( RACrits[i], false );
+            }
+            if( LACrits[i] != NoItem &! LACrits[i].LocationLocked() ) {
+                UnallocateAll( LACrits[i], false );
             }
         }
 
@@ -566,6 +582,9 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             case LocationIndex.MECH_LOC_LL:
                 AddToLL( p, SIndex );
                 break;
+            case LocationIndex.MECH_LOC_CL:
+                AddToLL( p, SIndex );
+                break;
             case LocationIndex.MECH_LOC_RL:
                 AddToRL( p, SIndex );
                 break;
@@ -576,8 +595,8 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
 
     public void AddToHD( abPlaceable p ) throws Exception {
         // adds the specified item into the next available slot in the head
-        for( int i = 0; i < CTCrits.length; i++ ) {
-            if( HDCrits[i] == NoItem ) {
+        for( int i = 0; i < HDCrits.length; i++ ) {
+            if ( HDCrits[i] == NoItem) {
                 AddToHD( p, i );
                 return;
             }
@@ -610,7 +629,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 }
             }
         }
-        throw new Exception("Unable to add item to Center Torso");
+        throw new Exception("Unable to add item.");
     }
 
     public void AddToLT( abPlaceable p ) throws Exception {
@@ -727,6 +746,26 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
         }
     }
 
+    
+    public void AddToCL( abPlaceable p ) throws Exception {
+        // adds the specified item into the next available slot in the right leg
+        if( p.Contiguous() ) {
+            for( int i = 0; i < CLCrits.length; i++ ) {
+                if( CLCrits[i] == NoItem ) {
+                    AddToRL( p, i );
+                    break;
+                }
+            }
+        } else {
+            for( int i = CLCrits.length - 1; i >= 0; i-- ) {
+                if( CLCrits[i] == NoItem ) {
+                    AddToRL( p, i );
+                    break;
+                }
+            }
+        }
+    }
+    
     public void AddToHD( abPlaceable p, int SIndex ) throws Exception {
         // Can we allocate the item here?
         if( ! p.CanAllocHD() ) {
@@ -748,6 +787,15 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                     }
                 }
             }
+        } else {
+           if( p instanceof PhysicalWeapon ) {
+           // Ensure that no other physical weapons are mounted in this location
+                for( int i = 0; i < NonCore.size(); i++ ){
+                    if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_HD)
+                        throw new Exception( p.CritName() +
+                            " cannot be allocated to the head because\nthe head already mounts a physical weapon." );
+                }
+           }
         }
         Allocate( p, SIndex, HDCrits );
     }
@@ -773,6 +821,15 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                     }
                 }
             }
+        } else {
+           if( p instanceof PhysicalWeapon ) {
+           // Ensure that no other physical weapons are mounted in this location
+                for( int i = 0; i < NonCore.size(); i++ ){
+                    if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_CT)
+                        throw new Exception( p.CritName() +
+                            " cannot be allocated to the center torso because\nthe torso already mounts a physical weapon." );
+                }
+           }
         }
         Allocate( p, SIndex, CTCrits );
     }
@@ -793,13 +850,11 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 }
             }
         } else if( p instanceof PhysicalWeapon ) {
-                // Ensure that no other physical weapons of the same class are mounted in this location,
+           // Ensure that no other physical weapons are mounted in this location
                 for( int i = 0; i < NonCore.size(); i++ ){
-                    if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RT) {
-                        if ( ((PhysicalWeapon)p).GetPWClass() == ((PhysicalWeapon)NonCore.get( i )).GetPWClass() )
-                            throw new Exception( p.CritName() +
-                                " cannot be allocated to the right torso because\nthe torso already mounts a physical weapon of the same class." );
-                }
+                    if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RT)
+                        throw new Exception( p.CritName() +
+                            " cannot be allocated to the right torso because\nthe torso already mounts a physical weapon." );
             }
         }
         Allocate( p, SIndex, RTCrits );
@@ -821,13 +876,11 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 }
             }
         } else if( p instanceof PhysicalWeapon ) {
-                // Ensure that no other physical weapons of the same class are mounted in this location,
-                for( int i = 0; i < NonCore.size(); i++ ){
-                    if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LT) {
-                        if ( ((PhysicalWeapon)p).GetPWClass() == ((PhysicalWeapon)NonCore.get( i )).GetPWClass() )
-                            throw new Exception( p.CritName() +
-                                " cannot be allocated to the left torso because\nthe torso already mounts a physical weapon of the same class." );
-                }
+            // Ensure that no other physical weapons are mounted in this location
+            for( int i = 0; i < NonCore.size(); i++ ){
+                if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LT)
+                    throw new Exception( p.CritName() +
+                        " cannot be allocated to the left torso because\nthe torso already mounts a physical weapon." );
             }
         }
         Allocate( p, SIndex, LTCrits );
@@ -835,80 +888,212 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
 
     public void AddToRA( abPlaceable p, int SIndex ) throws Exception {
         // Can we allocate the item here?
-        if( ! p.CanAllocLegs() ) {
+        if( ! p.CanAllocArms() ) {
             throw new Exception( p.CritName() +
-                " cannot be allocated to the right front leg." );
+                " cannot be allocated to the right arm." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
-            throw new Exception( p.CritName() + " cannot be allocated to the right front leg\nbecause the right front leg does not contain the cockpit." );
+            throw new Exception( p.CritName() + " cannot be allocated to the right arm\nbecause the right arm does not contain the cockpit." );
         } else if( p instanceof ModularArmor ) {
             for( int i = 0; i < NonCore.size(); i++ ) {
                 if ( NonCore.get( i ) instanceof ModularArmor ) {
                     if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RA ) {
-                        throw new Exception( p.CritName() + " cannot be allocated to the right front leg\nbecause only one may be mounted in any location." );
+                        throw new Exception( p.CritName() + " cannot be allocated to the right arm\nbecause only one may be mounted in any location." );
                     }
+                }
+            }
+        } else if( p instanceof PhysicalWeapon ) {
+            // Ensure that no other physical weapons of the same class are mounted in this location,
+            for( int i = 0; i < NonCore.size(); i++ ){
+                if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RA) {
+                    if ( ((PhysicalWeapon)p).GetPWClass() == ((PhysicalWeapon)NonCore.get( i )).GetPWClass() )
+                        throw new Exception( p.CritName() +
+                            " cannot be allocated to the right arm because\nthe arm already mounts a physical weapon of the same class." );
+                }
+            }
+
+            // Check for proper actuators
+            if ( ((PhysicalWeapon)p).RequiresHand() && ! ( RACrits[3] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the right arm because\nthe arm does not have a hand actuator." );
+            }
+            if ( ((PhysicalWeapon)p).RequiresLowerArm() && ! ( RACrits[2] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the right arm because\nthe arm does not have a lower arm actuator." );
+            }
+            if ( ((PhysicalWeapon)p).ReplacesHand() && ( RACrits[3] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the right arm because\nthe arm contains a hand actuator." );
+            }
+            if ( ((PhysicalWeapon)p).ReplacesLowerArm() && ( RACrits[2] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the right arm because\nthe arm contains a lower arm actuator." );
+            }
+        } else if( p instanceof ifWeapon ) {
+            if( ((ifWeapon) p).OmniRestrictActuators() && Owner.IsOmnimech() ) {
+                if( ( RACrits[2] instanceof Actuator ) || ( RACrits[3] instanceof Actuator ) ) {
+                    // check for physical weapons before removing the actuators
+                    // otherwise throw an exception
+                    for( int i = 0; i < NonCore.size(); i++ ) {
+                        if( NonCore.get( i ) instanceof PhysicalWeapon ) {
+                            if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RA ) {
+                                throw new Exception( p.CritName() +
+                                    " cannot be allocated to the right arm\n" +
+                                    "because the arm contains lower arm or hand actuators." );
+                            }
+                        }
+                    }
+                    Actuators.RemoveRightLowerArm();
                 }
             }
         }
         Allocate( p, SIndex, RACrits );
     }
-    
+
     public void AddToLA( abPlaceable p, int SIndex ) throws Exception {
         // Can we allocate the item here?
-        if( ! p.CanAllocLegs() ) {
+        if( ! p.CanAllocArms() ) {
             throw new Exception( p.CritName() +
-                " cannot be allocated to the left front leg." );
+                " cannot be allocated to the left arm." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
-            throw new Exception( p.CritName() + " cannot be allocated to the left front leg\nbecause the left front leg does not contain the cockpit." );
+            throw new Exception( p.CritName() + " cannot be allocated to the left arm\nbecause the left arm does not contain the cockpit." );
         } else if( p instanceof ModularArmor ) {
             for( int i = 0; i < NonCore.size(); i++ ) {
                 if ( NonCore.get( i ) instanceof ModularArmor ) {
                     if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LA ) {
-                        throw new Exception( p.CritName() + " cannot be allocated to the left front leg\nbecause only one may be mounted in any location." );
+                        throw new Exception( p.CritName() + " cannot be allocated to the left arm\nbecause only one may be mounted in any location." );
                     }
+                }
+            }
+        } else if( p instanceof PhysicalWeapon ) {
+            // Ensure that no other physical weapons of the same class are mounted in this location,
+            for( int i = 0; i < NonCore.size(); i++ ){
+                if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LA) {
+                    if ( ((PhysicalWeapon)p).GetPWClass() == ((PhysicalWeapon)NonCore.get( i )).GetPWClass() )
+                        throw new Exception( p.CritName() +
+                            " cannot be allocated to the left arm because\nthe arm already mounts a physical weapon of the same class." );
+                }
+            }
+
+            // Check for proper actuators
+            if ( ((PhysicalWeapon)p).RequiresHand() && ! ( LACrits[3] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the left arm because\nthe arm does not have a hand actuator." );
+            }
+            if ( ((PhysicalWeapon)p).RequiresLowerArm() && ! ( LACrits[2] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the left arm because\nthe arm does not have a lower arm actuator." );
+            }
+            if ( ((PhysicalWeapon)p).ReplacesHand() && ( LACrits[3] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the left arm because\nthe arm contains a hand actuator." );
+            }
+            if ( ((PhysicalWeapon)p).ReplacesLowerArm() && ( LACrits[2] instanceof Actuator ) ) {
+                throw new Exception( p.CritName() +
+                    " cannot be allocated to the left arm because\nthe arm contains a lower arm actuator." );
+            }
+        } else if( p instanceof ifWeapon ) {
+            if( ((ifWeapon) p).OmniRestrictActuators() && Owner.IsOmnimech() ) {
+                if( ( LACrits[2] instanceof Actuator ) || ( LACrits[3] instanceof Actuator ) ) {
+                    // check for physical weapons before removing the actuators
+                    // otherwise throw an exception
+                    for( int i = 0; i < NonCore.size(); i++ ) {
+                        if( NonCore.get( i ) instanceof PhysicalWeapon ) {
+                            if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LA ) {
+                                throw new Exception( p.CritName() +
+                                    " cannot be allocated to the right arm\n" +
+                                    "because the arm contains lower arm or hand actuators." );
+                            }
+                        }
+                    }
+                    Actuators.RemoveLeftLowerArm();
                 }
             }
         }
         Allocate( p, SIndex, LACrits );
     }
-    
+
     public void AddToRL( abPlaceable p, int SIndex ) throws Exception {
         // Can we allocate the item here?
         if( ! p.CanAllocLegs() ) {
             throw new Exception( p.CritName() +
-                " cannot be allocated to the right rear leg." );
+                " cannot be allocated to the right leg." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
-            throw new Exception( p.CritName() + " cannot be allocated to the right rear leg\nbecause the right rear leg does not contain the cockpit." );
+            throw new Exception( p.CritName() + " cannot be allocated to the right leg\nbecause the right leg does not contain the cockpit." );
         } else if( p instanceof ModularArmor ) {
             for( int i = 0; i < NonCore.size(); i++ ) {
                 if ( NonCore.get( i ) instanceof ModularArmor ) {
                     if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RL ) {
-                        throw new Exception( p.CritName() + " cannot be allocated to the right rear leg\nbecause only one may be mounted in any location." );
+                        throw new Exception( p.CritName() + " cannot be allocated to the right leg\nbecause only one may be mounted in any location." );
                     }
                 }
             }
+        } else if( p instanceof PhysicalWeapon ) {
+             // Ensure that no other physical weapons are mounted in this location
+             for( int i = 0; i < NonCore.size(); i++ ){
+                 if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RL)
+                     if ( ((PhysicalWeapon)p).GetPWClass() != PhysicalWeapon.PW_CLASS_TALON )
+                         throw new Exception( p.CritName() +
+                             " cannot be allocated to the right leg because\nthe leg already mounts a physical weapon." );
+             }
         }
         Allocate( p, SIndex, RLCrits );
     }
-    
+
     public void AddToLL( abPlaceable p, int SIndex ) throws Exception {
         // Can we allocate the item here?
         if( ! p.CanAllocLegs() ) {
             throw new Exception( p.CritName() +
-                " cannot be allocated to the left rear leg." );
+                " cannot be allocated to the left leg." );
         } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
-            throw new Exception( p.CritName() + " cannot be allocated to the left rear leg\nbecause the left rear leg does not contain the cockpit." );
+            throw new Exception( p.CritName() + " cannot be allocated to the left leg\nbecause the left leg does not contain the cockpit." );
         } else if( p instanceof ModularArmor ) {
-            for( int i = 0; i < NonCore.size(); i++ ) {
-                if ( NonCore.get( i ) instanceof ModularArmor ) {
-                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LL ) {
-                        throw new Exception( p.CritName() + " cannot be allocated to the left rear leg\nbecause only one may be mounted in any location." );
+                for( int i = 0; i < NonCore.size(); i++ ) {
+                    if ( NonCore.get( i ) instanceof ModularArmor ) {
+                        if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LL ) {
+                            throw new Exception( p.CritName() + " cannot be allocated to the left leg\nbecause only one may be mounted in any location." );
+                        }
                     }
                 }
-            }
+        } else if( p instanceof PhysicalWeapon ) {
+             // Ensure that no other physical weapons are mounted in this location
+             for( int i = 0; i < NonCore.size(); i++ ) {
+                 if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LL)
+                     if ( ((PhysicalWeapon)p).GetPWClass() != PhysicalWeapon.PW_CLASS_TALON )
+                         throw new Exception( p.CritName() +
+                             " cannot be allocated to the left leg because\nthe leg already mounts a physical weapon." );
+             }
         }
         Allocate( p, SIndex, LLCrits );
     }
 
+    
+    public void AddToCL( abPlaceable p, int SIndex ) throws Exception {
+        // Can we allocate the item here?
+        if( ! p.CanAllocLegs() ) {
+            throw new Exception( p.CritName() +
+                " cannot be allocated to the center leg." );
+        } else if( p.LookupName().equals( "MW Aquatic Survival System" ) ) {
+            throw new Exception( p.CritName() + " cannot be allocated to the center leg\nbecause the center leg does not contain the cockpit." );
+        } else if( p instanceof ModularArmor ) {
+                for( int i = 0; i < NonCore.size(); i++ ) {
+                    if ( NonCore.get( i ) instanceof ModularArmor ) {
+                        if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_CL ) {
+                            throw new Exception( p.CritName() + " cannot be allocated to the center leg\nbecause only one may be mounted in any location." );
+                        }
+                    }
+                }
+        } else if( p instanceof PhysicalWeapon ) {
+             // Ensure that no other physical weapons are mounted in this location
+             for( int i = 0; i < NonCore.size(); i++ ) {
+                 if ( NonCore.get( i ) instanceof PhysicalWeapon && Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_CL)
+                     if ( ((PhysicalWeapon)p).GetPWClass() != PhysicalWeapon.PW_CLASS_TALON )
+                         throw new Exception( p.CritName() +
+                             " cannot be allocated to the center leg because\nthe leg already mounts a physical weapon." );
+             }
+        }
+        Allocate( p, SIndex, CLCrits );
+    }
+    
     public abPlaceable[] GetHDCrits() {
         // get the head criticals locations for reporting
         return HDCrits;
@@ -949,6 +1134,11 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
         return LLCrits;
     }
 
+    public abPlaceable[] GetCLCrits() {
+        // get the center leg criticals locations for reporting
+        return CLCrits;
+    }
+    
     public abPlaceable[] GetCrits( int Loc ) {
         switch( Loc ) {
         case LocationIndex.MECH_LOC_HD:
@@ -967,6 +1157,8 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             return LLCrits;
         case LocationIndex.MECH_LOC_RL:
             return RLCrits;
+        case LocationIndex.MECH_LOC_CL:
+            return CLCrits;
         default:
             return null;
         }
@@ -1006,6 +1198,11 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                     innermost = LocationIndex.MECH_LOC_LL;
                 }
             }
+            if( CLCrits[i] == p ) {
+                if( innermost > LocationIndex.MECH_LOC_RT ) {
+                    innermost = LocationIndex.MECH_LOC_CL;
+                }
+            }
             if( RACrits[i] == p ) {
                 if( innermost >= LocationIndex.MECH_LOC_LA && innermost <= LocationIndex.MECH_LOC_RA || innermost == 11 ) {
                     innermost = LocationIndex.MECH_LOC_RA;
@@ -1035,13 +1232,24 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                     innermost = LocationIndex.MECH_LOC_RT;
                 }
             }
+            if( RACrits[i] == p ) {
+                if( innermost >= LocationIndex.MECH_LOC_LA && innermost <= LocationIndex.MECH_LOC_RA || innermost == 11 ) {
+                    innermost = LocationIndex.MECH_LOC_RA;
+                }
+            }
+            if( LACrits[i] == p ) {
+                if( innermost >= LocationIndex.MECH_LOC_LA && innermost <= LocationIndex.MECH_LOC_RA || innermost == 11 ) {
+                    innermost = LocationIndex.MECH_LOC_LA;
+                }
+            }
         }
+
         return innermost;
     }
 
     public LocationIndex FindIndex( abPlaceable p ) {
-        // finds the location index of the given item.  Should not be used for
-        // split items as there is a routine for that.
+        // finds the first location index of the given item.  Should not be used
+        // for split items as there is a routine for that.
         LocationIndex l = new LocationIndex();
         for( int i = 0; i < 6; i++ ) {
             if( HDCrits[i] == p ) {
@@ -1074,6 +1282,11 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 l.Location = LocationIndex.MECH_LOC_LL;
                 return l;
             }
+            if( CLCrits[i] == p ) {
+                l.Index = i;
+                l.Location = LocationIndex.MECH_LOC_CL;
+                return l;
+            }
             if( RACrits[i] == p ) {
                 l.Index = i;
                 l.Location = LocationIndex.MECH_LOC_RA;
@@ -1103,9 +1316,18 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 l.Location = LocationIndex.MECH_LOC_RT;
                 return l;
             }
+            if( RACrits[i] == p ) {
+                l.Index = i;
+                l.Location = LocationIndex.MECH_LOC_RA;
+                return l;
+            }
+            if( LACrits[i] == p ) {
+                l.Index = i;
+                l.Location = LocationIndex.MECH_LOC_LA;
+                return l;
+            }
         }
 
-        // couldn't find it?  return the empty index
         return l;
     }
 
@@ -1253,6 +1475,23 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                     searched[LocationIndex.MECH_LOC_RL] = true;
                 }
             }
+            if( ! searched[LocationIndex.MECH_LOC_CL] ) {
+                if( CLCrits[i] == p ) {
+                    l = new LocationIndex();
+                    l.Index = i;
+                    l.Location = LocationIndex.MECH_LOC_CL;
+                    NumHere = 1;
+                    // find how many are here
+                    for( int j = i + 1; j < CLCrits.length; j++ ) {
+                        if( CLCrits[j] == p ) {
+                            NumHere++;
+                        }
+                    }
+                    l.Number = NumHere;
+                    v.add( l );
+                    searched[LocationIndex.MECH_LOC_CL] = true;
+                }
+            }
         }
 
         // now for the last six slots in locations that have them
@@ -1308,6 +1547,40 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                     searched[LocationIndex.MECH_LOC_RT] = true;
                 }
             }
+            if( ! searched[LocationIndex.MECH_LOC_LA] ) {
+                if( LACrits[i] == p ) {
+                    l = new LocationIndex();
+                    l.Index = i;
+                    l.Location = LocationIndex.MECH_LOC_LA;
+                    NumHere = 1;
+                    // find how many are here
+                    for( int j = i + 1; j < LACrits.length; j++ ) {
+                        if( LACrits[j] == p ) {
+                            NumHere++;
+                        }
+                    }
+                    l.Number = NumHere;
+                    v.add( l );
+                    searched[LocationIndex.MECH_LOC_LA] = true;
+                }
+            }
+            if( ! searched[LocationIndex.MECH_LOC_RA] ) {
+                if( RACrits[i] == p ) {
+                    l = new LocationIndex();
+                    l.Index = i;
+                    l.Location = LocationIndex.MECH_LOC_RA;
+                    NumHere = 1;
+                    // find how many are here
+                    for( int j = i + 1; j < RACrits.length; j++ ) {
+                        if( RACrits[j] == p ) {
+                            NumHere++;
+                        }
+                    }
+                    l.Number = NumHere;
+                    v.add( l );
+                    searched[LocationIndex.MECH_LOC_RA] = true;
+                }
+            }
         }
 
         return v;
@@ -1344,6 +1617,9 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             if( RLCrits[i] == p ) {
                 retval[LocationIndex.MECH_LOC_RL]++;
             }
+            if( CLCrits[i] == p ) {
+                retval[LocationIndex.MECH_LOC_CL]++;
+            }
         }
 
         for( int i = 6; i < 12; i++ ) {
@@ -1355,6 +1631,12 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             }
             if( RTCrits[i] == p ) {
                 retval[LocationIndex.MECH_LOC_RT]++;
+            }
+            if( LACrits[i] == p ) {
+                retval[LocationIndex.MECH_LOC_LA]++;
+            }
+            if( RACrits[i] == p ) {
+                retval[LocationIndex.MECH_LOC_RA]++;
             }
         }
         return retval;
@@ -1408,6 +1690,12 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 l.Location = LocationIndex.MECH_LOC_LL;
                 v.add( l );
             }
+            if( CLCrits[i] == p ) {
+                l = new LocationIndex();
+                l.Index = i;
+                l.Location = LocationIndex.MECH_LOC_CL;
+                v.add( l );
+            }
             if( RLCrits[i] == p ) {
                 l = new LocationIndex();
                 l.Index = i;
@@ -1433,6 +1721,18 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 l = new LocationIndex();
                 l.Index = i;
                 l.Location = LocationIndex.MECH_LOC_RT;
+                v.add( l );
+            }
+            if( LACrits[i] == p ) {
+                l = new LocationIndex();
+                l.Index = i;
+                l.Location = LocationIndex.MECH_LOC_LA;
+                v.add( l );
+            }
+            if( RACrits[i] == p ) {
+                l = new LocationIndex();
+                l.Index = i;
+                l.Location = LocationIndex.MECH_LOC_RA;
                 v.add( l );
             }
         }
@@ -1469,6 +1769,9 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             if( RLCrits[i] instanceof HeatSink ) {
                 retval[LocationIndex.MECH_LOC_RL]++;
             }
+            if( CLCrits[i] instanceof HeatSink ) {
+                retval[LocationIndex.MECH_LOC_CL]++;
+            }
         }
 
         for( int i = 6; i < 12; i++ ) {
@@ -1480,6 +1783,12 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             }
             if( RTCrits[i] instanceof HeatSink ) {
                 retval[LocationIndex.MECH_LOC_RT]++;
+            }
+            if( LACrits[i] instanceof HeatSink ) {
+                retval[LocationIndex.MECH_LOC_LA]++;
+            }
+            if( RACrits[i] instanceof HeatSink ) {
+                retval[LocationIndex.MECH_LOC_RA]++;
             }
         }
 
@@ -1548,6 +1857,9 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             if( RLCrits[i] instanceof JumpJet ) {
                 retval[LocationIndex.MECH_LOC_RL]++;
             }
+            if( CLCrits[i] instanceof JumpJet ) {
+                retval[LocationIndex.MECH_LOC_CL]++;
+            }
         }
 
         for( int i = 6; i < 12; i++ ) {
@@ -1560,6 +1872,12 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             if( RTCrits[i] instanceof JumpJet ) {
                 retval[LocationIndex.MECH_LOC_RT]++;
             }
+            if( LACrits[i] instanceof JumpJet ) {
+                retval[LocationIndex.MECH_LOC_LA]++;
+            }
+            if( RACrits[i] instanceof JumpJet ) {
+                retval[LocationIndex.MECH_LOC_RA]++;
+            }
         }
 
         if( IJJ ) {
@@ -1571,6 +1889,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             retval[LocationIndex.MECH_LOC_RA] /= 2;
             retval[LocationIndex.MECH_LOC_LL] /= 2;
             retval[LocationIndex.MECH_LOC_RL] /= 2;
+            retval[LocationIndex.MECH_LOC_CL] /= 2;
         }
 
         return retval;
@@ -1617,6 +1936,9 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             if( RLCrits[i] instanceof ModularArmor ) {
                 retval[LocationIndex.MECH_LOC_RL]++;
             }
+            if( CLCrits[i] instanceof ModularArmor ) {
+                retval[LocationIndex.MECH_LOC_CL]++;
+            }
         }
 
         for( int i = 6; i < 12; i++ ) {
@@ -1640,6 +1962,12 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 } else {
                     retval[LocationIndex.MECH_LOC_RT]++;
                 }
+            }
+            if( LACrits[i] instanceof ModularArmor ) {
+                retval[LocationIndex.MECH_LOC_LA]++;
+            }
+            if( RACrits[i] instanceof ModularArmor ) {
+                retval[LocationIndex.MECH_LOC_RA]++;
             }
         }
 
@@ -1723,6 +2051,15 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                     retval[LocationIndex.MECH_LOC_RL]++;
                 }
             }
+            if( CLCrits[i] instanceof Ammunition ) {
+                if( ((Ammunition) CLCrits[i]).IsExplosive() ) {
+                    retval[LocationIndex.MECH_LOC_CL]++;
+                }
+            } else if( CLCrits[i] instanceof ifWeapon ) {
+                if( ((ifWeapon) CLCrits[i]).IsExplosive() ){
+                    retval[LocationIndex.MECH_LOC_CL]++;
+                }
+            }
         }
 
         for( int i = 6; i < 12; i++ ) {
@@ -1751,6 +2088,24 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             } else if( RTCrits[i] instanceof ifWeapon ) {
                 if( ((ifWeapon) RTCrits[i]).IsExplosive() ){
                     retval[LocationIndex.MECH_LOC_RT]++;
+                }
+            }
+            if( LACrits[i] instanceof Ammunition ) {
+                if( ((Ammunition) LACrits[i]).IsExplosive() ) {
+                    retval[LocationIndex.MECH_LOC_LA]++;
+                }
+            } else if( LACrits[i] instanceof ifWeapon ) {
+                if( ((ifWeapon) LACrits[i]).IsExplosive() ){
+                    retval[LocationIndex.MECH_LOC_LA]++;
+                }
+            }
+            if( RACrits[i] instanceof Ammunition ) {
+                if( ((Ammunition) RACrits[i]).IsExplosive() ) {
+                    retval[LocationIndex.MECH_LOC_RA]++;
+                }
+            } else if( RACrits[i] instanceof ifWeapon ) {
+                if( ((ifWeapon) RACrits[i]).IsExplosive() ){
+                    retval[LocationIndex.MECH_LOC_RA]++;
                 }
             }
         }
@@ -1839,6 +2194,10 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 // found it, now remove it
                 LLCrits[i] = NoItem;
             }
+            if( CLCrits[i] == p ) {
+                // found it, now remove it
+                CLCrits[i] = NoItem;
+            }
         }
 
         // now for the last six slots in locations that have them
@@ -1854,6 +2213,14 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             if( LTCrits[i] == p ) {
                 // found it, now remove it
                 LTCrits[i] = NoItem;
+            }
+            if( RACrits[i] == p ) {
+                // found it, now remove it
+                RACrits[i] = NoItem;
+            }
+            if( LACrits[i] == p ) {
+                // found it, now remove it
+                LACrits[i] = NoItem;
             }
         }
 
@@ -2036,7 +2403,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
         // start the round-robin.  LA, LT, CT, RT, RA, LL, RL, HD in order
         while( p.NumPlaced() < p.NumCrits() ) {
             try {
-                if ( p.CanAllocLegs() && HasSpace(LocationIndex.MECH_LOC_LA) )
+                if ( p.CanAllocArms() && HasSpace(LocationIndex.MECH_LOC_LA) )
                     AddToLA( p );
                 if( p.NumPlaced() >= p.NumCrits() ) { break; }
                 if( FreeCrits() <= 0 ) { break; }
@@ -2052,7 +2419,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                     AddToRT( p );
                 if( p.NumPlaced() >= p.NumCrits() ) { break; }
                 if( FreeCrits() <= 0 ) { break; }
-                if ( p.CanAllocLegs() && HasSpace(LocationIndex.MECH_LOC_RA) )
+                if ( p.CanAllocArms() && HasSpace(LocationIndex.MECH_LOC_RA) )
                     AddToRA( p );
                 if( p.NumPlaced() >= p.NumCrits() ) { break; }
                 if( FreeCrits() <= 0 ) { break; }
@@ -2062,6 +2429,10 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 if( FreeCrits() <= 0 ) { break; }
                 if ( p.CanAllocLegs() && HasSpace(LocationIndex.MECH_LOC_LL) )
                     AddToLL( p );
+                if( p.NumPlaced() >= p.NumCrits() ) { break; }
+                if( FreeCrits() <= 0 ) { break; }
+                if ( p.CanAllocLegs() && HasSpace(LocationIndex.MECH_LOC_CL) )
+                    AddToCL( p );
                 if( p.NumPlaced() >= p.NumCrits() ) { break; }
                 if( FreeCrits() <= 0 ) { break; }
                 if ( p.CanAllocHD() && HasSpace(LocationIndex.MECH_LOC_HD) )
@@ -2118,6 +2489,11 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                             break;
                         case LocationIndex.MECH_LOC_RL:
                             AddToRL( p, FirstFree( RLCrits ) );
+                            Loc++;
+                            Placed = true;
+                            break;
+                        case LocationIndex.MECH_LOC_CL:
+                            AddToCL( p, FirstFree( CLCrits ) );
                             Loc++;
                             Placed = true;
                             break;
@@ -2764,6 +3140,45 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             }
         }
 
+        // compact the center leg.
+        for( int i = 0; i < CLCrits.length; i++ ) {
+            // check each space in order to see if it's empty
+            if( CLCrits[i] == NoItem ) {
+                // it's empty, find the next item and move it up
+                for( int j = i + 1; j < CLCrits.length; j++ ) {
+                    if( CLCrits[j] != NoItem &! CLCrits[j].LocationLocked() ) {
+                        // is the item splittable?  If so, we have some work
+                        p = CLCrits[j];
+                        if( p.CanSplit() ) {
+                            // we're not going to unallocate it.  Instead, just
+                            // move the reference up.
+                            CLCrits[j] = NoItem;
+                            CLCrits[i] = p;
+                        } else {
+                            // move it up to i
+                            UnallocateByIndex( j, CLCrits );
+                            try {
+                                AddToCL( p, i );
+                            } catch ( Exception e ) {
+                                // wow!  How in the hell did that happen?  Throw the
+                                // item back into the queue.
+                                AddToQueue( p );
+                            }
+                        }
+                        break;
+                    } else {
+                        if( ! Owner.IsOmnimech() && ( CLCrits[j] instanceof CASEII || CLCrits[j] instanceof MultiSlotSystem ) ) {
+                            // we're not going to unallocate it.  Instead, just
+                            // move the reference up.
+                            CLCrits[i] = CLCrits[j];
+                            CLCrits[j] = NoItem;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        
         Owner.SetChanged( true );
     }
 
@@ -2804,6 +3219,10 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 // found it.
                 return true;
             }
+            if( CLCrits[i] == p ) {
+                // found it.
+                return true;
+            }
         }
 
         // now for the last six slots in locations that have them
@@ -2817,6 +3236,14 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 return true;
             }
             if( LTCrits[i] == p ) {
+                // found it.
+                return true;
+            }
+            if( RACrits[i] == p ) {
+                // found it.
+                return true;
+            }
+            if( LACrits[i] == p ) {
                 // found it.
                 return true;
             }
@@ -3164,6 +3591,9 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             if( LLCrits[i] == NoItem ) {
                 Result++;
             }
+            if( CLCrits[i] == NoItem ) {
+                Result++;
+            }
         }
 
         // now for the last six slots in locations that have them
@@ -3175,6 +3605,12 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 Result++;
             }
             if( LTCrits[i] == NoItem ) {
+                Result++;
+            }
+            if( RACrits[i] == NoItem ) {
+                Result++;
+            }
+            if( LACrits[i] == NoItem ) {
                 Result++;
             }
         }
@@ -3221,6 +3657,9 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             if( ! ( RLCrits[i] instanceof EmptyItem ) ) {
                 RLCrits[i].SetLocked( true );
             }
+            if( ! ( CLCrits[i] instanceof EmptyItem ) ) {
+                CLCrits[i].SetLocked( true );
+            }
         }
         for( int i = 6; i < 12; i++ ) {
             if( ! ( CTCrits[i] instanceof EmptyItem ) ) {
@@ -3231,6 +3670,12 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             }
             if( ! ( RTCrits[i] instanceof EmptyItem ) ) {
                 RTCrits[i].SetLocked( true );
+            }
+            if( ! ( LACrits[i] instanceof EmptyItem ) ) {
+                LACrits[i].SetLocked( true );
+            }
+            if( ! ( RACrits[i] instanceof EmptyItem ) ) {
+                RACrits[i].SetLocked( true );
             }
         }
 
@@ -3264,6 +3709,9 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             if( ! ( RLCrits[i] instanceof EmptyItem ) ) {
                 RLCrits[i].SetLocked( false );
             }
+            if( ! ( CLCrits[i] instanceof EmptyItem ) ) {
+                CLCrits[i].SetLocked( false );
+            }
         }
         for( int i = 6; i < 12; i++ ) {
             if( ! ( CTCrits[i] instanceof EmptyItem ) ) {
@@ -3275,6 +3723,12 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             if( ! ( RTCrits[i] instanceof EmptyItem ) ) {
                 RTCrits[i].SetLocked( false );
             }
+            if( ! ( LACrits[i] instanceof EmptyItem ) ) {
+                LACrits[i].SetLocked( false );
+            }
+            if( ! ( RACrits[i] instanceof EmptyItem ) ) {
+                RACrits[i].SetLocked( false );
+            }
         }
 
         Owner.SetChanged( true );
@@ -3282,7 +3736,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
 
     public ifMechLoadout Clone() {
         // Returns a clone of this loadout.  Normally used for omnimechs.
-        ifMechLoadout clone = new QuadLoadout( "", Owner, HeatSinks.GetNumHS(),
+        ifMechLoadout clone = new TripodLoadout( "", Owner, HeatSinks.GetNumHS(),
             HeatSinks, Jumps );
         clone.SetRulesLevel( RulesLevel );
         clone.SetTechBase( TechBase );
@@ -3296,6 +3750,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
         clone.SetRACrits( RACrits.clone() );
         clone.SetRLCrits( RLCrits.clone() );
         clone.SetLLCrits( LLCrits.clone() );
+        clone.SetCLCrits( CLCrits.clone() );
         // set the new actuators
         Actuators.Transfer( clone.GetActuators() );
         if( HasHDTurret() ) {
@@ -3331,7 +3786,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 clone.SetRTCASE( true, -1 );
             }
         } catch( Exception e ) {
-            // unhandled, print a message out to system error.
+            // unhandled, print a message to the error log
             System.err.println( "CASE system not reinstalled:\n" + e.getMessage() );
         }
         if( NonCore.size() > 0 ) {
@@ -3348,6 +3803,18 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
             clone.SetSupercharger( SCharger );
         }
         if( Owner.IsOmnimech() ) {
+            // before we unallocate the actuators, we need to make sure that
+            // there are no physical weapons located there.
+            for( int i = 0; i < NonCore.size(); i++ ) {
+                if( NonCore.get( i ) instanceof PhysicalWeapon ) {
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_RA ) {
+                        clone.GetActuators().SetLockedRight( true );
+                    }
+                    if( Find( (abPlaceable) NonCore.get( i ) ) == LocationIndex.MECH_LOC_LA ) {
+                        clone.GetActuators().SetLockedLeft( true );
+                    }
+                }
+            }
             clone.GetActuators().RemoveLeftLowerArm();
             clone.GetActuators().RemoveRightLowerArm();
             clone.SetBaseLoadout( this );
@@ -3412,9 +3879,9 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
     }
 
     public void SetCLCrits( abPlaceable[] c ) {
-        // this method sets the center leg crits to the specified array.
-        // NO CENTER LEG ON QUADS -- IGNORE
+        // this method sets the right leg crits to the specified array.
         // SHOULD ONLY BE USED WHEN CLONING THE LOADOUT
+        CLCrits = c;
     }
     
     public void SetNonCore( ArrayList v ) {
@@ -3442,20 +3909,20 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
     }
 
     public void SetClanCASE( boolean b ) {
-        UsingClanCASE = b;
+         UsingClanCASE = b;
     }
 
     public void SetCTCASE( boolean Add, int index ) throws Exception {
         // adds CASE equipment to the CT
-        if( Add && TechBase == AvailableCode.TECH_CLAN ) {
-            throw new Exception( "A Clan 'Mech may not mount Inner Sphere CASE equipment." );
-        }
         if( ! Add ) {
             Remove( CTCase );
             return;
         }
         if( Add && HasCTCASE() ) {
             return;
+        }
+        if( Add && TechBase == AvailableCode.TECH_CLAN ) {
+            throw new Exception( "A Clan 'Mech may not mount Inner Sphere CASE equipment." );
         }
 
         boolean placed = false;
@@ -3819,7 +4286,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
         }
 
         boolean placed = false;
-        int increment = 5;
+        int increment = 11;
         if( index < 0 ) {
             // general placement routine
             while( placed == false ) {
@@ -3870,7 +4337,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
         }
 
         boolean placed = false;
-        int increment = 5;
+        int increment = 11;
         if( index < 0 ) {
             // general placement routine
             while( placed == false ) {
@@ -4012,6 +4479,58 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
         return RLCaseII;
     }
 
+    
+    public void SetCLCASEII( boolean Add, int index, boolean clan ) throws Exception {
+        // adds CASE II equipment to the RL
+        if( ! Add ) {
+            Remove( CLCaseII );
+            return;
+        }
+        if( Add && HasCLCASEII() ) {
+            return;
+        }
+
+        boolean placed = false;
+        int increment = 5;
+        if( index < 0 ) {
+            // general placement routine
+            while( placed == false ) {
+                if ( increment < 0 ) {
+                    throw new Exception( "There is not enough space in the RL for CASE II." );
+                }
+                try {
+                    AddToCL( CLCaseII, increment );
+                    increment--;
+                    placed = true;
+                } catch ( Exception e ) {
+                    increment--;
+                }
+            }
+        } else {
+            // specific placement routine
+            try {
+                AddToCL( CLCaseII, index );
+            } catch( Exception e ) {
+                throw new Exception( "CASE II system could not be allocated to slot " + index + ".\nCASE II system was not installed in the CL." );
+            }
+        }
+
+        CLCaseII.SetClan( clan );
+        Owner.SetChanged( true );
+    }
+
+    public void SetCLCASEII( CASEII c ) {
+        CLCaseII = c;
+    }
+
+    public boolean HasCLCASEII() {
+        return IsAllocated( CLCaseII );
+    }
+
+    public CASEII GetCLCaseII() {
+        return CLCaseII;
+    }
+    
     // handlers for Artemis IV operations.
     public void SetFCSArtemisIV( boolean b ) throws Exception {
         if( b != UseAIVFCS ) {
@@ -4093,52 +4612,7 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
         return CurTC;
     }
 
-    public void UseTC( boolean use, boolean clan ) {
-        if( use == Use_TC ) {
-            return;
-        } else {
-            Use_TC = use;
-        }
-
-        CurTC.SetClan( clan );
-        CheckTC();
-
-        Owner.SetChanged( true );
-    }
-
-    public void CheckTC() {
-        // this routine checks to see if the targeting computer can be allocated
-        // and does so if needed.  It will also remove the TC if it has to.
-        if( ! Use_TC ) {
-            // remove the TC from the loadout
-            Remove( CurTC );
-            return;
-        }
-
-        if( !  QueueContains( CurTC ) ) {
-            if( ! IsAllocated( CurTC ) ) {
-                // TC not allocated or in the queue, let's see if we can add it
-                if( CurTC.NumCrits() > 0 ) {
-                    AddToQueue( CurTC );
-                } else {
-                    Remove( CurTC );
-                }
-            }
-        }
-
-        // lastly, see if we need to remove it altogether
-        if( CurTC.NumCrits() <= 0 ) { Remove( CurTC ); }
-
-        Owner.SetChanged( true );
-    }
-
-    public void UnallocateTC() {
-        // unallocates the TC from the loadout and then performs a TC check
-        Remove( CurTC );
-        CheckTC();
-    }
-
-     public boolean UsingDumper(){
+    public boolean UsingDumper(){
         return Use_Dumper;
     }
 
@@ -4176,6 +4650,50 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
                 }
             }
         }
+    }
+
+    public void UseTC( boolean use, boolean clan ) {
+        if( use == Use_TC ) {
+            return;
+        } else {
+            Use_TC = use;
+        }
+
+        CurTC.SetClan( clan );
+        CheckTC();
+        Owner.SetChanged( true );
+    }
+
+    public void CheckTC() {
+        // this routine checks to see if the targeting computer can be allocated
+        // and does so if needed.  It will also remove the TC if it has to.
+        if( ! Use_TC ) {
+            // remove the TC from the loadout
+            Remove( CurTC );
+            return;
+        }
+
+        if( ! QueueContains( CurTC ) ) {
+            if( ! IsAllocated( CurTC ) ) {
+                // TC not allocated or in the queue, let's see if we can add it
+                if( CurTC.NumCrits() > 0 ) {
+                    AddToQueue( CurTC );
+                } else {
+                    Remove( CurTC );
+                }
+            }
+        }
+
+        // lastly, see if we need to remove it altogether
+        if( CurTC.NumCrits() <= 0 ) { Remove( CurTC ); }
+
+        Owner.SetChanged( true );
+    }
+
+    public void UnallocateTC() {
+        // unallocates the TC from the loadout and then performs a TC check
+        Remove( CurTC );
+        CheckTC();
     }
 
     public void SetSupercharger( boolean b, int Loc, int index ) throws Exception {
@@ -4350,15 +4868,15 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
         return IsAllocated( HDTurret );
     }
 
-    public void SetHDTurret( MechTurret t ) {
-        HDTurret = t;
-    }
-
     public boolean CanUseHDTurret() {
-        if( Owner.GetCockpit().IsTorsoMounted() && !HasLTTurret() && !HasRTTurret() ) {
+        if( Owner.GetCockpit().IsTorsoMounted() ) {
             return true;
         }
         return false;
+    }
+
+    public void SetHDTurret( MechTurret t ) {
+        HDTurret = t;
     }
 
     public MechTurret GetLTTurret() {
@@ -4412,7 +4930,6 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
     }
 
     public boolean CanUseLTTurret() {
-        if( HasRTTurret() || HasHDTurret() ) { return false; }
         return true;
     }
 
@@ -4467,7 +4984,6 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
     }
 
     public boolean CanUseRTTurret() {
-        if( HasLTTurret() || HasHDTurret() ) { return false; }
         return true;
     }
 
@@ -4494,7 +5010,8 @@ public class QuadLoadout implements ifMechLoadout, ifLoadout {
         }
     }
 
-public void SetBoobyTrap( boolean b ) throws Exception{
+    @Override
+    public void SetBoobyTrap( boolean b ) throws Exception{
         if ( b == false && this.HasBoobyTrap() )
         {
             this.Remove(BTrap);
@@ -4530,13 +5047,13 @@ public void SetBoobyTrap( boolean b ) throws Exception{
         }
     }
 
+    @Override
     public boolean HasBoobyTrap() {
         if ( IsAllocated (BTrap) )
             return true;
         else
             return false;
     }
-
 
     @Override
     public BoobyTrap GetBoobyTrap() {
@@ -4546,6 +5063,7 @@ public void SetBoobyTrap( boolean b ) throws Exception{
     public void CheckExclusions( abPlaceable p ) throws Exception {
         // this checks all the items in the loadout vs. the placeable's exclusions
         // not worried about a return value since we're tossing exceptions
+
         // check basic requirements first
         if( p instanceof RangedWeapon ) {
             if( ((RangedWeapon) p).RequiresNuclear() &! Owner.GetEngine().IsNuclear() ) {
@@ -4609,6 +5127,9 @@ public void SetBoobyTrap( boolean b ) throws Exception{
                 if( RLCrits[j].CritName().contains( exclude[i] ) ) {
                     throw new Exception( "A mech may not mount an " + p.CritName() + " if it\nalready mounts an " + RLCrits[j].CritName() );
                 }
+                if( CLCrits[j].CritName().contains( exclude[i] ) ) {
+                    throw new Exception( "A mech may not mount an " + p.CritName() + " if it\nalready mounts an " + CLCrits[j].CritName() );
+                }
             }
             for( int j = 6; j < 12; j++ ) {
                 if( CTCrits[j].CritName().contains( exclude[i] ) ) {
@@ -4619,6 +5140,12 @@ public void SetBoobyTrap( boolean b ) throws Exception{
                 }
                 if( RTCrits[j].CritName().contains( exclude[i] ) ) {
                     throw new Exception( "A mech may not mount an " + p.CritName() + " if it\nalready mounts an " + RTCrits[j].CritName() );
+                }
+                if( LACrits[j].CritName().contains( exclude[i] ) ) {
+                    throw new Exception( "A mech may not mount an " + p.CritName() + " if it\nalready mounts an " + LACrits[j].CritName() );
+                }
+                if( RACrits[j].CritName().contains( exclude[i] ) ) {
+                    throw new Exception( "A mech may not mount an " + p.CritName() + " if it\nalready mounts an " + RACrits[j].CritName() );
                 }
             }
             // special addition for a targeting computer that is not in the loadout yet
@@ -4648,7 +5175,7 @@ public void SetBoobyTrap( boolean b ) throws Exception{
 
     @Override
     public String toString() {
-        return "Loadout " + Name;
+        return "Loadout: " + Name;
     }
 
     public Engine GetEngine() {
@@ -4658,7 +5185,7 @@ public void SetBoobyTrap( boolean b ) throws Exception{
     public boolean UsingFractionalAccounting() {
         return Owner.UsingFractionalAccounting();
     }
-    
+
     public ifUnit GetUnit() {
         return Owner;
     }
@@ -4692,6 +5219,9 @@ public void SetBoobyTrap( boolean b ) throws Exception{
             case LocationIndex.MECH_LOC_RL:
                 Section = RLCrits;
                 break;
+            case LocationIndex.MECH_LOC_CL:
+                Section = CLCrits;
+                break;
             case LocationIndex.MECH_LOC_RT:
                 Section = RTCrits;
                 break;
@@ -4702,33 +5232,5 @@ public void SetBoobyTrap( boolean b ) throws Exception{
                  return true;
         }
         return false;
-    }
-
-    public void AddToCL(abPlaceable p) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public void AddToCL(abPlaceable p, int SIndex) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public abPlaceable[] GetCLCrits() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public void SetCLCASEII(boolean Add, int index, boolean clan) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public void SetCLCASEII(CASEII c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public boolean HasCLCASEII() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public CASEII GetCLCaseII() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

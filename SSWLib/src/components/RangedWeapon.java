@@ -474,7 +474,7 @@ public class RangedWeapon extends abPlaceable implements ifWeapon {
     public double GetCurOffensiveBV( boolean UseRear, boolean UseTC, boolean UseAES, boolean UseRoboticCockpit ) {
         double retval = GetOffensiveBV();
         if( UseAES ) {
-            retval *= 1.5;
+            retval *= 1.25;
         }
         if( UseTC && TCCapable ) {
             retval *= 1.25;

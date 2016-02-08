@@ -72,6 +72,14 @@ public class BattleForceData {
                 //Base.BattleForceValue(LRM.baseMedium);
     }
 
+    public int BaseMaxLong() {
+        //System.out.println(AdjBase.BattleForceValue(AdjBase.baseMedium) + "/" + AC.BattleForceValue(AC.baseMedium) + "/" + SRM.BattleForceValue(SRM.baseMedium) + "/" + LRM.BattleForceValue(LRM.baseMedium));
+        return Base.BattleForceValue(Base.baseLong); //+
+                //Base.BattleForceValue(AC.baseMedium) +
+                //Base.BattleForceValue(SRM.baseMedium) +
+                //Base.BattleForceValue(LRM.baseMedium);
+    }
+
     public int AdjustedMaxMedium() {
         return (int) AdjBase.heatMedium + (int) AC.heatMedium + (int) SRM.heatMedium + (int) LRM.heatMedium;
     }
@@ -85,10 +93,12 @@ public class BattleForceData {
         AdjBase.baseLong = Base.baseLong;
         AdjBase.baseExtreme = Base.baseExtreme;
 
-        if ( AC.CheckSpecial() ) Adjust(AC);
-        if ( SRM.CheckSpecial() ) Adjust(SRM);
-        if ( LRM.CheckSpecial() ) Adjust(LRM);
-        if ( TOR.CheckSpecial() ) Adjust(TOR);
+//        Commented out 7/17/2013 because errata changes make it so that base damage
+//        does not get changed
+//        if ( AC.CheckSpecial() ) Adjust(AC);
+//        if ( SRM.CheckSpecial() ) Adjust(SRM);
+//        if ( LRM.CheckSpecial() ) Adjust(LRM);
+//        if ( TOR.CheckSpecial() ) Adjust(TOR);
         
         AdjBase.SetHeat(TotalHeatGenerated, TotalHeatDissipation);
         AdjBase.BattleForceValues();
@@ -266,21 +276,21 @@ public class BattleForceData {
             this.TotalHeatGenerated += (int)vals[BFConstants.BF_OV];
         }
 
-        /**
-         * Add amount of ammo to this specific type
-         * 
-         * @param lotsize Amount of ammo to add
-         */
-        public void AddAmmo( int lotsize ) {
-            this.AmmoCount += lotsize;
-        }
-
-        /*
-         * Used to increase the count of launchers that need ammunition
-         */
-        public void AddLauncher() {
-            LauncherCount++;
-        }
+//        /**
+//         * Add amount of ammo to this specific type
+//         * 
+//         * @param lotsize Amount of ammo to add
+//         */
+//        public void AddAmmo( int lotsize ) {
+//            this.AmmoCount += lotsize;
+//        }
+//
+//        /*
+//         * Used to increase the count of launchers that need ammunition
+//         */
+//        public void AddLauncher() {
+//            LauncherCount++;
+//        }
         
         public void SetHeat( int TotalHeatGenerated, int TotalHeatDissipation ) {
             this.TotalHeatGenerated = TotalHeatGenerated;
@@ -306,7 +316,7 @@ public class BattleForceData {
         }
 
         public int BattleForceValue( double base ) {
-            if (!EnoughAmmo()) { base *= .75; }
+            //if (!EnoughAmmo()) { base *= .75; }  This is being done in the per weapon damage check
             if ( base > 9.0 || SpecialDamage || !isSpecial )
                 if ( isSpecial || useNormalRound)
                     return (int) Math.round(base / 10);

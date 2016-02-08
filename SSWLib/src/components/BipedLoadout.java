@@ -152,6 +152,10 @@ public class BipedLoadout implements ifMechLoadout, ifLoadout {
         return false;
     }
 
+public boolean IsTripod(){
+        return false;
+    }
+    
     public abPlaceable GetNoItem() {
         return NoItem;
     }
@@ -3687,6 +3691,12 @@ public class BipedLoadout implements ifMechLoadout, ifLoadout {
         RLCrits = c;
     }
 
+    public void SetCLCrits( abPlaceable[] c ) {
+        // this method sets the center leg crits to the specified array.
+        // NO CENTER LEG ON BIPEDS  -- IGNORE
+        // SHOULD ONLY BE USED WHEN CLONING THE LOADOUT
+    }
+    
     public void SetNonCore( ArrayList v ) {
         NonCore = v;
     }
@@ -4836,6 +4846,12 @@ public class BipedLoadout implements ifMechLoadout, ifLoadout {
                 throw new Exception( p.CritName() + " may not be mounted on this 'Mech because the engine is incompatible." );
             }
         }
+        
+        //HarJel requires Standard, Heavy Industrial, Light Ferro Fibrous, Standard Ferro Fibrous, or Heavy Ferro Fibrous armor
+        if ( p.ActualName().contains("HarJel"))
+            if ( !Owner.GetArmor().AllowHarJel() )
+                throw new Exception( p.CritName() + " may not be mounted on this 'Mech with " + Owner.GetArmor().ActualName());
+        
         if( p.GetExclusions() == null ) { return; }
         String[] exclude = p.GetExclusions().GetExclusions();
 
@@ -4977,5 +4993,33 @@ public class BipedLoadout implements ifMechLoadout, ifLoadout {
                  return true;
         }
         return false;
+    }
+
+    public void AddToCL(abPlaceable p) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void AddToCL(abPlaceable p, int SIndex) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public abPlaceable[] GetCLCrits() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void SetCLCASEII(boolean Add, int index, boolean clan) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void SetCLCASEII(CASEII c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public boolean HasCLCASEII() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public CASEII GetCLCaseII() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

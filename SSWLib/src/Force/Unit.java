@@ -748,6 +748,16 @@ public class Unit implements ifSerializable {
             BFStats.setGunnery(warrior.getGunnery());
             BFStats.setPiloting(warrior.getPiloting());
             BFStats.setImage(this.UnitImage);
+            switch(this.UnitType){
+                case CommonTools.BattleMech:
+                    BFStats.setBFType("BM");
+                    break;
+                case CommonTools.Vehicle:
+                    BFStats.setBFType("CV");
+                    break;
+                default:
+                    BFStats.setBFType("BM");
+            }
             return BFStats;
         }
 

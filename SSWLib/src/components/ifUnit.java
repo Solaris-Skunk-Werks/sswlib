@@ -21,6 +21,7 @@ public interface ifUnit {
     public int GetTechBase();
     public Engine GetEngine();
     public boolean IsQuad();
+    public boolean IsTripod();
     public MechModifier GetTotalModifiers( boolean BV, boolean MASCTSM );
     public PhysicalEnhancement GetPhysEnhance();
     public boolean UsingTC();

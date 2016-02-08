@@ -235,6 +235,9 @@ public class CostBVBreakdown {
                     retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", a.CritName(), a.GetDefensiveBV(), a.GetOffensiveBV(), a.GetCost() ) + NL;
                 }
             } else {
+                if( a instanceof Equipment && ((Equipment)a).LookupName().equals("Radical Heat Sink"))
+                    retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", a.CritName(), a.GetDefensiveBV(), CommonTools.RoundFullUp(CurMech.GetHeatSinks().GetNumHS() * 1.4), a.GetCost() ) + NL;
+                else
                 retval += String.format( "%1$-46s %2$,6.0f    %3$,6.0f    %4$,13.2f", a.CritName(), a.GetDefensiveBV(), a.GetOffensiveBV(), a.GetCost() ) + NL;
             }
         }
@@ -336,6 +339,9 @@ public class CostBVBreakdown {
         for( int i = 0; i < v.size(); i++ ) {
             if( ! ( v.get( i ) instanceof ifWeapon ) ) {
                 a = ((abPlaceable) v.get( i ));
+                if ( a.LookupName().equals("Radical Heat Sink"))
+                    retval += String.format( "%1$-71s %2$,8.2f", "    -> " + a.CritName(), CommonTools.RoundFullUp(CurMech.GetHeatSinks().GetNumHS() * 1.4) ) + NL;
+                else
                 retval += String.format( "%1$-71s %2$,8.2f", "    -> " + a.CritName(), a.GetOffensiveBV() ) + NL;
             }
         }
