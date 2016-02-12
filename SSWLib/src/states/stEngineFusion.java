@@ -47,7 +47,8 @@ public class stEngineFusion implements ifEngine, ifState {
         36.5,38.5,41.0,43.5,46.0,49.0,52.5,56.5,61.0,66.5,72.5,79.5,
         87.5,97.0,107.5,119.5,133.5,150.0,168.5,190.0,214.5,243.0,
         275.5,313.0,356.0,405.5,462.5};
-    private final static int[] BFStructure = {1,1,2,2,3,3,3,4,4,5,5,5,6,6,6,7,7,8,8};
+                                           /*|----------- NORMAL WEIGHT -----------|---------SUPER HEAVY WEIGHT ---------|*/
+    private final static int[] BFStructure = {1,1,2,2,3,3,3,4,4,5,5,5,6,6,6,7,7,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8};
     private Engine Owner;
     
     public stEngineFusion( Engine e ) {

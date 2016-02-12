@@ -547,7 +547,13 @@ public class PrintMech implements Printable {
             graphics.drawString( "Dissipation (" + CurMech.GetHeatSinks().TotalDissipation() + ")", p[PrintConsts.MAX_HEAT].x-1, p[PrintConsts.MAX_HEAT].y+1 );
             //graphics.drawString( "Weapon Heat (" + CurMech.GetWeaponHeat(false, false, true, false) + ")", p[PrintConsts.MAX_HEAT].x-1, p[PrintConsts.MAX_HEAT].y );
             graphics.setFont( PrintConsts.SmallFont );
-            graphics.drawString( "Armor Pts: " + CurMech.GetArmor().GetArmorValue(), p[PrintConsts.TOTAL_ARMOR].x-8, p[PrintConsts.TOTAL_ARMOR].y+16 );
+            
+            // The Armor Pts text should be placed just a bit higher on the sheet if using a right arm shield
+            if (CurMech.HasRAShield() == true)
+                graphics.drawString( "Armor Pts: " + CurMech.GetArmor().GetArmorValue(), p[PrintConsts.TOTAL_ARMOR].x-8, p[PrintConsts.TOTAL_ARMOR].y+0 );
+            else    
+                graphics.drawString( "Armor Pts: " + CurMech.GetArmor().GetArmorValue(), p[PrintConsts.TOTAL_ARMOR].x-8, p[PrintConsts.TOTAL_ARMOR].y+16 );
+            
             graphics.setFont( PrintConsts.BoldFont );
         } else {
             graphics.drawString( String.format( "%1$,d", CurMech.GetCurrentBV() ), p[PrintConsts.BV2].x, p[PrintConsts.BV2].y );

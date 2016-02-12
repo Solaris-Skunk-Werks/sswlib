@@ -40,7 +40,8 @@ public class Cockpit extends abPlaceable {
                             IndusAFCCockpit = new stCockpitIndustrialAFC(),
                             PrimIndustrial = new stCockpitPrimIndustrial(),
                             PrimIndusAFC = new stCockpitPrimIndustrialAFC(),
-                            RoboticCockpit = new stCockpitRobotic();
+                            RoboticCockpit = new stCockpitRobotic(),
+                            SuperHeavyCockpit = new stCockpitSuperHeavy();
     private ifCockpit CurConfig = StandardCockpit;
     private ifUnit Owner;
 
@@ -91,6 +92,14 @@ public class Cockpit extends abPlaceable {
     public void SetRobotic() {
         CurConfig = RoboticCockpit;
     }
+    
+    /**
+     * Set this cockpit to a Super Heavy cockpit
+     */
+    public void SetSuperHeavy() {
+        CurConfig = SuperHeavyCockpit;
+    }
+            
 
     public ifState GetCurrentState() {
         return (ifState) CurConfig;

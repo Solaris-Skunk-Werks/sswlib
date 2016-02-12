@@ -59,7 +59,8 @@ public class InternalStructure extends abPlaceable {
                              CLESQD = new stChassisCLESQD(),
                              CLECBP = new stChassisCLECBP(),
                              CLECQD = new stChassisCLECQD(),
-                             CVIS = new stChassisCVIS();
+                             CVIS = new stChassisCVIS(),
+                             SHBP = new stChassisSHBP();
     private int Placed = 0;
     
     // Constructor
@@ -183,6 +184,13 @@ public class InternalStructure extends abPlaceable {
     public void SetCLECQD() {
         // Set this chassis to a Clan Endo-Composite Quad
         Config = CLECQD;
+    }
+    
+    /**
+     * Set this chassis to a Inner Sphere Super Heavy Biped
+     */
+    public void SetSHBP() {
+        Config = SHBP;
     }
 
     public void SetCVIS()

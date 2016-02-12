@@ -72,6 +72,7 @@ public class Mech implements ifUnit, ifBattleforce {
     private boolean Quad,
                     Tripod,
                     Omnimech,
+                    SuperHeavy,
                     Primitive = false,
                     IndustrialMech = false,
                     HasNullSig = false,
@@ -145,6 +146,7 @@ public class Mech implements ifUnit, ifBattleforce {
         // Basic setup for the mech.  This is an arbitrary default chassis
         Quad = false;
         Omnimech = false;
+        SuperHeavy = false;
         WalkMP = 1;
         CurEngine.SetRating( 20 );
         CurLoadout.SetBaseLoadout( MainLoadout );
@@ -1410,6 +1412,31 @@ public class Mech implements ifUnit, ifBattleforce {
         }
 
         SetChanged( true );
+    }
+    
+    /**
+     * This performs all the necessary steps to transform this Mech into a 
+     * SuperHeavy chassis
+     */
+    public void SetSuperHeavy()
+    {
+        // Update chassis
+        CurIntStruc.SetSHBP();
+        
+        // switch the engine over to a military Standard
+        CurEngine.SetFUEngine();
+        
+        // Update cockpit
+        CurCockpit.SetSuperHeavy();
+        
+        // Update gyro
+        CurGyro.SetSuperHeavy();
+        
+        // Update physical enhancements, Super Heavy Mechs may not use them
+        CurPhysEnhance.SetNone();
+        
+        // Clear all Mech Modifications
+        MechMods.clear();
     }
     
     public void SetIndustrialmech() {
@@ -3462,6 +3489,24 @@ public class Mech implements ifUnit, ifBattleforce {
 
     public MultiSlotSystem GetChameleon() {
         return Chameleon;
+    }
+    
+    /**
+     * Determines if this 'Mech uses a shield in the right arm
+     * Returns true if found and false otherwise.
+     * Used to determine the proper location of the "Armor Pts" 
+     * text on a record sheet
+     */
+    public boolean HasRAShield()
+    {
+        abPlaceable items [] = CurLoadout.GetRACrits();
+        for (abPlaceable item : items) {
+            if( item instanceof PhysicalWeapon ) {
+                if ( ((PhysicalWeapon) item).GetPWClass() == PhysicalWeapon.PW_CLASS_SHIELD )
+                return true;
+            }
+        }
+        return false;
     }
 
     public void SetVoidSig( boolean set ) throws Exception {

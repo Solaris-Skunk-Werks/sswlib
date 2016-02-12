@@ -31,32 +31,36 @@ package states;
 import components.AvailableCode;
 import components.MechModifier;
 
-public class stChassisMSBP implements ifChassis, ifState {
-    // An Inner Sphere Standard Military Biped chassis
-    public final static double[] Masses = { 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0 };
+/**
+ * Inner Sphere Super Heavy Biped Chassis
+ */
+public class stChassisSHBP implements ifChassis, ifState {
+    // An Inner Sphere Super Heavy Biped chassis
+    public final static double[] Masses = { 21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0, 31.0, 32.0, 33.0, 34.0, 35.0, 36.0, 37.0, 38.0, 39.0, 40.0 };
     private final static int[][] IntPoints = {
-        { 4, 3, 1, 2 },
-        { 5, 4, 2, 3 },
-        { 6, 5, 3, 4 },
-        { 8, 6, 4, 6 },
-        { 10, 7, 5, 7 },
-        { 11, 8, 6, 8 },
-        { 12, 10, 6, 10 },
-        { 14, 11, 7, 11 },
-        { 16, 12, 8, 12 },
-        { 18, 13, 9, 13 },
-        { 20, 14, 10, 14 },
-        { 21, 15, 10, 15 },
-        { 22, 15, 11, 15 },
-        { 23, 16, 12, 16 },
-        { 25, 17, 13, 17 },
-        { 27, 18, 14, 18 },
-        { 29, 19, 15, 19 },
-        { 30, 20, 16, 20 },
-        { 31, 21, 17, 21 } };
+        { 32, 22, 17, 22 },
+        { 33, 23, 18, 23 },
+        { 35, 24, 19, 24 },
+        { 36, 25, 20, 25 },
+        { 38, 26, 21, 26 },
+        { 39, 27, 21, 27 },
+        { 41, 28, 22, 28 },
+        { 42, 29, 23, 29 },
+        { 44, 31, 24, 31 },
+        { 45, 32, 25, 32 },
+        { 47, 33, 26, 33 },
+        { 48, 34, 26, 34 },
+        { 50, 35, 27, 35 },
+        { 51, 36, 28, 36 },
+        { 53, 37, 29, 37 },
+        { 54, 38, 30, 38 },
+        { 56, 39, 31, 39 },
+        { 57, 40, 31, 40 },
+        { 59, 41, 32, 41 },
+        { 60, 42, 33, 42 } };
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
 
-    public stChassisMSBP() {
+    public stChassisSHBP() {
         AC.SetISCodes( 'D', 'C', 'C', 'C' );
         AC.SetISDates( 0, 0, false, 2443, 0, 0, false, false );
         AC.SetISFactions( "", "", "TH", "" );
@@ -75,27 +79,27 @@ public class stChassisMSBP implements ifChassis, ifState {
     }
     
     public String ActualName() {
-        return "Military Standard Structure (Biped)";
+        return "Super Heavy Structure (Biped)";
     }
 
     public String CritName() {
-        return "Standard";
+        return "Super Heavy";
     }
 
     public String LookupName() {
-        return "Standard Structure";
+        return "Super Heavy Structure";
     }
 
     public String ChatName() {
-        return "Std";
+        return "Std Super Hvy";
     }
 
     public String MegaMekName( boolean UseRear ) {
-        return "Standard";
+        return "Standard Super heavy";
     }
 
     public String BookReference() {
-        return "Tech Manual";
+        return "Interstellar Operations";
     }
 
     public double GetStrucTon( int Tonnage, boolean fractional ) {
@@ -107,8 +111,8 @@ public class stChassisMSBP implements ifChassis, ifState {
     }
     
     public int GetHeadPoints() {
-        // All mech heads have 3 internal structure points
-        return 3;
+        // All super heavy mech heads have 4 internal structure points
+        return 4;
     }
 
     public int GetCTPoints( int Tonnage ) {
@@ -148,7 +152,7 @@ public class stChassisMSBP implements ifChassis, ifState {
     }
 
     private int GetIndex( int Tonnage ) {
-        return Tonnage / 5 - 2;
+        return (Tonnage - 100) / 5 - 1;
     }
 
     public MechModifier GetMechModifier() {
@@ -158,7 +162,7 @@ public class stChassisMSBP implements ifChassis, ifState {
     // toString
     @Override
     public String toString() {
-        return "Standard";
+        return "Standard Super Heavy";
     }
 
     public int GetCVPoints(int Tonnage) {

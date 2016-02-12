@@ -36,6 +36,7 @@ public class Gyro extends abPlaceable {
                                 ISCompact = new stGyroISCompact(),
                                 ISHeavy = new stGyroISHeavy(),
                                 ISXL = new stGyroISXL(),
+                                ISSH = new stGyroISSuperHeavy(),
                                 None = new stGyroNone();
     private ifGyro CurConfig = Standard;
 
@@ -59,6 +60,13 @@ public class Gyro extends abPlaceable {
     
     public void SetISXL() {
         CurConfig = ISXL;
+    }
+    
+    /**
+     * Set this gyro to a Super Heavy
+     */
+    public void SetSuperHeavy() {
+        CurConfig = ISSH;
     }
 
     public void SetNone() {
