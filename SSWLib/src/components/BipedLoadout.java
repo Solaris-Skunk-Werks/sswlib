@@ -3598,6 +3598,46 @@ public boolean IsTripod(){
                 clone.SetRTCASE( RTCase );
                 clone.SetRTCASE( true, -1 );
             }
+            if( IsAllocated( HDCaseII ) )
+            {
+                clone.SetHDCASEII(HDCaseII);
+                clone.SetHDCASEII(true, -1, HDCaseII.IsClan());
+            }
+            if( IsAllocated( CTCaseII ) )
+            {
+                clone.SetCTCASEII(CTCaseII);
+                clone.SetCTCASEII(true, -1, CTCaseII.IsClan());
+            }
+            if( IsAllocated( LTCaseII ) )
+            {
+                clone.SetLTCASEII(LTCaseII);
+                clone.SetLTCASEII(true, -1, LTCaseII.IsClan());
+            }
+            if( IsAllocated( LACaseII ) )
+            {
+                clone.SetLACASEII(LACaseII);
+                clone.SetLACASEII(true, -1, LACaseII.IsClan());
+            }
+            if( IsAllocated( LLCaseII ) )
+            {
+                clone.SetLLCASEII(LLCaseII);
+                clone.SetLLCASEII(true, -1, LLCaseII.IsClan());
+            }
+            if( IsAllocated( RTCaseII ) )
+            {
+                clone.SetRTCASEII(RTCaseII);
+                clone.SetRTCASEII(true, -1, RTCaseII.IsClan());
+            }
+            if( IsAllocated( RACaseII ) )
+            {
+                clone.SetRACASEII(RACaseII);
+                clone.SetRACASEII(true, -1, RACaseII.IsClan());
+            }
+            if( IsAllocated( RLCaseII ) )
+            {
+                clone.SetRLCASEII(RLCaseII);
+                clone.SetRLCASEII(true, -1, RLCaseII.IsClan());
+            }
         } catch( Exception e ) {
             // unhandled, print a message to the error log
             System.err.println( "CASE system not reinstalled:\n" + e.getMessage() );
