@@ -42,6 +42,7 @@ public class stJumpJetUMU implements ifJumpJetFactory, ifState {
         AC.SetCLCodes( 'E', 'X', 'X', 'E' );
         AC.SetCLDates( 3057, 3061, true, 3061, 0, 0, false, false );
         AC.SetCLFactions( "CGS", "CGS", "", "" );
+        AC.SetSuperHeavyCompatible( false );
         AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 

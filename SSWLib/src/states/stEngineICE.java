@@ -58,6 +58,7 @@ public class stEngineICE implements ifEngine, ifState {
         AC.SetCLCodes( 'C', 'X', 'A', 'A' );
         AC.SetCLDates( 0, 0, false, 1950, 0, 0, false, false );
         AC.SetCLFactions( "", "", "PS", "" );
+        AC.SetSuperHeavyCompatible( false );
         AC.SetRulesLevels( AvailableCode.RULES_ADVANCED, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_INTRODUCTORY, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_TOURNAMENT );
         LARGE_AC.SetISCodes( 'C', 'A', 'A', 'A' );
         LARGE_AC.SetISDates( 2550, 2630, true, 2630, 0, 0, false, false );

@@ -28,8 +28,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package components;
 
+/**
+ * Provides a class for availability codes for BT equipment.
+ */
 public class AvailableCode {
-    // Provides a class for availability codes for CBT equipment.
+
     public static final int ERA_STAR_LEAGUE = 0,
                             ERA_SUCCESSION = 1,
                             ERA_CLAN_INVASION = 2,
@@ -104,7 +107,9 @@ public class AvailableCode {
                     CL_IsPrototype = false,
                     PBMAllowed = false,
                     PIMAllowed = false,
-                    PrimitiveOnly = false;
+                    PrimitiveOnly = false,
+                    SuperHeavyCompatible = true,
+                    SuperHeavyOnly = false;
 
 /*
  *  Constructor
@@ -129,12 +134,18 @@ public class AvailableCode {
         //CL_DA = clDA;
     }
 
+    /**
+     * Set Inner Sphere availability codes
+     * @param tech Technology Rating
+     * @param SL Star League Era 
+     * @param SW Succession Wars Era
+     * @param CI Clan Invasion Era
+     */
     public void SetISCodes( char tech, char SL, char SW, char CI ) {
         IS_TechRating = tech;
         IS_SL = SL;
         IS_SW = SW;
         IS_CI = CI;
-        //IS_DA = DA;
     }
     
     public void SetISCodes( char tech, char SL, char SW, char CI, char DA) {
@@ -147,7 +158,6 @@ public class AvailableCode {
         CL_SL = SL;
         CL_SW = SW;
         CL_CI = CI;
-        //CL_DA = DA;
     }
     
     public void SetCLCodes( char tech, char SL, char SW, char CI, char DA ) {
@@ -202,6 +212,14 @@ public class AvailableCode {
         CL_PrototypeFaction = CLprotofac;
     }
 
+    /**
+     * Set the rules levels for each possible unit type
+     * @param BM BattleMech rules level
+     * @param IM Industrial Mech rules level
+     * @param CV Combat Vehicle rules level
+     * @param AF Aerospace Fighter rules level
+     * @param CF Conventional Fighter rules level
+     */
     public void SetRulesLevels( int BM, int IM, int CV, int AF, int CF ) {
         RulesLevelBM = BM;
         RulesLevelIM = IM;
@@ -220,6 +238,22 @@ public class AvailableCode {
 
     public void SetPrimitiveOnly ( boolean b ) {
         PrimitiveOnly = b;
+    }
+    
+    /**
+     * Set Super Heavy 'Mech compatibility
+     * @param b Super Heavy compatibility setting
+     */
+    public void SetSuperHeavyCompatible( boolean b ) {
+        SuperHeavyCompatible = b;
+    }
+    
+    /**
+     * Set Super Heavy 'Mech only restriction
+     * @param b Super Heavy compatibility setting
+     */
+    public void SetSuperHeavyOnly( boolean b ) {
+        SuperHeavyOnly = b;
     }
 /*
  *  Getters
@@ -402,6 +436,22 @@ public class AvailableCode {
 
     public boolean IsPrimitiveOnly() {
         return PrimitiveOnly;
+    }
+    
+    /**
+     * Determines if this Available Code is compatible with Super Heavy BattleMechs
+     * @return True if Super Heavy designs are supported.
+     */
+    public boolean IsSuperHeavyCompatible() {
+        return SuperHeavyCompatible;
+    }
+    
+    /**
+     * Determines if this Available Code is only compatible with Super Heavy BattleMechs
+     * @return True if only Super Heavy designs are supported.
+     */
+    public boolean IsSuperHeavyOnly() {
+        return SuperHeavyOnly;
     }
 
 /*

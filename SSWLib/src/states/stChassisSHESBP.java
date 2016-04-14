@@ -31,40 +31,44 @@ package states;
 import components.AvailableCode;
 import components.MechModifier;
 
-public class stChassisISECBP implements ifChassis, ifState {
-    // An Inner Sphere Endo-Composite Biped chassis
-    private final static double[] Masses = { 1.0, 1.5, 1.5, 2.0, 2.5, 3.0, 3.0, 3.5, 4.0, 4.5, 4.5, 5.0, 5.5, 6.0, 6.0, 6.5, 7.0, 7.5, 7.5 };
+/**
+ * Inner Sphere Super Heavy Endo Steel Biped Chassis
+ */
+public class stChassisSHESBP implements ifChassis, ifState {
+    public final static double[] Masses = { 10.5, 11.0, 11.5, 12.0, 12.5, 13.0, 13.5, 14.0, 14.5, 15.0, 15.5, 16.0, 16.5, 17, 17.5, 18.0, 18.5, 19.0, 19.5, 20.0 };
     private final static int[][] IntPoints = {
-        { 4, 3, 1, 2 },
-        { 5, 4, 2, 3 },
-        { 6, 5, 3, 4 },
-        { 8, 6, 4, 6 },
-        { 10, 7, 5, 7 },
-        { 11, 8, 6, 8 },
-        { 12, 10, 6, 10 },
-        { 14, 11, 7, 11 },
-        { 16, 12, 8, 12 },
-        { 18, 13, 9, 13 },
-        { 20, 14, 10, 14 },
-        { 21, 15, 10, 15 },
-        { 22, 15, 11, 15 },
-        { 23, 16, 12, 16 },
-        { 25, 17, 13, 17 },
-        { 27, 18, 14, 18 },
-        { 29, 19, 15, 19 },
-        { 30, 20, 16, 20 },
-        { 31, 21, 17, 21 } };
+        { 32, 22, 17, 22 },
+        { 33, 23, 18, 23 },
+        { 35, 24, 19, 24 },
+        { 36, 25, 20, 25 },
+        { 38, 26, 21, 26 },
+        { 39, 27, 21, 27 },
+        { 41, 28, 22, 28 },
+        { 42, 29, 23, 29 },
+        { 44, 31, 24, 31 },
+        { 45, 32, 25, 32 },
+        { 47, 33, 26, 33 },
+        { 48, 34, 26, 34 },
+        { 50, 35, 27, 35 },
+        { 51, 36, 28, 36 },
+        { 53, 37, 29, 37 },
+        { 54, 38, 30, 38 },
+        { 56, 39, 31, 39 },
+        { 57, 40, 31, 40 },
+        { 59, 41, 32, 41 },
+        { 60, 42, 33, 42 } };
     private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
 
-    public stChassisISECBP() {
-        AC.SetISCodes( 'E', 'X', 'X', 'F' );
-        AC.SetISDates( 3063, 3067, true, 3067, 0, 0, false, false );
-        AC.SetISFactions( "LA", "LA", "", "" );
-        AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+    public stChassisSHESBP() {
+        AC.SetISCodes( 'E', 'X', 'X', 'F', 'F' );
+        AC.SetISDates( 0, 0, false, 3076, 0, 0, false, false );
+        AC.SetISFactions( "", "", "WoB", "" );
+        AC.SetSuperHeavyOnly(true);
+        AC.SetRulesLevels( AvailableCode.RULES_ADVANCED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 
     public boolean HasCounterpart() {
-        return true;
+        return false;
     }
 
     public int GetCrits() {
@@ -72,35 +76,31 @@ public class stChassisISECBP implements ifChassis, ifState {
     }
     
     public String ActualName() {
-        return "Endo-Composite Structure (Biped)";
+        return "Super Heavy Endo Steel Structure (Biped)";
     }
 
     public String CritName() {
-        return "Endo-Composite";
+        return "Super Heavy Endo Steel";
     }
 
     public String LookupName() {
-        return "Endo-Composite";
+        return "Super Heavy Endo Steel Structure";
     }
 
     public String ChatName() {
-        return "E-Comp";
+        return "Std Super Hvy Endo Steel";
     }
 
     public String MegaMekName( boolean UseRear ) {
-        return "Endo-Composite";
+        return "Standard Super Heavy Endo Steel";
     }
 
     public String BookReference() {
-        return "Tactical Operations";
+        return "Interstellar Operations";
     }
 
     public double GetStrucTon( int Tonnage, boolean fractional ) {
-        if( fractional ) {
-            return Math.ceil( stChassisMSBP.Masses[GetIndex(Tonnage)] * 750 ) * 0.001;
-        } else {
-            return Masses[GetIndex(Tonnage)];
-        }
+        return Masses[GetIndex(Tonnage)];
     }
     
     public boolean IsQuad() {
@@ -116,8 +116,8 @@ public class stChassisISECBP implements ifChassis, ifState {
     }
     
     public int GetHeadPoints() {
-        // All mech heads have 3 internal structure points
-        return 3;
+        // All super heavy mech heads have 4 internal structure points
+        return 4;
     }
 
     public int GetCTPoints( int Tonnage ) {
@@ -135,15 +135,15 @@ public class stChassisISECBP implements ifChassis, ifState {
     public int GetLegPoints( int Tonnage ) {
         return IntPoints[GetIndex(Tonnage)][3];
     }
-
+    
     public double GetCost( int Tonnage ) {
-        return 3200 * Tonnage;
+        return 400 * Tonnage;
     }
     
     public double GetBVMult() {
         return 1.0f;
     }
-
+    
     public boolean IncrementPlaced() {
         return true;
     }
@@ -157,7 +157,7 @@ public class stChassisISECBP implements ifChassis, ifState {
     }
 
     private int GetIndex( int Tonnage ) {
-        return Tonnage / 5 - 2;
+        return (Tonnage - 100) / 5 - 1;
     }
 
     public MechModifier GetMechModifier() {
@@ -167,7 +167,7 @@ public class stChassisISECBP implements ifChassis, ifState {
     // toString
     @Override
     public String toString() {
-        return "Endo Composite";
+        return "Endo Steel Super Heavy";
     }
 
     public int GetCVPoints(int Tonnage) {

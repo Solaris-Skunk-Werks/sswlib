@@ -40,6 +40,7 @@ public class stPEISMASC implements ifPhysEnhance, ifState {
         AC.SetISCodes( 'E', 'D', 'F', 'E' );
         AC.SetISDates( 0, 0, false, 2740, 2795, 3035, true, true );
         AC.SetISFactions( "", "", "TH", "CC" );
+        AC.SetSuperHeavyCompatible( false );
         AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 

@@ -63,6 +63,7 @@ public class stChassisMSBP implements ifChassis, ifState {
         AC.SetCLCodes( 'D', 'X', 'B', 'B' );
         AC.SetCLDates( 0, 0, false, 2443, 0, 0, false, false );
         AC.SetCLFactions( "", "", "TH", "" );
+        AC.SetSuperHeavyCompatible(false);
         AC.SetRulesLevels( AvailableCode.RULES_INTRODUCTORY, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 
@@ -103,6 +104,14 @@ public class stChassisMSBP implements ifChassis, ifState {
     }
     
     public boolean IsQuad() {
+        return false;
+    }
+    
+    /**
+     * Determines if this Chassis is a Tripod
+     * @return True if this chassis is a Tripod
+     */
+    public boolean IsTripod() {
         return false;
     }
     

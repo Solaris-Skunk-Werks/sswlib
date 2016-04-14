@@ -1806,7 +1806,7 @@ public class MechArmor  extends abPlaceable {
         // this sets the maximum array when tonnage changes.
         InternalStructure IntStruc = Owner.GetIntStruc();
 
-        MaxArmor[LocationIndex.MECH_LOC_HD] = 9;
+        MaxArmor[LocationIndex.MECH_LOC_HD] = IntStruc.GetHeadPoints() * 3;
         MaxArmor[LocationIndex.MECH_LOC_CT] = IntStruc.GetCTPoints() * 2;
         MaxArmor[LocationIndex.MECH_LOC_LT] = IntStruc.GetSidePoints() * 2;
         MaxArmor[LocationIndex.MECH_LOC_RT] = IntStruc.GetSidePoints() * 2;

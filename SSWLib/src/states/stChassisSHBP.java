@@ -35,7 +35,6 @@ import components.MechModifier;
  * Inner Sphere Super Heavy Biped Chassis
  */
 public class stChassisSHBP implements ifChassis, ifState {
-    // An Inner Sphere Super Heavy Biped chassis
     public final static double[] Masses = { 21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0, 31.0, 32.0, 33.0, 34.0, 35.0, 36.0, 37.0, 38.0, 39.0, 40.0 };
     private final static int[][] IntPoints = {
         { 32, 22, 17, 22 },
@@ -58,16 +57,13 @@ public class stChassisSHBP implements ifChassis, ifState {
         { 57, 40, 31, 40 },
         { 59, 41, 32, 41 },
         { 60, 42, 33, 42 } };
-    private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_BOTH );
+    private final static AvailableCode AC = new AvailableCode( AvailableCode.TECH_INNER_SPHERE );
 
     public stChassisSHBP() {
-        AC.SetISCodes( 'D', 'C', 'C', 'C' );
-        AC.SetISDates( 0, 0, false, 2443, 0, 0, false, false );
-        AC.SetISFactions( "", "", "TH", "" );
-        AC.SetCLCodes( 'D', 'X', 'B', 'B' );
-        AC.SetCLDates( 0, 0, false, 2443, 0, 0, false, false );
-        AC.SetCLFactions( "", "", "TH", "" );
-        AC.SetRulesLevels( AvailableCode.RULES_INTRODUCTORY, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
+        AC.SetISCodes( 'E', 'X', 'X', 'F', 'F' );
+        AC.SetISDates( 0, 0, false, 3076, 0, 0, false, false );
+        AC.SetISFactions( "", "", "WoB", "" );
+        AC.SetRulesLevels( AvailableCode.RULES_ADVANCED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 
     public boolean HasCounterpart() {
@@ -95,7 +91,7 @@ public class stChassisSHBP implements ifChassis, ifState {
     }
 
     public String MegaMekName( boolean UseRear ) {
-        return "Standard Super heavy";
+        return "Standard Super Heavy";
     }
 
     public String BookReference() {
@@ -107,6 +103,14 @@ public class stChassisSHBP implements ifChassis, ifState {
     }
     
     public boolean IsQuad() {
+        return false;
+    }
+    
+    /**
+     * Determines if this Chassis is a Tripod
+     * @return True if this chassis is a Tripod
+     */
+    public boolean IsTripod() {
         return false;
     }
     

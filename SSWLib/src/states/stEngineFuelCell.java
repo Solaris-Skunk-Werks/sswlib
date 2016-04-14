@@ -52,6 +52,7 @@ public class stEngineFuelCell implements ifEngine, ifState {
         AC.SetCLCodes( 'D', 'X', 'C', 'D' );
         AC.SetCLDates( 0, 0, false, 1950, 0, 0, false, false );
         AC.SetCLFactions( "", "", "PS", "" );
+        AC.SetSuperHeavyCompatible( false );
         AC.SetRulesLevels( AvailableCode.RULES_ADVANCED, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_ADVANCED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 

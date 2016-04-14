@@ -60,6 +60,7 @@ public class stChassisMSTP implements ifChassis, ifState {
         AC.SetISCodes( 'E', 'F', 'X', 'X', 'F' );
         AC.SetISDates( 0, 0, false, 2602, 0, 0, false, false );
         AC.SetISFactions( "", "", "TH", "" );
+        AC.SetSuperHeavyCompatible(false);
         /*AC.SetCLCodes( 'D', 'X', 'B', 'B' );
         AC.SetCLDates( 0, 0, false, 2443, 0, 0, false, false );
         AC.SetCLFactions( "", "", "TH", "" );*/
@@ -103,6 +104,14 @@ public class stChassisMSTP implements ifChassis, ifState {
     }
     
     public boolean IsQuad() {
+        return false;
+    }
+    
+    /**
+     * Determines if this Chassis is a Tripod
+     * @return True if this chassis is a Tripod
+     */
+    public boolean IsTripod() {
         return false;
     }
     

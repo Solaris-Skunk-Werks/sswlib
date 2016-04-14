@@ -41,6 +41,7 @@ public interface ifChassis {
     public int GetCrits();
     public double GetStrucTon( int Tonnage, boolean fractional );
     public boolean IsQuad();
+    public boolean IsTripod();
     public int GetHeadPoints();
     public int GetCTPoints( int Tonnage );
     public int GetSidePoints( int Tonnage );

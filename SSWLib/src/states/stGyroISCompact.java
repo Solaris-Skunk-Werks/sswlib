@@ -38,6 +38,7 @@ public class stGyroISCompact implements ifGyro, ifState {
         AC.SetISCodes( 'E', 'X', 'X', 'E' );
         AC.SetISDates( 0, 0, false, 3068, 0, 0, false, false );
         AC.SetISFactions( "", "", "FS", "" );
+        AC.SetSuperHeavyCompatible( false );
         AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 

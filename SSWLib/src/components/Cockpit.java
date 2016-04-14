@@ -387,9 +387,18 @@ public class Cockpit extends abPlaceable {
     }
 
     public ifState[] GetStates() {
-        ifState[] retval = { (ifState) StandardCockpit, (ifState) SmallCockpit,
-            (ifState) TorsoCockpit, (ifState) IndustrialCockpit, (ifState) IndusAFCCockpit,
-            (ifState) InterfaceCockpit, (ifState) Primitive, (ifState) PrimIndustrial, (ifState) PrimIndusAFC, (ifState) RoboticCockpit };
+        ifState[] retval = { 
+            (ifState) StandardCockpit, 
+            (ifState) SmallCockpit,
+            (ifState) TorsoCockpit, 
+            (ifState) IndustrialCockpit, 
+            (ifState) IndusAFCCockpit,
+            (ifState) InterfaceCockpit, 
+            (ifState) Primitive, 
+            (ifState) PrimIndustrial, 
+            (ifState) PrimIndusAFC, 
+            (ifState) RoboticCockpit,
+            (ifState) SuperHeavyCockpit};
         return retval;
     }
 

@@ -42,6 +42,7 @@ public class stJumpJetImproved implements ifJumpJetFactory, ifState {
         AC.SetCLCodes( 'E', 'X', 'X', 'D' );
         AC.SetCLDates( 0, 0, false, 3069, 0, 0, false, false );
         AC.SetCLFactions( "", "", "CWF", "" );
+        AC.SetSuperHeavyCompatible( false );
         AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 

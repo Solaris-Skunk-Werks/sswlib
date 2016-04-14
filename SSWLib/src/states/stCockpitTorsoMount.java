@@ -48,6 +48,7 @@ public class stCockpitTorsoMount implements ifCockpit, ifState {
         AC.SetCLCodes( 'E', 'X', 'X', 'F' );
         AC.SetCLDates( 3044, 3055, true, 3055, 0, 0, false, false );
         AC.SetCLFactions( "FC", "FC", "", "" );
+        AC.SetSuperHeavyCompatible(false);
         AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 

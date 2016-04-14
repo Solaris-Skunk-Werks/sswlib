@@ -44,6 +44,7 @@ public class stCockpitInterface implements ifCockpit, ifState {
         AC.SetISCodes( 'E', 'X', 'X', 'F' );
         AC.SetISDates( 0, 0, false, 2300, 0, 0, false, false );
         AC.SetISFactions( "", "", "WB", "" );
+        AC.SetSuperHeavyCompatible(false);
         //AC.SetCLCodes( 'D', 'X', 'B', 'B' );
         //AC.SetCLDates( 0, 0, false, 2300, 0, 0, false, false );
         //AC.SetCLFactions( "", "", "TH", "" );

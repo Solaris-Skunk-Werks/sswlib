@@ -51,6 +51,7 @@ public class stCockpitRobotic implements ifCockpit, ifState {
         AC.SetCLCodes( 'C', 'X', 'D', 'E' );
         AC.SetCLDates( 0, 0, false, 2300, 0, 0, false, false );
         AC.SetCLFactions( "", "", "TH", "" );
+        AC.SetSuperHeavyCompatible(false);
         AC.SetRulesLevels( AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL );
     }
 

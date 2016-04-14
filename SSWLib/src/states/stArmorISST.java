@@ -42,6 +42,7 @@ public class stArmorISST implements ifArmor, ifState {
         AC.SetISCodes( 'E', 'X', 'X', 'E' );
         AC.SetISDates( 0, 0, false, 3063, 0, 0, false, false );
         AC.SetISFactions( "", "", "CC", "" );
+        AC.SetSuperHeavyCompatible(false);
         AC.SetRulesLevels( AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL, AvailableCode.RULES_EXPERIMENTAL );
     }
 

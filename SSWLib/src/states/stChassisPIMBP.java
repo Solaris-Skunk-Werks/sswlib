@@ -105,6 +105,14 @@ public class stChassisPIMBP implements ifChassis, ifState {
         return false;
     }
     
+    /**
+     * Determines if this Chassis is a Tripod
+     * @return True if this chassis is a Tripod
+     */
+    public boolean IsTripod() {
+        return false;
+    }
+    
     public int GetHeadPoints() {
         // All mech heads have 3 internal structure points
         return 3;

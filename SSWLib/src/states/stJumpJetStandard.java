@@ -44,6 +44,7 @@ public class stJumpJetStandard implements ifJumpJetFactory, ifState {
         AC.SetCLFactions( "", "", "TH", "" );
         AC.SetPBMAllowed( true );
         AC.SetPIMAllowed( true );
+        AC.SetSuperHeavyCompatible( false );
         AC.SetRulesLevels( AvailableCode.RULES_INTRODUCTORY, AvailableCode.RULES_INTRODUCTORY, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_UNALLOWED );
     }
 

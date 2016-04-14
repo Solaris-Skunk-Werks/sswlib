@@ -188,6 +188,14 @@ public class CommonTools {
                 } else {
                     if( AC.IsPrimitiveOnly() ) { return false; }
                 }
+                
+                // If this 'Mech is Super Heavy, the equipment must be compatible
+                if ( ((Mech) u).IsSuperheavy() ) {
+                    if ( ! AC.IsSuperHeavyCompatible() ) { return false; }
+                } else {
+                    if ( AC.IsSuperHeavyOnly() ) { return false; }
+                }
+                
                 break;
             case AvailableCode.UNIT_INDUSTRIALMECH:
                 if( ! ( u instanceof Mech ) ) { return false; }

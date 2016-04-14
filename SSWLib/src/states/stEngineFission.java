@@ -52,6 +52,7 @@ public class stEngineFission implements ifEngine, ifState {
         AC.SetCLCodes( 'D', 'X', 'E', 'D' );
         AC.SetCLDates( 0, 0, false, 1960, 0, 0, false, false );
         AC.SetCLFactions( "", "", "ES", "" );
+        AC.SetSuperHeavyCompatible( false );
         AC.SetRulesLevels( AvailableCode.RULES_ADVANCED, AvailableCode.RULES_TOURNAMENT, AvailableCode.RULES_ADVANCED, AvailableCode.RULES_UNALLOWED, AvailableCode.RULES_ADVANCED );
     }
 

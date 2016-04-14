@@ -60,7 +60,8 @@ public class InternalStructure extends abPlaceable {
                              CLECBP = new stChassisCLECBP(),
                              CLECQD = new stChassisCLECQD(),
                              CVIS = new stChassisCVIS(),
-                             SHBP = new stChassisSHBP();
+                             SHBP = new stChassisSHBP(),
+                             SHESBP = new stChassisSHESBP();
     private int Placed = 0;
     
     // Constructor
@@ -191,6 +192,13 @@ public class InternalStructure extends abPlaceable {
      */
     public void SetSHBP() {
         Config = SHBP;
+    }
+    
+    /**
+     * Set this chassis to a Inner Sphere Super Heavy Endo Steel Biped
+     */
+    public void SetSHESBP() {
+        Config = SHESBP;
     }
 
     public void SetCVIS()
@@ -325,7 +333,7 @@ public class InternalStructure extends abPlaceable {
     }
 
     public ifState[] GetStates( boolean biped ) {
-        ifState[] retval = { null, null, null, null, null, null, null, null, null, null };
+        ifState[] retval = { null, null, null, null, null, null, null, null, null, null, null, null };
         if ( Owner.IsQuad() ) {
             retval[0] = (ifState) MSQD;
             retval[1] = (ifState) ISESQD;
@@ -351,6 +359,8 @@ public class InternalStructure extends abPlaceable {
             retval[7] = (ifState) IMBP;
             retval[8] = (ifState) PBMBP;
             retval[9] = (ifState) PIMBP;
+            retval[10] = (ifState) SHBP;
+            retval[11] = (ifState) SHESBP;
         }
         return retval;
     }

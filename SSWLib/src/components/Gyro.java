@@ -192,7 +192,7 @@ public class Gyro extends abPlaceable {
 
     public ifState[] GetStates() {
         ifState[] retval = { (ifState) Standard,
-            (ifState) ISCompact, (ifState) ISHeavy, (ifState) ISXL, (ifState) None };
+            (ifState) ISCompact, (ifState) ISHeavy, (ifState) ISXL, (ifState) None, (ifState) ISSH };
         return retval;
     }
 

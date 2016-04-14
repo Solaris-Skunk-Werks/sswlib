@@ -1415,11 +1415,21 @@ public class Mech implements ifUnit, ifBattleforce {
     }
     
     /**
+     * Determines if this mech is a Super Heavy 'Mech (over 100 tons)
+     * @return True if this Mech is SuperHeavy 
+     */
+    public boolean IsSuperheavy() {
+        return SuperHeavy;
+    }
+    
+    /**
      * This performs all the necessary steps to transform this Mech into a 
      * SuperHeavy chassis
      */
-    public void SetSuperHeavy()
-    {
+    public void SetSuperHeavy() {
+        
+        SuperHeavy = true;
+        
         // Update chassis
         CurIntStruc.SetSHBP();
         
@@ -1431,6 +1441,33 @@ public class Mech implements ifUnit, ifBattleforce {
         
         // Update gyro
         CurGyro.SetSuperHeavy();
+        
+        // Update physical enhancements, Super Heavy Mechs may not use them
+        CurPhysEnhance.SetNone();
+        
+        // Clear all Mech Modifications
+        MechMods.clear();
+    }
+    
+    /**
+     * This performs all the necessary steps to transform this Mech into a 
+     * standard chassis
+     */
+    public void UnsetSuperHeavy() {
+        
+        SuperHeavy = false;
+        
+        // Update chassis
+        CurIntStruc.SetMSBP();
+        
+        // switch the engine over to a military Standard
+        CurEngine.SetFUEngine();
+        
+        // Update cockpit
+        CurCockpit.SetStandardCockpit();
+        
+        // Update gyro
+        CurGyro.SetStandard();
         
         // Update physical enhancements, Super Heavy Mechs may not use them
         CurPhysEnhance.SetNone();
