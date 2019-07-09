@@ -34,13 +34,14 @@ import Force.Force;
 import Force.Scenario;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.XMLConstants;
 import org.w3c.dom.*;
 
 public class XMLReader {
 //    frmBase Parent;
 
     Document load;
-    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    DocumentBuilderFactory dbf;
     DocumentBuilder db;
 
 //    public Force[] ReadFile( frmBase parent, String filename ) throws Exception {
@@ -61,7 +62,14 @@ public class XMLReader {
 //        forces[1] = new Force(n.item(1));
 //        return forces;
 //    }
-
+    public XMLReader() {
+        dbf = DocumentBuilderFactory.newInstance();
+        dbf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        dbf.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        dbf.setAttribute(XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
+        dbf.setExpandEntityReferences(false);
+    }
+    
     public Scenario ReadScenario( String filename ) throws Exception {
         System.out.println("Loading Scenario from " + filename);
         Scenario scenario = new Scenario();
