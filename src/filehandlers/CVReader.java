@@ -38,6 +38,7 @@ import list.UnitListData;
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.XMLConstants;
 import org.w3c.dom.*;
 import visitors.VArmorSetPatchwork;
 import visitors.VArmorSetPatchworkLocation;
@@ -45,12 +46,17 @@ import visitors.VArmorSetPatchworkLocation;
 public class CVReader {
     DataFactory data;
     Document load;
-    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    DocumentBuilderFactory dbf;
     DocumentBuilder db;
     int SaveFileVersion = 1;
     String Messages = "";
 
     public CVReader() throws Exception {
+        dbf = DocumentBuilderFactory.newInstance();
+        dbf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        dbf.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        dbf.setAttribute(XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
+        dbf.setExpandEntityReferences(false);
         db = dbf.newDocumentBuilder();
     }
 

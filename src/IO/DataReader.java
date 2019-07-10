@@ -30,15 +30,23 @@ package IO;
 import common.CommonTools;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.XMLConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class DataReader {
     Document load;
-    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    DocumentBuilderFactory dbf;
     DocumentBuilder db;
 
+    public DataReader() {
+        dbf = DocumentBuilderFactory.newInstance();
+        dbf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        dbf.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        dbf.setAttribute(XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
+        dbf.setExpandEntityReferences(false);
+    }
     public Node ReadNode( String filename, String nodeName ) throws Exception {
         try {
             filename = CommonTools.SafeFileName( filename );

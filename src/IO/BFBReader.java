@@ -29,16 +29,24 @@ package IO;
 
 import common.CommonTools;
 import Force.*;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.XMLConstants;
 import org.w3c.dom.*;
 
 public class BFBReader {
     Document load;
-    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    DocumentBuilderFactory dbf;
     DocumentBuilder db;
 
+    public BFBReader() {
+        dbf = DocumentBuilderFactory.newInstance();
+        dbf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        dbf.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        dbf.setAttribute(XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
+        dbf.setExpandEntityReferences(false);
+    }
+    
     public Scenario ReadScenario( String filename ) throws Exception {
         System.out.println("Loading Scenario from " + filename);
         Scenario scenario = new Scenario();
