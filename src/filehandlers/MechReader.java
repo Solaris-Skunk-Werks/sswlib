@@ -1269,8 +1269,14 @@ public class MechReader {
             // change the mech into an omni.  we'll use a temporary name for the
             // first loadout so we can remove it easily since we don't know what
             // loadout names we have yet.
-            m.SetOmnimech( "SSW_TEMP_LOADOUT_001" );
+            
             NodeList OmniLoads = d.getElementsByTagName( "loadout" );
+            if (OmniLoads.getLength() == 0) {
+                // Use base/chassis loadout if there aren't any loadouts in the input file
+                m.SetOmnimech("Base Loadout");
+            } else {
+                m.SetOmnimech( "SSW_TEMP_LOADOUT_001" );
+            }
             // the actual loading routine
             for( int k = 0; k < OmniLoads.getLength(); k++ ) {
                 map = OmniLoads.item( k ).getAttributes();
@@ -1681,11 +1687,12 @@ public class MechReader {
                 }
             }
 
-            // now remove the first loadout that we added.
-            m.RemoveLoadout( "SSW_TEMP_LOADOUT_001" );
-
-            // make sure the 'Mech is set to the first loadout.
-            m.SetCurLoadout( ((ifMechLoadout) m.GetLoadouts().get( 0 )).GetName() );
+            // Remove the temporary loadout if we created one and set the mech
+            // to the first loadout
+            if ( m.GetLoadout().GetName() == "SSW_TEMP_LOADOUT_001" ) {
+                m.RemoveLoadout( "SSW_TEMP_LOADOUT_001" );
+                m.SetCurLoadout( ((ifMechLoadout) m.GetLoadouts().get( 0 )).GetName() );
+            }
         }
 
         // fluff last
