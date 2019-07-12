@@ -157,7 +157,7 @@ public class stChassisISESBP implements ifChassis, ifState {
     }
 
     private int GetIndex( int Tonnage ) {
-        return (Tonnage - 100) / 5 - 1;
+        return Tonnage / 5 - 2;
     }
 
     public MechModifier GetMechModifier() {
