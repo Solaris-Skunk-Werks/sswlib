@@ -11,6 +11,7 @@ package IO;
 import java.io.*;
 import java.util.*;
 import java.util.zip.*;
+import javax.swing.JOptionPane;
 
 /**
  * JarResources: JarResources maps all resources included in a
@@ -107,9 +108,11 @@ public final class JarResources {
        } catch (NullPointerException e) {
           System.out.println("done.");
        } catch (FileNotFoundException e) {
-          e.printStackTrace();
+          JOptionPane.showMessageDialog(null, "Error: could not find file: " + e.getMessage());
+          System.exit(-1);
        } catch (IOException e) {
-          e.printStackTrace();
+          JOptionPane.showMessageDialog(null, "Error: could not load file: " + e.getMessage());
+          System.exit(-1);
        }
    }
 
